@@ -1,0 +1,10 @@
+spring:
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      enabled: true
+#      additional-paths:
+#      additional-exclude:
+    livereload:
+      enabled: true
