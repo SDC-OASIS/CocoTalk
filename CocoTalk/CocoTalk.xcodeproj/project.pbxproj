@@ -10,10 +10,13 @@
 		EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */; };
 		EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */; };
 		EA14D4F42786B16C00EDC892 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F32786B16C00EDC892 /* ViewController.swift */; };
-		EA14D4F72786B16C00EDC892 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4F52786B16C00EDC892 /* Main.storyboard */; };
 		EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F82786B16C00EDC892 /* CocoTalk.xcdatamodeld */; };
 		EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FB2786B16E00EDC892 /* Assets.xcassets */; };
 		EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */; };
+		EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */; };
+		EA14D5192786CE3100EDC892 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D5182786CE3100EDC892 /* Main.storyboard */; };
+		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
+		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,11 +24,11 @@
 		EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		EA14D4F32786B16C00EDC892 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		EA14D4F62786B16C00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EA14D4F92786B16C00EDC892 /* CocoTalk.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CocoTalk.xcdatamodel; sourceTree = "<group>"; };
 		EA14D4FB2786B16E00EDC892 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
+		EA14D5182786CE3100EDC892 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +36,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */,
+				EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */,
+				EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,16 +64,96 @@
 		EA14D4EE2786B16C00EDC892 /* CocoTalk */ = {
 			isa = PBXGroup;
 			children = (
-				EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */,
-				EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */,
+				EA14D5092786C29100EDC892 /* Application */,
+				EA14D5072786BF0500EDC892 /* Resources */,
+				EA14D5062786BEFB00EDC892 /* Scenes */,
+				EA14D50E2786C70B00EDC892 /* Components */,
+				EA14D5082786BF4D00EDC892 /* Core */,
+			);
+			path = CocoTalk;
+			sourceTree = "<group>";
+		};
+		EA14D5062786BEFB00EDC892 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
 				EA14D4F32786B16C00EDC892 /* ViewController.swift */,
-				EA14D4F52786B16C00EDC892 /* Main.storyboard */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		EA14D5072786BF0500EDC892 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EA14D5182786CE3100EDC892 /* Main.storyboard */,
 				EA14D4FB2786B16E00EDC892 /* Assets.xcassets */,
 				EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */,
 				EA14D5002786B16E00EDC892 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EA14D5082786BF4D00EDC892 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				EAA6A3D02787E0D6001A7E46 /* Helpers */,
+				EAA6A3CF2787C3FB001A7E46 /* CoreData */,
+				EA14D50C2786C4AA00EDC892 /* Models */,
+				EA14D50B2786C45000EDC892 /* Extension */,
+				EA14D50A2786C44800EDC892 /* Networking */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		EA14D5092786C29100EDC892 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */,
+				EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		EA14D50A2786C44800EDC892 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		EA14D50B2786C45000EDC892 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		EA14D50C2786C4AA00EDC892 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EA14D50E2786C70B00EDC892 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		EAA6A3CF2787C3FB001A7E46 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
 				EA14D4F82786B16C00EDC892 /* CocoTalk.xcdatamodeld */,
 			);
-			path = CocoTalk;
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		EAA6A3D02787E0D6001A7E46 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -86,6 +172,11 @@
 			dependencies = (
 			);
 			name = CocoTalk;
+			packageProductDependencies = (
+				EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */,
+				EAA6A3CA2786CEFE001A7E46 /* SnapKit */,
+				EAA6A3CD2786CF2B001A7E46 /* Then */,
+			);
 			productName = CocoTalk;
 			productReference = EA14D4EC2786B16C00EDC892 /* CocoTalk.app */;
 			productType = "com.apple.product-type.application";
@@ -114,6 +205,13 @@
 				Base,
 			);
 			mainGroup = EA14D4E32786B16C00EDC892;
+			packageReferences = (
+				EA14D5122786C85B00EDC892 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				EAA6A3CC2786CF2B001A7E46 /* XCRemoteSwiftPackageReference "Then" */,
+			);
 			productRefGroup = EA14D4ED2786B16C00EDC892 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -128,9 +226,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA14D5192786CE3100EDC892 /* Main.storyboard in Resources */,
 				EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */,
 				EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */,
-				EA14D4F72786B16C00EDC892 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,14 +249,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		EA14D4F52786B16C00EDC892 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EA14D4F62786B16C00EDC892 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -295,12 +385,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 92NGUT4BRA;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CocoTalk/Info.plist;
+				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -323,12 +414,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 92NGUT4BRA;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CocoTalk/Info.plist;
+				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -364,6 +456,67 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EA14D5122786C85B00EDC892 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+		EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		EAA6A3CC2786CF2B001A7E46 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		EAA6A3CA2786CEFE001A7E46 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		EAA6A3CD2786CF2B001A7E46 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAA6A3CC2786CF2B001A7E46 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		EA14D4F82786B16C00EDC892 /* CocoTalk.xcdatamodeld */ = {
