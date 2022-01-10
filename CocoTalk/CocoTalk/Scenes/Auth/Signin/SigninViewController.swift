@@ -155,7 +155,7 @@ extension SigninViewController {
     private func bindButton() {
         btnSignup.rx.tap.bind { [weak self] in
             guard let self = self else { return }
-            let vc = SignupViewController()
+            let vc = TermViewController()
             DispatchQueue.main.async {
                 self.navigationController?.pushViewController(vc, animated: true)
             }

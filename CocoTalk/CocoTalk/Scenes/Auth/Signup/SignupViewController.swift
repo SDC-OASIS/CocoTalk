@@ -14,14 +14,20 @@ class SignupViewController: UIViewController {
     
     // MARK: - UI Properties
     private let lblHello = UILabel().then {
-        $0.text = "HELLO WORLD!!"
+        $0.text = "Sign up"
         $0.font = .systemFont(ofSize: 36)
     }
+    
+    private let tableView = UITableView()
+    
+    // MARK: - Propeties
     
     
     // MARK: - Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .white
         
         view.addSubview(lblHello)
         lblHello.snp.makeConstraints {

@@ -18,6 +18,11 @@
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
 		EA3F3759278BD00D007957EB /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3758278BD00D007957EB /* RxSwift */; };
+		EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F375D278BF472007957EB /* CheckBoxCell.swift */; };
+		EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F375F278BFCCD007957EB /* TermViewController.swift */; };
+		EA3F3767278C4145007957EB /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3766278C4145007957EB /* RxGesture */; };
+		EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3768278C5224007957EB /* TermViewModel.swift */; };
+		EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
 		EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE575CC278BCA4000D959A0 /* SignupViewController.swift */; };
@@ -33,6 +38,10 @@
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
+		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
+		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
+		EA3F3768278C5224007957EB /* TermViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewModel.swift; sourceTree = "<group>"; };
+		EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
 		EAE575CC278BCA4000D959A0 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -47,6 +56,7 @@
 				EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */,
 				EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */,
 				EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */,
+				EA3F3767278C4145007957EB /* RxGesture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,7 +191,7 @@
 			children = (
 				EAE575CB278BC6E600D959A0 /* Password */,
 				EAE575CA278BC6D400D959A0 /* PhoneNumber */,
-				EAE575C9278BC6CE00D959A0 /* Terms */,
+				EAE575C9278BC6CE00D959A0 /* Term */,
 				EAE575C8278BB9EF00D959A0 /* Signup */,
 				EAE575C7278BB9E200D959A0 /* Signin */,
 			);
@@ -198,6 +208,7 @@
 		EAE575C3278BB49B00D959A0 /* CheckBoxCell */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F375D278BF472007957EB /* CheckBoxCell.swift */,
 			);
 			path = CheckBoxCell;
 			sourceTree = "<group>";
@@ -240,16 +251,19 @@
 			path = Signup;
 			sourceTree = "<group>";
 		};
-		EAE575C9278BC6CE00D959A0 /* Terms */ = {
+		EAE575C9278BC6CE00D959A0 /* Term */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F375F278BFCCD007957EB /* TermViewController.swift */,
+				EA3F3768278C5224007957EB /* TermViewModel.swift */,
 			);
-			path = Terms;
+			path = Term;
 			sourceTree = "<group>";
 		};
 		EAE575CA278BC6D400D959A0 /* PhoneNumber */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */,
 			);
 			path = PhoneNumber;
 			sourceTree = "<group>";
@@ -284,6 +298,7 @@
 				EA3F3754278BD00D007957EB /* RxCocoa */,
 				EA3F3756278BD00D007957EB /* RxRelay */,
 				EA3F3758278BD00D007957EB /* RxSwift */,
+				EA3F3766278C4145007957EB /* RxGesture */,
 			);
 			productName = CocoTalk;
 			productReference = EA14D4EC2786B16C00EDC892 /* CocoTalk.app */;
@@ -319,6 +334,7 @@
 				EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				EAA6A3CC2786CF2B001A7E46 /* XCRemoteSwiftPackageReference "Then" */,
 				EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */,
+				EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */,
 			);
 			productRefGroup = EA14D4ED2786B16C00EDC892 /* Products */;
 			projectDirPath = "";
@@ -346,11 +362,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */,
 				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
+				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
+				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
+				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -591,6 +611,14 @@
 				minimumVersion = 6.0.0;
 			};
 		};
+		EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
@@ -629,6 +657,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
+		};
+		EA3F3766278C4145007957EB /* RxGesture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */;
+			productName = RxGesture;
 		};
 		EAA6A3CA2786CEFE001A7E46 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
