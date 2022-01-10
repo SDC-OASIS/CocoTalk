@@ -14,7 +14,6 @@
 		EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FB2786B16E00EDC892 /* Assets.xcassets */; };
 		EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */; };
 		EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */; };
-		EA14D5192786CE3100EDC892 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D5182786CE3100EDC892 /* Main.storyboard */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
 /* End PBXBuildFile section */
@@ -28,7 +27,6 @@
 		EA14D4FB2786B16E00EDC892 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
-		EA14D5182786CE3100EDC892 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +74,7 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				EAE575C1278BB37D00D959A0 /* Auth */,
 				EA14D4F32786B16C00EDC892 /* ViewController.swift */,
 			);
 			path = Scenes;
@@ -84,7 +83,6 @@
 		EA14D5072786BF0500EDC892 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EA14D5182786CE3100EDC892 /* Main.storyboard */,
 				EA14D4FB2786B16E00EDC892 /* Assets.xcassets */,
 				EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */,
 				EA14D5002786B16E00EDC892 /* Info.plist */,
@@ -137,6 +135,10 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EAE575C4278BB5B600D959A0 /* Cells */,
+				EAE575C6278BB61F00D959A0 /* CustomTextFieldView */,
+				EAE575C5278BB5F600D959A0 /* ProfileImageView */,
+				EAE575C2278BB46100D959A0 /* SquareButtonView */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -154,6 +156,65 @@
 			children = (
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		EAE575C1278BB37D00D959A0 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				EAE575C8278BB9EF00D959A0 /* Signup */,
+				EAE575C7278BB9E200D959A0 /* Signin */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		EAE575C2278BB46100D959A0 /* SquareButtonView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SquareButtonView;
+			sourceTree = "<group>";
+		};
+		EAE575C3278BB49B00D959A0 /* CheckBoxCell */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CheckBoxCell;
+			sourceTree = "<group>";
+		};
+		EAE575C4278BB5B600D959A0 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EAE575C3278BB49B00D959A0 /* CheckBoxCell */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		EAE575C5278BB5F600D959A0 /* ProfileImageView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ProfileImageView;
+			sourceTree = "<group>";
+		};
+		EAE575C6278BB61F00D959A0 /* CustomTextFieldView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CustomTextFieldView;
+			sourceTree = "<group>";
+		};
+		EAE575C7278BB9E200D959A0 /* Signin */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Signin;
+			sourceTree = "<group>";
+		};
+		EAE575C8278BB9EF00D959A0 /* Signup */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Signup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -226,7 +287,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA14D5192786CE3100EDC892 /* Main.storyboard in Resources */,
 				EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */,
 				EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */,
 			);
@@ -388,7 +448,7 @@
 				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -417,7 +477,7 @@
 				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
