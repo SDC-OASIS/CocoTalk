@@ -9,24 +9,31 @@
 /* Begin PBXBuildFile section */
 		EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */; };
 		EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */; };
-		EA14D4F42786B16C00EDC892 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F32786B16C00EDC892 /* ViewController.swift */; };
+		EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F32786B16C00EDC892 /* SplashViewController.swift */; };
 		EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F82786B16C00EDC892 /* CocoTalk.xcdatamodeld */; };
 		EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FB2786B16E00EDC892 /* Assets.xcassets */; };
 		EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */; };
 		EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */; };
+		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
+		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
+		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
+		EA3F3759278BD00D007957EB /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3758278BD00D007957EB /* RxSwift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
+		EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE575CC278BCA4000D959A0 /* SignupViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		EA14D4EC2786B16C00EDC892 /* CocoTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		EA14D4F32786B16C00EDC892 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EA14D4F32786B16C00EDC892 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		EA14D4F92786B16C00EDC892 /* CocoTalk.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CocoTalk.xcdatamodel; sourceTree = "<group>"; };
 		EA14D4FB2786B16E00EDC892 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
+		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
+		EAE575CC278BCA4000D959A0 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,8 +41,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA3F3759278BD00D007957EB /* RxSwift in Frameworks */,
+				EA3F3757278BD00D007957EB /* RxRelay in Frameworks */,
 				EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */,
 				EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */,
+				EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */,
 				EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -74,8 +84,8 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F375A278BD068007957EB /* Splash */,
 				EAE575C1278BB37D00D959A0 /* Auth */,
-				EA14D4F32786B16C00EDC892 /* ViewController.swift */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -143,6 +153,14 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		EA3F375A278BD068007957EB /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				EA14D4F32786B16C00EDC892 /* SplashViewController.swift */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
 		EAA6A3CF2787C3FB001A7E46 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +179,9 @@
 		EAE575C1278BB37D00D959A0 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				EAE575CB278BC6E600D959A0 /* Password */,
+				EAE575CA278BC6D400D959A0 /* PhoneNumber */,
+				EAE575C9278BC6CE00D959A0 /* Terms */,
 				EAE575C8278BB9EF00D959A0 /* Signup */,
 				EAE575C7278BB9E200D959A0 /* Signin */,
 			);
@@ -206,6 +227,7 @@
 		EAE575C7278BB9E200D959A0 /* Signin */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F3751278BCCDE007957EB /* SigninViewController.swift */,
 			);
 			path = Signin;
 			sourceTree = "<group>";
@@ -213,8 +235,30 @@
 		EAE575C8278BB9EF00D959A0 /* Signup */ = {
 			isa = PBXGroup;
 			children = (
+				EAE575CC278BCA4000D959A0 /* SignupViewController.swift */,
 			);
 			path = Signup;
+			sourceTree = "<group>";
+		};
+		EAE575C9278BC6CE00D959A0 /* Terms */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Terms;
+			sourceTree = "<group>";
+		};
+		EAE575CA278BC6D400D959A0 /* PhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PhoneNumber;
+			sourceTree = "<group>";
+		};
+		EAE575CB278BC6E600D959A0 /* Password */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Password;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,6 +281,9 @@
 				EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */,
 				EAA6A3CA2786CEFE001A7E46 /* SnapKit */,
 				EAA6A3CD2786CF2B001A7E46 /* Then */,
+				EA3F3754278BD00D007957EB /* RxCocoa */,
+				EA3F3756278BD00D007957EB /* RxRelay */,
+				EA3F3758278BD00D007957EB /* RxSwift */,
 			);
 			productName = CocoTalk;
 			productReference = EA14D4EC2786B16C00EDC892 /* CocoTalk.app */;
@@ -267,11 +314,11 @@
 			);
 			mainGroup = EA14D4E32786B16C00EDC892;
 			packageReferences = (
-				EA14D5122786C85B00EDC892 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				EAA6A3CC2786CF2B001A7E46 /* XCRemoteSwiftPackageReference "Then" */,
+				EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = EA14D4ED2786B16C00EDC892 /* Products */;
 			projectDirPath = "";
@@ -299,8 +346,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA14D4F42786B16C00EDC892 /* ViewController.swift in Sources */,
+				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
+				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
+				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
 			);
@@ -518,14 +567,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		EA14D5122786C85B00EDC892 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
 		EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -537,6 +578,14 @@
 		EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
@@ -565,6 +614,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		EA3F3754278BD00D007957EB /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		EA3F3756278BD00D007957EB /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		EA3F3758278BD00D007957EB /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
 		EAA6A3CA2786CEFE001A7E46 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
