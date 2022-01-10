@@ -34,6 +34,12 @@ public class TestController {
         return "touser";
     }
 
+    @GetMapping("/foo")
+    public String foo() { return "foo"; }
+
+    @GetMapping("/bar")
+    public String bar() { return "bar"; }
+
 //    @MessageMapping("/good")
 //    public String handle(String message) {
 //        return message + " - good";
