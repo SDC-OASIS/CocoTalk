@@ -10,8 +10,8 @@ module.exports = {
   rules: {
     "no-console": "off",
     "prettier/prettier": ['error', {
-      "semi": true,
       "useTabs": true,
+      "semi": true,
       "tabWidth": 2,
       "trailingComma": "all",
       "printWidth": 120,
