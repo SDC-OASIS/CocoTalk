@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -31,9 +32,6 @@ public class User extends BaseTime {
     @Column(length = 64)
     private String password;
 
-    @Column(length = 125, unique = true)
-    private String email;
-
     @NotNull
     @Column(length = 20)
     private String name;
@@ -41,6 +39,9 @@ public class User extends BaseTime {
     @NotNull
     @Column(length = 20)
     private String nickname;
+
+    @Column(length = 125, unique = true)
+    private String email;
 
     @NotNull
     @Column(length = 20, unique = true)
@@ -60,7 +61,7 @@ public class User extends BaseTime {
     
     private LocalDateTime loggedinAt; // 최종 접속 기록
 
-    private Date birth;
+    private LocalDate birth;
 
     public void modify(UserModifyRequest request) {
         this.name = request.getName();

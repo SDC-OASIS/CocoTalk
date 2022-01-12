@@ -2,6 +2,7 @@ package com.cocotalk.user.service;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.dto.request.UserModifyRequest;
+import com.cocotalk.user.repository.UserCustomRepositoryImpl;
 import com.cocotalk.user.repository.UserRepository;
 import com.cocotalk.user.support.GlobalError;
 import com.cocotalk.user.support.GlobalException;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final UserCustomRepositoryImpl userCustomRepository;
 
     @Transactional(readOnly = true)
     public List<User> findAll() {

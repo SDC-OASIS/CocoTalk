@@ -34,21 +34,21 @@ public class UserController {
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "유저 ID로 조회")
+    @ApiOperation(value = "유저 id로 조회")
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         User user = userService.findById(id);
         return new ResponseEntity<>(new GlobalResponse<>(userMapper.toDto(user)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "유저 ID로 정보 수정")
+    @ApiOperation(value = "유저 id로 정보 수정")
     @PutMapping("/{id}")
     public ResponseEntity<?> modifyById(@PathVariable Long id, @RequestBody UserModifyRequest request) {
         User modifiedUser = userService.modifyById(id, request);
         return new ResponseEntity<>(new GlobalResponse<>(userMapper.toDto(modifiedUser)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "유저 ID로 삭제")
+    @ApiOperation(value = "유저 id로 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         String cid = userService.deleteById(id);
