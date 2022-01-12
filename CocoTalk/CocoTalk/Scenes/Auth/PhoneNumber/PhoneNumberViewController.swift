@@ -99,7 +99,6 @@ extension PhoneNumberViewController {
         btnConfirm.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.view.endEditing(true)
                 self.confirmModal.isHidden = false
             }).disposed(by: bag)
     }
