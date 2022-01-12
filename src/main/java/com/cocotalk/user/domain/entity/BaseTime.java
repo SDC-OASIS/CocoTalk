@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,10 +18,12 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTime {
     @CreatedDate
-    @Column(name = "createdAt")
+    @NotNull
+    @Column(name = "created_at")
     protected LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "modifiedAt")
-    protected LocalDateTime modifiedAt; // 패스워드 변경 기능 염두
+    @NotNull
+    @Column(name = "modified_at")
+    protected LocalDateTime modifiedAt;
 }
