@@ -17,7 +17,7 @@ class SigninViewController: UIViewController {
     /// CocoTalk 환영 문구
     private let lblWelcome = UILabel().then {
         $0.text = "코코톡을 시작합니다"
-        $0.font = .systemFont(ofSize: 24)
+        $0.font = .systemFont(ofSize: 24, weight: .bold)
     }
     
     /// 로그인 안내 문구
@@ -109,39 +109,27 @@ extension SigninViewController {
             $0.top.equalTo(lblNotice.snp.bottom).offset(30)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(40)
+            $0.height.equalTo(44)
         }
         
         textFieldPassword.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
             $0.top.equalTo(textFieldEmail.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(40)
+            $0.leading.trailing.height.equalTo(textFieldEmail)
         }
         
         btnSignin.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
             $0.top.equalTo(textFieldPassword.snp.bottom).offset(30)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(44)
+            $0.leading.trailing.height.equalTo(textFieldEmail)
         }
         
         btnSignup.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
             $0.top.equalTo(btnSignin.snp.bottom).offset(20)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(44)
+            $0.leading.trailing.height.equalTo(textFieldEmail)
         }
         
         btnFindAccount.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
             $0.top.equalTo(btnSignup.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(44)
+            $0.leading.trailing.height.equalTo(textFieldEmail)
         }
     }
 }

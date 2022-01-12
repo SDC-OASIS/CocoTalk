@@ -30,6 +30,7 @@ class PhoneNumberViewController: UIViewController {
     }
     
     /// 인증 번호 보내기 모달
+    #warning("UIKit 모달로 수정")
     private let confirmModal = ConfirmModalView().then {
         $0.isHidden = true
     }
@@ -69,10 +70,8 @@ extension PhoneNumberViewController {
         }
         
         btnConfirm.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
             $0.top.equalTo(textFieldPhoneNumber.snp.bottom).offset(30)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.leading.trailing.equalTo(textFieldPhoneNumber)
             $0.height.equalTo(44)
         }
         
