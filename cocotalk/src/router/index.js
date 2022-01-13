@@ -1,23 +1,72 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Friends from "../views/Friends.vue";
+import Chats from "../views/Chats.vue";
+import Chat from "@/views/Chat.vue";
+import ChatDefault from "@/views/ChatDefault.vue";
+import Setting from "@/views/Setting.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
 	{
-		path: "/",
-		name: "Home",
-		component: Home,
+		path: "/friends",
+		name: "friends",
+		components: {
+			left: Friends,
+			right: ChatDefault,
+		},
 	},
 	{
-		path: "/about",
-		name: "About",
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ "../views/About.vue"),
+		path: "/chats",
+		name: "chats",
+		components: {
+			left: Chats,
+			right: ChatDefault,
+		},
 	},
+	{
+		path: "/friends/chat/:roomId?",
+		name: "friendsChat",
+		components: {
+			left: Friends,
+			right: Chat,
+		},
+	},
+	{
+		path: "/chatlist/chat/:roomId?",
+		name: "chatsChat",
+		components: {
+			left: Chats,
+			right: Chat,
+		},
+	},
+	{
+		path: "/friends/setting",
+		name: "friendsSetting",
+		components: {
+			left: Friends,
+			right: Setting,
+		},
+	},
+	{
+		path: "/chats/setting",
+		name: "chatsSetting",
+		components: {
+			left: Chats,
+			right: Setting,
+		},
+	},
+	// {
+	// 	path: "/friends/chat/:roomId?",
+	// 	name: "friendList",
+	// 	component: FriendList,
+	// },
+	// {
+	// 	path: "/chatlist/chat/:roomId?",
+	// 	name: "chatList",
+	// 	component: ChatList,
+	// },
 ];
 
 const router = new VueRouter({
