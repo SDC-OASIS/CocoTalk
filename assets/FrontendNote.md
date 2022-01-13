@@ -1,6 +1,6 @@
-html_document  : 
-
-toc: true
+output:
+	html_document  : 
+	toc: true
 
 # Vue.js 필수 기술 살펴보기
 
