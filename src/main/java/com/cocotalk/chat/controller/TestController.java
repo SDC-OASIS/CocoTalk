@@ -1,5 +1,6 @@
 package com.cocotalk.chat.controller;
 
+import com.cocotalk.chat.dto.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -39,6 +41,9 @@ public class TestController {
 
     @GetMapping("/bar")
     public String bar() { return "bar"; }
+
+    @GetMapping("/nobroadcast")
+    public String nobroadcast() { return "nobroadcast"; }
 
 //    @MessageMapping("/good")
 //    public String handle(String message) {
@@ -94,9 +99,51 @@ public class TestController {
         simpMessagingTemplate.convertAndSend("/topic/greet", "[" + now + "]" + greet);
     }
 
+//    @MessageMapping("/good")
+//    @SendToUser("/queue/something")
+//    public String handleSendToUser(@Payload String payload) {
+//        return payload;
+//    }
+
     @MessageMapping("/good")
-    @SendToUser("/queue/something")
-    public String handleSendToUser(@Payload String payload) {
+    public String handle(@Payload String payload, Principal user) {
+        if(payload.equals("error")) {
+            throw new IllegalArgumentException("error 문자열은 취급할 수 없습니다.");
+        }
         return payload;
+    }
+
+    @MessageMapping("/good/template")
+    public void handleTemplate(@Payload String payload, Principal user) {
+        System.out.println(payload);
+        System.out.println(user);
+
+        simpMessagingTemplate.convertAndSendToUser(user.getName(), "/queue/something", payload);
+    }
+
+    @MessageExceptionHandler
+    @SendToUser(destinations = "/queue/errors", broadcast = false)
+    public String handleException(IllegalArgumentException exception) {
+        return exception.getMessage();
+    }
+
+    @GetMapping
+    public String index() {
+        return "index";
+    }
+
+    @MessageMapping("/chat.sendMessage")
+    @SendTo("/topic/public")
+    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+        return chatMessage;
+    }
+
+    @MessageMapping("/chat.addUser")
+    @SendTo("/topic/public")
+    public ChatMessage addUser(@Payload ChatMessage chatMessage,
+                               SimpMessageHeaderAccessor headerAccessor) {
+        // Add username in web socket session
+        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        return chatMessage;
     }
 }

@@ -43,7 +43,7 @@
     let stomp;
     document.addEventListener("DOMContentLoaded", function() {
         // ["websocket", "xhr-streaming", "xhr-polling"]
-        const sock = new SockJS('http://localhost:8080/test', null, {transports: ["xhr-polling"]});
+        const sock = new SockJS('http://localhost:8080/stomp', null, {transports: ["xhr-polling"]});
         stomp = webstomp.over(sock);
         stomp.connect({
             login: "foo"

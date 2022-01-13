@@ -40,37 +40,51 @@
 </div>
 </body>
 <script>
-    let stomp;
+    let stomp1, stomp2;
     document.addEventListener("DOMContentLoaded", function() {
         // ["websocket", "xhr-streaming", "xhr-polling"]
-        const sock = new SockJS('http://localhost:8080/stomp', null, {transports: ["xhr-polling"]});
-        stomp = webstomp.over(sock);
-        stomp.connect({
-            login: "bar"
+        const sock1 = new SockJS('http://localhost:8080/stomp', null, {transports: ["xhr-polling"]});
+        stomp1 = webstomp.over(sock1);
+        stomp1.connect({
+            login: "foo"
         }, function(frame) {
-            console.log('Connected!!');
+            console.log('First Connected!!');
 
-            stomp.subscribe("/user/queue/something", function(frame) {
+            stomp1.subscribe("/user/queue/errors", function(frame) {
                 const messages = document.querySelector("#messages");
                 const message = document.createElement("li");
-                message.innerText = frame.body;
+                message.innerText = frame.body + " - first";
                 messages.appendChild(message)
             });
         });
 
+        // ["websocket", "xhr-streaming", "xhr-polling"]
+        const sock2 = new SockJS('http://localhost:8080/stomp', null, {transports: ["xhr-polling"]});
+        stomp2 = webstomp.over(sock2);
+        stomp2.connect({
+            login: "foo"
+        }, function(frame) {
+            console.log('Second Connected!!');
+
+            stomp2.subscribe("/user/queue/errors", function(frame) {
+                console.log("11");
+                const messages = document.querySelector("#messages");
+                const message = document.createElement("li");
+                message.innerText = frame.body + " - second";
+                messages.appendChild(message)
+            });
+        });
     });
 
-    // 스스로에게만 메시지 전송
     function send() {
         const message = document.querySelector(".message");
-        stomp.send("/simple/good", message.value);
+        stomp1.send("/simple/good", message.value);
         message.value = '';
     }
 
-    // foo 사용자에게 메시지 전송
     function sendOther() {
         const message = document.querySelector(".message");
-        stomp.send("/user/foo/queue/something", message.value);
+        stomp1.send("/user/bar/queue/something", message.value);
         message.value = '';
     }
 </script>
