@@ -40,6 +40,6 @@ export default {
 
 <style scoped>
 .about {
-	background-color: rgb(221, 171, 34);
+	background-color: #e6eede;
 }
 </style>
