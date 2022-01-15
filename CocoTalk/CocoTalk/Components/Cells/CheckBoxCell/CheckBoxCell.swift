@@ -39,7 +39,7 @@ class CheckBoxCell: UITableViewCell {
     // MARK: - Properties
     static let identifier = "CheckBoxCellIdentifier"
     var bag = DisposeBag()
-    var innerBag = DisposeBag()
+    var _bag = DisposeBag()
     var isChecked = false
 
     // MARK: - Lifecycle
@@ -115,7 +115,7 @@ class CheckBoxCell: UITableViewCell {
                 print(destination)
                 print("destination")
             }
-            .disposed(by: innerBag)
+            .disposed(by: _bag)
         }
     }
 }
