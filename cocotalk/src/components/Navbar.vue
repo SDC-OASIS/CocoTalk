@@ -95,4 +95,12 @@ ul.nav li.current span {
 	background: #42652b;
 	height: 33px;
 }
+@media (max-width: 1600px) {
+	.nav-inner-container {
+		width: 520px;
+	}
+	.nav-logo {
+		width: 350px;
+	}
+}
 </style>

@@ -1,4 +1,3 @@
-import { NULL } from "mysql/lib/protocol/constants/types";
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
@@ -8,6 +7,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	plugins: [createPersistedState()],
 	state: {
+		screenInfo: {
+			width: Number,
+		},
 		userInfo: {
 			name: "모코코",
 			statusMessage: "오늘도 좋은 하루",
@@ -26,7 +28,7 @@ export default new Vuex.Store({
 			{
 				name: "고병학",
 				statusMessage: "햇빛이 쨍쨍",
-				profile: NULL,
+				profile: undefined,
 			},
 		],
 		chats: [
@@ -39,10 +41,16 @@ export default new Vuex.Store({
 			state.roomStatus.chatPage = payload.chat;
 			state.roomStatus.roomId = payload.roomId;
 		},
+		GET_SCREEN(state, payload) {
+			state.screenInfo.width = payload.width;
+		},
 	},
 	actions: {
 		changePage: function (context, payload) {
 			context.commit("CHANGE_PAGE", payload);
+		},
+		getScreen: function (context, payload) {
+			context.commit("GET_SCREEN", payload);
 		},
 	},
 	modules: {},
