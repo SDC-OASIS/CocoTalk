@@ -13,8 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomRequest {
-    private String id;
-    private String title;
+    private String name;
     private String img;
     private Short type;
     private List<String> memberName;

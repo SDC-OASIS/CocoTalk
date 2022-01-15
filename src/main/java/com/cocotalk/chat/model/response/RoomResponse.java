@@ -14,9 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomResponse {
     private String id;
-    private String title;
+    private String name;
     private String img;
     private Short type;
+    private List<String> memberName;
     private List<ObjectId> memberPk;
     private List<ObjectId> messagePk;
     private List<ObjectId> noticePk;

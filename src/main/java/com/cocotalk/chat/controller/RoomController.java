@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(value = "/chat/room")
+@RequestMapping(value = "/api/v1/chat/room")
 public class RoomController {
     private final RoomService roomService;
     private final RoomMapper roomMapper;
