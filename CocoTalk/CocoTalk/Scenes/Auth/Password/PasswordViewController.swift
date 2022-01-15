@@ -135,5 +135,14 @@ extension PasswordViewController {
     }
     
     func bindButton() {
+        btnConfirm.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self,
+                      let navigationController = self.navigationController  else {
+                          return
+                      }
+                let vc = NewProfileViewController()
+                navigationController.pushViewController(vc, animated: true)
+            }).disposed(by: bag)
     }
 }
