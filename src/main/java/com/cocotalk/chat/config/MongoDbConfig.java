@@ -2,19 +2,21 @@ package com.cocotalk.chat.config;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
 @Slf4j
 @Getter
 @Configuration
-public class MongoDbConfig extends AbstractReactiveMongoConfiguration {
+@EnableMongoAuditing
+public class MongoDbConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.host}")
     private String host;
 
@@ -38,10 +40,11 @@ public class MongoDbConfig extends AbstractReactiveMongoConfiguration {
         return getDatabase();
     }
 
+
     @Bean
     @Override
-    public MongoClient reactiveMongoClient() {
-        log.info("Creating Reactive Mongodb Client Configuration");
+    public MongoClient mongoClient() {
+        log.info("Creating Mongodb Client Configuration");
 
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(getConnectionString())).build();

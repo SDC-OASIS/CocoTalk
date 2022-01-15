@@ -1,4 +1,4 @@
-package com.cocotalk.chat.dto;
+package com.cocotalk.chat.model;
 
 /**
  * Created by rajeevkumarsingh on 24/07/17.

@@ -1,10 +1,10 @@
 package com.cocotalk.chat.repository;
 
 import com.cocotalk.chat.document.Room;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoomRepository extends ReactiveMongoRepository<Room, String>, ReactiveQuerydslPredicateExecutor<Room> {
+public interface RoomRepository extends MongoRepository<Room, String>, QuerydslPredicateExecutor<Room> {
 }

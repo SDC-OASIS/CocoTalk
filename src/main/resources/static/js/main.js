@@ -10,6 +10,7 @@ var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
 var username = null;
+var roomName = null;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -18,6 +19,7 @@ var colors = [
 
 function connect(event) {
     username = document.querySelector('#name').value.trim();
+    roomName = document.querySelector('#room-name').value.trim();
 
     if(username) {
         usernamePage.classList.add('hidden');
@@ -25,6 +27,7 @@ function connect(event) {
 
         var socket = new SockJS('/stomp');
         stompClient = Stomp.over(socket);
+        // SockJS와 stomp client를 통해 연결을 시도.
 
         stompClient.connect({}, onConnected, onError);
     }
@@ -33,8 +36,8 @@ function connect(event) {
 
 
 function onConnected() {
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    // roomName으로 토픽 구독
+    stompClient.subscribe('/topic/' + roomName, onMessageReceived);
 
     // Tell your username to the server
     stompClient.send("/simple/chat.addUser",

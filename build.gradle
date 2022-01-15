@@ -25,11 +25,6 @@ ext {
 }
 
 dependencies {
-    //Spring Reactive
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'io.projectreactor:reactor-core'
-    implementation 'io.projectreactor.tools:blockhound:1.0.6.RELEASE'
-
     //Spring-Boot MVC
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -49,13 +44,17 @@ dependencies {
 
     //DB
     runtimeOnly 'com.h2database:h2'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.mongodb:mongodb-driver-sync' // driver-sync 하지 않으면 mongoOperation에서 파라미터 생성 불가
 
     //QueryDSL
     implementation 'com.querydsl:querydsl-mongodb'
     implementation 'com.querydsl:querydsl-apt'
+
+    //ObjectMapper
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     // Spring Cloud
     // implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'

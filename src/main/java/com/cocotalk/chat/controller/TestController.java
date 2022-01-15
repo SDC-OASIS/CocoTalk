@@ -1,6 +1,6 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.dto.ChatMessage;
+import com.cocotalk.chat.model.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;

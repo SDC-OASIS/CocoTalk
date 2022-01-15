@@ -1,6 +1,6 @@
 package com.cocotalk.chat.application;
 
-import com.cocotalk.chat.dto.ChatMessage;
+import com.cocotalk.chat.model.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
