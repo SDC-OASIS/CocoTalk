@@ -15,6 +15,7 @@
 		EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */; };
 		EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */; };
 		EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */; };
+		EA22D5342794E29A00E1F39A /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -46,6 +47,7 @@
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthNumberViewController.swift; sourceTree = "<group>"; };
+		EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
@@ -181,6 +183,14 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		EA22D5322794E25500E1F39A /* ProfileCell */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */,
+			);
+			path = ProfileCell;
+			sourceTree = "<group>";
+		};
 		EA3F375A278BD068007957EB /* Splash */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +264,7 @@
 		EAE575C4278BB5B600D959A0 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				EA22D5322794E25500E1F39A /* ProfileCell */,
 				EAE575C3278BB49B00D959A0 /* CheckBoxCell */,
 			);
 			path = Cells;
@@ -417,6 +428,7 @@
 				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
+				EA22D5342794E29A00E1F39A /* ProfileTableViewCell.swift in Sources */,
 				EA3F376D278C6027007957EB /* SquareButton.swift in Sources */,
 				EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */,
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
