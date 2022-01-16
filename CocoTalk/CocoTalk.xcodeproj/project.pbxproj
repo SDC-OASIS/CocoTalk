@@ -14,6 +14,7 @@
 		EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FB2786B16E00EDC892 /* Assets.xcassets */; };
 		EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */; };
 		EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */; };
+		EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -23,9 +24,16 @@
 		EA3F3767278C4145007957EB /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3766278C4145007957EB /* RxGesture */; };
 		EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3768278C5224007957EB /* TermViewModel.swift */; };
 		EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */; };
+		EA3F376D278C6027007957EB /* SquareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376C278C6027007957EB /* SquareButton.swift */; };
+		EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376E278C61E9007957EB /* PasswordViewController.swift */; };
+		EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3771278C623F007957EB /* NewProfileViewController.swift */; };
+		EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
 		EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE575CC278BCA4000D959A0 /* SignupViewController.swift */; };
+		EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */; };
+		EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */; };
+		EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,12 +45,20 @@
 		EA14D4FB2786B16E00EDC892 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
+		EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthNumberViewController.swift; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
 		EA3F3768278C5224007957EB /* TermViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewModel.swift; sourceTree = "<group>"; };
 		EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
+		EA3F376C278C6027007957EB /* SquareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareButton.swift; sourceTree = "<group>"; };
+		EA3F376E278C61E9007957EB /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
+		EA3F3771278C623F007957EB /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
+		EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
 		EAE575CC278BCA4000D959A0 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmModalView.swift; sourceTree = "<group>"; };
+		EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsAuthViewController.swift; sourceTree = "<group>"; };
+		EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +157,7 @@
 		EA14D50B2786C45000EDC892 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -155,6 +172,7 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EAE7F3BA278D0B0A002EB808 /* Modal */,
 				EAE575C4278BB5B600D959A0 /* Cells */,
 				EAE575C6278BB61F00D959A0 /* CustomTextFieldView */,
 				EAE575C5278BB5F600D959A0 /* ProfileImageView */,
@@ -169,6 +187,23 @@
 				EA14D4F32786B16C00EDC892 /* SplashViewController.swift */,
 			);
 			path = Splash;
+			sourceTree = "<group>";
+		};
+		EA3F3770278C622D007957EB /* NewProfile */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F3771278C623F007957EB /* NewProfileViewController.swift */,
+			);
+			path = NewProfile;
+			sourceTree = "<group>";
+		};
+		EA3F3773278C625F007957EB /* EmailAuth */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */,
+				EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */,
+			);
+			path = EmailAuth;
 			sourceTree = "<group>";
 		};
 		EAA6A3CF2787C3FB001A7E46 /* CoreData */ = {
@@ -189,8 +224,10 @@
 		EAE575C1278BB37D00D959A0 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F3773278C625F007957EB /* EmailAuth */,
+				EA3F3770278C622D007957EB /* NewProfile */,
 				EAE575CB278BC6E600D959A0 /* Password */,
-				EAE575CA278BC6D400D959A0 /* PhoneNumber */,
+				EAE575CA278BC6D400D959A0 /* RegisterPhone */,
 				EAE575C9278BC6CE00D959A0 /* Term */,
 				EAE575C8278BB9EF00D959A0 /* Signup */,
 				EAE575C7278BB9E200D959A0 /* Signin */,
@@ -201,6 +238,7 @@
 		EAE575C2278BB46100D959A0 /* SquareButtonView */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F376C278C6027007957EB /* SquareButton.swift */,
 			);
 			path = SquareButtonView;
 			sourceTree = "<group>";
@@ -260,19 +298,29 @@
 			path = Term;
 			sourceTree = "<group>";
 		};
-		EAE575CA278BC6D400D959A0 /* PhoneNumber */ = {
+		EAE575CA278BC6D400D959A0 /* RegisterPhone */ = {
 			isa = PBXGroup;
 			children = (
+				EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */,
 				EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */,
 			);
-			path = PhoneNumber;
+			path = RegisterPhone;
 			sourceTree = "<group>";
 		};
 		EAE575CB278BC6E600D959A0 /* Password */ = {
 			isa = PBXGroup;
 			children = (
+				EA3F376E278C61E9007957EB /* PasswordViewController.swift */,
 			);
 			path = Password;
+			sourceTree = "<group>";
+		};
+		EAE7F3BA278D0B0A002EB808 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */,
+			);
+			path = Modal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -363,13 +411,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */,
+				EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */,
+				EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */,
 				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
+				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
+				EA3F376D278C6027007957EB /* SquareButton.swift in Sources */,
+				EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */,
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
+				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
 				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
+				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
+				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
 			);

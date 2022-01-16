@@ -26,6 +26,7 @@ class SmsAuthViewController: UIViewController {
         $0.placeholder = "인증번호 4자리"
         $0.textAlignment = .center
         $0.font = .systemFont(ofSize: 24)
+        $0.textContentType = .oneTimeCode
         $0.keyboardType = .numberPad
     }
     
