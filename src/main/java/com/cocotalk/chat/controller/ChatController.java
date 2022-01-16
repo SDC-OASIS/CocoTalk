@@ -11,10 +11,7 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -23,7 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class TestController {
+public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @GetMapping("/chat")
@@ -132,15 +129,17 @@ public class TestController {
         return "index";
     }
 
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+    @MessageMapping("/chat.sendMessage/{roomId}")
+    @SendTo("/topic/{roomId}")
+    public ChatMessage sendMessage(@Payload ChatMessage chatMessage,
+                                   @PathVariable String roomId) {
         return chatMessage;
     }
 
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
+    @MessageMapping("/chat.addUser/{roomId}")
+    @SendTo("/topic/{roomId}")
     public ChatMessage addUser(@Payload ChatMessage chatMessage,
+                               @PathVariable String roomId,
                                SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());

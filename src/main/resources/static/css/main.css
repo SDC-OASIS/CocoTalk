@@ -98,6 +98,10 @@ button.primary {
     color: #fff;
 }
 
+button.exit {
+    margin: 2rem 0;
+}
+
 button.accent {
     background-color: #ff4743;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);

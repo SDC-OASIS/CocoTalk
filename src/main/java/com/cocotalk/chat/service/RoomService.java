@@ -17,16 +17,16 @@ public class RoomService {
 
     QRoom qRoom = QRoom.room;
 
-    public Optional<Room> findPrivateRoom(String me, String friend) {
-        Predicate myNamePredicate = qRoom.memberName.contains(me);
-        Predicate friendNamePredicate = qRoom.memberName.contains(friend);
-        Predicate sizePredicate = qRoom.memberName.size().eq(2);
-        Predicate predicate = ((BooleanExpression) myNamePredicate).and(
-                friendNamePredicate).and(sizePredicate);
-        return roomRepository.findOne(predicate);
+    public Room createRoom(Room room){
+        return roomRepository.save(room);
     }
 
-    public Room createPrivateRoom(Room privateRoom){
-        return roomRepository.save(privateRoom);
+    public Optional<Room> findPrivateRoom(Long myid, Long friendid) {
+        Predicate myIdPredicate = qRoom.members.get(0).userId.in(myid, friendid);
+        Predicate friendIdPredicate = qRoom.members.get(1).userId.in(myid, friendid);
+        Predicate sizePredicate = qRoom.members.size().eq(2);
+        Predicate predicate = ((BooleanExpression) myIdPredicate).and(
+                friendIdPredicate).and(sizePredicate);
+        return roomRepository.findOne(predicate);
     }
 }

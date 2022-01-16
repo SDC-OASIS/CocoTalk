@@ -25,9 +25,7 @@ public class Room {
 
     private Short type; // 0=갠톡, 1=단톡, 2=오픈톡
 
-    private List<String> memberName;
-
-    private List<ObjectId> memberPk;
+    private List<RoomMember> members;
 
     private List<ObjectId> messagePk;
 

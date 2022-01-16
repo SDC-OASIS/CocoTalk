@@ -18,22 +18,22 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/chat/room")
+@RequestMapping(value = "/api/v1/chat/rooms")
 public class RoomController {
     private final RoomService roomService;
     private final RoomMapper roomMapper;
 
-    @GetMapping("/private")
-    public ResponseEntity<?> findPrivateRoom(@RequestParam String me, @RequestParam String friend){
-        Optional<Room> roomOptional = roomService.findPrivateRoom(me, friend);
-        RoomResponse data = roomOptional.map(roomMapper::toDto).orElse(null);
-        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<?> createRoom(@RequestBody RoomRequest request){
+        Room room = roomService.createRoom(roomMapper.toEntity(request));
+        RoomResponse data = roomMapper.toDto(room);
+        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 
-    @PostMapping("/private")
-    public ResponseEntity<?> createPrivateRoom(@RequestBody RoomRequest request){
-        Room privateRoom = roomService.createPrivateRoom(roomMapper.toEntity(request));
-        RoomResponse data = roomMapper.toDto(privateRoom);
-        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
+    @GetMapping("/private")
+    public ResponseEntity<?> findPrivateRoom(@RequestParam Long myid, @RequestParam Long friendid){
+        Optional<Room> roomOptional = roomService.findPrivateRoom(myid, friendid);
+        RoomResponse data = roomOptional.map(roomMapper::toDto).orElse(null);
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 }

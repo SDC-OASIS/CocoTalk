@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -16,17 +15,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Document(collection = "room_member")
 public class RoomMember {
-    @Id
-    private String id;
+//    @Id
+//    private String id;
 
-    @DBRef(lazy = true)
-    private Room room;
+//    @DBRef(lazy = true)
+//    private Room room;
 
-    private Long userId;
-
-    private LocalDateTime accessedAt;
-
-    private LocalDateTime joinedAt;
+    private Long userId; // MySQL userId
 
     private Boolean isJoining;
+
+    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
+    private LocalDateTime accessedAt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
+    private LocalDateTime joinedAt;
 }

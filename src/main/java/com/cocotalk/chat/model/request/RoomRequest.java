@@ -1,5 +1,6 @@
 package com.cocotalk.chat.model.request;
 
+import com.cocotalk.chat.document.RoomMember;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +17,7 @@ public class RoomRequest {
     private String name;
     private String img;
     private Short type;
-    private List<String> memberName;
-    private List<ObjectId> memberPk;
+    private List<RoomMember> members;
     private List<ObjectId> messagePk;
     private List<ObjectId> noticePk;
 }

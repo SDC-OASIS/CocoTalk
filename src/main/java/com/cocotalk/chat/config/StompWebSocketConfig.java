@@ -1,12 +1,11 @@
 package com.cocotalk.chat.config;
 
-import com.cocotalk.chat.application.AuthenticationChannelInterceptor;
+import com.cocotalk.chat.application.InboundChannelInterceptor;
+import com.cocotalk.chat.application.OutboundChannelInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.support.ExecutorChannelInterceptor;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -15,6 +14,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    // private final AuthenticationChannelInterceptor authenticationChannelInterceptor;
+    private final InboundChannelInterceptor inboundChannelInterceptor;
+    private final OutboundChannelInterceptor outboundChannelInterceptor;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // /example은 WebSocket 또는 SockJS Client가 웹 소켓 핸드셰이크 커넥션을 생성할 경로이다.
@@ -23,7 +26,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // 페이지에서 GET /info 404 에러가 발생한다. 그래서 아래와 같이 2개의 계층으로
         // 분리하고 origins를 개발 도메인으로 변경하니 잘 동작하였다.
         registry.addEndpoint("/stomp")
-                .setAllowedOrigins("*")
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 
@@ -38,6 +41,20 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new AuthenticationChannelInterceptor());
+        registration.interceptors(inboundChannelInterceptor);
+        // registration.interceptors(authenticationChannelInterceptor);
     }
+
+    @Override
+    public void configureClientOutboundChannel(ChannelRegistration registration) {
+        registration.interceptors(outboundChannelInterceptor);
+    }
+
+//    @Override
+//    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+//        // 시간과 보내는 버퍼 사이즈 제한
+//        registration.setSendTimeLimit(15 * 1000).setSendBufferSizeLimit(512 * 1024);
+//        //전송받고 보낼 메시지 사이즈 제한
+//        registration.setMessageSizeLimit(128 * 1024);
+//    }
 }
