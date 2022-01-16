@@ -36,7 +36,7 @@ export default {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-	color: #2c3e50;
+	color: #000000;
 	background-color: #fffacd;
 	width: 100vw;
 	height: 100vh;
@@ -47,7 +47,7 @@ export default {
 	justify-content: center;
 }
 .left-container {
-	width: 400px;
+	width: 380px;
 	height: 100vh;
 }
 .right-container {

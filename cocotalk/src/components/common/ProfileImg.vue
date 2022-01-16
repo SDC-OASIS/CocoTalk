@@ -1,5 +1,5 @@
 <template>
-	<div class="profile-img-container">
+	<div class="box">
 		<!-- <img :src="imgUrl" :style="{ width: width }" @error="$event.target.src = 'https://ifh.cc/g/pLtMj2.png'" /> -->
 		<svg :width="width" :height="width" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<defs>
@@ -38,10 +38,10 @@ export default {
 		height: String,
 	},
 	methods: {
-		noProfile() {
-			const profileImg = document.getElementById("profileImg");
-			profileImg.setAttribute("href", "https://ifh.cc/g/pLtMj2.png");
-		},
+		// noProfile() {
+		// 	const profileImg = document.getElementById("profileImg");
+		// 	profileImg.setAttribute("href", "https://ifh.cc/g/pLtMj2.png");
+		// },
 	},
 };
 </script>

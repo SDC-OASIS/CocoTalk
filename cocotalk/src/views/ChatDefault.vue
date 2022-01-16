@@ -1,9 +1,11 @@
 <template>
-	<div class="about">
-		<h1>채팅시작해주세요!!!!.</h1>
-		<button @click="changeNow">kkk</button>
+	<div class="chat-default-container row">
+		<img src="../images/chat_default_mococo.png" alt="" />
+		<div class="break"></div>
+		<span style="">채팅을 시작해보세요.</span>
+		<!-- <button @click="changeNow">kkk</button>
 		{{ this.$route.params.roomId }}
-		{{ roomStatus }}
+		{{ roomStatus }} -->
 	</div>
 </template>
 
@@ -39,7 +41,20 @@ export default {
 </script>
 
 <style scoped>
-.about {
+.chat-default-container {
 	background-color: #e6eede;
+	height: 100vh;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+.chat-default-container > img {
+	padding-right: 50px;
+}
+.chat-default-container > span {
+	padding-bottom: 150px;
+	font-size: 25px;
+	font-weight: bold;
+	color: #90949b;
 }
 </style>
