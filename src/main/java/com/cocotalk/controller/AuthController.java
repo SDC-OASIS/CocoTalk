@@ -21,15 +21,28 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * 로그인 API [POST] /api/auth/signin
+     *
+     * @return ResponseEntity<Response<TokenDto>>
+     */
     @PostMapping("/signin")
     public ResponseEntity<Response<TokenDto>> signin(@RequestBody @Valid SigninInput signinInput) {
-//        String token = authService.login(loginRequest);
-//        LoginResponse loginResponse = LoginResponse.toDto(token);
         return authService.signin(signinInput);
     }
 
     /**
-     * 회원가입 API [POST] /api/users/signup
+     * 로그아웃 API [POST] /api/auth/signout
+     *
+     * @return ResponseEntity<Response<Object>>
+     */
+    @GetMapping("/signout")
+    public ResponseEntity<Response<Object>> signout() {
+        return authService.signout();
+    }
+
+    /**
+     * 회원가입 API [POST] /api/auth/signup
      *
      * @return ResponseEntity<Response<SignUpOutput>>
      */
@@ -42,9 +55,9 @@ public class AuthController {
 
 
     /**
-     * ACESS TOKEN 재발급 API [POST] /api/users/reissue
+     * ACESS TOKEN 재발급 API [POST] /api/auth/reissue
      *
-     * @return ResponseEntity<Response<ReissueOutput>>
+     * @return ResponseEntity<Response<TokenDto>>
      */
     // Body
     @GetMapping("/reissue")

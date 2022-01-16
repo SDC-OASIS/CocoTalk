@@ -154,7 +154,9 @@ public class AuthService {
     }
 
     public ResponseEntity<Response<Object>> signout() {
-        redisService.deleteData(jwtService.getRefreshToken());
+        String refreshToken = jwtService.getRefreshToken();
+        if(ValidationCheck.isValid(refreshToken))
+            redisService.deleteData(refreshToken);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(SUCCESS));
     }
 
@@ -169,6 +171,8 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<>(UNAUTHORIZED_REFRESH_TOKEN));
         try{
             String userCid = jwtService.getClaims(refreshToken).getBody().get("userCid", String.class);
+            //redis에서 기존 refresh token 삭제
+            redisService.deleteData(refreshToken);
             TokenDto token = TokenDto.builder()
                     .accessToken(jwtService.createAccessToken(userCid))
                     .refreshToken(jwtService.createRefreshToken(userCid))
