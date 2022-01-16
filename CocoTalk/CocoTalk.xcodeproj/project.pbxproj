@@ -9,26 +9,58 @@
 /* Begin PBXBuildFile section */
 		EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */; };
 		EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */; };
-		EA14D4F42786B16C00EDC892 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F32786B16C00EDC892 /* ViewController.swift */; };
+		EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F32786B16C00EDC892 /* SplashViewController.swift */; };
 		EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F82786B16C00EDC892 /* CocoTalk.xcdatamodeld */; };
 		EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FB2786B16E00EDC892 /* Assets.xcassets */; };
 		EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */; };
 		EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */; };
-		EA14D5192786CE3100EDC892 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D5182786CE3100EDC892 /* Main.storyboard */; };
+		EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */; };
+		EA22D5342794E29A00E1F39A /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */; };
+		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
+		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
+		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
+		EA3F3759278BD00D007957EB /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3758278BD00D007957EB /* RxSwift */; };
+		EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F375D278BF472007957EB /* CheckBoxCell.swift */; };
+		EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F375F278BFCCD007957EB /* TermViewController.swift */; };
+		EA3F3767278C4145007957EB /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3766278C4145007957EB /* RxGesture */; };
+		EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3768278C5224007957EB /* TermViewModel.swift */; };
+		EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */; };
+		EA3F376D278C6027007957EB /* SquareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376C278C6027007957EB /* SquareButton.swift */; };
+		EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376E278C61E9007957EB /* PasswordViewController.swift */; };
+		EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3771278C623F007957EB /* NewProfileViewController.swift */; };
+		EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
+		EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE575CC278BCA4000D959A0 /* SignupViewController.swift */; };
+		EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */; };
+		EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */; };
+		EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		EA14D4EC2786B16C00EDC892 /* CocoTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		EA14D4F32786B16C00EDC892 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EA14D4F32786B16C00EDC892 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		EA14D4F92786B16C00EDC892 /* CocoTalk.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CocoTalk.xcdatamodel; sourceTree = "<group>"; };
 		EA14D4FB2786B16E00EDC892 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
-		EA14D5182786CE3100EDC892 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthNumberViewController.swift; sourceTree = "<group>"; };
+		EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
+		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
+		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
+		EA3F3768278C5224007957EB /* TermViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewModel.swift; sourceTree = "<group>"; };
+		EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
+		EA3F376C278C6027007957EB /* SquareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareButton.swift; sourceTree = "<group>"; };
+		EA3F376E278C61E9007957EB /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
+		EA3F3771278C623F007957EB /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
+		EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
+		EAE575CC278BCA4000D959A0 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmModalView.swift; sourceTree = "<group>"; };
+		EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsAuthViewController.swift; sourceTree = "<group>"; };
+		EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,9 +68,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA3F3759278BD00D007957EB /* RxSwift in Frameworks */,
+				EA3F3757278BD00D007957EB /* RxRelay in Frameworks */,
 				EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */,
 				EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */,
+				EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */,
 				EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */,
+				EA3F3767278C4145007957EB /* RxGesture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,7 +112,8 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				EA14D4F32786B16C00EDC892 /* ViewController.swift */,
+				EA3F375A278BD068007957EB /* Splash */,
+				EAE575C1278BB37D00D959A0 /* Auth */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -84,7 +121,6 @@
 		EA14D5072786BF0500EDC892 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EA14D5182786CE3100EDC892 /* Main.storyboard */,
 				EA14D4FB2786B16E00EDC892 /* Assets.xcassets */,
 				EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */,
 				EA14D5002786B16E00EDC892 /* Info.plist */,
@@ -123,6 +159,7 @@
 		EA14D50B2786C45000EDC892 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -137,8 +174,46 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EAE7F3BA278D0B0A002EB808 /* Modal */,
+				EAE575C4278BB5B600D959A0 /* Cells */,
+				EAE575C6278BB61F00D959A0 /* CustomTextFieldView */,
+				EAE575C5278BB5F600D959A0 /* ProfileImageView */,
+				EAE575C2278BB46100D959A0 /* SquareButtonView */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		EA22D5322794E25500E1F39A /* ProfileCell */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */,
+			);
+			path = ProfileCell;
+			sourceTree = "<group>";
+		};
+		EA3F375A278BD068007957EB /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				EA14D4F32786B16C00EDC892 /* SplashViewController.swift */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
+		EA3F3770278C622D007957EB /* NewProfile */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F3771278C623F007957EB /* NewProfileViewController.swift */,
+			);
+			path = NewProfile;
+			sourceTree = "<group>";
+		};
+		EA3F3773278C625F007957EB /* EmailAuth */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */,
+				EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */,
+			);
+			path = EmailAuth;
 			sourceTree = "<group>";
 		};
 		EAA6A3CF2787C3FB001A7E46 /* CoreData */ = {
@@ -154,6 +229,109 @@
 			children = (
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		EAE575C1278BB37D00D959A0 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F3773278C625F007957EB /* EmailAuth */,
+				EA3F3770278C622D007957EB /* NewProfile */,
+				EAE575CB278BC6E600D959A0 /* Password */,
+				EAE575CA278BC6D400D959A0 /* RegisterPhone */,
+				EAE575C9278BC6CE00D959A0 /* Term */,
+				EAE575C8278BB9EF00D959A0 /* Signup */,
+				EAE575C7278BB9E200D959A0 /* Signin */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		EAE575C2278BB46100D959A0 /* SquareButtonView */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F376C278C6027007957EB /* SquareButton.swift */,
+			);
+			path = SquareButtonView;
+			sourceTree = "<group>";
+		};
+		EAE575C3278BB49B00D959A0 /* CheckBoxCell */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F375D278BF472007957EB /* CheckBoxCell.swift */,
+			);
+			path = CheckBoxCell;
+			sourceTree = "<group>";
+		};
+		EAE575C4278BB5B600D959A0 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D5322794E25500E1F39A /* ProfileCell */,
+				EAE575C3278BB49B00D959A0 /* CheckBoxCell */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		EAE575C5278BB5F600D959A0 /* ProfileImageView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ProfileImageView;
+			sourceTree = "<group>";
+		};
+		EAE575C6278BB61F00D959A0 /* CustomTextFieldView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CustomTextFieldView;
+			sourceTree = "<group>";
+		};
+		EAE575C7278BB9E200D959A0 /* Signin */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F3751278BCCDE007957EB /* SigninViewController.swift */,
+			);
+			path = Signin;
+			sourceTree = "<group>";
+		};
+		EAE575C8278BB9EF00D959A0 /* Signup */ = {
+			isa = PBXGroup;
+			children = (
+				EAE575CC278BCA4000D959A0 /* SignupViewController.swift */,
+			);
+			path = Signup;
+			sourceTree = "<group>";
+		};
+		EAE575C9278BC6CE00D959A0 /* Term */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F375F278BFCCD007957EB /* TermViewController.swift */,
+				EA3F3768278C5224007957EB /* TermViewModel.swift */,
+			);
+			path = Term;
+			sourceTree = "<group>";
+		};
+		EAE575CA278BC6D400D959A0 /* RegisterPhone */ = {
+			isa = PBXGroup;
+			children = (
+				EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */,
+				EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */,
+			);
+			path = RegisterPhone;
+			sourceTree = "<group>";
+		};
+		EAE575CB278BC6E600D959A0 /* Password */ = {
+			isa = PBXGroup;
+			children = (
+				EA3F376E278C61E9007957EB /* PasswordViewController.swift */,
+			);
+			path = Password;
+			sourceTree = "<group>";
+		};
+		EAE7F3BA278D0B0A002EB808 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */,
+			);
+			path = Modal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,6 +354,10 @@
 				EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */,
 				EAA6A3CA2786CEFE001A7E46 /* SnapKit */,
 				EAA6A3CD2786CF2B001A7E46 /* Then */,
+				EA3F3754278BD00D007957EB /* RxCocoa */,
+				EA3F3756278BD00D007957EB /* RxRelay */,
+				EA3F3758278BD00D007957EB /* RxSwift */,
+				EA3F3766278C4145007957EB /* RxGesture */,
 			);
 			productName = CocoTalk;
 			productReference = EA14D4EC2786B16C00EDC892 /* CocoTalk.app */;
@@ -206,11 +388,12 @@
 			);
 			mainGroup = EA14D4E32786B16C00EDC892;
 			packageReferences = (
-				EA14D5122786C85B00EDC892 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				EAA6A3CC2786CF2B001A7E46 /* XCRemoteSwiftPackageReference "Then" */,
+				EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */,
+				EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */,
 			);
 			productRefGroup = EA14D4ED2786B16C00EDC892 /* Products */;
 			projectDirPath = "";
@@ -226,7 +409,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA14D5192786CE3100EDC892 /* Main.storyboard in Resources */,
 				EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */,
 				EA14D4FC2786B16E00EDC892 /* Assets.xcassets in Resources */,
 			);
@@ -239,9 +421,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA14D4F42786B16C00EDC892 /* ViewController.swift in Sources */,
+				EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */,
+				EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */,
+				EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */,
+				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
+				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
+				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
+				EA22D5342794E29A00E1F39A /* ProfileTableViewCell.swift in Sources */,
+				EA3F376D278C6027007957EB /* SquareButton.swift in Sources */,
+				EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */,
+				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
+				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
+				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
+				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
+				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
+				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
+				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,7 +585,7 @@
 				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -417,7 +614,7 @@
 				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -458,14 +655,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		EA14D5122786C85B00EDC892 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
 		EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -480,6 +669,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
+			};
+		};
+		EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
 			};
 		};
 		EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
@@ -505,6 +710,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		EA3F3754278BD00D007957EB /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		EA3F3756278BD00D007957EB /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		EA3F3758278BD00D007957EB /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		EA3F3766278C4145007957EB /* RxGesture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */;
+			productName = RxGesture;
 		};
 		EAA6A3CA2786CEFE001A7E46 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,24 +1,32 @@
 //
-//  ViewController.swift
+//  SignupViewController.swift
 //  CocoTalk
 //
-//  Created by byunghak on 2022/01/06.
+//  Created by byunghak on 2022/01/10.
 //
 
 import UIKit
 import SnapKit
 import Then
+import RxSwift
 
-class ViewController: UIViewController {
+class SignupViewController: UIViewController {
     
     // MARK: - UI Properties
     private let lblHello = UILabel().then {
-        $0.text = "HELLO WORLD!!"
+        $0.text = "Sign up"
         $0.font = .systemFont(ofSize: 36)
     }
-
+    
+    private let tableView = UITableView()
+    
+    // MARK: - Propeties
+    
+    
+    // MARK: - Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .white
         
         view.addSubview(lblHello)
@@ -26,7 +34,6 @@ class ViewController: UIViewController {
             $0.center.equalToSuperview()
         }
     }
-
-
+    
+    // MARK: - Helper
 }
-
