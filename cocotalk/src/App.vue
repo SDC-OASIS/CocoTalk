@@ -9,11 +9,23 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import Navbar from "@/components/Navbar.vue";
 export default {
 	name: "App",
 	components: {
 		Navbar,
+	},
+	created() {
+		const width = screen.width;
+		this.$store.dispatch("getScreen", { width: width });
+	},
+	computed: {
+		...mapState({
+			screenInfo: (state) => state.roomStatus,
+			friends: (state) => state.friends,
+		}),
 	},
 };
 </script>
@@ -24,7 +36,7 @@ export default {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-	color: #2c3e50;
+	color: #000000;
 	background-color: #fffacd;
 	width: 100vw;
 	height: 100vh;
@@ -35,11 +47,21 @@ export default {
 	justify-content: center;
 }
 .left-container {
-	width: 400px;
+	width: 380px;
 	height: 100vh;
 }
 .right-container {
 	width: 650px;
 	height: 100vh;
+}
+@media (max-width: 1600px) {
+	.left-container {
+		width: 330px;
+		height: 100vh;
+	}
+	.right-container {
+		width: 520px;
+		height: 100vh;
+	}
 }
 </style>

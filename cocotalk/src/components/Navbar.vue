@@ -43,12 +43,13 @@ export default {};
 .nav-outer-container {
 	justify-content: center;
 	background: #749f58;
+	display: float;
 }
 .nav-inner-container {
 	width: 650px;
 }
 .nav-logo {
-	width: 400px;
+	width: 425px;
 }
 .nav-logo img {
 	width: 50px;
@@ -70,9 +71,15 @@ ul.nav a {
 	font-size: 30px;
 	line-height: 28px;
 }
-@media (max-width: 1000px) {
+@media (max-width: 1600px) {
+	.nav-inner-container {
+		width: 520px;
+	}
+	.nav-logo {
+		width: 360px;
+	}
 	ul.nav a {
-		padding: 14px 40px;
+		padding: 14px 30px;
 	}
 }
 @media (max-width: 850px) {

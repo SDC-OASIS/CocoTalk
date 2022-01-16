@@ -9,16 +9,13 @@
 		</div>
 		<div class="myprofile row">
 			<ProfileImg :imgUrl="userInfo.profile" width="70px" />
-			<div class="myprofile-info-container">
-				<div style="font-weight: bold">{{ userInfo.name }}</div>
-				<div>{{ userInfo.statusMessage }}</div>
-			</div>
+			<FriendListUserInfo :userInfo="userInfo" />
 		</div>
-		<div v-for="(friend, idx) in friends" :key="idx">
-			<div class="friend-container">
+		<div class="friend-list-container">
+			<span>친구 - 200</span>
+			<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
 				<ProfileImg :imgUrl="friend.profile" width="50px" />
-				<div>{{ friend.name }}</div>
-				<div>{{ friend.statusMessage }}</div>
+				<FriendListUserInfo :userInfo="friend" />
 			</div>
 		</div>
 		{{ roomStatus }}
@@ -28,11 +25,13 @@
 <script>
 import { mapState } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
+import FriendListUserInfo from "../components/friends/FriendListUserInfo.vue";
 
 export default {
 	name: "FriendList",
 	components: {
 		ProfileImg,
+		FriendListUserInfo,
 	},
 	created() {
 		console.log("친구목록");
@@ -71,7 +70,7 @@ export default {
 	justify-content: space-between;
 	align-items: center;
 }
-.header span {
+.header > span {
 	color: #749f58;
 	font-size: 28px;
 	font-weight: bold;
@@ -82,7 +81,7 @@ export default {
 	margin-right: 30px;
 }
 .myprofile {
-	padding: 25px 0;
+	padding: 20px 0;
 	margin-right: 30px;
 	border-bottom: 2px solid #9eac95;
 	align-items: center;
@@ -91,13 +90,18 @@ export default {
 .myprofile > div {
 	display: inline-block;
 }
-.myprofile-info-container {
-	display: inline-block;
-}
-.myprofile-info-container > div {
-	padding-left: 30px;
-	font-size: 17px;
+
+.friend-list-container {
+	padding: 20px 0;
 	text-align: left;
+}
+.friend-list-container > span {
+	margin-bottom: 100px;
+	/* 왜 안되지! */
+}
+.friend-container {
+	padding: 7px 0;
+	align-items: center;
 }
 .friend-container img {
 	width: 50px;

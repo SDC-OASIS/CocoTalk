@@ -1,5 +1,5 @@
 <template>
-	<div class="profile-img-container">
+	<div class="box">
 		<!-- <img :src="imgUrl" :style="{ width: width }" @error="$event.target.src = 'https://ifh.cc/g/pLtMj2.png'" /> -->
 		<svg :width="width" :height="width" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<defs>
@@ -12,12 +12,12 @@
 				</clipPath>
 			</defs>
 			<image
+				id="profileImg"
 				width="100%"
 				height="100%"
 				preserveAspectRatio="xMidYMid slice"
 				clip-path="url(#clipSquircle)"
 				:xlink:href="imgUrl"
-				@error="$event.target.href = 'https://ifh.cc/g/pLtMj2.png'"
 			/>
 		</svg>
 	</div>
@@ -36,6 +36,12 @@ export default {
 			default: "50px",
 		},
 		height: String,
+	},
+	methods: {
+		// noProfile() {
+		// 	const profileImg = document.getElementById("profileImg");
+		// 	profileImg.setAttribute("href", "https://ifh.cc/g/pLtMj2.png");
+		// },
 	},
 };
 </script>
