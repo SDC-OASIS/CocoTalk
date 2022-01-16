@@ -345,6 +345,69 @@ https://velog.io/@roghabo/Squircle-%EC%8A%A4%EC%BF%BC%ED%81%B4
 
 
 
+### felx box에서 한줄 띄기
+
+https://tobiasahlin.com/blog/flexbox-break-to-new-row/
+
+```vue
+<div class="chat-default-container row">
+    <div>
+        <img src="../images/chat_default_mococo.png" alt="" />
+    </div>
+    <div class="break"></div>
+    <div class="padding-bottom: 100px;">채팅을 시작해보세요.</div>
+</div>
+```
+
+
+
+### position: fixed 사용시 부모 width 받아오지 못함
+
+> width: inherit 으로 해결
+
+https://stackoverflow.com/questions/5873565/set-width-of-a-position-fixed-div-relative-to-parent-div
+
+```css
+.message-input-container {
+	position: fixed;
+	background-color: #ffffff;
+	height: 10vh;
+	bottom: 0px;
+	width: inherit;
+}
+```
+
+
+
+### textarea
+
+https://velog.io/@leemember/CSS-textarea-%ED%81%AC%EA%B8%B0-%EA%B3%A0%EC%A0%95%ED%95%98%EA%B8%B0
+
+
+
+## template
+
+### 반복문
+
+> 반복문을 돌리는 template이 item에 해당한다. 이를 감싸려면 반복문 밖에 컨테이너 선언.
+
+```vue
+<div class="friend-list-container">
+	<div class="friend-container" v-for="(friend, idx) in friends" :key="idx">
+		<ProfileImg :imgUrl="friend.profile" width="50px" />
+		<FriendListUserInfo :userInfo="friend" />
+	</div>
+</div>
+```
+
+
+
+### 재사용 공통 컴퍼넌트 만들기
+
+https://kr.vuejs.org/v2/guide/class-and-style.html
+
+
+
 ## 기능 구현
 
 ### 이미지 자르기 구현
