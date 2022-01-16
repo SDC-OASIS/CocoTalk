@@ -48,6 +48,7 @@ class NewProfileViewController: UIViewController {
     
     
     // MARK: - Properties
+    let bag = DisposeBag()
     
     // MARK: - Life cycle
     override func viewDidLoad() {
@@ -117,6 +118,15 @@ extension NewProfileViewController {
     }
     
     func bindButton() {
-        
+        btnConfirm.rx.tap
+            .subscribe(onNext:{ [weak self] _ in
+                guard let self = self,
+                      let navigationController = self.navigationController else {
+                          return
+                      }
+                
+                let vc = EmailRegisterViewController()
+                navigationController.pushViewController(vc, animated: true)
+            }).disposed(by: bag)
     }
 }
