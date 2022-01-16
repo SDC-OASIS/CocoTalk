@@ -28,8 +28,7 @@ public class SignupInput {
     private String phone;
     private String email;
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
+    private String provider;
     @NotNull
     private String providerId;
     @NotNull

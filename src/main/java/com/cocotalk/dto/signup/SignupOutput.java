@@ -1,6 +1,7 @@
 package com.cocotalk.dto.signup;
 
 import com.cocotalk.entity.Provider;
+import com.cocotalk.entity.User;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -23,4 +24,18 @@ public class SignupOutput {
     private Provider provider;
     @Enumerated(EnumType.STRING)
     private String providerId;
+
+    public static SignupOutput toDto(User user){
+        return SignupOutput.builder()
+                .cid(user.getCid())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .birth(user.getBirth())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .provider(user.getProvider())
+                .providerId(user.getProviderId())
+                .build();
+
+    }
 }

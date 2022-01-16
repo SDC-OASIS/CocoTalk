@@ -5,6 +5,7 @@ import com.cocotalk.dto.common.TokenDto;
 import com.cocotalk.dto.signin.SigninInput;
 import com.cocotalk.dto.signup.SignupInput;
 import com.cocotalk.dto.signup.SignupOutput;
+import com.cocotalk.entity.Provider;
 import com.cocotalk.entity.User;
 import com.cocotalk.repository.UserRepository;
 import com.cocotalk.response.Response;
@@ -54,7 +55,7 @@ public class AuthService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(FAILED_TO_SIGN_IN));
             }
         } catch (Exception e) {
-            log.error("[users/signin/post] database error", e);
+            log.error("[auth/signin/post] database error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(DATABASE_ERROR));
         }
 
@@ -90,15 +91,31 @@ public class AuthService {
         if (signupInput == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(NO_VALUES));
         }
-        if (!ValidationCheck.isValid(signupInput.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_EMAIL_VALUE));
+        if (!ValidationCheck.isValid(signupInput.getCid())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_COCOTALK_ID));
         }
         if (!ValidationCheck.isValid(signupInput.getPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_PASSWORD_VALUE));
         }
+        if (!ValidationCheck.isValid(signupInput.getName())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_NAME_VALUE));
+        }
         if (!ValidationCheck.isValid(signupInput.getNickname())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_NICKNAME_VALUE));
         }
+        if (!ValidationCheck.isValid(signupInput.getPhone())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_PHONE_VALUE));
+        }
+        if (!ValidationCheck.isValidProvider(signupInput.getProvider())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_PROVIDER_VALUE));
+        }
+        if (!ValidationCheck.isValid(signupInput.getProviderId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_PROVIDER_ID_VALUE));
+        }
+        if (signupInput.getStatus() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(BAD_STATUS_VALUE));
+        }
+
         // 2. 유저 생성
         User user;
         try {
@@ -126,7 +143,7 @@ public class AuthService {
                     .birth(signupInput.getBirth())
                     .phone(phone)
                     .email(email)
-                    .provider(signupInput.getProvider())
+                    .provider(Provider.valueOf(signupInput.getProvider()))
                     .providerId(signupInput.getProviderId())
                     .status(signupInput.getStatus())
                     .profile(signupInput.getProfile())
@@ -135,10 +152,9 @@ public class AuthService {
             user = userRepository.save(user);
 
         } catch (Exception e) {
-            log.error("[users/signup/post] database error", e);
+            log.error("[auth/signup/post] database error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(DATABASE_ERROR));
         }
-
         // 3. 결과 return
         SignupOutput signupOutput = SignupOutput.builder()
                 .cid(user.getCid())
@@ -150,6 +166,7 @@ public class AuthService {
                 .provider(user.getProvider())
                 .providerId(user.getProviderId())
                 .build();
+//        SignupOutput signupOutput = SignupOutput.toDto(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(signupOutput, CREATED_USER));
     }
 
