@@ -43,7 +43,8 @@ function connect(event) {
 
 async function onConnected() {
     try {
-        let friendid = Math.floor(Math.random() * 1000001) + 2;
+        // let friendid = Math.floor(Math.random() * 1000001) + 2;
+        let friendid = 2;
         room = await axios.get(domain + "/rooms/private?myid=" + myid + "&friendid=" + friendid);
         if(!room.data.data) {
             room = await axios.post(domain + "/rooms", {
