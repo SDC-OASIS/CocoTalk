@@ -57,26 +57,33 @@ export default {
 		console.log("채팅나와라");
 	},
 	computed: {
-		...mapState({
-			userInfo: (state) => state.userInfo,
-			roomStatus: (state) => state.roomStatus,
-			friends: (state) => state.friends,
-			chattings: (state) => state.chattings,
-		}),
+		...mapState("chat", ["roomStatus", "friends", "chattings"]),
+		...mapState("userStore", ["userInfo"]),
+
+		// ...mapState({
+		// 	userInfo: (state) => state.userInfo,
+		// 	roomStatus: (state) => state.roomStatus,
+		// 	friends: (state) => state.friends,
+		// 	chattings: (state) => state.chattings,
+		// }),
 	},
 	watch: {
 		"$route.params.roomId": function () {
 			console.log("채팅을 시작합니다.");
 			// vuex에 마지막 페이지 방문 저장
-			this.$store.dispatch("changePage", {
-				chat: this.$route.params.chat,
-				roomId: this.$route.params.roomId,
-			});
+			this.$store.dispatch(
+				"chat/changePage",
+				{
+					chat: this.$route.params.chat,
+					roomId: this.$route.params.roomId,
+				},
+				{ root: true },
+			);
 		},
 	},
 	methods: {
 		changeNow() {
-			this.$store.dispatch("changePage", { chat: "chat", roomId: "4" });
+			this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" }, { root: true });
 		},
 	},
 };
