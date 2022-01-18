@@ -23,10 +23,13 @@ export default {
 	},
 
 	computed: {
-		...mapState({
-			roomStatus: (state) => state.roomStatus,
-			friends: (state) => state.friends,
-		}),
+		...mapState("chat", ["roomStatus"]),
+		...mapState("friends", ["friends"]),
+
+		// ...mapState({
+		// 	roomStatus: (state) => state.roomStatus,
+		// 	friends: (state) => state.friends,
+		// }),
 	},
 	watch: {
 		"$route.params.roomId": function () {
@@ -38,7 +41,7 @@ export default {
 			// console.log(window.location.pathname.split("/")[1]); = fiends같은 앞머리 가져오는 방법 연구
 		},
 		changeNow() {
-			this.$store.dispatch("changePage", { chat: "chat", roomId: "4" });
+			this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" });
 		},
 	},
 };

@@ -1,5 +1,5 @@
 <template>
-	<div class="box">
+	<div class="box" @click="showProfile">
 		<!-- <img :src="imgUrl" :style="{ width: width }" @error="$event.target.src = 'https://ifh.cc/g/pLtMj2.png'" /> -->
 		<svg :width="width" :height="width" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<defs>
@@ -8,7 +8,7 @@
 					<use xlink:href="#shapeSquircle" />
 				</clipPath>
 			</defs>
-			<image onClick='afiseaza_indicatie($i, \"$indicatii[$i]\")' id="profileImg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipSquircle)" :xlink:href="imgUrl" />
+			<image id="profileImg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipSquircle)" :xlink:href="imgUrl" />
 		</svg>
 	</div>
 </template>
@@ -28,13 +28,13 @@ export default {
 		height: String,
 	},
 	methods: {
+		showProfile() {
+			console.log("조회");
+		},
 		// noProfile() {
 		// 	const profileImg = document.getElementById("profileImg");
 		// 	profileImg.setAttribute("href", "https://ifh.cc/g/pLtMj2.png");
 		// },
-		showProfile() {
-			console.log("조회");
-		},
 	},
 	created() {},
 };

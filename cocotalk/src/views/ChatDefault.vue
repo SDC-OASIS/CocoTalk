@@ -22,10 +22,13 @@ export default {
 		console.log("채팅을 시작해주세요");
 	},
 	computed: {
-		...mapState({
-			roomStatus: (state) => state.roomStatus,
-			friends: (state) => state.friends,
-		}),
+		...mapState("chat", ["roomStatus"]),
+		...mapState("chat", ["friends"]),
+
+		// ...mapState({
+		// 	roomStatus: (state) => state.roomStatus,
+		// 	friends: (state) => state.friends,
+		// }),
 	},
 	watch: {
 		"$route.params.roomId": function () {
@@ -34,7 +37,7 @@ export default {
 	},
 	methods: {
 		changeNow() {
-			this.$store.dispatch("changePage", { chat: "chat", roomId: "4" });
+			this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" });
 		},
 	},
 };

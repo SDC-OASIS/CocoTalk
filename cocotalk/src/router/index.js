@@ -34,7 +34,7 @@ const routes = [
 		},
 	},
 	{
-		path: "/friends/chat/:roomId?",
+		path: "/friends/:chat/:roomId?",
 		name: "friendsChat",
 		components: {
 			left: Friends,
@@ -42,7 +42,7 @@ const routes = [
 		},
 	},
 	{
-		path: "/chats/chat/:roomId?",
+		path: "/chats/:chat/:roomId?",
 		name: "chatsChat",
 		components: {
 			left: Chats,

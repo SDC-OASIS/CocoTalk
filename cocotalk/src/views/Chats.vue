@@ -50,10 +50,13 @@ export default {
 		console.log(this.$route.params);
 	},
 	computed: {
-		...mapState({
-			roomStatus: (state) => state.roomStatus,
-			chats: (state) => state.chats,
-		}),
+		...mapState("chat", ["roomStatus"]),
+		...mapState("chat", ["chats"]),
+
+		// ...mapState({
+		// 	roomStatus: (state) => state.roomStatus,
+		// 	chats: (state) => state.chats,
+		// }),
 	},
 	methods: {
 		goChat(roomId) {

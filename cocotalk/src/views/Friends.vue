@@ -8,14 +8,13 @@
 			</div>
 		</div>
 		<div class="myprofile row">
-			<div id="d" class="d" @Click="showProfile">d</div>
 			<ProfileImg :imgUrl="userInfo.profile" :width="width" />
 			<FriendListUserInfo :userInfo="userInfo" />
 		</div>
 		<div class="friend-list-container">
 			<span>친구 - 200</span>
 			<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
-				<ProfileImg :imgUrl="friend.profile" width="50px" @click.self="showProfile" />
+				<ProfileImg :imgUrl="friend.profile" width="50px" />
 				<FriendListUserInfo :userInfo="friend" />
 			</div>
 		</div>
@@ -47,12 +46,17 @@ export default {
 		}
 	},
 	computed: {
-		...mapState({
-			roomStatus: (state) => state.roomStatus,
-			friends: (state) => state.friends,
-			userInfo: (state) => state.userInfo,
-			screenInfo: (state) => state.screenInfo,
-		}),
+		...mapState("chat", ["roomStatus"]),
+		...mapState("chat", ["friends"]),
+		...mapState("userStore", ["userInfo"]),
+		...mapState("userStore", ["screenInfo"]),
+
+		// ...mapState({
+		// 	roomStatus: (state) => state.roomStatus,
+		// 	friends: (state) => state.friends,
+		// 	userInfo: (state) => state.userInfo,
+		// 	screenInfo: (state) => state.screenInfo,
+		// }),
 	},
 	methods: {
 		noImage(e) {
