@@ -24,7 +24,7 @@ class ProfileTableViewCell: UITableViewCell {
     private let stackView = UIStackView().then {
         $0.axis = .vertical
         $0.alignment = .leading
-        $0.spacing = 4
+        $0.spacing = 2
     }
     
     /// 이름
@@ -37,7 +37,7 @@ class ProfileTableViewCell: UITableViewCell {
     
     /// 상태 메시지
     private let lblBio = UILabel().then {
-        $0.font = .systemFont(ofSize: 12)
+        $0.font = .systemFont(ofSize: 14)
         $0.textAlignment = .natural
         $0.textColor = .secondaryLabel
         $0.numberOfLines = 1
@@ -60,6 +60,11 @@ class ProfileTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+    }
+    
+    #warning("이미지 재사용을 위한 처리 필요")
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
 
     // MARK: - Helper

@@ -42,6 +42,7 @@ class SplashViewController: UIViewController {
 
     // MARK: - Helper
     #warning("로그인 여부에 따라 뷰컨트롤러 다르게 주기")
+    #warning("UserDefault로 확인")
     private func move2root() {
 //        let signInVC = SigninViewController()
 //        let root = UINavigationController(rootViewController: signInVC)

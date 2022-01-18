@@ -25,6 +25,10 @@
 		EA22D5472795925700E1F39A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EA22D5462795925700E1F39A /* Kingfisher */; };
 		EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5482796388500E1F39A /* ProfileModalViewController.swift */; };
 		EA22D54C27963D0F00E1F39A /* ProfileModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D54B27963D0F00E1F39A /* ProfileModalViewModel.swift */; };
+		EA22D54F27967C1500E1F39A /* ChatRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D54E27967C1500E1F39A /* ChatRoomListViewController.swift */; };
+		EA22D55127967C2F00E1F39A /* ChatRoomListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55027967C2F00E1F39A /* ChatRoomListViewModel.swift */; };
+		EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55327967CED00E1F39A /* ChatRoomCell.swift */; };
+		EA22D5562796816D00E1F39A /* ModelChatRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5552796816D00E1F39A /* ModelChatRoom.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -64,6 +68,10 @@
 		EA22D5432795511800E1F39A /* MyProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileCell.swift; sourceTree = "<group>"; };
 		EA22D5482796388500E1F39A /* ProfileModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModalViewController.swift; sourceTree = "<group>"; };
 		EA22D54B27963D0F00E1F39A /* ProfileModalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModalViewModel.swift; sourceTree = "<group>"; };
+		EA22D54E27967C1500E1F39A /* ChatRoomListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomListViewController.swift; sourceTree = "<group>"; };
+		EA22D55027967C2F00E1F39A /* ChatRoomListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomListViewModel.swift; sourceTree = "<group>"; };
+		EA22D55327967CED00E1F39A /* ChatRoomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomCell.swift; sourceTree = "<group>"; };
+		EA22D5552796816D00E1F39A /* ModelChatRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelChatRoom.swift; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
@@ -128,9 +136,9 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				EA22D54A27963CF500E1F39A /* Common */,
 				EA22D53C2794F7D400E1F39A /* Root */,
 				EA22D5392794F76D00E1F39A /* FriendList */,
+				EA22D54D27967BF700E1F39A /* ChatRoomList */,
 				EA3F375A278BD068007957EB /* Splash */,
 				EAE575C1278BB37D00D959A0 /* Auth */,
 			);
@@ -187,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				EA22D541279544E100E1F39A /* ModelProfile.swift */,
+				EA22D5552796816D00E1F39A /* ModelChatRoom.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -229,13 +238,30 @@
 			path = Root;
 			sourceTree = "<group>";
 		};
-		EA22D54A27963CF500E1F39A /* Common */ = {
+		EA22D54A27963CF500E1F39A /* ProfileModal */ = {
 			isa = PBXGroup;
 			children = (
 				EA22D5482796388500E1F39A /* ProfileModalViewController.swift */,
 				EA22D54B27963D0F00E1F39A /* ProfileModalViewModel.swift */,
 			);
-			path = Common;
+			path = ProfileModal;
+			sourceTree = "<group>";
+		};
+		EA22D54D27967BF700E1F39A /* ChatRoomList */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D54E27967C1500E1F39A /* ChatRoomListViewController.swift */,
+				EA22D55027967C2F00E1F39A /* ChatRoomListViewModel.swift */,
+			);
+			path = ChatRoomList;
+			sourceTree = "<group>";
+		};
+		EA22D55227967CCB00E1F39A /* ChatRoomCell */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D55327967CED00E1F39A /* ChatRoomCell.swift */,
+			);
+			path = ChatRoomCell;
 			sourceTree = "<group>";
 		};
 		EA3F375A278BD068007957EB /* Splash */ = {
@@ -310,6 +336,7 @@
 		EAE575C4278BB5B600D959A0 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				EA22D55227967CCB00E1F39A /* ChatRoomCell */,
 				EA22D5322794E25500E1F39A /* ProfileCell */,
 				EAE575C3278BB49B00D959A0 /* CheckBoxCell */,
 			);
@@ -377,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */,
+				EA22D54A27963CF500E1F39A /* ProfileModal */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -482,6 +510,7 @@
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
 				EA22D5382794E76E00E1F39A /* ProfileImageView.swift in Sources */,
+				EA22D54F27967C1500E1F39A /* ChatRoomListViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
 				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
 				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
@@ -491,10 +520,13 @@
 				EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */,
 				EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
+				EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
 				EA22D542279544E100E1F39A /* ModelProfile.swift in Sources */,
+				EA22D5562796816D00E1F39A /* ModelChatRoom.swift in Sources */,
+				EA22D55127967C2F00E1F39A /* ChatRoomListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

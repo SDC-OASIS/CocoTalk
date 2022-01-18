@@ -62,6 +62,11 @@ class MyProfileCell: UITableViewCell {
     }
 
     // MARK: - Helper
+    #warning("이미지 재사용을 위한 처리 필요")
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
+    
     private func setUI() {
         stackView.addArrangedSubview(lblName)
         contentView.addSubview(ivProfile)

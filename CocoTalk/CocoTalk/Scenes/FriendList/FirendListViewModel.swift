@@ -44,13 +44,8 @@ class FriendListViewModel {
     }
     
     init() {
-        for i in 0..<40 {
-            print(i)
-            if i % 2 == 0 {
-                input.profileList.append(ModelProfile(id: i, name: UUID().uuidString.split(separator: "-")[0].description, bio: "\(i)호기 입니다. 안녕하세요~~! 😀 솰라솰라솰라솰라솰라솰라솰라솰라솰라솰라", profileImageUrl: ""))
-            } else {
-                input.profileList.append(ModelProfile(id: i, name: UUID().uuidString.split(separator: "-")[0].description, bio: "", profileImageUrl: ""))
-            }
+        for _ in 0..<40 {
+            input.profileList.append(ModelProfile.createRandomProfile())
         }
     }
 }

@@ -111,7 +111,7 @@ class ProfileModalViewController: UIViewController {
                 })
             }
         case .ended:
-            if viewTranslation.y < UIScreen.main.bounds.height/2 {
+            if viewTranslation.y < UIScreen.main.bounds.height/3 {
                 UIView.animate(withDuration: 0.1, animations: { [weak self] in
                     guard let self = self else { return }
                     self.view.transform = .identity
