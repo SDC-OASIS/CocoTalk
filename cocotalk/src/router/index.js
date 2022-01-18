@@ -34,22 +34,6 @@ const routes = [
 		},
 	},
 	{
-		path: "/friends/:chat/:roomId?",
-		name: "friendsChat",
-		components: {
-			left: Friends,
-			right: Chat,
-		},
-	},
-	{
-		path: "/chats/:chat/:roomId?",
-		name: "chatsChat",
-		components: {
-			left: Chats,
-			right: Chat,
-		},
-	},
-	{
 		path: "/friends/setting",
 		name: "friendsSetting",
 		components: {
@@ -65,6 +49,24 @@ const routes = [
 			right: Setting,
 		},
 	},
+	{
+		path: "/friends/:chat/:roomId?",
+		name: "friendsChat",
+		components: {
+			left: Friends,
+			right: Chat,
+		},
+	},
+	{
+		path: "/chats/:chat/:roomId?",
+		name: "chatsChat",
+		components: {
+			left: Chats,
+			right: Chat,
+		},
+	},
+
+	// },
 	// {
 	// 	path: "/friends/chat/:roomId?",
 	// 	name: "friendList",
