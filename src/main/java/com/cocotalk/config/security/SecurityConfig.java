@@ -27,13 +27,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
 
-    /*
-     * 스프링 시큐리티가 사용자를 인증하는 방법이 담긴 객체.
-     */
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-    }
+//    /*
+//     * 스프링 시큐리티가 사용자를 인증하는 방법이 담긴 객체.
+//     */
+//    @Override
+//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(customUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+//    }
 
     /*
      * 스프링 시큐리티 규칙
@@ -46,16 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable() // csrf 보안 토큰 disable처리.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 역시 사용하지 않습니다.
                 .and().authorizeRequests() // 요청에 대한 사용권한 체크
-                .antMatchers("/api/auth/signup").permitAll()
-                .antMatchers("/api/auth/signin").permitAll()
-                .antMatchers("/api/auth/signout").permitAll()
-                .antMatchers("/api/auth/reissue").permitAll()
-                .antMatchers("/api/auth/email/issue").permitAll()
-                .antMatchers("/api/auth/email/validation").permitAll()
+                .antMatchers(
+                        "/v2/**",
+                        "/webjars/**",
+                        "/swagger**",
+                        "/swagger-resources/**").permitAll()
+                .antMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint()).and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
-        // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class); // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
     }
 
     // CORS 허용 적용
@@ -78,4 +77,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
