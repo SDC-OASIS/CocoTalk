@@ -13,12 +13,10 @@ import RxSwift
 class NewProfileViewController: UIViewController {
     
     // MARK: - UI Properties
-    
-    private let ivMask = UIImageView(image: UIImage(named: "squircle_mask")!)
     /// 프로필 이미지 버튼
     /// 1. 앨범에서 선택
     /// 2. 기본 이미지로 설정
-    private let ivProfile = UIImageView(image: UIImage(named: "profile_camera")!)
+    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_camera")!)
     
     /// 이름 텍스트 필드
     private let textFieldUsername = UITextField().then {
@@ -59,11 +57,7 @@ class NewProfileViewController: UIViewController {
         configureSubviews()
         bindRx()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        ivMask.frame = ivProfile.bounds
-    }
+
     // MARK: - Helper
 }
 
@@ -81,7 +75,6 @@ extension NewProfileViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
             $0.width.height.equalTo(100)
         }
-        ivProfile.mask = ivMask
         
         textFieldUsername.snp.makeConstraints {
             $0.centerX.equalToSuperview()

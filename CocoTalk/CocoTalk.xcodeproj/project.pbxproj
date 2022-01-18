@@ -15,7 +15,16 @@
 		EA14D4FF2786B16E00EDC892 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA14D4FD2786B16E00EDC892 /* LaunchScreen.storyboard */; };
 		EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EA14D5162786CA8800EDC892 /* IQKeyboardManagerSwift */; };
 		EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */; };
-		EA22D5342794E29A00E1F39A /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */; };
+		EA22D5362794E4FD00E1F39A /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5352794E4FD00E1F39A /* ProfileTableViewCell.swift */; };
+		EA22D5382794E76E00E1F39A /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5372794E76E00E1F39A /* ProfileImageView.swift */; };
+		EA22D53B2794F7CF00E1F39A /* FriendListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D53A2794F7CF00E1F39A /* FriendListViewController.swift */; };
+		EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D53D2794F7E100E1F39A /* RootTabBarController.swift */; };
+		EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D53F279544A100E1F39A /* FirendListViewModel.swift */; };
+		EA22D542279544E100E1F39A /* ModelProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D541279544E100E1F39A /* ModelProfile.swift */; };
+		EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5432795511800E1F39A /* MyProfileCell.swift */; };
+		EA22D5472795925700E1F39A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EA22D5462795925700E1F39A /* Kingfisher */; };
+		EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5482796388500E1F39A /* ProfileModalViewController.swift */; };
+		EA22D54C27963D0F00E1F39A /* ProfileModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D54B27963D0F00E1F39A /* ProfileModalViewModel.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -25,7 +34,6 @@
 		EA3F3767278C4145007957EB /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3766278C4145007957EB /* RxGesture */; };
 		EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3768278C5224007957EB /* TermViewModel.swift */; };
 		EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */; };
-		EA3F376D278C6027007957EB /* SquareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376C278C6027007957EB /* SquareButton.swift */; };
 		EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376E278C61E9007957EB /* PasswordViewController.swift */; };
 		EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3771278C623F007957EB /* NewProfileViewController.swift */; };
 		EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */; };
@@ -47,13 +55,20 @@
 		EA14D4FE2786B16E00EDC892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA14D5002786B16E00EDC892 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CocoTalk/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA22D5302793D9CC00E1F39A /* EmailAuthNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthNumberViewController.swift; sourceTree = "<group>"; };
-		EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		EA22D5352794E4FD00E1F39A /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		EA22D5372794E76E00E1F39A /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
+		EA22D53A2794F7CF00E1F39A /* FriendListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListViewController.swift; sourceTree = "<group>"; };
+		EA22D53D2794F7E100E1F39A /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
+		EA22D53F279544A100E1F39A /* FirendListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirendListViewModel.swift; sourceTree = "<group>"; };
+		EA22D541279544E100E1F39A /* ModelProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelProfile.swift; sourceTree = "<group>"; };
+		EA22D5432795511800E1F39A /* MyProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileCell.swift; sourceTree = "<group>"; };
+		EA22D5482796388500E1F39A /* ProfileModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModalViewController.swift; sourceTree = "<group>"; };
+		EA22D54B27963D0F00E1F39A /* ProfileModalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModalViewModel.swift; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
 		EA3F3768278C5224007957EB /* TermViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewModel.swift; sourceTree = "<group>"; };
 		EA3F376A278C5FAB007957EB /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
-		EA3F376C278C6027007957EB /* SquareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareButton.swift; sourceTree = "<group>"; };
 		EA3F376E278C61E9007957EB /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		EA3F3771278C623F007957EB /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
 		EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +87,7 @@
 				EA3F3757278BD00D007957EB /* RxRelay in Frameworks */,
 				EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */,
 				EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */,
+				EA22D5472795925700E1F39A /* Kingfisher in Frameworks */,
 				EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */,
 				EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */,
 				EA3F3767278C4145007957EB /* RxGesture in Frameworks */,
@@ -112,6 +128,9 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				EA22D54A27963CF500E1F39A /* Common */,
+				EA22D53C2794F7D400E1F39A /* Root */,
+				EA22D5392794F76D00E1F39A /* FriendList */,
 				EA3F375A278BD068007957EB /* Splash */,
 				EAE575C1278BB37D00D959A0 /* Auth */,
 			);
@@ -167,6 +186,7 @@
 		EA14D50C2786C4AA00EDC892 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				EA22D541279544E100E1F39A /* ModelProfile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -186,9 +206,36 @@
 		EA22D5322794E25500E1F39A /* ProfileCell */ = {
 			isa = PBXGroup;
 			children = (
-				EA22D5332794E29A00E1F39A /* ProfileTableViewCell.swift */,
+				EA22D5432795511800E1F39A /* MyProfileCell.swift */,
+				EA22D5352794E4FD00E1F39A /* ProfileTableViewCell.swift */,
 			);
 			path = ProfileCell;
+			sourceTree = "<group>";
+		};
+		EA22D5392794F76D00E1F39A /* FriendList */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D53A2794F7CF00E1F39A /* FriendListViewController.swift */,
+				EA22D53F279544A100E1F39A /* FirendListViewModel.swift */,
+			);
+			path = FriendList;
+			sourceTree = "<group>";
+		};
+		EA22D53C2794F7D400E1F39A /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D53D2794F7E100E1F39A /* RootTabBarController.swift */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		EA22D54A27963CF500E1F39A /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D5482796388500E1F39A /* ProfileModalViewController.swift */,
+				EA22D54B27963D0F00E1F39A /* ProfileModalViewModel.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		EA3F375A278BD068007957EB /* Splash */ = {
@@ -248,7 +295,6 @@
 		EAE575C2278BB46100D959A0 /* SquareButtonView */ = {
 			isa = PBXGroup;
 			children = (
-				EA3F376C278C6027007957EB /* SquareButton.swift */,
 			);
 			path = SquareButtonView;
 			sourceTree = "<group>";
@@ -273,6 +319,7 @@
 		EAE575C5278BB5F600D959A0 /* ProfileImageView */ = {
 			isa = PBXGroup;
 			children = (
+				EA22D5372794E76E00E1F39A /* ProfileImageView.swift */,
 			);
 			path = ProfileImageView;
 			sourceTree = "<group>";
@@ -358,6 +405,7 @@
 				EA3F3756278BD00D007957EB /* RxRelay */,
 				EA3F3758278BD00D007957EB /* RxSwift */,
 				EA3F3766278C4145007957EB /* RxGesture */,
+				EA22D5462795925700E1F39A /* Kingfisher */,
 			);
 			productName = CocoTalk;
 			productReference = EA14D4EC2786B16C00EDC892 /* CocoTalk.app */;
@@ -388,12 +436,12 @@
 			);
 			mainGroup = EA14D4E32786B16C00EDC892;
 			packageReferences = (
-				EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				EAA6A3C92786CEFE001A7E46 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				EAA6A3CC2786CF2B001A7E46 /* XCRemoteSwiftPackageReference "Then" */,
 				EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */,
+				EA22D5452795925700E1F39A /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = EA14D4ED2786B16C00EDC892 /* Products */;
 			projectDirPath = "";
@@ -421,6 +469,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA22D53B2794F7CF00E1F39A /* FriendListViewController.swift in Sources */,
 				EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */,
 				EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */,
 				EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */,
@@ -428,18 +477,24 @@
 				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
-				EA22D5342794E29A00E1F39A /* ProfileTableViewCell.swift in Sources */,
-				EA3F376D278C6027007957EB /* SquareButton.swift in Sources */,
+				EA22D5362794E4FD00E1F39A /* ProfileTableViewCell.swift in Sources */,
 				EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */,
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
+				EA22D5382794E76E00E1F39A /* ProfileImageView.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
 				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
 				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
+				EA22D54C27963D0F00E1F39A /* ProfileModalViewModel.swift in Sources */,
 				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
+				EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */,
+				EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */,
+				EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
+				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
+				EA22D542279544E100E1F39A /* ModelProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,20 +710,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		EA14D5142786C8A200EDC892 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.0.0;
-			};
-		};
 		EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
+			};
+		};
+		EA22D5452795925700E1F39A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
 			};
 		};
 		EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */ = {
@@ -710,6 +765,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA14D5152786CA8800EDC892 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		EA22D5462795925700E1F39A /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA22D5452795925700E1F39A /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		EA3F3754278BD00D007957EB /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
