@@ -13,8 +13,8 @@
 
 <script>
 import { mapState } from "vuex";
-
 import Navbar from "@/components/Navbar.vue";
+
 export default {
 	name: "App",
 	data() {
@@ -27,17 +27,20 @@ export default {
 	},
 	created() {
 		const width = screen.width;
-		this.$store.dispatch("getScreen", { width: width });
+		this.$store.dispatch("userStore/getScreen", { width: width });
 		// 로그인 페이지에서는 navbar 안보이게 만들기
 		if (window.location.pathname == "/") {
 			this.nav = false;
 		}
 	},
 	computed: {
-		...mapState({
-			screenInfo: (state) => state.roomStatus,
-			friends: (state) => state.friends,
-		}),
+		...mapState("userStore", ["screenInfo"]),
+		...mapState("chat", ["friends"]),
+
+		// ...mapState(userStore, {
+		// 	screenInfo: (state) => state.roomStatus,
+		// 	friends: (state) => state.friends,
+		// }),
 	},
 };
 </script>
