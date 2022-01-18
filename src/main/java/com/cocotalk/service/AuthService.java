@@ -173,8 +173,8 @@ public class AuthService {
             emailOutput = IssueOutput.builder().expirationDate(expirationDate).build();
             mailSender.send(message);
 
-            // 2. redis에 코드 기록
-            redisService.setDataExpire(issueInput.getEmail(), generatedString, mailCodeExp);
+            // 2. redis에 code 기록
+            redisService.setDataExpire(generatedString, issueInput.getEmail(), mailCodeExp);
 
         } catch (Exception e) {
             log.error("[auth/email/post] send email error", e);
@@ -183,7 +183,6 @@ public class AuthService {
         // 3. 결과 return
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(emailOutput, SUCCESS));
     }
-
 
     public ResponseEntity<Response<Boolean>> checkMail(ValidationInput validationInput) {
         String code = redisService.getData(validationInput.getEmail());
