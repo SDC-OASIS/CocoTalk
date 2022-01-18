@@ -36,7 +36,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+	data() {
+		return {
+			pathname: "",
+		};
+	},
+};
 </script>
 
 <style scoped>
