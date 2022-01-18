@@ -43,11 +43,13 @@ class SplashViewController: UIViewController {
     // MARK: - Helper
     #warning("로그인 여부에 따라 뷰컨트롤러 다르게 주기")
     private func move2root() {
-        let signInVC = SigninViewController()
-        let nav = UINavigationController(rootViewController: signInVC)
+//        let signInVC = SigninViewController()
+//        let root = UINavigationController(rootViewController: signInVC)
+        
+        let root = RootTabBarController()
         
         setNeedsStatusBarAppearanceUpdate()
-        view.window?.rootViewController = nav
+        view.window?.rootViewController = root
         view.window?.makeKeyAndVisible()
     }
 
