@@ -1,6 +1,8 @@
 package com.cocotalk.chat.model.request;
 
 import com.cocotalk.chat.document.RoomMember;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,9 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomRequest {
     private String name;
+
     private String img;
+
     private Short type;
+
     private List<RoomMember> members;
-    private List<ObjectId> messagePk;
-    private List<ObjectId> noticePk;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    private List<ObjectId> messageIds;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    private List<ObjectId> noticeIds;
 }

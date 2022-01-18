@@ -1,6 +1,6 @@
 package com.cocotalk.chat.application;
 
-import com.cocotalk.chat.model.ChatMessage;
+import com.cocotalk.chat.document.ChatMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -82,13 +82,14 @@ public class WebSocketEventListener {
         String stringPayload = new String(payload);
         log.info("SessionDisconnectEvent - payload: " + stringPayload);
 
-        String username = (String) accessor.getSessionAttributes().get("username");
-        if(username != null) {
-            log.info("User Disconnected - " + username);
+        Long userId = (Long) accessor.getSessionAttributes().get("userId");
+        if(userId != null) {
+            log.info("User Disconnected - userId = " + userId);
 
-            ChatMessage chatMessage = new ChatMessage();
-            chatMessage.setType(ChatMessage.MessageType.LEAVE);
-            chatMessage.setSender(username);
+            ChatMessage chatMessage = ChatMessage.builder()
+                    .type(2)
+                    .userId(userId)
+                    .build();
 
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }

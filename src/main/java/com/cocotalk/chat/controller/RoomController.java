@@ -31,8 +31,8 @@ public class RoomController {
     }
 
     @GetMapping("/private")
-    public ResponseEntity<?> findPrivateRoom(@RequestParam Long myid, @RequestParam Long friendid){
-        Optional<Room> roomOptional = roomService.findPrivateRoom(myid, friendid);
+    public ResponseEntity<?> findPrivateRoom(@RequestParam Long userid, @RequestParam Long friendid){
+        Optional<Room> roomOptional = roomService.findPrivateRoom(userid, friendid);
         RoomResponse data = roomOptional.map(roomMapper::toDto).orElse(null);
         return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }

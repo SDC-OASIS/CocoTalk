@@ -13,6 +13,7 @@ import org.mapstruct.ReportingPolicy;
 )
 
 public interface RoomMapper {
+
     RoomResponse toDto(Room room);
 
 //    @Mapping(target = "memberPK", ignore = true)

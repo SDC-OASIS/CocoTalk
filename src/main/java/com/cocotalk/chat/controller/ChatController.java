@@ -1,51 +1,57 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.model.ChatMessage;
+import com.cocotalk.chat.document.ChatMessage;
+import com.cocotalk.chat.model.vo.ChatMessageVo;
+import com.cocotalk.chat.service.ChatMessageService;
+import com.cocotalk.chat.service.RoomService;
+import com.cocotalk.chat.utils.mapper.ChatMessageMapper;
+import com.cocotalk.chat.utils.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ChatMessageService chatMessageService;
+    private final ChatMessageMapper chatMessageMapper;
+    private final RoomService roomService;
+    private final RoomMapper roomMapper;
 
-    @GetMapping("/chat")
-    public String chatTest(){
-        return "chat";
+    @GetMapping
+    public String index() {
+        return "index";
     }
 
-    @GetMapping("/touser")
-    public String toUserTest(){
-        return "touser";
+    @MessageMapping("/chat.sendMessage/{roomId}")
+    @SendTo("/topic/{roomId}")
+    public ChatMessage sendMessage(@Payload ChatMessageVo chatMessageVo,
+                                   @PathVariable String roomId) {
+        ChatMessage chatMessage = chatMessageMapper.toEntity(chatMessageVo);
+        chatMessageService.save(chatMessage);
+        return chatMessage;
     }
 
-    @GetMapping("/foo")
-    public String foo() { return "foo"; }
-
-    @GetMapping("/bar")
-    public String bar() { return "bar"; }
-
-    @GetMapping("/nobroadcast")
-    public String nobroadcast() { return "nobroadcast"; }
-
-//    @MessageMapping("/good")
-//    public String handle(String message) {
-//        return message + " - good";
-//    }
+    @MessageMapping("/chat.addUser/{roomId}")
+    @SendTo("/topic/{roomId}")
+    public ChatMessage addUser(@Payload ChatMessage chatMessage,
+                               @PathVariable String roomId,
+                               SimpMessageHeaderAccessor headerAccessor) {
+        // Add username in web socket session
+        headerAccessor.getSessionAttributes().put("userId", chatMessage.getUserId());
+        return chatMessage;
+    }
 
     @MessageMapping("/good/{id}")
     public String handle(Message message, MessageHeaders messageHeaders,
@@ -54,7 +60,7 @@ public class ChatController {
                          @Header("destination") String destination, @Headers Map<String, String> headers,
                          @DestinationVariable String id) {
 
-        System.out.println("---- Message ----");
+        System.out.println("---- ChatMessage ----");
         System.out.println(message);
 
         System.out.println("---- MessageHeaders ----");
@@ -82,67 +88,5 @@ public class ChatController {
         System.out.println(id);
 
         return payload;
-    }
-
-    @GetMapping(path = "/greet")
-    public String greet() {
-        return "greet";
-    }
-
-    @PostMapping(path = "/greet")
-    @ResponseBody
-    public void greet(@RequestBody String greet) {
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        simpMessagingTemplate.convertAndSend("/topic/greet", "[" + now + "]" + greet);
-    }
-
-//    @MessageMapping("/good")
-//    @SendToUser("/queue/something")
-//    public String handleSendToUser(@Payload String payload) {
-//        return payload;
-//    }
-
-    @MessageMapping("/good")
-    public String handle(@Payload String payload, Principal user) {
-        if(payload.equals("error")) {
-            throw new IllegalArgumentException("error 문자열은 취급할 수 없습니다.");
-        }
-        return payload;
-    }
-
-    @MessageMapping("/good/template")
-    public void handleTemplate(@Payload String payload, Principal user) {
-        System.out.println(payload);
-        System.out.println(user);
-
-        simpMessagingTemplate.convertAndSendToUser(user.getName(), "/queue/something", payload);
-    }
-
-    @MessageExceptionHandler
-    @SendToUser(destinations = "/queue/errors", broadcast = false)
-    public String handleException(IllegalArgumentException exception) {
-        return exception.getMessage();
-    }
-
-    @GetMapping
-    public String index() {
-        return "index";
-    }
-
-    @MessageMapping("/chat.sendMessage/{roomId}")
-    @SendTo("/topic/{roomId}")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage,
-                                   @PathVariable String roomId) {
-        return chatMessage;
-    }
-
-    @MessageMapping("/chat.addUser/{roomId}")
-    @SendTo("/topic/{roomId}")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
-                               @PathVariable String roomId,
-                               SimpMessageHeaderAccessor headerAccessor) {
-        // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
     }
 }

@@ -1,6 +1,5 @@
-package com.cocotalk.chat.model.response;
+package com.cocotalk.chat.model.vo;
 
-import com.cocotalk.chat.document.RoomMember;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -9,27 +8,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomResponse {
+public class ChatMessageVo {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 
-    private String name;
-
-    private String img;
+    private Long userId;
 
     private int type;
 
-    private List<RoomMember> members;
+    private String content;
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private List<ObjectId> messageIds;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private List<ObjectId> noticeIds;
+    private LocalDateTime sentAt;
 }

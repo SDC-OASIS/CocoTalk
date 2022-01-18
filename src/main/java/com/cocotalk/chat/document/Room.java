@@ -1,5 +1,7 @@
 package com.cocotalk.chat.document;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,17 +19,20 @@ import java.util.List;
 @Document(collection = "room")
 public class Room {
     @Id
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId id;
 
     private String name;
 
     private String img;
 
-    private Short type; // 0=갠톡, 1=단톡, 2=오픈톡
+    private int type; // 0=갠톡, 1=단톡, 2=오픈톡
 
     private List<RoomMember> members;
 
-    private List<ObjectId> messagePk;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private List<ObjectId> messageIds;
 
-    private List<ObjectId> noticePk;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private List<ObjectId> noticeIds;
 }

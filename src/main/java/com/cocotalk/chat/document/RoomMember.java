@@ -15,12 +15,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Document(collection = "room_member")
 public class RoomMember {
-//    @Id
-//    private String id;
-
-//    @DBRef(lazy = true)
-//    private Room room;
-
     private Long userId; // MySQL userId
 
     private Boolean isJoining;

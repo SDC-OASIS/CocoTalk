@@ -1,11 +1,13 @@
 package com.cocotalk.chat.document;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -15,16 +17,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "message")
-public class Message {
+public class ChatMessage {
     @Id
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId id;
 
-    @DBRef(lazy = true)
-    private Room room;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId roomId;
 
     private Long userId;
 
-    private Short type;
+    private int type;
 
     private String content;
 

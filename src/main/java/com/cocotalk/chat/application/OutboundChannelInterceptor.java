@@ -1,8 +1,8 @@
 package com.cocotalk.chat.application;
 
-import com.cocotalk.chat.service.MessageService;
+import com.cocotalk.chat.service.ChatMessageService;
 import com.cocotalk.chat.utils.logging.ChannelLogger;
-import com.cocotalk.chat.utils.mapper.MessageMapper;
+import com.cocotalk.chat.utils.mapper.ChatMessageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class OutboundChannelInterceptor implements ChannelInterceptor {
-    private final MessageService messageService;
-    private final MessageMapper messageMapper;
+    private final ChatMessageService chatMessageService;
+    private final ChatMessageMapper chatMessageMapper;
     private final ChannelLogger channelLogger;
 
     @Override

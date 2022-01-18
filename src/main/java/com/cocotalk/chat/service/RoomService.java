@@ -21,9 +21,9 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Optional<Room> findPrivateRoom(Long myid, Long friendid) {
-        Predicate myIdPredicate = qRoom.members.get(0).userId.in(myid, friendid);
-        Predicate friendIdPredicate = qRoom.members.get(1).userId.in(myid, friendid);
+    public Optional<Room> findPrivateRoom(Long userid, Long friendid) {
+        Predicate myIdPredicate = qRoom.members.get(0).userId.in(userid, friendid);
+        Predicate friendIdPredicate = qRoom.members.get(1).userId.in(userid, friendid);
         Predicate sizePredicate = qRoom.members.size().eq(2);
         Predicate predicate = ((BooleanExpression) myIdPredicate).and(
                 friendIdPredicate).and(sizePredicate);

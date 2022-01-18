@@ -13,7 +13,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RoomMemberResponse {
     private Long userId; // MySQL userId
+
     private Boolean isJoining;
+
     private LocalDateTime accessedAt;
+
     private LocalDateTime joinedAt;
 }
