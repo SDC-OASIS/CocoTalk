@@ -6,12 +6,12 @@
 		<div class="nav-inner-container">
 			<ul class="nav row">
 				<li>
-					<router-link to="/friends">
+					<router-link :to="{ path: '/friends/' + changePath }">
 						<span class="iconify" data-icon="fa-solid:user-friends"></span>
 					</router-link>
 				</li>
 				<li>
-					<router-link to="/chats">
+					<router-link :to="{ path: '/chats/' + changePath }">
 						<span class="iconify" data-icon="ant-design:message-filled"></span>
 					</router-link>
 				</li>
@@ -36,11 +36,22 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
 	data() {
 		return {
-			pathname: "",
+			// pathname: "",
 		};
+	},
+	computed: {
+		...mapState("chat", ["roomStatus"]),
+		changePath() {
+			if (this.roomStatus.chatPage == "chat") {
+				return `${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
+			}
+			return this.pathname;
+		},
 	},
 };
 </script>
