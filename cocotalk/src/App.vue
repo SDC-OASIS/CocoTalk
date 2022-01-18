@@ -1,9 +1,12 @@
 <template>
 	<div id="app">
-		<Navbar />
-		<div class="content-container">
-			<router-view name="left" class="left-container" />
-			<router-view name="right" class="right-container" />
+		<router-view name="login" />
+		<div>
+			<Navbar v-if="nav" />
+			<div class="content-container">
+				<router-view name="left" class="left-container" />
+				<router-view name="right" class="right-container" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -14,12 +17,21 @@ import { mapState } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 export default {
 	name: "App",
+	data() {
+		return {
+			nav: true,
+		};
+	},
 	components: {
 		Navbar,
 	},
 	created() {
 		const width = screen.width;
 		this.$store.dispatch("getScreen", { width: width });
+		// 로그인 페이지에서는 navbar 안보이게 만들기
+		if (window.location.pathname == "/") {
+			this.nav = false;
+		}
 	},
 	computed: {
 		...mapState({
@@ -51,7 +63,7 @@ export default {
 	height: 100vh;
 }
 .right-container {
-	width: 650px;
+	width: 550px;
 	height: 100vh;
 }
 @media (max-width: 1600px) {
@@ -60,7 +72,7 @@ export default {
 		height: 100vh;
 	}
 	.right-container {
-		width: 520px;
+		width: 500px;
 		height: 100vh;
 	}
 }

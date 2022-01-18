@@ -14,7 +14,7 @@ module.exports = {
       "semi": true,
       "tabWidth": 2,
       "trailingComma": "all",
-      "printWidth": 120,
+      "printWidth": 200,
       "endOfLine": "auto"
     }]
   },

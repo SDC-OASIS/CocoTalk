@@ -16,8 +16,8 @@ export default {
 
 <style scoped>
 .box > div {
-	padding-left: 20px;
-	font-size: 17px;
+	padding-left: 15px;
+	font-size: 16px;
 	text-align: left;
 }
 </style>

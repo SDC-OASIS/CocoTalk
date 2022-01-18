@@ -6,7 +6,7 @@
 				<span class="iconify" data-icon="eva:arrow-ios-back-outline"></span>
 				<span class="bold" style="font-size: 18px">999+</span>
 			</div>
-			<span class="bold" style="font-size: 22px">채팅방 이름</span>
+			<span class="bold" style="font-size: 18px">채팅방 이름</span>
 			<div class="box">
 				<span class="iconify" data-icon="ant-design:search-outlined" style="color: black; padding-right: 10px"></span>
 				<span class="iconify" data-icon="charm:menu-hamburger" style="color: black"></span>
@@ -17,7 +17,7 @@
 			<div class="chat-messages" v-for="(chatting, idx) in chattings" :key="idx">
 				<!-- 상대가 한 말 -->
 				<div v-if="chatting.userInfo.name != userInfo.name" class="row">
-					<ProfileImg :imgUrl="chatting.userInfo.profile" width="50px" />
+					<ProfileImg :imgUrl="chatting.userInfo.profile" width="40px" />
 					<div class="chat-message">
 						<div style="padding-bottom: 7px">{{ chatting.userInfo.name }}</div>
 						<div class="bubble box">{{ chatting.message }}</div>
@@ -68,7 +68,10 @@ export default {
 		"$route.params.roomId": function () {
 			console.log("채팅을 시작합니다.");
 			// vuex에 마지막 페이지 방문 저장
-			this.$store.dispatch("changePage", { chat: this.$route.params.chat, roomId: this.$route.params.roomId });
+			this.$store.dispatch("changePage", {
+				chat: this.$route.params.chat,
+				roomId: this.$route.params.roomId,
+			});
 		},
 	},
 	methods: {
@@ -86,15 +89,16 @@ export default {
 }
 /* 왜 span으로는 하위처리가 안되지 */
 .chat-header .iconify {
-	font-size: 35px;
+	font-size: 25px;
 	font-weight: bold;
 }
 .chat-messages-container {
-	padding: 10px 20px;
+	padding: 0px 50px;
 }
 .chat-messages {
 	text-align: left;
 	padding: 10px 0;
+	font-size: 14px;
 }
 
 .chat-message {

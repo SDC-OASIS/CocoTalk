@@ -1,5 +1,5 @@
 <template>
-	<div class="friends-container">
+	<div class="chats-container">
 		<div class="header row">
 			<span>채팅</span>
 			<div class="header-icon-container row">
@@ -8,8 +8,8 @@
 				<span class="iconify" data-icon="mdi:chat-plus-outline" style="color: #aaaaaa"></span>
 			</div>
 		</div>
-		<div class="friend-list-container">
-			<div class="friend-container row" v-for="(chat, idx) in chats" :key="idx">
+		<div class="chat-list-container">
+			<div class="chat-container row" v-for="(chat, idx) in chats" :key="idx">
 				<ProfileImg :imgUrl="chat.profile" width="50px" />
 				<div class="chat-info-container row" @click="goChat(chat.roomId)">
 					<ChatListInfo :chatInfo="chat" />
@@ -63,10 +63,9 @@ export default {
 };
 </script>
 <style scoped>
-.friends-container {
+.chats-container {
 	display: block;
-	padding-left: 2%;
-	padding-top: 1.5%;
+	padding-top: 20px;
 	background-color: #ffffff;
 	border-left: 2px solid #9eac95;
 	border-right: 2px solid #9eac95;
@@ -82,8 +81,9 @@ export default {
 }
 .header > span {
 	color: #749f58;
-	font-size: 28px;
+	font-size: 25px;
 	font-weight: bold;
+	padding-left: 20px;
 }
 .header div {
 	font-size: 28px;
@@ -101,23 +101,24 @@ export default {
 	display: inline-block;
 }
 
-.friend-list-container {
+.chat-list-container {
 	padding: 20px 0;
 	text-align: left;
 }
-.friend-list-container > span {
+.chat-list-container > span {
 	margin-bottom: 100px;
 	/* 왜 안되지! */
 }
-.friend-container {
+.chat-container {
 	padding: 7px 0;
 	align-items: center;
+	padding-left: 20px;
 }
-.friend-container img {
+.chat-container img {
 	width: 50px;
 	height: 50px;
 }
-.friend-container:hover {
+.chat-container:hover {
 	background-color: #e7f7dd;
 }
 .chat-info-container {

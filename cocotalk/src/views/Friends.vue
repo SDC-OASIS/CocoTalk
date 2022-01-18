@@ -8,13 +8,14 @@
 			</div>
 		</div>
 		<div class="myprofile row">
-			<ProfileImg :imgUrl="userInfo.profile" width="70px" />
+			<div id="d" class="d" @Click="showProfile">d</div>
+			<ProfileImg :imgUrl="userInfo.profile" :width="width" />
 			<FriendListUserInfo :userInfo="userInfo" />
 		</div>
 		<div class="friend-list-container">
 			<span>친구 - 200</span>
 			<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
-				<ProfileImg :imgUrl="friend.profile" width="50px" />
+				<ProfileImg :imgUrl="friend.profile" width="50px" @click.self="showProfile" />
 				<FriendListUserInfo :userInfo="friend" />
 			</div>
 		</div>
@@ -33,30 +34,45 @@ export default {
 		ProfileImg,
 		FriendListUserInfo,
 	},
+	data() {
+		return {
+			width: "60px",
+		};
+	},
 	created() {
 		console.log("친구목록");
 		console.log(this.$route.params);
+		if (screen.width <= 1600) {
+			this.width = "60px";
+		}
 	},
 	computed: {
 		...mapState({
 			roomStatus: (state) => state.roomStatus,
 			friends: (state) => state.friends,
 			userInfo: (state) => state.userInfo,
+			screenInfo: (state) => state.screenInfo,
 		}),
 	},
 	methods: {
 		noImage(e) {
 			e.targer.src = "@/assets/profile.jpg";
 		},
+		showProfile() {
+			console.log("조회");
+		},
 	},
 };
+// var toolbar = document.getElementById("d");
+// 	toolbar.onclick = function (e) {
+// 		alert("Hello");
+// };
 </script>
 
 <style scoped>
 .friends-container {
 	display: block;
-	padding-left: 2%;
-	padding-top: 1.5%;
+	padding-top: 20px;
 	background-color: #ffffff;
 	border-left: 2px solid #9eac95;
 	border-right: 2px solid #9eac95;
@@ -72,8 +88,9 @@ export default {
 }
 .header > span {
 	color: #749f58;
-	font-size: 28px;
+	font-size: 25px;
 	font-weight: bold;
+	padding-left: 20px;
 }
 .header div {
 	font-size: 28px;
@@ -83,6 +100,7 @@ export default {
 .myprofile {
 	padding: 20px 0;
 	margin-right: 30px;
+	margin-left: 20px;
 	border-bottom: 2px solid #9eac95;
 	align-items: center;
 }
@@ -92,11 +110,13 @@ export default {
 }
 
 .friend-list-container {
-	padding: 20px 0;
+	padding: 10px 0;
 	text-align: left;
+	padding-left: 20px;
 }
 .friend-list-container > span {
 	margin-bottom: 100px;
+	font-size: 13px;
 	/* 왜 안되지! */
 }
 .friend-container {
@@ -106,5 +126,11 @@ export default {
 .friend-container img {
 	width: 50px;
 	height: 50px;
+}
+.d {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	z-index: 3000;
 }
 </style>

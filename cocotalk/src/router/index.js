@@ -1,14 +1,22 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Login from "../views/Login.vue";
 import Friends from "../views/Friends.vue";
 import Chats from "../views/Chats.vue";
-import Chat from "@/views/Chat.vue";
-import ChatDefault from "@/views/ChatDefault.vue";
-import Setting from "@/views/Setting.vue";
+import Chat from "../views/Chat.vue";
+import ChatDefault from "../views/ChatDefault.vue";
+import Setting from "../views/Setting.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
+	{
+		path: "/",
+		name: "login",
+		components: {
+			login: Login,
+		},
+	},
 	{
 		path: "/friends",
 		name: "friends",

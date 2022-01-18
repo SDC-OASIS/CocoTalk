@@ -28,7 +28,6 @@ export default new Vuex.Store({
 			{
 				name: "고병학",
 				statusMessage: "햇빛이 쨍쨍",
-				profile: undefined,
 			},
 			{
 				name: "김민정",
@@ -38,11 +37,15 @@ export default new Vuex.Store({
 			{
 				name: "황종훈",
 				statusMessage: "얍얍 오늘도 화이팅",
-				profile: undefined,
 			},
 		],
 		chats: [
-			{ name: "오아시스팀", lastMessage: "오늘도 좋은 하루", roomId: "111", cnt: 200 },
+			{
+				name: "오아시스팀",
+				lastMessage: "오늘도 좋은 하루",
+				roomId: "111",
+				cnt: 200,
+			},
 			{ name: "스토브캠프", lastMessage: "햇빛이 쨍쨍", roomId: "222", cnt: 3 },
 		],
 		chattings: [

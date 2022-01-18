@@ -26,9 +26,9 @@
 					</router-link>
 				</li>
 				<li>
-					<a href="#">
+					<router-link to="/">
 						<span class="iconify" data-icon="fe:logout"></span>
-					</a>
+					</router-link>
 				</li>
 			</ul>
 		</div>
@@ -46,10 +46,10 @@ export default {};
 	display: float;
 }
 .nav-inner-container {
-	width: 650px;
+	width: 550px;
 }
 .nav-logo {
-	width: 425px;
+	width: 380px;
 }
 .nav-logo img {
 	width: 50px;
@@ -66,20 +66,23 @@ ul.nav li {
 }
 ul.nav a {
 	display: block;
-	padding: 14px 50px;
+	padding: 12px 39px;
 	color: #ffffff;
 	font-size: 30px;
-	line-height: 28px;
+	line-height: 23px;
 }
 @media (max-width: 1600px) {
 	.nav-inner-container {
-		width: 520px;
+		width: 500px;
 	}
 	.nav-logo {
-		width: 360px;
+		width: 330px;
 	}
 	ul.nav a {
-		padding: 14px 30px;
+		padding: 10px 30px;
+	}
+	.iconify {
+		font-size: 25px;
 	}
 }
 @media (max-width: 850px) {
@@ -97,9 +100,8 @@ ul.nav a {
 		padding: 14px 10px;
 	}
 }
-ul.nav a:hover,
-ul.nav li.current span {
+ul.nav a:hover {
 	background: #42652b;
-	height: 33px;
+	height: 30px;
 }
 </style>
