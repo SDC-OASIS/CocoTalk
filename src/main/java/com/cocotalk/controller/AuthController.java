@@ -1,6 +1,9 @@
 package com.cocotalk.controller;
 
 import com.cocotalk.dto.common.TokenDto;
+import com.cocotalk.dto.email.issue.IssueInput;
+import com.cocotalk.dto.email.issue.IssueOutput;
+import com.cocotalk.dto.email.validation.ValidationInput;
 import com.cocotalk.dto.signin.SigninInput;
 import com.cocotalk.dto.signup.SignupInput;
 import com.cocotalk.dto.signup.SignupOutput;
@@ -48,11 +51,10 @@ public class AuthController {
      */
     // Body
     @PostMapping("/signup")
-    public ResponseEntity<Response<SignupOutput>> signup(@RequestBody SignupInput signUpInput) {
+    public ResponseEntity<Response<SignupOutput>> signup(@RequestBody @Valid SignupInput signUpInput) {
         log.info("[POST] /api/users/signup");
         return authService.signup(signUpInput);
     }
-
 
     /**
      * ACESS TOKEN 재발급 API [POST] /api/auth/reissue
@@ -65,5 +67,30 @@ public class AuthController {
         log.info("[POST] /api/users/reissue");
         return authService.reissue();
     }
+
+    /**
+     * 이메일 인증 코드 보내기 API [POST] /api/users/email
+     *
+     * @return ResponseEntity<Response<EmailOutput>>
+     */
+    // Body
+    @PostMapping("/email/issue")
+    public ResponseEntity<Response<IssueOutput>> sendMail(@RequestBody @Valid IssueInput emailInput) {
+        log.info("[POST] /users/email");
+        return authService.sendMail(emailInput);
+    }
+
+    /**
+     * 이메일 인증 코드 확인 API [POST] /api/users/email
+     *
+     * @return ResponseEntity<Response<EmailOutput>>
+     */
+    // Body
+    @PostMapping("/email/validation")
+    public ResponseEntity<Response<Boolean>> checkMail(@RequestBody @Valid ValidationInput validationInput) {
+        log.info("[POST] /users/email");
+        return authService.checkMail(validationInput);
+    }
+
 
 }

@@ -1,17 +1,17 @@
-package com.cocotalk.dto.signin;
+package com.cocotalk.dto.email.validation;
 
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-public class SigninInput {
+@Setter
+public class ValidationInput {
     @NotBlank
-    private String cid;
+    private String email;
     @NotBlank
-    private String password;
+    private String code;
 }

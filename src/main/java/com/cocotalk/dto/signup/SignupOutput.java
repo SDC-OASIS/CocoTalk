@@ -21,21 +21,7 @@ public class SignupOutput {
     private Date birth;
     private String phone;
     private String email;
-    private Provider provider;
     @Enumerated(EnumType.STRING)
+    private Provider provider;
     private String providerId;
-
-    public static SignupOutput toDto(User user){
-        return SignupOutput.builder()
-                .cid(user.getCid())
-                .name(user.getName())
-                .nickname(user.getNickname())
-                .birth(user.getBirth())
-                .phone(user.getPhone())
-                .email(user.getEmail())
-                .provider(user.getProvider())
-                .providerId(user.getProviderId())
-                .build();
-
-    }
 }

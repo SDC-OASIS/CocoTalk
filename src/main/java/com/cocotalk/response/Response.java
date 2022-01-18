@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 import java.util.Date;
 
@@ -46,4 +47,5 @@ public class Response<T> {
         this.message = status.getMessage();
         this.timestamp = new Date();
     }
+
 }

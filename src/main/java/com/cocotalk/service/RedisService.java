@@ -1,5 +1,7 @@
 package com.cocotalk.service;
 
+import com.cocotalk.response.ResponseStatus;
+import com.cocotalk.support.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -16,23 +18,38 @@ public class RedisService {
     private final StringRedisTemplate stringRedisTemplate;
 
     public String getData(String key){
-        ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
-        return valueOperations.get(key);
+        try {
+            ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
+            return valueOperations.get(key);
+        }catch (Exception e){
+            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+        }
     }
 
     public void setData(String key, String value){
-        ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
-        valueOperations.set(key,value);
+        try {
+            ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
+            valueOperations.set(key,value);
+        }catch (Exception e){
+            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+        }
     }
 
     public void setDataExpire(String key,String value,long duration){
-        ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
-        Duration expireDuration = Duration.ofSeconds(duration);
-        valueOperations.set(key,value,expireDuration);
+        try {
+            ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
+            Duration expireDuration = Duration.ofSeconds(duration);
+            valueOperations.set(key,value,expireDuration);
+        }catch (Exception e){
+            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+        }
     }
 
     public void deleteData(String key){
-        stringRedisTemplate.delete(key);
+        try {
+            stringRedisTemplate.delete(key);
+        }catch (Exception e){
+            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+        }
     }
-
 }

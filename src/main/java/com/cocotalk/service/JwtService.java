@@ -22,15 +22,15 @@ import java.util.Date;
 public class JwtService {
 
     private final UserRepository userRepository;
-    private final CustomUserDetailsService customUserDetailsService;
 
     @Value("${jwt.secret}")
-    private String TOKEN_SECRET_KEY;
+    private String secretKey;
 
     @Value("${jwt.token.exp.access}")
-    public long ACCESS_TOKEN_VALIDITY_SECONDS;
+    public long accessTokenExp;
+
     @Value("${jwt.token.exp.refresh}")
-    private long REFRESH_TOKEN_VALIDITY_SECONDS;
+    private long refreshTokenExp;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,8 +40,8 @@ public class JwtService {
         return Jwts.builder()
                 .claim("userCid", userId)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
-                .signWith(SignatureAlgorithm.HS256, TOKEN_SECRET_KEY)
+                .setExpiration(new Date(now.getTime() + accessTokenExp * 1000))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
@@ -50,8 +50,8 @@ public class JwtService {
         String refreshToken = Jwts.builder()
                 .claim("userCid", userCid)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALIDITY_SECONDS * 1000))
-                .signWith(SignatureAlgorithm.HS256, TOKEN_SECRET_KEY)
+                .setExpiration(new Date(now.getTime() + refreshTokenExp * 1000))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
         User user = userRepository.findByCid(userCid).orElse(null);
         if(user==null) return null;
@@ -74,7 +74,7 @@ public class JwtService {
         if (accessToken == null)
             return null;
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(TOKEN_SECRET_KEY).parseClaimsJws(accessToken);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken);
             String userCid = claims.getBody().get("userCid", String.class);
             if (!ValidationCheck.isValid(userCid))
                 return null;
@@ -92,7 +92,7 @@ public class JwtService {
         if (accessToken == null)
             return null;
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(TOKEN_SECRET_KEY).parseClaimsJws(accessToken);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken);
             String userCid = claims.getBody().get("userCid", String.class);
             if (!ValidationCheck.isValid(userCid))
                 return null;
@@ -107,7 +107,7 @@ public class JwtService {
 
     public Jws<Claims> getClaims(String jwtToken) {
         try {
-            return Jwts.parser().setSigningKey(TOKEN_SECRET_KEY).parseClaimsJws(jwtToken);
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
             throw ex;
@@ -128,22 +128,4 @@ public class JwtService {
         }
     }
 
-//    public String makeToken(TokenPayload payload) {
-//        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-//        byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(TOKEN_SECRET_KEY);
-//        Key signingKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
-//        long nowMillis = System.currentTimeMillis();
-//        long expMillis = nowMillis + exp;
-//        Date exp = new Date(expMillis);
-//        try {
-//            return Jwts.builder()
-//                    .setSubject(objectMapper.writeValueAsString(payload))
-//                    .setIssuedAt(new Date(nowMillis))
-//                    .setExpiration(exp)
-//                    .signWith(signatureAlgorithm, signingKey)
-//                    .compact();
-//        } catch (JsonProcessingException e) {
-//            throw new AuthException(AuthError.JSON_PARSE_ERROR, e);
-//        }
-//    }
 }

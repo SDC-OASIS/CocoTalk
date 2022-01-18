@@ -28,27 +28,32 @@ public class User extends BaseTime {
     @Column(nullable = false, length = 20, unique = true)
     private String cid; // 코코톡 아이디
 
-    @NotNull
-    @Column(length = 20)
+    @Column(nullable = false, length = 20)
     private String name;
-    @NotNull
-    @Column(length = 20)
+
+    @Column(nullable = false, length = 20)
     private String nickname;
+
     private Date birth;
-    @NotNull
-    @Column(length = 20, unique = true)
+
+    @Column(nullable = false, length = 20, unique = true)
     private String phone;
+
     @Column(length = 125, unique = true)
     private String email;
-    @NotNull
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Provider provider;
-    @NotNull
+
+    @Column(nullable = false)
     private String providerId;
-    @NotNull
+
+    @Column(nullable = false)
     private Short status; // 유저 상태
+
     @Column(name = "logined_at")
     private LocalDateTime loginedAt;
-    private String profile; // JSON 형태로 저장
 
+    private String profile; // JSON 형태로 저장
 }
