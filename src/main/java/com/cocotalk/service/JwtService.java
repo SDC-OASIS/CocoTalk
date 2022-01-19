@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -74,7 +75,7 @@ public class JwtService {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken);
             String userCid = claims.getBody().get("userCid", String.class);
-            if (!ValidationCheck.isValid(userCid))
+            if (StringUtils.isEmpty(userCid))
                 return null;
             User user = userRepository.findByCid(userCid).orElse(null);
             if (user == null)
@@ -92,7 +93,7 @@ public class JwtService {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken);
             String userCid = claims.getBody().get("userCid", String.class);
-            if (!ValidationCheck.isValid(userCid))
+            if (StringUtils.isEmpty(userCid))
                 return null;
             User userDB = userRepository.findByCid(userCid).orElse(null);
             if (userDB == null)
