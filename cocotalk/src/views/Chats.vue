@@ -116,6 +116,7 @@ export default {
 	padding: 7px 0;
 	align-items: center;
 	padding-left: 20px;
+	cursor: pointer;
 }
 .chat-container img {
 	width: 50px;

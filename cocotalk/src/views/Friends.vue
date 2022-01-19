@@ -8,13 +8,18 @@
 			</div>
 		</div>
 		<div class="myprofile row">
-			<ProfileImg :imgUrl="userInfo.profile" :width="width" />
+			<div>
+				<ProfileImg :imgUrl="userInfo.profile" :width="width" />
+			</div>
 			<FriendListUserInfo :userInfo="userInfo" />
 		</div>
+		<hr />
 		<div class="friend-list-container">
-			<span>친구 - 200</span>
+			<div class="friend-cnt">친구 - 200</div>
 			<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
-				<ProfileImg :imgUrl="friend.profile" width="50px" />
+				<div @click="openProfileModal(friend)">
+					<ProfileImg :imgUrl="friend.profile" width="50px" />
+				</div>
 				<FriendListUserInfo :userInfo="friend" />
 			</div>
 		</div>
@@ -62,7 +67,8 @@ export default {
 		noImage(e) {
 			e.targer.src = "@/assets/profile.jpg";
 		},
-		showProfile() {
+		openProfileModal(userInfo) {
+			this.$store.dispatch("modal/openProfileModal", { status: "open", userInfo: userInfo }, { root: true });
 			console.log("조회");
 		},
 	},
@@ -82,8 +88,13 @@ export default {
 	border-right: 2px solid #9eac95;
 	font-size: 15px;
 }
+.friends-container > hr {
+	border-bottom: 1px solid #9eac95;
+	width: 90%;
+}
 .header {
 	justify-content: space-between;
+	padding-bottom: 10px;
 }
 .header-icon-container {
 	width: 70px;
@@ -101,31 +112,38 @@ export default {
 	font-weight: bold;
 	margin-right: 30px;
 }
+
 .myprofile {
-	padding: 20px 0;
-	margin-right: 30px;
-	margin-left: 20px;
-	border-bottom: 2px solid #9eac95;
+	padding: 10px 20px 10px 20px;
+	/* border-bottom: 2px solid #9eac95; */
 	align-items: center;
+	cursor: pointer;
 }
 
+.myprofile:hover {
+	background-color: #e7f7dd;
+}
 .myprofile > div {
 	display: inline-block;
 }
 
 .friend-list-container {
-	padding: 10px 0;
 	text-align: left;
-	padding-left: 20px;
 }
-.friend-list-container > span {
-	margin-bottom: 100px;
-	font-size: 13px;
+.friend-cnt {
+	/* margin-bottom: 100px; */
 	/* 왜 안되지! */
+	font-size: 13px;
+	margin: 15px 0px 5px 20px;
 }
 .friend-container {
 	padding: 7px 0;
 	align-items: center;
+	cursor: pointer;
+	padding-left: 20px;
+}
+.friend-container:hover {
+	background-color: #e7f7dd;
 }
 .friend-container img {
 	width: 50px;
