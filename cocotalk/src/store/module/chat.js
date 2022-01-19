@@ -13,6 +13,7 @@ const chat = {
 				name: "권희은",
 				statusMessage: "오늘도 좋은 하루",
 				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+				background: "https://ifh.cc/g/CgiChn.jpg",
 			},
 			{
 				name: "고병학",
@@ -22,10 +23,12 @@ const chat = {
 				name: "김민정",
 				statusMessage: "룰루~~ 신나는 오늘~",
 				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+				background: "https://ifh.cc/g/qKgD7C.png",
 			},
 			{
 				name: "황종훈",
 				statusMessage: "얍얍 오늘도 화이팅",
+				background: "https://ifh.cc/g/CgiChn.jpg",
 			},
 		],
 		chats: [
