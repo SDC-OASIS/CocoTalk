@@ -4,6 +4,7 @@ import com.cocotalk.dto.common.TokenDto;
 import com.cocotalk.dto.email.issue.IssueInput;
 import com.cocotalk.dto.email.issue.IssueOutput;
 import com.cocotalk.dto.email.validation.ValidationInput;
+import com.cocotalk.dto.email.validation.ValidationOutput;
 import com.cocotalk.dto.signin.SigninInput;
 import com.cocotalk.dto.signup.SignupInput;
 import com.cocotalk.dto.signup.SignupOutput;
@@ -97,7 +98,7 @@ public class AuthController {
     // Body
     @ApiOperation(value = "Eamil 인증 코드 확인")
     @PostMapping("/email/validation")
-    public ResponseEntity<Response<Boolean>> checkMail(@RequestBody @Valid ValidationInput validationInput) {
+    public ResponseEntity<Response<ValidationOutput>> checkMail(@RequestBody @Valid ValidationInput validationInput) {
         log.info("[POST] /users/email");
         return authService.checkMail(validationInput);
     }
