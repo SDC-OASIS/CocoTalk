@@ -98,10 +98,6 @@ button.primary {
     color: #fff;
 }
 
-button.exit {
-    margin: 2rem 0;
-}
-
 button.accent {
     background-color: #ff4743;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
@@ -161,10 +157,11 @@ button.accent {
     overflow: auto;
     overflow-y: scroll;
     padding: 0 20px 0px 20px;
-    height: calc(100% - 150px);
+    height: calc(100% - 220px);
 }
 
-#chat-page #messageForm {
+/*얘가 문제임*/
+#chat-page #messageForm #inviteForm {
     padding: 20px;
 }
 
@@ -227,7 +224,26 @@ button.accent {
     width: calc(100% - 85px);
 }
 
+#inviteForm .input-group input {
+    float: left;
+    width: calc(100% - 85px);
+}
+
 #messageForm .input-group button {
+    float: left;
+    width: 80px;
+    height: 38px;
+    margin-left: 5px;
+}
+
+#inviteForm .input-group button {
+    float: left;
+    width: 80px;
+    height: 38px;
+    margin-left: 5px;
+}
+
+#leaveForm .input-group button {
     float: left;
     width: 80px;
     height: 38px;
@@ -286,6 +302,18 @@ button.accent {
 
     #messageForm .input-group input {
         width: calc(100% - 70px);
+    }
+
+    #inviteForm .input-group button {
+        width: 65px;
+    }
+
+    #inviteForm .input-group input {
+        width: calc(100% - 70px);
+    }
+
+    #leaveForm .input-group button {
+        width: 65px;
     }
 
     .chat-header {

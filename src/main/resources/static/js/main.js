@@ -4,6 +4,8 @@ const usernamePage = document.querySelector('#username-page');
 const chatPage = document.querySelector('#chat-page');
 const usernameForm = document.querySelector('#usernameForm');
 const messageForm = document.querySelector('#messageForm');
+const inviteForm = document.querySelector('#inviteForm');
+const inviteInput = document.querySelector('#inviteeId');
 const leaveForm = document.querySelector('#leaveForm');
 const messageInput = document.querySelector('#message');
 const messageArea = document.querySelector('#messageArea');
@@ -49,7 +51,7 @@ async function onConnected() {
             console.log('채팅방 존재 -> roomId = ' + roomId);
         } else {
             room = await axios.post(domain + "/rooms", {
-                name: "userId=" + userId + ", friendId=" + friendId + " RoomName",
+                name: "RoomName",
                 img: "img",
                 type: 0,
                 members: [
@@ -73,8 +75,6 @@ async function onConnected() {
             console.log('채팅방 없음 -> 채팅방 생성 roomId = ' + roomId);
         }
 
-        console.log(room.data.data);
-
         // friendName으로 토픽 구독
         stompClient.subscribe('/topic/' + roomId, onMessageReceived);
 
@@ -88,11 +88,10 @@ async function onConnected() {
 
         console.log(joinMessage);
 
-        // Tell your userId to the server
-        stompClient.send("/simple/chat.addUser/" + roomId,
-            {},
-            JSON.stringify(joinMessage) // join
-        )
+        // stompClient.send("/simple/chat/" + roomId + "/invite",
+        //     {},
+        //     JSON.stringify(joinMessage) // join
+        // )
         connectingElement.classList.add('hidden');
     } catch(e) {
         alert(e);
@@ -118,24 +117,39 @@ function sendMessage(event) {
             sentAt: getLocalDateTime()
         };
 
-        stompClient.send("/simple/chat.sendMessage/" + roomId, {}, JSON.stringify(chatMessage));
+        stompClient.send("/simple/chat/" + roomId + "/send", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
 }
 
+function invite (event) {
+    const inviteeIds = document.querySelector('#inviteeId').value.split(",");
+    if(inviteeIds && stompClient) {
+        let inviteMessage = { // 일종의 joinMessage
+            roomId: roomId,
+            userId: inviteeIds,
+            type: 1,
+            content: null,
+            sentAt: getLocalDateTime()
+        }
 
+        stompClient.send("/simple/chat/" + roomId + "/invite", {}, JSON.stringify(inviteMessage));
+        inviteInput.value = '';
+    }
+    event.preventDefault();
+}
 
 function leave(event) {
     let leaveMessage = {
         roomId: roomId,
         userId: userId,
-        type: 3,
+        type: 2,
         content: null,
         sentAt: getLocalDateTime()
     }
 
-    stompClient.send("/simple/chat.sendMessage/" + roomId, {}, JSON.stringify(leaveMessage));
+    stompClient.send("/simple/chat/" + roomId + "/leave", {}, JSON.stringify(leaveMessage));
     messageInput.value = '';
 
     chatPage.classList.add('hidden');
@@ -149,7 +163,7 @@ function leave(event) {
 }
 
 
-function onMessageReceived(payload) {
+function onMessageReceived(payload) { // subscribe시 이 함수로 처리
     const message = JSON.parse(payload.body);
 
     const messageElement = document.createElement('li');
@@ -157,17 +171,17 @@ function onMessageReceived(payload) {
     if(message.type === 1) { // join
         messageElement.classList.add('event-message');
         message.content = message.userId + ' joined!';
-    } else if (message.type === 2) { // away
-        messageElement.classList.add('event-message');
-        message.content = message.userId + ' away from keyboard!';
-    } else if (message.type === 3) { // leave
+    } else if (message.type === 2) { // leave
         messageElement.classList.add('event-message');
         message.content = message.userId + ' left!';
+    } else if (message.type === 3) { // away
+        messageElement.classList.add('event-message');
+        message.content = message.userId + ' away from keyboard!';
     } else {
         messageElement.classList.add('chat-message');
 
         const avatarElement = document.createElement('i');
-        const avatarText = document.createTextNode(message.userId[0]);
+        const avatarText = document.createTextNode(message.userId);
         avatarElement.appendChild(avatarText);
         avatarElement.style['background-color'] = getAvatarColor(message.userId);
 
@@ -216,4 +230,5 @@ function getLocalDateTime() {
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
+inviteForm.addEventListener('submit', invite, true)
 leaveForm.addEventListener('submit', leave, true)
