@@ -1,6 +1,5 @@
 package com.cocotalk.service;
 
-import com.cocotalk.config.ValidationCheck;
 import com.cocotalk.dto.common.TokenDto;
 import com.cocotalk.dto.email.issue.IssueInput;
 import com.cocotalk.dto.email.issue.IssueOutput;
@@ -9,12 +8,14 @@ import com.cocotalk.dto.email.validation.ValidationOutput;
 import com.cocotalk.dto.signin.SigninInput;
 import com.cocotalk.dto.signup.SignupInput;
 import com.cocotalk.dto.signup.SignupOutput;
+import com.cocotalk.entity.Provider;
 import com.cocotalk.entity.User;
 import com.cocotalk.entity.mapper.UserMapper;
 import com.cocotalk.repository.UserRepository;
 import com.cocotalk.response.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -89,10 +90,11 @@ public class AuthService {
     @Transactional
     public ResponseEntity<Response<SignupOutput>> signup(SignupInput signupInput) {
 
-        if(!ValidationCheck.isValidProvider(signupInput.getProvider()))
+        // 1. Enum 타입 맞는지 검증
+        if(!EnumUtils.isValidEnumIgnoreCase(Provider.class, signupInput.getProvider()))
             return ResponseEntity.status(HttpStatus.OK).body(new Response<>(BAD_REQUEST));
 
-        // 1. 유저 생성
+        // 2. 유저 생성
         User user;
         try {
             // 중복 제어
@@ -119,7 +121,7 @@ public class AuthService {
 
     public ResponseEntity<Response<Object>> signout() {
         String refreshToken = jwtService.getRefreshToken();
-        if(ValidationCheck.isValid(refreshToken))
+        if(refreshToken!=null)
             redisService.deleteData(refreshToken);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(null,SUCCESS));
     }
@@ -131,7 +133,7 @@ public class AuthService {
     public ResponseEntity<Response<TokenDto>> reissue() {
         String refreshToken = jwtService.getRefreshToken();
         System.out.println(redisService.getData(refreshToken)+","+redisService.getData("없는값"));
-        if(!ValidationCheck.isValid(redisService.getData(refreshToken)))
+        if(redisService.getData(refreshToken)==null)
             return ResponseEntity.status(HttpStatus.OK).body(new Response<>(UNAUTHORIZED));
         try{
             String userCid = jwtService.getClaims(refreshToken).getBody().get("userCid", String.class);
@@ -175,7 +177,7 @@ public class AuthService {
             mailSender.send(message);
 
             // 2. redis에 code 기록
-            redisService.setDataExpire(generatedString, issueInput.getEmail(), mailCodeExp);
+            redisService.setDataExpire(issueInput.getEmail(), generatedString, mailCodeExp);
 
         } catch (Exception e) {
             log.error("[auth/email/post] send email error", e);

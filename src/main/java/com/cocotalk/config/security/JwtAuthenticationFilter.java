@@ -26,11 +26,6 @@ public class    JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-//        String token = jwtService.getAccessToken();
-//        if (token != null && !token.equals("")) { // token 검증
-//            Authentication auth = jwtService.getAutentication(token); // 인증 객체 생성
-//            SecurityContextHolder.getContext().setAuthentication(auth); // SecurityContextHolder에 인증 객체 저장
-//        }
         chain.doFilter(request, response);
     }
 }
