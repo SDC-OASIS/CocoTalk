@@ -106,6 +106,15 @@ module.exports = {
 
 
 
+### html 속성별 줄바꿈 일어나는 현상
+
+> Eslint에 설정한 prettier이 html에서 먹히지 않는 것. 
+> Default Formatter을 eslint로 설정해 해결하였다.
+
+https://yjg-lab.tistory.com/91
+
+
+
 ##### 유용한 rule
 
 1. 저장시 자동으로 공백 줄맞춤
@@ -119,12 +128,11 @@ module.exports = {
    ...
    ```
 
-   
 
 ## 3. Router
 
 >  routing은 웹 페이지간 이동 방법으로 SPA에 주로 사용.
-> 서버에 요청 없이 해당 페이지를 미리 받아 놓고 화면을 갱신하는 형태이다.
+>  서버에 요청 없이 해당 페이지를 미리 받아 놓고 화면을 갱신하는 형태이다.
 
 ### 🍀구현시 고려사항
 
@@ -297,9 +305,20 @@ this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: roomId } 
 
 
 
+## 4. Vuex
+
+### Modal 상태관리
+
+> [도입하게 된 이유]
+> 현재 이중 분할 화면 template을 구현 중인데, 이 경우 최하위 컴포넌트에서 클릭했을 때 전체화면에 꽉차는 형태의 모달을 구현하고 싶다. 그렇다면 Modal은 최상위 분할 이전 컴포넌트에 있어야하는데, 그렇다면 클릭 이벤트 emit이 계속해서 발생한다. 이를 보다 효율적으로 관리하기 위해 Modal의 상태를 전역에서 관리해주는 것이 좋지 않을까 하는 생각을 하게 되었다. 
+> [참고]
+> Dynamic Reusable Vuex : https://jeongwooahn.medium.com/%EB%AA%A8%EB%8B%AC-%EB%A0%88%EC%9D%B4%EC%96%B4%ED%8C%9D%EC%97%85-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-with-dynamic-reusable-vuex-c99e611c6133
 
 
-# CSS
+
+
+
+## 5. CSS
 
 ### 배경 등록
 
@@ -385,7 +404,21 @@ https://velog.io/@leemember/CSS-textarea-%ED%81%AC%EA%B8%B0-%EA%B3%A0%EC%A0%95%E
 
 
 
-## template
+### input 클릭했을때 테두리 색상 변경
+
+http://happycgi.com/16392
+
+```css
+.login input:focus {
+	outline: 2px solid #fce41e;
+}
+```
+
+
+
+
+
+## 6. Template
 
 ### 반복문
 
@@ -408,11 +441,67 @@ https://kr.vuejs.org/v2/guide/class-and-style.html
 
 
 
-## 기능 구현
+## 7.기능 구현
 
 ### 이미지 자르기 구현
 
 https://wiznxt.tistory.com/606
+
+
+
+```
+<template>
+	<div class="nav-outer-container row">
+		<div class="nav-logo">
+			<img src="@/assets/logo.png" alt="logo" />
+		</div>
+		<div class="nav-inner-container">
+			<ul class="nav row">
+				<li>
+					<router-link :to="{ path: '/friends/' + roomStatus.roomId }">
+						<span class="iconify" data-icon="fa-solid:user-friends"></span>
+					</router-link>
+				</li>
+				<li>
+					<router-link to="/chats">
+						<span class="iconify" data-icon="ant-design:message-filled"></span>
+					</router-link>
+				</li>
+				<li>
+					<router-link to="/friends/setting">
+						<span class="iconify" data-icon="bi:bell-fill"></span>
+					</router-link>
+				</li>
+				<li>
+					<router-link to="/chats/setting">
+						<span class="iconify" data-icon="uil:setting"></span>
+					</router-link>
+				</li>
+				<li>
+					<router-link to="/">
+						<span class="iconify" data-icon="fe:logout"></span>
+					</router-link>
+				</li>
+			</ul>
+		</div>
+	</div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+
+export default {
+	computed: {
+		...mapState("chat", ["roomStatus"]),
+
+		// ...mapState({
+		// 	roomStatus: (state) => state.roomStatus,
+		// 	chats: (state) => state.chats,
+		// }),
+	},
+};
+</script>
+```
 
 
 
