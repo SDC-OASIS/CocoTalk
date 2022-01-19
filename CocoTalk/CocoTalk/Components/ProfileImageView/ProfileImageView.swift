@@ -14,6 +14,7 @@ class ProfileImageView: UIImageView {
     override init(image: UIImage?) {
         super.init(image: image)
         self.mask = ivMask
+        self.contentMode = .scaleAspectFill
     }
     
     required init?(coder: NSCoder) {
