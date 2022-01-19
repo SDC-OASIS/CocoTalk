@@ -68,6 +68,5 @@ public class SwaggerConfig {
                 .build()
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(accessTokenKey(), refreshTokenKey()));
-//                .securitySchemes(List.of(accessTokenKey(), refreshTokenKey()));
     }
 }

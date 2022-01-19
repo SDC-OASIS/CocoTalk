@@ -2,11 +2,13 @@ package com.cocotalk.dto.signup;
 
 import com.cocotalk.entity.Provider;
 import com.cocotalk.entity.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -18,7 +20,8 @@ public class SignupOutput {
     private String cid; // 코코톡 아이디
     private String name;
     private String nickname;
-    private Date birth;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate birth;
     private String phone;
     private String email;
     @Enumerated(EnumType.STRING)

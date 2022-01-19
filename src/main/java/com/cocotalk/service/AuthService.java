@@ -170,7 +170,8 @@ public class AuthService {
                     "</div>";
             message.setText(msgg, "utf-8", "html");
 
-            Date expirationDate = new Date(new Date().getTime() + mailCodeExp * 1000);
+            LocalDateTime expirationDate = LocalDateTime.now().plusSeconds(mailCodeExp);
+//            Date expirationDate = new Date(new Date().getTime() + mailCodeExp * 1000);
             emailOutput = IssueOutput.builder().expirationDate(expirationDate).build();
             mailSender.send(message);
 

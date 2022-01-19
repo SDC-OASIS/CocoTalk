@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public class SignupInput {
     private String name;
     @NotBlank
     private String nickname;
-    private Date birth;
+    private LocalDate birth;
     @NotBlank
     private String phone;
     @NotBlank(message = "이메일은 필수값 입니다.")
