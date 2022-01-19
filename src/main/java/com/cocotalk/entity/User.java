@@ -19,7 +19,6 @@ import java.util.UUID;
 public class User extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
     private Long id;
 
     @Column(nullable = false, length = 64)
@@ -46,7 +45,7 @@ public class User extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    @Column(nullable = false)
+    @Column(name = "provider_id", nullable = false)
     private String providerId;
 
     @Column(nullable = false)

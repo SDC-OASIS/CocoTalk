@@ -5,6 +5,7 @@ import com.cocotalk.dto.common.TokenDto;
 import com.cocotalk.dto.email.issue.IssueInput;
 import com.cocotalk.dto.email.issue.IssueOutput;
 import com.cocotalk.dto.email.validation.ValidationInput;
+import com.cocotalk.dto.email.validation.ValidationOutput;
 import com.cocotalk.dto.signin.SigninInput;
 import com.cocotalk.dto.signup.SignupInput;
 import com.cocotalk.dto.signup.SignupOutput;
@@ -184,10 +185,11 @@ public class AuthService {
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(emailOutput, SUCCESS));
     }
 
-    public ResponseEntity<Response<Boolean>> checkMail(ValidationInput validationInput) {
+    public ResponseEntity<Response<ValidationOutput>> checkMail(ValidationInput validationInput) {
         String code = redisService.getData(validationInput.getEmail());
         Boolean res = code!=null && validationInput.getCode().equals(code);
-        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(res, SUCCESS));
+        ValidationOutput validationOutput = ValidationOutput.builder().isValid(res).build();
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(validationOutput, SUCCESS));
     }
 
 }
