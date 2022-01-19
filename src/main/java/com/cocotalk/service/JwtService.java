@@ -1,5 +1,7 @@
 package com.cocotalk.service;
 
+import com.cocotalk.config.ValidationCheck;
+import com.cocotalk.config.security.CustomUserDetailsService;
 import com.cocotalk.entity.User;
 import com.cocotalk.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
