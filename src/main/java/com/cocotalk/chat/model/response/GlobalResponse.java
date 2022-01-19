@@ -3,6 +3,7 @@ package com.cocotalk.chat.model.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,8 @@ public class GlobalResponse<T> {
     private HttpStatus status;
     private int statusCode;
     private String message;
+
+    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
     private LocalDateTime timestamp;
 
     public GlobalResponse(T data) {
