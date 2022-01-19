@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Builder
@@ -16,12 +16,22 @@ import java.time.LocalDateTime;
 @Document(collection = "room_member")
 public class RoomMember {
     private Long userId; // MySQL userId
+    
+    private Boolean isJoining; // 갠톡에서만 사용
 
-    private Boolean isJoining;
-
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
-    private LocalDateTime accessedAt;
-
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
     private LocalDateTime joinedAt;
+
+    private LocalDateTime leftAt;
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        else if(!(obj instanceof RoomMember)) return false;
+        RoomMember roomMember = (RoomMember) obj;
+        return Objects.equals(userId, roomMember.userId);
+    }
+
+    public void setIsJoining(boolean isJoining) {
+        this.isJoining = isJoining;
+    }
 }

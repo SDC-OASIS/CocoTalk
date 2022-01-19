@@ -1,11 +1,11 @@
-package com.cocotalk.chat.document;
+package com.cocotalk.chat.document.message;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "message")

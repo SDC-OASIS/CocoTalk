@@ -1,6 +1,6 @@
 package com.cocotalk.chat.utils.mapper;
 
-import com.cocotalk.chat.document.ChatMessage;
+import com.cocotalk.chat.document.message.ChatMessage;
 import com.cocotalk.chat.model.vo.ChatMessageVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

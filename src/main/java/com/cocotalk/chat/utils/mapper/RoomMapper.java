@@ -16,8 +16,5 @@ public interface RoomMapper {
 
     RoomResponse toDto(Room room);
 
-//    @Mapping(target = "memberPK", ignore = true)
-//    @Mapping(target = "messagePK", ignore = true)
-//    @Mapping(target = "noticePK", ignore = true)
     Room toEntity(RoomRequest roomRequest);
 }

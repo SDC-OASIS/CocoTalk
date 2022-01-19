@@ -1,6 +1,7 @@
 package com.cocotalk.chat.service;
 
-import com.cocotalk.chat.document.ChatMessage;
+
+import com.cocotalk.chat.document.message.ChatMessage;
 import com.cocotalk.chat.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;

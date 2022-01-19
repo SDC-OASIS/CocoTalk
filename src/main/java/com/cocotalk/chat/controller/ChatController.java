@@ -1,11 +1,9 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.document.ChatMessage;
-import com.cocotalk.chat.model.vo.ChatMessageVo;
+import com.cocotalk.chat.document.message.ChatMessage;
+import com.cocotalk.chat.document.message.InviteMessage;
 import com.cocotalk.chat.service.ChatMessageService;
 import com.cocotalk.chat.service.RoomService;
-import com.cocotalk.chat.utils.mapper.ChatMessageMapper;
-import com.cocotalk.chat.utils.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -16,40 +14,51 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@MessageMapping("/chat")
 public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageService chatMessageService;
-    private final ChatMessageMapper chatMessageMapper;
     private final RoomService roomService;
-    private final RoomMapper roomMapper;
 
     @GetMapping
     public String index() {
         return "index";
     }
 
-    @MessageMapping("/chat.sendMessage/{roomId}")
+    @MessageMapping("/{roomId}/send")
     @SendTo("/topic/{roomId}")
-    public ChatMessage sendMessage(@Payload ChatMessageVo chatMessageVo,
-                                   @PathVariable String roomId) {
-        ChatMessage chatMessage = chatMessageMapper.toEntity(chatMessageVo);
+    public ChatMessage send(@DestinationVariable String roomId,
+                            @Payload ChatMessage chatMessage) {
+        // 페이로드를 바로 저장하는게 맞을까?
         chatMessageService.save(chatMessage);
+        roomService.saveMessageId(roomId, chatMessage.getId());
         return chatMessage;
     }
 
-    @MessageMapping("/chat.addUser/{roomId}")
+    @MessageMapping("/{roomId}/invite")
     @SendTo("/topic/{roomId}")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
-                               @PathVariable String roomId,
+    public ChatMessage invite(@DestinationVariable String roomId,
+                               @Payload InviteMessage inviteMessage,
                                SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("userId", chatMessage.getUserId());
+        inviteMessage.getInvitees()
+                        .forEach(userId -> headerAccessor.getSessionAttributes().put("userId", userId));
+        roomService.invite(roomId, inviteMessage.getInvitees());
+        return inviteMessage;
+    }
+
+    @MessageMapping("/{roomId}/leave")
+    @SendTo("/topic/{roomId}")
+    public ChatMessage leave(@DestinationVariable String roomId,
+                            @Payload ChatMessage chatMessage,
+                            SimpMessageHeaderAccessor headerAccessor) {
+        roomService.leave(roomId, chatMessage.getUserId());
+        headerAccessor.getSessionAttributes().remove("userId");
         return chatMessage;
     }
 

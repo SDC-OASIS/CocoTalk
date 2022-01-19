@@ -13,7 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -24,16 +25,38 @@ public class RoomController {
     private final RoomMapper roomMapper;
 
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody RoomRequest request){
-        Room room = roomService.createRoom(roomMapper.toEntity(request));
+    public ResponseEntity<GlobalResponse<?>> create(@RequestBody RoomRequest request){
+        Room room = roomService.save(roomMapper.toEntity(request));
         RoomResponse data = roomMapper.toDto(room);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GlobalResponse<?>> find(@PathVariable String id){
+        Room room = roomService.find(id);
+        RoomResponse data = roomMapper.toDto(room);
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<GlobalResponse<?>> findAll(@PathVariable Long userId){
+        List<RoomResponse> data = roomService.findAll(userId).stream()
+                .map(roomMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    }
+
     @GetMapping("/private")
-    public ResponseEntity<?> findPrivateRoom(@RequestParam Long userid, @RequestParam Long friendid){
-        Optional<Room> roomOptional = roomService.findPrivateRoom(userid, friendid);
-        RoomResponse data = roomOptional.map(roomMapper::toDto).orElse(null);
+    public ResponseEntity<GlobalResponse<?>> findPrivate(@RequestParam Long userid, @RequestParam Long friendid){
+        Room room = roomService.findPrivate(userid, friendid);
+        RoomResponse data = roomMapper.toDto(room);
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<GlobalResponse<?>> modify(@RequestBody RoomRequest request){
+        Room room = roomService.save(roomMapper.toEntity(request));
+        RoomResponse data = roomMapper.toDto(room);
         return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
-package com.cocotalk.chat.application;
+package com.cocotalk.chat.websocket.listener;
 
-import com.cocotalk.chat.document.ChatMessage;
+import com.cocotalk.chat.document.message.ChatMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;

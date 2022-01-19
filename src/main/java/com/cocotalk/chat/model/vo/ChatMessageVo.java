@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -18,11 +19,15 @@ public class ChatMessageVo {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId roomId;
+
     private Long userId;
 
     private int type;
 
     private String content;
 
+    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
     private LocalDateTime sentAt;
 }
