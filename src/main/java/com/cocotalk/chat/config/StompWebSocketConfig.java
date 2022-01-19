@@ -1,7 +1,7 @@
 package com.cocotalk.chat.config;
 
-import com.cocotalk.chat.application.InboundChannelInterceptor;
-import com.cocotalk.chat.application.OutboundChannelInterceptor;
+import com.cocotalk.chat.websocket.interceptor.InboundChannelInterceptor;
+import com.cocotalk.chat.websocket.interceptor.OutboundChannelInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

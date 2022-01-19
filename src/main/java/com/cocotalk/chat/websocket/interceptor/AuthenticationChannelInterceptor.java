@@ -1,4 +1,4 @@
-package com.cocotalk.chat.application;
+package com.cocotalk.chat.websocket.interceptor;
 
 import com.cocotalk.chat.entity.User;
 import lombok.NoArgsConstructor;

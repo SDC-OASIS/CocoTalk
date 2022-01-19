@@ -1,4 +1,4 @@
-package com.cocotalk.chat.application;
+package com.cocotalk.chat.websocket.interceptor;
 
 import com.cocotalk.chat.service.ChatMessageService;
 import com.cocotalk.chat.utils.logging.ChannelLogger;
