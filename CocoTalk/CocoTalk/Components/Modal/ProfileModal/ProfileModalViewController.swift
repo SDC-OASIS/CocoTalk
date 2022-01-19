@@ -75,6 +75,7 @@ class ProfileModalViewController: UIViewController {
     
     // MARK: - Properties
     var bag = DisposeBag()
+    var delegate: ProfileCellDelegate?
     var profile: ModelProfile?
     
     var viewTranslation = CGPoint(x: 0, y: 0)
@@ -194,7 +195,19 @@ extension ProfileModalViewController {
     }
     
     func bindButton() {
+        ivChat.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self,
+                      let delegate = self.delegate  else {
+                          return
+                      }
+                delegate.openChatRoom()
+                self.dismiss(animated: true)
+            }).disposed(by: bag)
+        
         ivClose.rx.tapGesture()
+            .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.dismiss(animated: true)

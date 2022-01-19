@@ -108,8 +108,20 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
         let profileVC = ProfileModalViewController()
         profileVC.modalPresentationStyle = .overFullScreen
         profileVC.modalTransitionStyle = .coverVertical
+        profileVC.delegate = self
         self.present(profileVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+}
+
+// MARK: - PrfofileCellDelegate
+extension FriendListViewController: ProfileCellDelegate {
+    func openChatRoom() {
+        tabBarController?.selectedIndex = 1
+        let chatRoomListVC = tabBarController?.viewControllers![1] as! UINavigationController
+        let vc = ChatRoomViewController()
+        vc.hidesBottomBarWhenPushed = true
+        chatRoomListVC.pushViewController(vc, animated: true)
+    }
 }

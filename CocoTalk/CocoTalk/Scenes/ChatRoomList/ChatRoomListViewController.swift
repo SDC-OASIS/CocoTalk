@@ -69,10 +69,12 @@ extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let profileVC = ProfileModalViewController()
-//        profileVC.modalPresentationStyle = .overFullScreen
-//        profileVC.modalTransitionStyle = .coverVertical
-//        self.present(profileVC, animated: true)
+        let vc = ChatRoomViewController()
+        vc.hidesBottomBarWhenPushed = true
+        guard let nav = self.navigationController else {
+            return
+        }
+        nav.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
