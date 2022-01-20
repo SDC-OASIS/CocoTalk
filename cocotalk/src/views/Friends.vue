@@ -8,7 +8,7 @@
 			</div>
 		</div>
 		<div class="myprofile row">
-			<div>
+			<div @click="openProfileModal(userInfo)">
 				<ProfileImg :imgUrl="userInfo.profile" :width="width" />
 			</div>
 			<FriendListUserInfo :userInfo="userInfo" />
@@ -67,8 +67,8 @@ export default {
 		noImage(e) {
 			e.targer.src = "@/assets/profile.jpg";
 		},
-		openProfileModal(userInfo) {
-			this.$store.dispatch("modal/openProfileModal", { status: "open", userInfo: userInfo }, { root: true });
+		openProfileModal(userProfileInfo) {
+			this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
 			console.log("조회");
 		},
 	},

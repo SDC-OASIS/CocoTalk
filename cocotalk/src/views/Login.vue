@@ -19,7 +19,7 @@ export default {
 		return {
 			user: {
 				id: "",
-				name: "",
+				username: "",
 			},
 		};
 	},
