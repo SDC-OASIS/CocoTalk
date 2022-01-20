@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class RoomController {
     private final RoomMapper roomMapper;
 
     @PostMapping
-    public ResponseEntity<GlobalResponse<?>> create(@RequestBody RoomRequest request){
+    public ResponseEntity<GlobalResponse<?>> create(@RequestBody @Valid RoomRequest request){
         Room room = roomService.save(roomMapper.toEntity(request));
         RoomResponse data = roomMapper.toDto(room);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);

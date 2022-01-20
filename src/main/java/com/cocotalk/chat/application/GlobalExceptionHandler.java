@@ -1,8 +1,9 @@
 package com.cocotalk.chat.application;
 
+import com.cocotalk.chat.model.exception.ErrorDetails;
 import com.cocotalk.chat.model.exception.GlobalError;
 import com.cocotalk.chat.model.exception.GlobalException;
-import com.cocotalk.chat.model.response.GlobalResponse;
+import com.cocotalk.chat.model.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,31 +16,38 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(GlobalException.class)
-    public ResponseEntity<GlobalResponse<?>> UserServerException(GlobalException e) {
+    public ResponseEntity<ErrorResponse<?>> ChatServerException(GlobalException e) {
         GlobalError error = e.getError();
-        log.error("GlobalException : " + error.getDesc());
+        ErrorDetails details = new ErrorDetails(e);
 
-        return ResponseEntity
-                .status(error.getStatus())
-                .body(new GlobalResponse<>(error.getStatus(), e.getMessage()));
+        log.error("GlobalException : " + e.getMessage());
+        return ResponseEntity.status(error.getStatus()).body(new ErrorResponse<>(details));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<GlobalResponse<?>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse<?>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
-        String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
-        log.error("MethodArgumentNotValidException : " + errorMessage);
+        GlobalError error = GlobalError.BAD_REQUEST;
+        String desc = error.getDesc() + " : " + bindingResult.getAllErrors().get(0).getDefaultMessage();
+        String stackTrace = e.getStackTrace()[0].toString();
+        ErrorDetails details = new ErrorDetails(error, desc, stackTrace);
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new GlobalResponse<>(HttpStatus.BAD_REQUEST, errorMessage));
+        log.error("MethodArgumentNotValidException : " + desc);
+        return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponse<>(details));
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<GlobalResponse<?>> unknownException(Exception e) {
+    public ResponseEntity<ErrorResponse<?>> unknownException(Exception e) {
+        String stackTrace = e.getStackTrace()[0].toString();
+        ErrorDetails details = new ErrorDetails(GlobalError.UNKNOWN_ERROR, stackTrace);
+
         log.error("UnknownException : " + e.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new GlobalResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, GlobalError.UNKNOWN_ERROR.getDesc()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse<>(details));
     }
+
+//    @MessageExceptionHandler
+//    public ResponseEntity<ExceptionDto> handleException(BabbleException e) {
+//        return ResponseEntity.status(e.status())
+//                .body(new ExceptionDto(e.getMessage()));
+//    }
 }

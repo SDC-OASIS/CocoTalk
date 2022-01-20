@@ -12,17 +12,27 @@ public enum GlobalError {
 
     private final int errorCode;
     private final String desc;
+    private final String type; // Exception 종류
     private final HttpStatus status;
 
     GlobalError(int errorCode, String desc) {
         this.errorCode = errorCode;
         this.desc = desc;
+        this.type = this.toString();
         this.status = HttpStatus.OK;
     }
 
-    GlobalError(int errorCode, String desc, HttpStatus status) {
+    GlobalError(int errorCode, String desc, String type) {
         this.errorCode = errorCode;
         this.desc = desc;
+        this.type = type;
+        this.status = HttpStatus.OK;
+    }
+
+    GlobalError(int errorCode, String desc, String type, HttpStatus status) {
+        this.errorCode = errorCode;
+        this.desc = desc;
+        this.type = type;
         this.status = status;
     }
 }
