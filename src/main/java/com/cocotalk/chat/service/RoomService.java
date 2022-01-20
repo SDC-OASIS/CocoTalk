@@ -1,8 +1,10 @@
 package com.cocotalk.chat.service;
 
 import com.cocotalk.chat.document.QRoom;
-import com.cocotalk.chat.document.Room;
-import com.cocotalk.chat.document.RoomMember;
+import com.cocotalk.chat.document.room.Room;
+import com.cocotalk.chat.document.room.RoomMember;
+import com.cocotalk.chat.document.message.ChatMessage;
+import com.cocotalk.chat.document.message.MessageType;
 import com.cocotalk.chat.model.exception.GlobalError;
 import com.cocotalk.chat.model.exception.GlobalException;
 import com.cocotalk.chat.repository.RoomRepository;
@@ -23,6 +25,10 @@ public class RoomService {
 
     QRoom qRoom = QRoom.room;
 
+    public Room save(Room room) {
+        return roomRepository.save(room);
+    }
+
     public Room find(String id) {
         return roomRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalError.BAD_REQUEST, "존재하지 않는 채팅방입니다."));
@@ -39,11 +45,6 @@ public class RoomService {
                 .orElseThrow(() -> new GlobalException(GlobalError.BAD_REQUEST, "채팅방에 속해 있지 않은 유저입니다."));
     }
 
-
-    public Room save(Room room){
-        return roomRepository.save(room);
-    }
-
     public Room findPrivate(Long userid, Long friendid) {
         Predicate userIdPredicate = qRoom.members.get(0).userId.in(userid, friendid);
         Predicate friendIdPredicate = qRoom.members.get(1).userId.in(userid, friendid);
@@ -54,11 +55,21 @@ public class RoomService {
                 .orElseThrow(() -> new GlobalException(GlobalError.BAD_REQUEST, "존재하지 않는 1:1 채팅방입니다."));
     }
 
-    public Room saveMessageId(String roomId, ObjectId messageId) {
+    public Room saveMessageId(String roomId, ChatMessage chatMessage) {
         Room room = this.find(roomId);
+        if(chatMessage.getType() == MessageType.AWAKE.ordinal()) {
+            room.getMembers().stream()
+                    .filter(roomMember -> !roomMember.getIsJoining())
+                    .map(roomMember -> RoomMember.builder()
+                            .userId(roomMember.getUserId())
+                            .isJoining(true)
+                            .joinedAt(roomMember.getJoinedAt())
+                            .leftAt(roomMember.getLeftAt())
+                            .build());
+        }
         List<ObjectId> messageIds = room.getMessageIds();
-        messageIds.add(messageId);
-        return roomRepository.save(room);
+        messageIds.add(chatMessage.getId());
+        return this.save(room);
     }
 
     public void invite(String roomId, List<Long> userIds) {
@@ -74,7 +85,7 @@ public class RoomService {
                 .filter(invitee -> !members.contains(invitee))
                 .collect(Collectors.toList());
         members.addAll(invitees);
-        roomRepository.save(room);
+        this.save(room);
     }
 
     public void leave(String roomId, Long userId) {
@@ -82,10 +93,19 @@ public class RoomService {
         RoomMember leaver = this.findMember(room, userId);
         List<RoomMember> members = room.getMembers();
         members.remove(leaver);
-        if(room.getType() == 0) {
-            leaver.setIsJoining(false);
-            members.add(leaver);
+        if (room.getType() == 0) {
+            members.add(RoomMember.builder()
+                    .userId(leaver.getUserId())
+                    .isJoining(false)
+                    .joinedAt(leaver.getJoinedAt())
+                    .leftAt(LocalDateTime.now()) // 어차피 ChannelInterceptor preSend에서 처리해주지 않을까?
+                    .build());
         }
-        roomRepository.save(room);
+        if (members.size() == 0) this.delete(room); // 1:1은 수정만 하기 때문에 단톡방에만 적용
+        else this.save(room);
+    }
+
+    public void delete(Room room) {
+        roomRepository.delete(room);
     }
 }

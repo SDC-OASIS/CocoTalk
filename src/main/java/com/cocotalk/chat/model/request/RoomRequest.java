@@ -1,6 +1,6 @@
 package com.cocotalk.chat.model.request;
 
-import com.cocotalk.chat.document.RoomMember;
+import com.cocotalk.chat.document.room.RoomMember;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;

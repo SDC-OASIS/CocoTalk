@@ -1,6 +1,6 @@
 package com.cocotalk.chat.utils.mapper;
 
-import com.cocotalk.chat.document.Room;
+import com.cocotalk.chat.document.room.Room;
 import com.cocotalk.chat.model.request.RoomRequest;
 import com.cocotalk.chat.model.response.RoomResponse;
 import org.mapstruct.Mapper;

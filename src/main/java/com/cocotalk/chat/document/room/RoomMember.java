@@ -1,4 +1,4 @@
-package com.cocotalk.chat.document;
+package com.cocotalk.chat.document.room;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import java.util.Objects;
 @Document(collection = "room_member")
 public class RoomMember {
     private Long userId; // MySQL userId
-    
+
     private Boolean isJoining; // 갠톡에서만 사용
 
     private LocalDateTime joinedAt;
@@ -25,13 +25,9 @@ public class RoomMember {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        else if(!(obj instanceof RoomMember)) return false;
+        if (this == obj) return true;
+        else if (!(obj instanceof RoomMember)) return false;
         RoomMember roomMember = (RoomMember) obj;
         return Objects.equals(userId, roomMember.userId);
-    }
-
-    public void setIsJoining(boolean isJoining) {
-        this.isJoining = isJoining;
     }
 }

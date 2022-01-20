@@ -1,6 +1,6 @@
 package com.cocotalk.chat.service;
 
-import com.cocotalk.chat.document.RoomMember;
+import com.cocotalk.chat.document.room.RoomMember;
 import com.cocotalk.chat.repository.RoomMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

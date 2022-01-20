@@ -1,6 +1,6 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.document.Room;
+import com.cocotalk.chat.document.room.Room;
 import com.cocotalk.chat.model.request.RoomRequest;
 import com.cocotalk.chat.model.response.GlobalResponse;
 import com.cocotalk.chat.model.response.RoomResponse;

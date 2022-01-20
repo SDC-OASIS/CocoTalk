@@ -10,27 +10,27 @@ public enum GlobalError {
     NOT_LOGIN(2003, "로그인 하지 않은 사용자입니다."),
     NOT_PERMITTED(2004, "권한이 없는 유저 입니다.");
 
-    private final int errorCode;
+    private final int code;
     private final String desc;
     private final String type; // Exception 종류
     private final HttpStatus status;
 
-    GlobalError(int errorCode, String desc) {
-        this.errorCode = errorCode;
+    GlobalError(int code, String desc) {
+        this.code = code;
         this.desc = desc;
         this.type = this.toString();
         this.status = HttpStatus.OK;
     }
 
-    GlobalError(int errorCode, String desc, String type) {
-        this.errorCode = errorCode;
+    GlobalError(int code, String desc, String type) {
+        this.code = code;
         this.desc = desc;
         this.type = type;
         this.status = HttpStatus.OK;
     }
 
-    GlobalError(int errorCode, String desc, String type, HttpStatus status) {
-        this.errorCode = errorCode;
+    GlobalError(int code, String desc, String type, HttpStatus status) {
+        this.code = code;
         this.desc = desc;
         this.type = type;
         this.status = status;
