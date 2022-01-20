@@ -1,21 +1,29 @@
 <template>
 	<div class="modal row" @click.self="closeProfileModal">
-		<div class="modal-container" :style="{ backgroundImage: `url(${userInfo.background})` }" @click.self="openFullImg(userInfo.background)">
+		<div class="modal-container" :style="{ backgroundImage: `url(${userProfileInfo.background})` }" @click.self="openFullImg(userProfileInfo.background)">
 			<div @click="closeProfileModal">
 				<span class="iconify exit" data-icon="bx:bx-x" style="color: white"></span>
 			</div>
 			<div class="modal-bottom-container">
-				<div class="profile-modal-info">
-					<div style="cursor: pointer" @click="openFullImg(userInfo.profile)">
-						<ProfileImg :imgUrl="userInfo.profile" width="70px" />
+				<div class="profile-modal-info" @click.self="openFullImg(userProfileInfo.background)">
+					<div style="cursor: pointer; display: inline-block" @click="openFullImg(userProfileInfo.profile)">
+						<ProfileImg :imgUrl="userProfileInfo.profile" width="70px" />
 					</div>
-					<div>{{ userInfo.name }}</div>
-					<div>{{ userInfo.statusMessage }}</div>
+					<br />
+					<span>{{ userProfileInfo.username }}</span>
+					<br />
+					<span>{{ userProfileInfo.statusMessage }}</span>
 				</div>
 				<hr />
-				<div class="modal-profile-chat">
-					<i class="chat fas fa-comment"></i>
-					<div style="font-size: 13px">1 : 1 채팅</div>
+				<div class="modal-profile-chat" style="display: inline-block; margin: 0 20px">
+					<div style="display: inline-block; margin: 0 20px">
+						<i class="chat fas fa-comment"></i>
+						<div style="font-size: 13px">1 : 1 채팅</div>
+					</div>
+					<div v-if="userProfileInfo.username == userInfo.username" style="display: inline-block; font-size: 20px; margin: 0 20px">
+						<i class="fas fa-pen" style="margin: 10px 0"></i>
+						<div style="font-size: 13px">프로필 관리</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -28,6 +36,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import ProfileImg from "../common/ProfileImg.vue";
 
 export default {
@@ -41,14 +50,18 @@ export default {
 				status: false,
 				img: "",
 			},
+			profileInfo: this.userProfileInfo,
 		};
 	},
 	props: {
-		userInfo: Object,
+		userProfileInfo: Object,
+	},
+	computed: {
+		...mapState("userStore", ["userInfo"]),
+		...mapState("modal", ["profileModal"]),
 	},
 	methods: {
 		closeProfileModal() {
-			console.log("모달 닫혀라");
 			this.$store.dispatch("modal/closeProfileModal");
 		},
 		openFullImg(data) {
@@ -58,6 +71,9 @@ export default {
 		closeFullImg() {
 			this.fullImg.status = false;
 		},
+	},
+	created() {
+		console.log(this.profileInfo);
 	},
 };
 
@@ -101,6 +117,9 @@ export default {
 	padding: 3px;
 }
 .modal-profile-chat:hover {
+	cursor: auto;
+}
+.modal-profile-chat > div:hover {
 	color: #ccc8c8;
 	cursor: pointer;
 }

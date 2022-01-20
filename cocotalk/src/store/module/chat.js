@@ -10,40 +10,40 @@ const chat = {
 		},
 		friends: [
 			{
-				name: "권희은",
+				username: "권희은",
 				statusMessage: "오늘도 좋은 하루",
 				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 				background: "https://ifh.cc/g/CgiChn.jpg",
 			},
 			{
-				name: "고병학",
+				username: "고병학",
 				statusMessage: "햇빛이 쨍쨍",
 			},
 			{
-				name: "김민정",
+				username: "김민정",
 				statusMessage: "룰루~~ 신나는 오늘~",
 				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 				background: "https://ifh.cc/g/qKgD7C.png",
 			},
 			{
-				name: "황종훈",
+				username: "황종훈",
 				statusMessage: "얍얍 오늘도 화이팅",
 				background: "https://ifh.cc/g/CgiChn.jpg",
 			},
 		],
 		chats: [
 			{
-				name: "오아시스팀",
+				chatname: "오아시스팀",
 				lastMessage: "오늘도 좋은 하루",
 				roomId: "111",
 				cnt: 200,
 			},
-			{ name: "스토브캠프", lastMessage: "햇빛이 쨍쨍", roomId: "222", cnt: 3 },
+			{ chatname: "스토브캠프", lastMessage: "햇빛이 쨍쨍", roomId: "222", cnt: 3 },
 		],
 		chattings: [
 			{
 				userInfo: {
-					name: "권희은",
+					username: "권희은",
 					profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 				},
 				message: "오늘도 화이팅!",
@@ -51,7 +51,7 @@ const chat = {
 			},
 			{
 				userInfo: {
-					name: "김민정",
+					username: "김민정",
 					profile: undefined,
 				},
 				message: "넵넵",
@@ -59,7 +59,7 @@ const chat = {
 			},
 			{
 				userInfo: {
-					name: "고병학",
+					username: "고병학",
 					profile: undefined,
 				},
 				message: "화이팅!!!",

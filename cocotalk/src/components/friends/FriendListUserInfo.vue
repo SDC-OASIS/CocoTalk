@@ -1,6 +1,6 @@
 <template>
 	<div class="box">
-		<div style="font-weight: bold">{{ userInfo.name }}</div>
+		<div style="font-weight: bold">{{ userInfo.username }}</div>
 		<div>{{ userInfo.statusMessage }}</div>
 	</div>
 </template>

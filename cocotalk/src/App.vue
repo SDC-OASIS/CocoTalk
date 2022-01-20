@@ -8,7 +8,7 @@
 				<router-view name="right" class="right-container" />
 			</div>
 		</div>
-		<ProfileModal v-if="profileModal.status == 'open'" :userInfo="profileModal.userInfo" />
+		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
 		<!-- <AddFriendModal /> -->
 	</div>
 </template>
@@ -58,6 +58,7 @@ export default {
 </script>
 
 <style>
+@import "./css/common.css";
 #app {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -68,38 +69,5 @@ export default {
 	width: 100vw;
 	height: 100vh;
 	margin: 0;
-}
-.content-container {
-	display: flex;
-	justify-content: center;
-}
-.left-container {
-	width: 380px;
-	height: 100vh;
-}
-.right-container {
-	width: 550px;
-	height: 100vh;
-}
-@media (max-width: 1600px) {
-	.left-container {
-		width: 330px;
-		height: 100vh;
-	}
-	.right-container {
-		width: 500px;
-		height: 100vh;
-	}
-}
-.modal {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	background-color: rgb(0, 0, 0, 0.5);
-	z-index: 1;
-	justify-content: center;
-	align-items: center;
 }
 </style>

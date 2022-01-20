@@ -10,7 +10,9 @@
 		</div>
 		<div class="chat-list-container">
 			<div class="chat-container row" v-for="(chat, idx) in chats" :key="idx">
-				<ProfileImg :imgUrl="chat.profile" width="50px" />
+				<div>
+					<ProfileImg :imgUrl="chat.profile" width="50px" />
+				</div>
 				<div class="chat-info-container row" @click="goChat(chat.roomId)">
 					<ChatListInfo :chatInfo="chat" />
 					<div class="box row chat-detail-info">

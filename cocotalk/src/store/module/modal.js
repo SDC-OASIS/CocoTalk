@@ -7,7 +7,7 @@ const modal = {
 		myProfileModal: "close",
 		profileModal: {
 			status: "close",
-			data: Object,
+			userProfileInfo: Object,
 		},
 		addFriendModal: "close",
 	},
@@ -17,7 +17,7 @@ const modal = {
 		},
 		OPEN_PROFILE_MODAL(state, payload) {
 			state.profileModal.status = payload.status;
-			state.profileModal.userInfo = payload.userInfo;
+			state.profileModal.userProfileInfo = payload.userProfileInfo;
 		},
 		CLOSE_PROFILE_MODAL(state) {
 			state.profileModal.status = "close";

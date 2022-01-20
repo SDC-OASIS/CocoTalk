@@ -8,7 +8,7 @@ const userStore = {
 			width: Number,
 		},
 		userInfo: {
-			name: "권희은",
+			username: "권희은",
 			statusMessage: "오늘도 좋은 하루",
 			profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		},
