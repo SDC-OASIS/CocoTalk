@@ -18,6 +18,8 @@ let friendId = null;
 let room = null;
 let roomId = null;
 
+let socket = null;
+
 const domain = "http://localhost:8080/api/v1/chat";
 
 const colors = [
@@ -25,85 +27,120 @@ const colors = [
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
 
-function connect(event) {
+function enter(event) {
     userId = document.querySelector('#userId').value.trim();
     friendId = document.querySelector('#friendId').value.trim();
 
-    if(userId) {
+    if (userId && friendId) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
-        const socket = new SockJS('/stomp');
-        stompClient = Stomp.over(socket);
-        // SockJS와 stomp client를 통해 연결을 시도.
+        axios.get(domain + "/rooms/private?userid=" + userId + "&friendid=" + friendId)
+            .then(res => {
+                console.log(res);
 
-        stompClient.connect({}, onConnected, onError);
+                console.log("enter roomId = " + roomId);
+
+                if (!res.data.data) {
+                    console.log('채팅방 없음');
+                    console.log("createRoomAndConnectAndSend 이벤트 리스너에 등록됨");
+                    messageForm.addEventListener('submit', createRoomAndConnectAndSend, true);
+                } else {
+                    roomId = res.data.data.id;
+                    console.log('채팅방 존재 -> roomId = ' + roomId);
+
+                    socket = new SockJS('/stomp');
+                    stompClient = Stomp.over(socket);
+
+                    console.log("enter connect");
+                    stompClient.connect({
+                        view: "chatroom",
+                        userId: userId,
+                        roomId: roomId
+                    }, onConnected, onError);
+                }
+            })
+            .catch(err => {
+                alert(err);
+            })
+        event.preventDefault();
     }
+}
+
+function createRoomAndConnectAndSend(event){
+    console.log("createRoomAndConnect 이벤트 발생");
+    let now = getLocalDateTime();
+    axios.post(domain + "/rooms", {
+        name: "RoomName",
+        img: "img",
+        type: 0,
+        members: [
+            {
+                userId: userId,
+                isJoining: true,
+                accessedAt: now,
+                joinedAt: now
+            },
+            {
+                userId: friendId,
+                isJoining: true,
+                accessedAt: now,
+                joinedAt: now
+            }
+        ],
+        messageIds: [],
+        noticeIds: []
+    }).then(res => {
+        console.log(res);
+        roomId = res.data.data.id;
+        console.log('채팅방 생성됨 roomId = ' + roomId);
+
+        socket = new SockJS('/stomp');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({
+            view : "chatroom",
+            userId : userId,
+            roomId : roomId
+        }, onConnectAndSend, onError);
+
+    }).catch(err => {
+        alert(err);
+    })
     event.preventDefault();
 }
 
-async function onConnected() {
-    try {
-        // let friendid = Math.floor(Math.random() * 1000001) + 2;
-        room = await axios.get(domain + "/rooms/private?userid=" + userId + "&friendid=" + friendId);
-        if(room.data.data) {
-            roomId = room.data.data.id;
-            console.log('채팅방 존재 -> roomId = ' + roomId);
-        } else {
-            room = await axios.post(domain + "/rooms", {
-                name: "RoomName",
-                img: "img",
-                type: 0,
-                members: [
-                    {
-                        userId: userId,
-                        isJoining: true,
-                        accessedAt: "2022-01-15T11:34:06",
-                        joinedAt: "2022-01-15T11:34:06"
-                    },
-                    {
-                        userId: friendId,
-                        isJoining: true,
-                        accessedAt: "2022-01-15T11:34:06",
-                        joinedAt: "2022-01-15T11:34:06"
-                    }
-                ],
-                messageIds: [],
-                noticeIds: []
-            });
-            roomId = room.data.data.id;
-            console.log('채팅방 없음 -> 채팅방 생성 roomId = ' + roomId);
-        }
+function onConnected() {
+    messageForm.addEventListener('submit', sendMessage, true)
+    stompClient.subscribe('/topic/' + roomId, onMessageReceived);
+    connectingElement.classList.add('hidden');
+}
 
-        // friendName으로 토픽 구독
-        stompClient.subscribe('/topic/' + roomId, onMessageReceived);
+function onConnectAndSend() {
+    const messageContent = messageInput.value.trim();
 
-        let joinMessage = {
+    if(messageContent && stompClient) {
+        let chatMessage = {
             roomId: roomId,
             userId: userId,
-            type: 1,
-            content: null,
+            type: 0,
+            content: messageInput.value,
             sentAt: getLocalDateTime()
-        }
+        };
 
-        console.log(joinMessage);
-
-        // stompClient.send("/simple/chat/" + roomId + "/invite",
-        //     {},
-        //     JSON.stringify(joinMessage) // join
-        // )
-        connectingElement.classList.add('hidden');
-    } catch(e) {
-        alert(e);
+        stompClient.send("/simple/chat/" + roomId + "/send", {}, JSON.stringify(chatMessage));
+        messageInput.value = '';
     }
+
+    messageForm.removeEventListener('submit', createRoomAndConnectAndSend, true)
+    onConnected();
 }
 
 
-function onError(error) {
+function onError() {
     connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
     connectingElement.style.color = 'red';
 }
-
 
 function sendMessage(event) {
     const messageContent = messageInput.value.trim();
@@ -164,6 +201,9 @@ function leave(event) {
 
 
 function onMessageReceived(payload) { // subscribe시 이 함수로 처리
+    console.log('onMessageReceived');
+    console.log(payload);
+
     const message = JSON.parse(payload.body);
 
     const messageElement = document.createElement('li');
@@ -228,7 +268,6 @@ function getLocalDateTime() {
     return year + '-' + month  + '-' + day + "T" + hours + ':' + minutes  + ':' + seconds
 }
 
-usernameForm.addEventListener('submit', connect, true)
-messageForm.addEventListener('submit', sendMessage, true)
+usernameForm.addEventListener('submit', enter, true)
 inviteForm.addEventListener('submit', invite, true)
 leaveForm.addEventListener('submit', leave, true)
