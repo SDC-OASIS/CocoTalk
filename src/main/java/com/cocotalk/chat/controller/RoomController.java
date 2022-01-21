@@ -1,51 +1,63 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.repository.ChatRoomRepository;
+import com.cocotalk.chat.document.room.Room;
+import com.cocotalk.chat.model.request.RoomRequest;
+import com.cocotalk.chat.model.response.GlobalResponse;
+import com.cocotalk.chat.model.response.RoomResponse;
+import com.cocotalk.chat.service.RoomService;
+import com.cocotalk.chat.utils.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(value = "/chat")
+@RequestMapping(value = "/api/v1/chat/rooms")
 public class RoomController {
+    private final RoomService roomService;
+    private final RoomMapper roomMapper;
 
-    private final ChatRoomRepository repository;
-
-    //채팅방 목록 조회
-    @GetMapping(value = "/rooms")
-    public ModelAndView rooms(){
-        log.info("# All Chat Rooms");
-        ModelAndView mv = new ModelAndView("chat/rooms");
-
-        mv.addObject("list", repository.findAllRooms());
-
-        return mv;
+    @PostMapping
+    public ResponseEntity<GlobalResponse<?>> create(@RequestBody @Valid RoomRequest request){
+        Room room = roomService.save(roomMapper.toEntity(request));
+        RoomResponse data = roomMapper.toDto(room);
+        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 
-    //채팅방 개설
-    @PostMapping(value = "/room")
-    public String create(@RequestParam String name, RedirectAttributes rttr){
-
-        log.info("# Create Chat Room , name: " + name);
-        rttr.addFlashAttribute("roomName", repository.createChatRoomDto(name));
-        return "redirect:/chat/rooms";
+    @GetMapping("/{id}")
+    public ResponseEntity<GlobalResponse<?>> find(@PathVariable String id){
+        Room room = roomService.find(id);
+        RoomResponse data = roomMapper.toDto(room);
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 
-    //채팅방 조회
-    @GetMapping("/room")
-    public void getRoom(String roomId, Model model){
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<GlobalResponse<?>> findAll(@PathVariable Long userId){
+        List<RoomResponse> data = roomService.findAll(userId).stream()
+                .map(roomMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    }
 
-        log.info("# get Chat Room, roomID : " + roomId);
+    @GetMapping("/private")
+    public ResponseEntity<GlobalResponse<?>> findPrivate(@RequestParam Long userid, @RequestParam Long friendid){
+        Room room = roomService.findPrivate(userid, friendid);
+        RoomResponse data = roomMapper.toDto(room);
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    }
 
-        model.addAttribute("room", repository.findRoomById(roomId));
+    @PutMapping
+    public ResponseEntity<GlobalResponse<?>> modify(@RequestBody RoomRequest request){
+        Room room = roomService.save(roomMapper.toEntity(request));
+        RoomResponse data = roomMapper.toDto(room);
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 }

@@ -33,6 +33,7 @@
 <div>
     <input type="text" class="message"/>
     <button onClick='send()' class="send-btn">보내기</button>
+    <button onClick='sendOther()' class="send-btn">상대방에게 보내기</button>
 </div>
 <div class="messages">
     <div id="messages"></div>
@@ -44,7 +45,9 @@
         // ["websocket", "xhr-streaming", "xhr-polling"]
         const sock = new SockJS('http://localhost:8080/stomp', null, {transports: ["xhr-polling"]});
         stomp = webstomp.over(sock);
-        stomp.connect({}, function(frame) {
+        stomp.connect({
+            login: "bar"
+        }, function(frame) {
             console.log('Connected!!');
 
             stomp.subscribe("/user/queue/something", function(frame) {
@@ -57,9 +60,17 @@
 
     });
 
+    // 스스로에게만 메시지 전송
     function send() {
         const message = document.querySelector(".message");
         stomp.send("/simple/good", message.value);
+        message.value = '';
+    }
+
+    // foo 사용자에게 메시지 전송
+    function sendOther() {
+        const message = document.querySelector(".message");
+        stomp.send("/user/foo/queue/something", message.value);
         message.value = '';
     }
 </script>
