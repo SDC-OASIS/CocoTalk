@@ -3,8 +3,12 @@
 		<div class="header row">
 			<span>친구</span>
 			<div class="header-icon-container row">
-				<span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
-				<span class="iconify" data-icon="heroicons-outline:user-add" style="color: #aaaaaa"></span>
+				<div style="dispaly: inline-block">
+					<span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
+				</div>
+				<div style="dispaly: inline-block" @click="openAddFriendModal">
+					<span class="iconify" data-icon="heroicons-outline:user-add" style="color: #aaaaaa"></span>
+				</div>
 			</div>
 		</div>
 		<div class="myprofile row">
@@ -69,7 +73,10 @@ export default {
 		},
 		openProfileModal(userProfileInfo) {
 			this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
-			console.log("조회");
+		},
+		openAddFriendModal() {
+			console.log("얍");
+			this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
 		},
 	},
 };
@@ -97,7 +104,7 @@ export default {
 	padding-bottom: 10px;
 }
 .header-icon-container {
-	width: 70px;
+	width: 75px;
 	justify-content: space-between;
 	align-items: center;
 }
@@ -107,10 +114,18 @@ export default {
 	font-weight: bold;
 	padding-left: 20px;
 }
-.header div {
-	font-size: 28px;
+.header > div {
+	font-size: 23px;
 	font-weight: bold;
-	margin-right: 30px;
+	margin-right: 20px;
+}
+.iconify {
+	padding: 7px;
+	border-radius: 15px;
+}
+.iconify:hover {
+	background-color: #e7f7dd;
+	cursor: pointer;
 }
 
 .myprofile {

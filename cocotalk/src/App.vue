@@ -9,13 +9,15 @@
 			</div>
 		</div>
 		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
-		<!-- <AddFriendModal /> -->
+		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
+		<AddFriendModal v-if="addFriendModal == 'open'" />
 	</div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Navbar from "@/components/Navbar.vue";
+import AddFriendModal from "@/components/modals/AddFriendModal.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
 // import AddFriendModal from "@/components/modals/AddFriendModal.vue";
 
@@ -28,8 +30,8 @@ export default {
 	},
 	components: {
 		Navbar,
+		AddFriendModal,
 		ProfileModal,
-		// AddFriendModal,
 	},
 	created() {
 		const width = screen.width;
@@ -42,7 +44,7 @@ export default {
 	computed: {
 		...mapState("userStore", ["screenInfo"]),
 		...mapState("chat", ["friends"]),
-		...mapState("modal", ["profileModal"]),
+		...mapState("modal", ["profileModal", "addFriendModal"]),
 
 		// ...mapState(userStore, {
 		// 	screenInfo: (state) => state.roomStatus,

@@ -22,6 +22,12 @@ const modal = {
 		CLOSE_PROFILE_MODAL(state) {
 			state.profileModal.status = "close";
 		},
+		OPEN_ADD_FRIEND_MODAL(state, payload) {
+			state.addFriendModal = payload;
+		},
+		CLOSE_ADD_FRIEND_MODAL(state) {
+			state.addFriendModal = "close";
+		},
 	},
 	actions: {
 		getScreen: function (context, payload) {
@@ -32,6 +38,12 @@ const modal = {
 		},
 		closeProfileModal: function (context) {
 			context.commit("CLOSE_PROFILE_MODAL");
+		},
+		openAddFriendModal: function (context, payload) {
+			context.commit("OPEN_ADD_FRIEND_MODAL", payload);
+		},
+		closeAddFriendModal: function (context) {
+			context.commit("CLOSE_ADD_FRIEND_MODAL");
 		},
 	},
 	modules: {},

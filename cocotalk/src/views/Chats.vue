@@ -80,7 +80,7 @@ export default {
 	justify-content: space-between;
 }
 .header-icon-container {
-	width: 70px;
+	width: 75px;
 	justify-content: space-between;
 	align-items: center;
 }
@@ -91,9 +91,17 @@ export default {
 	padding-left: 20px;
 }
 .header div {
-	font-size: 28px;
+	font-size: 23px;
 	font-weight: bold;
-	margin-right: 30px;
+	margin-right: 20px;
+}
+.iconify {
+	padding: 7px;
+	border-radius: 15px;
+}
+.iconify:hover {
+	background-color: #e7f7dd;
+	cursor: pointer;
 }
 .myprofile {
 	padding: 20px 0;
