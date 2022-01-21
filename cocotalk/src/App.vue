@@ -8,9 +8,9 @@
 				<router-view name="right" class="right-container" />
 			</div>
 		</div>
-		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
-		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
 		<AddFriendModal v-if="addFriendModal == 'open'" />
+		<MakeChatModal v-if="makeChatModal == 'open'" />
+		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
 	</div>
 </template>
 
@@ -18,8 +18,9 @@
 import { mapState } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 import AddFriendModal from "@/components/modals/AddFriendModal.vue";
+import MakeChatModal from "@/components/modals/MakeChatModal.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
-// import AddFriendModal from "@/components/modals/AddFriendModal.vue";
+// import	MakeChatModal from "@/components/modals	MakeChatModal.vue";
 
 export default {
 	name: "App",
@@ -31,6 +32,7 @@ export default {
 	components: {
 		Navbar,
 		AddFriendModal,
+		MakeChatModal,
 		ProfileModal,
 	},
 	created() {
@@ -44,7 +46,7 @@ export default {
 	computed: {
 		...mapState("userStore", ["screenInfo"]),
 		...mapState("chat", ["friends"]),
-		...mapState("modal", ["profileModal", "addFriendModal"]),
+		...mapState("modal", ["addFriendModal", "profileModal", "makeChatModal"]),
 
 		// ...mapState(userStore, {
 		// 	screenInfo: (state) => state.roomStatus,

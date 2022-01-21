@@ -3,9 +3,12 @@
 		<div class="header row">
 			<span>채팅</span>
 			<div class="header-icon-container row">
-				<span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
-				<!-- <span class="iconify" data-icon="heroicons-outline:user-add" style="color: #aaaaaa"></span> -->
-				<span class="iconify" data-icon="mdi:chat-plus-outline" style="color: #aaaaaa"></span>
+				<div style="dispaly: inline-block">
+					<span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
+				</div>
+				<div style="dispaly: inline-block" @click="openMakeChatModal">
+					<span class="iconify" data-icon="mdi:chat-plus-outline" style="color: #aaaaaa"></span>
+				</div>
 			</div>
 		</div>
 		<div class="chat-list-container">
@@ -61,6 +64,10 @@ export default {
 		// }),
 	},
 	methods: {
+		openMakeChatModal() {
+			// console.log("헛");
+			this.$store.dispatch("modal/openMakeChatModal", "open", { root: true });
+		},
 		goChat(roomId) {
 			this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: roomId } }).catch(() => {});
 		},
@@ -83,6 +90,7 @@ export default {
 	width: 75px;
 	justify-content: space-between;
 	align-items: center;
+	padding-right: 20px;
 }
 .header > span {
 	color: #749f58;
@@ -93,7 +101,7 @@ export default {
 .header div {
 	font-size: 23px;
 	font-weight: bold;
-	margin-right: 20px;
+	/* margin-right: 20px; */
 }
 .iconify {
 	padding: 7px;
@@ -102,16 +110,6 @@ export default {
 .iconify:hover {
 	background-color: #e7f7dd;
 	cursor: pointer;
-}
-.myprofile {
-	padding: 20px 0;
-	margin-right: 30px;
-	border-bottom: 2px solid #9eac95;
-	align-items: center;
-}
-
-.myprofile > div {
-	display: inline-block;
 }
 
 .chat-list-container {

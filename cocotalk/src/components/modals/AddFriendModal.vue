@@ -10,14 +10,14 @@
 					<div>ID로 추가</div>
 				</div>
 				<hr />
-				<div class="add-friend-modal-info">
+				<div>
 					<div class="add-friend-modal-input row">
 						<input v-model="friendId" type="text" placeholder="ID를 입력하세요." maxlength="20" />
 						<span>
 							{{ friendIdCnt + "/20" }}
 						</span>
 					</div>
-					<div class="add-friend-modal-friend-info row" style="justify-content: center">
+					<div class="add-friend-modal-info row" style="justify-content: center">
 						<div style="dispaly: inline-block; text-align: center">
 							<div>
 								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
@@ -82,8 +82,8 @@ export default {
 	right: 0;
 	margin: 13px;
 	font-size: 30px;
-	cursor: pointer;
 	color: #42652b;
+	cursor: pointer;
 }
 .modal-inner-container {
 	padding: 25px 30px;
@@ -129,7 +129,7 @@ export default {
 	font-weight: bold;
 	/* outline: 2px solid #fce41e; */
 }
-.add-friend-modal-friend-info {
+.add-friend-modal-info {
 	padding: 25px 0 5px 0;
 }
 </style>

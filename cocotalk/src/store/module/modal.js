@@ -4,12 +4,12 @@ const modal = {
 	plugins: [createPersistedState()],
 	namespaced: true,
 	state: {
-		myProfileModal: "close",
+		addFriendModal: "close",
+		makeChatModal: "close",
 		profileModal: {
 			status: "close",
 			userProfileInfo: Object,
 		},
-		addFriendModal: "close",
 	},
 	mutations: {
 		GET_SCREEN(state, payload) {
@@ -28,6 +28,12 @@ const modal = {
 		CLOSE_ADD_FRIEND_MODAL(state) {
 			state.addFriendModal = "close";
 		},
+		OPEN_MAKE_CHAT_MODAL(state, payload) {
+			state.makeChatModal = payload;
+		},
+		CLOSE_MAKE_CHAT_MODAL(state) {
+			state.makeChatModal = "close";
+		},
 	},
 	actions: {
 		getScreen: function (context, payload) {
@@ -44,6 +50,12 @@ const modal = {
 		},
 		closeAddFriendModal: function (context) {
 			context.commit("CLOSE_ADD_FRIEND_MODAL");
+		},
+		openMakeChatModal: function (context, payload) {
+			context.commit("OPEN_MAKE_CHAT_MODAL", payload);
+		},
+		closeMakeChatModal: function (context) {
+			context.commit("CLOSE_MAKE_CHAT_MODAL");
 		},
 	},
 	modules: {},

@@ -32,5 +32,6 @@ export default {
 .button:hover {
 	background-color: #c9b821;
 	border: 1px solid rgb(230, 207, 6);
+	cursor: pointer;
 }
 </style>
