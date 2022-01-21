@@ -1,10 +1,10 @@
 package com.cocotalk.chat.service;
 
-import com.cocotalk.chat.document.QRoom;
-import com.cocotalk.chat.document.room.Room;
-import com.cocotalk.chat.document.room.RoomMember;
 import com.cocotalk.chat.document.message.ChatMessage;
 import com.cocotalk.chat.document.message.MessageType;
+import com.cocotalk.chat.document.room.QRoom;
+import com.cocotalk.chat.document.room.Room;
+import com.cocotalk.chat.document.room.RoomMember;
 import com.cocotalk.chat.model.exception.GlobalError;
 import com.cocotalk.chat.model.exception.GlobalException;
 import com.cocotalk.chat.repository.RoomRepository;
@@ -72,6 +72,31 @@ public class RoomService {
         return this.save(room);
     }
 
+    public void saveLeftAt(String roomId, Long userId) {
+        Room room = this.find(roomId);
+        RoomMember me = this.findMember(room, userId);
+        List<RoomMember> members = room.getMembers();
+        members.remove(me);
+        me.setLeftAt(LocalDateTime.now());
+        members.add(me);
+        this.save(room);
+    }
+
+//    public Room saveSessionId(String roomId, String sessionId, Long userId) {
+//        Room room = this.find(roomId);
+//        RoomMember me = this.findMember(room, userId);
+//        List<RoomMember> members = room.getMembers();
+//        members.remove(me);
+//        members.add(RoomMember.builder()
+//                .userId(me.getUserId())
+//                .sessionId(sessionId)
+//                .isJoining(me.getIsJoining()) // true로 해도 상관없나
+//                .joinedAt(me.getJoinedAt())
+//                .leftAt(me.getLeftAt())
+//                .build());
+//        return this.save(room);
+//    }
+
     public void invite(String roomId, List<Long> userIds) {
         Room room = this.find(roomId);
         // userIds로 User 서버에서 정보 조회
@@ -103,6 +128,20 @@ public class RoomService {
         }
         if (members.size() == 0) this.delete(room); // 1:1은 수정만 하기 때문에 단톡방에만 적용
         else this.save(room);
+    }
+
+    public void away(String roomId, Long userId) {
+        Room room = this.find(roomId);
+        RoomMember awayMember = this.findMember(room, userId);
+        List<RoomMember> members = room.getMembers();
+        members.remove(awayMember);
+        members.add(RoomMember.builder()
+                .userId(awayMember.getUserId())
+                .isJoining(true)
+                .joinedAt(awayMember.getJoinedAt())
+                .leftAt(LocalDateTime.now())
+                .build());
+        this.save(room);
     }
 
     public void delete(Room room) {

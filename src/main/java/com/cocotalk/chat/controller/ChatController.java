@@ -11,6 +11,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -27,12 +28,19 @@ public class ChatController {
         return "index";
     }
 
+    @MessageMapping("/{roomId}/connect")
+    public ChatMessage connect(@DestinationVariable String roomId,
+                               StompHeaderAccessor headerAccessor,
+                               @Payload ChatMessage connectMessage) {
+        return connectMessage;
+    }
+
     @MessageMapping("/{roomId}/send")
     @SendTo("/topic/{roomId}")
     public ChatMessage send(@DestinationVariable String roomId,
                             @Payload ChatMessage chatMessage) {
         // 페이로드를 바로 저장하는게 맞을까?
-        chatMessageService.save(chatMessage);
+        chatMessageService.saveChatMessage(chatMessage);
         roomService.saveMessageId(roomId, chatMessage);
         return chatMessage;
     }
@@ -42,6 +50,7 @@ public class ChatController {
     public ChatMessage invite(@DestinationVariable String roomId,
                                @Payload InviteMessage inviteMessage,
                                SimpMessageHeaderAccessor headerAccessor) {
+        chatMessageService.saveInviteMessage(inviteMessage);
         inviteMessage.getInvitees()
                         .forEach(userId -> headerAccessor.getSessionAttributes().put("userId", userId));
         roomService.invite(roomId, inviteMessage.getInvitees());
@@ -51,10 +60,11 @@ public class ChatController {
     @MessageMapping("/{roomId}/leave")
     @SendTo("/topic/{roomId}")
     public ChatMessage leave(@DestinationVariable String roomId,
-                            @Payload ChatMessage chatMessage,
+                            @Payload ChatMessage leaveMessage,
                             SimpMessageHeaderAccessor headerAccessor) {
-        roomService.leave(roomId, chatMessage.getUserId());
+        chatMessageService.saveChatMessage(leaveMessage);
+        roomService.leave(roomId, leaveMessage.getUserId());
         headerAccessor.getSessionAttributes().remove("userId");
-        return chatMessage;
+        return leaveMessage;
     }
 }

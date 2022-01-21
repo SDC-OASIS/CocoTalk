@@ -28,6 +28,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/stomp")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
+                // .setHeartbeatTime(1000);
     }
 
     /*어플리케이션 내부에서 사용할 path를 지정할 수 있음*/

@@ -30,4 +30,16 @@ public class RoomMember {
         RoomMember roomMember = (RoomMember) obj;
         return Objects.equals(userId, roomMember.userId);
     }
+
+    public void setJoining(Boolean joining) {
+        isJoining = joining;
+    }
+
+    public void setJoinedAt(LocalDateTime joinedAt) {
+        this.joinedAt = joinedAt;
+    }
+
+    public void setLeftAt(LocalDateTime leftAt) {
+        this.leftAt = leftAt;
+    }
 }

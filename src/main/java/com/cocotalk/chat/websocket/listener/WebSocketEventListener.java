@@ -1,22 +1,26 @@
 package com.cocotalk.chat.websocket.listener;
 
 import com.cocotalk.chat.document.message.ChatMessage;
+import com.cocotalk.chat.document.message.MessageType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.bson.types.ObjectId;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.broker.BrokerAvailabilityEvent;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.messaging.SessionConnectedEvent;
+import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class WebSocketEventListener {
-
-    @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
+    private final SimpMessageSendingOperations messagingTemplate;
 
     @EventListener
     public void handleBrokerAvailabilityListener(BrokerAvailabilityEvent event) {
@@ -25,73 +29,44 @@ public class WebSocketEventListener {
         log.info("BrokerAvailabilityEvent - " + event.toString());
     }
 
+
     @EventListener
-    public void handleWebSocketConnectedListener(SessionConnectedEvent event) {
-        log.info("SessionConnectedEvent - timestamp: " + event.getTimestamp());
-        log.info("SessionConnectedEvent - user: " + event.getUser());
-        log.info("SessionConnectedEvent: " + event.toString());
-
+    public void handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-//        StompCommand command = accessor.getCommand();
-//
-//        log.info("SessionConnectedEvent : StompCommand: " + command);
-        log.info("SessionConnectedEvent - login: " + accessor.getLogin());
-
-        long[] heartBeats = accessor.getHeartbeat();
-        for (long heartBeat : heartBeats) {
-            log.info("SessionConnectedEvent - heartBeat: " + heartBeat);
-        }
-
-        log.info("SessionConnectedEvent - destination: " + accessor.getDestination());
-        log.info("SessionConnectedEvent - host: " + accessor.getHost());
-        log.info("SessionConnectedEvent - message: " + accessor.getMessage());
-        log.info("SessionConnectedEvent - sessionId: " + accessor.getSessionId());
-        log.info("SessionConnectedEvent - subscriptionId: " + accessor.getSubscriptionId());
-
-        byte[] payload = (byte[])event.getMessage().getPayload();
-        String stringPayload = new String(payload);
-        log.info("SessionConnectedEvent - payload: " + stringPayload);
+//        List<String> uiList = accessor.getNativeHeader("userId");
+//        List<String> riList = accessor.getNativeHeader("roomId");
+//        if(uiList != null && riList != null) {
+//            Long userId = Long.parseLong(uiList.get(0));
+//            ObjectId roomId = new ObjectId(riList.get(0));
+//            Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
+//            if(sessionAttributes != null) {
+//                accessor.getSessionAttributes().put(accessor.getSessionId(), new SessionVo(userId, roomId));
+//            }
+//        }
     }
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-        log.info("SessionDisconnectEvent - timestamp: " + event.getTimestamp());
-        log.info("SessionDisconnectEvent - user: " + event.getUser());
-        log.info("SessionDisconnectEvent - sessionId: " + event.getSessionId());
-        log.info("SessionDisconnectEvent - close status: " + event.getCloseStatus());
-        log.info("SessionDisconnectEvent: " + event.toString());
-
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-//        StompCommand command = accessor.getCommand();
-//
-//        log.info("SessionDisconnectEvent : StompCommand: " + command);
-        log.info("SessionDisconnectEvent - login: " + accessor.getLogin());
 
-        long[] heartBeats = accessor.getHeartbeat();
-        for (long heartBeat : heartBeats) {
-            log.info("SessionDisconnectEvent - heartBeat: " + heartBeat);
-        }
+        Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
+        if(sessionAttributes != null) {
+            String view = sessionAttributes.get("view").toString();
+            if(view.equals("chatroom")) {
+                Long userId = Long.parseLong(sessionAttributes.get("userId").toString());
+                ObjectId roomId = new ObjectId(sessionAttributes.get("roomId").toString());
+                log.info("User Disconnected - userId = " + userId);
+                ChatMessage chatMessage = ChatMessage.builder()
+                        .userId(userId)
+                        .roomId(roomId)
+                        .type(MessageType.AWAY.ordinal())
+                        .sentAt(LocalDateTime.now())
+                        .build();
 
-        log.info("SessionDisconnectEvent - destination: " + accessor.getDestination());
-        log.info("SessionDisconnectEvent - host: " + accessor.getHost());
-        log.info("SessionDisconnectEvent - message: " + accessor.getMessage());
-        log.info("SessionDisconnectEvent - sessionId: " + accessor.getSessionId());
-        log.info("SessionDisconnectEvent - subscriptionId: " + accessor.getSubscriptionId());
-
-        byte[] payload = (byte[])event.getMessage().getPayload();
-        String stringPayload = new String(payload);
-        log.info("SessionDisconnectEvent - payload: " + stringPayload);
-
-        Long userId = (Long) accessor.getSessionAttributes().get("userId");
-        if(userId != null) {
-            log.info("User Disconnected - userId = " + userId);
-
-            ChatMessage chatMessage = ChatMessage.builder()
-                    .type(2)
-                    .userId(userId)
-                    .build();
-
-            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+                messagingTemplate.convertAndSend("/topic/" + roomId, chatMessage);
+            } else if (view.equals("main")) {
+                // 메인화면 글로벌 소켓 예정
+            }
         }
     }
 }
