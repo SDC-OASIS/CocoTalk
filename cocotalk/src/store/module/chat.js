@@ -30,6 +30,27 @@ const chat = {
 				statusMessage: "얍얍 오늘도 화이팅",
 				background: "https://ifh.cc/g/CgiChn.jpg",
 			},
+			{
+				username: "김김김",
+				statusMessage: "오늘도 좋은 하루",
+				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+				background: "https://ifh.cc/g/CgiChn.jpg",
+			},
+			{
+				username: "박박박",
+				statusMessage: "햇빛이 쨍쨍",
+			},
+			{
+				username: "리리리",
+				statusMessage: "룰루~~ 신나는 오늘~",
+				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+				background: "https://ifh.cc/g/qKgD7C.png",
+			},
+			{
+				username: "황황황",
+				statusMessage: "얍얍 오늘도 화이팅",
+				background: "https://ifh.cc/g/CgiChn.jpg",
+			},
 		],
 		chats: [
 			{

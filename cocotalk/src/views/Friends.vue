@@ -164,10 +164,10 @@ export default {
 	width: 50px;
 	height: 50px;
 }
-.d {
+/* .d {
 	position: absolute;
 	width: 50px;
 	height: 50px;
 	z-index: 3000;
-}
+} */
 </style>
