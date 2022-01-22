@@ -39,6 +39,7 @@ extension RootTabBarController {
     
     func configureView() {
         tabBar.tintColor = .black
+        tabBar.backgroundColor = .white
         UITabBar.appearance().backgroundColor = .secondarySystemFill
         tabBar.isTranslucent = false
         
