@@ -11,6 +11,7 @@ import SnapKit
 import Then
 import RxSwift
 import RxGesture
+import Kingfisher
 
 class ProfileModalViewController: UIViewController {
     
@@ -27,66 +28,86 @@ class ProfileModalViewController: UIViewController {
     }
     
     /// 프로필 이미지
-    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumnail_01")!)
+    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumnail_01")!).then {
+        $0.setShadow()
+    }
     
     /// 이름
     private let lblName = UILabel().then {
-        $0.text = "테스트 이름"
         $0.font = .systemFont(ofSize: 18)
         $0.textColor = .white
-        $0.shadowColor = .gray
-        $0.shadowOffset = .init(width: 0, height: 0)
+        $0.setShadow()
     }
     
     /// 이름 수정 버튼
     private let ivUpdateName = UIImageView(image: UIImage(systemName: "pencil")).then {
         $0.tintColor = .white
+        $0.setShadow()
     }
     
     /// 상태메시지
     private let lblBio = UILabel().then {
-        $0.text = "상태 메시지가 있을 자리"
         $0.textColor = .white
         $0.font = .systemFont(ofSize: 14)
         $0.textAlignment = .center
-        $0.shadowColor = .gray
-        $0.shadowOffset = .init(width: 0, height: 0)
-        
+        $0.setShadow()
     }
     
     /// 수직선
     private let horizontalLine = UIView().then {
-        $0.backgroundColor = .lightGray
+        $0.backgroundColor = .gray
     }
     
     /// 1:1 채팅
     private let ivChat = UIImageView(image: UIImage(systemName: "message.fill")).then {
         $0.tintColor = .white
+        $0.setShadow()
     }
     
     private let lblChat = UILabel().then {
         $0.text = "1:1 채팅"
         $0.textColor = .white
         $0.font = .systemFont(ofSize: 12)
-        $0.shadowColor = .gray
-        $0.shadowOffset = .init(width: 0, height: 0)
+        $0.setShadow()
     }
     
     
     // MARK: - Properties
     var bag = DisposeBag()
     var delegate: ProfileCellDelegate?
-    var profile: ModelProfile?
+    let profile: ModelProfile
     
     var viewTranslation = CGPoint(x: 0, y: 0)
     var viewVelocity = CGPoint(x: 0, y: 0)
     
     // MARK: - Life cycle
+    init(profile: ModelProfile) {
+        self.profile = profile
+        lblName.text = profile.name ?? ""
+        lblBio.text = profile.bio ?? ""
+        
+        if let bgImgUrl = profile.bgImageUrl,
+           !bgImgUrl.isEmpty {
+            let url = URL(string: bgImgUrl)
+            ivBg.kf.setImage(with: url, placeholder: UIImage(named: "bg_noimage"))
+        }
+        
+        if let profileImgUrl = profile.profileImageUrl,
+           !profileImgUrl.isEmpty {
+            let url = URL(string: profileImgUrl)
+            ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumnail_01"))
+        }
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        title = ""
         
         addPanGesture()
         configureView()
@@ -169,7 +190,7 @@ extension ProfileModalViewController {
         }
         
         horizontalLine.snp.makeConstraints {
-            $0.height.equalTo(2)
+            $0.height.equalTo(1)
             $0.centerX.width.equalToSuperview()
             $0.bottom.equalToSuperview().inset(140)
         }

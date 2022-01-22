@@ -104,8 +104,10 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
         return viewModel.dependency.sections[section]
     }
     
+    #warning("각 섹션별 대응 코드 작성")
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let profileVC = ProfileModalViewController()
+        let profile = viewModel.input.profileList[indexPath.row]
+        let profileVC = ProfileModalViewController(profile: profile)
         profileVC.modalPresentationStyle = .overFullScreen
         profileVC.modalTransitionStyle = .coverVertical
         profileVC.delegate = self

@@ -11,6 +11,7 @@ struct ModelProfile: Codable {
     var id: Int?
     var name: String?
     var bio: String?
+    var bgImageUrl: String?
     var profileImageUrl: String?
     #warning("UserDefault로 확인하기")
     /// CoreData에 업데이트가 생겼을 경우
@@ -37,6 +38,7 @@ extension ModelProfile {
         return ModelProfile(id: Int.random(in: 0..<99999),
                             name: UUID().uuidString.split(separator: "-")[0].description,
                             bio: _bio,
-                            profileImageUrl: "")
+                            bgImageUrl: "https://wallpaperbat.com/img/162518-get-the-macos-high-sierra-default-wallpaper.jpg",
+                            profileImageUrl: "https://post-phinf.pstatic.net/MjAyMDA5MDRfMTIy/MDAxNTk5MTU0ODgwODA1.VIMIFPYx_9Pi4hGZOt8Ij8MED4n_L9y2YhLYBKzSKj0g.mKjyNEiLP1tstUCDK2qNl9bb16QvoZHaB00P4ZYygVAg.JPEG/fdg34tsdfg3.jpg?type=w1200")
     }
 }
