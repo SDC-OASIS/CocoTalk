@@ -44,8 +44,6 @@ class ChatRoomListViewModel {
         for _ in 0..<40 {
             input.roomList.append(ModelChatRoom.createRandom())
         }
-        
-        print(input.roomList)
     }
 }
 

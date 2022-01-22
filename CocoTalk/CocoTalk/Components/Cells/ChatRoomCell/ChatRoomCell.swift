@@ -19,6 +19,8 @@ import Kingfisher
 class ChatRoomCell: UITableViewCell {
     
     // MARK: - UI properties
+    private let uiView = UIView()
+    
     #warning("단체톡 이미지 처리")
     // 갠톡, 3인, 4인 이상
     /// 프로필 이미지
@@ -130,11 +132,12 @@ class ChatRoomCell: UITableViewCell {
         titleStackView.addArrangedSubview(ivSilent)
         centerStackView.addArrangedSubview(titleStackView)
         centerStackView.addArrangedSubview(lblLastMessage)
-        contentView.addSubview(lblLastMsgTime)
+        uiView.addSubview(lblLastMsgTime)
         viewUnreadNumberContainer.addSubview(lblUnreadMessageNumber)
-        contentView.addSubview(viewUnreadNumberContainer)
-        contentView.addSubview(ivRoomImage)
-        contentView.addSubview(centerStackView)
+        uiView.addSubview(viewUnreadNumberContainer)
+        uiView.addSubview(ivRoomImage)
+        uiView.addSubview(centerStackView)
+        contentView.addSubview(uiView)
         
         ivRoomImage.snp.makeConstraints {
             $0.centerY.equalToSuperview()
@@ -185,9 +188,9 @@ class ChatRoomCell: UITableViewCell {
             $0.trailing.equalTo(lblLastMsgTime.snp.leading).offset(-10)
         }
         
-        contentView.snp.makeConstraints {
+        uiView.snp.makeConstraints {
+            $0.top.bottom.width.equalToSuperview()
             $0.height.equalTo(76)
-            $0.width.equalToSuperview()
         }
     }
     

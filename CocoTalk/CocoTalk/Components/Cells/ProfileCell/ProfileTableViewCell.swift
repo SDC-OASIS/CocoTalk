@@ -18,6 +18,8 @@ import Kingfisher
 class ProfileTableViewCell: UITableViewCell {
     
     // MARK: - UI properties
+    private let uiView = UIView()
+    
     /// 프로필 이미지
     private let ivProfile = ProfileImageView(image: nil)
     
@@ -61,17 +63,18 @@ class ProfileTableViewCell: UITableViewCell {
         super.awakeFromNib()
 
     }
-    
-    #warning("이미지 재사용을 위한 처리 필요")
+
     override func prepareForReuse() {
         super.prepareForReuse()
+        ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")
     }
 
     // MARK: - Helper
     private func setUI() {
         stackView.addArrangedSubview(lblName)
-        contentView.addSubview(ivProfile)
-        contentView.addSubview(stackView)
+        uiView.addSubview(ivProfile)
+        uiView.addSubview(stackView)
+        contentView.addSubview(uiView)
         
         ivProfile.snp.makeConstraints {
             $0.centerY.equalToSuperview()
@@ -86,16 +89,17 @@ class ProfileTableViewCell: UITableViewCell {
             $0.trailing.equalToSuperview().inset(30)
         }
         
-        contentView.snp.makeConstraints {
+        uiView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
             $0.height.equalTo(60)
-            $0.width.equalToSuperview()
         }
     }
     
     func setData(data: ModelProfile) {
-        #warning("이미지 적용")
-        if let _img = data.profileImageUrl {
-            ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")!
+        if let _img = data.profileImageUrl,
+           !_img.isEmpty {
+            let url = URL(string: _img)
+            ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumnail_01"))
         } else {
             ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")!
         }

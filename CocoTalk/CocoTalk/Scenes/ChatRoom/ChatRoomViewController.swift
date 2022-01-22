@@ -41,8 +41,6 @@ class ChatRoomViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.tabBarController?.tabBar.isHidden = true
-//        print(tabBarController?.tabBar.layer.zPosition)
-//        tabBarController?.tabBar.layer.zPosition = 1
     }
     
     override func viewWillDisappear(_ animated: Bool) {
