@@ -14,7 +14,10 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "friend")
+@Table(name = "friend", uniqueConstraints = {
+        @UniqueConstraint(name = "uniqueFriend",
+                columnNames = {"from_uid", "to_uid"})
+})
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

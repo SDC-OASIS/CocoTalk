@@ -3,9 +3,9 @@ create table user
     id          bigint auto_increment primary key,
     cid         varchar(20)  not null,
     password    varchar(64)  not null,
-    email       varchar(125),
     name        varchar(20)  not null,
     nickname    varchar(20)  not null,
+    email       varchar(125),
     phone       varchar(20)  not null,
     profile     varchar(255),
     provider    varchar(255) not null,
@@ -15,8 +15,8 @@ create table user
     loggedin_at  timestamp,
     created_at  timestamp    not null,
     modified_at timestamp    not null,
-    constraint uk_phone
+    constraint unique_phone
         unique (phone),
-    constraint uk_email
+    constraint unique_email
         unique (email)
 ) engine=InnoDB;
