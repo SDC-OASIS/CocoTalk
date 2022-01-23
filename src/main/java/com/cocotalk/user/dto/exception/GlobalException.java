@@ -1,4 +1,4 @@
-package com.cocotalk.user.support;
+package com.cocotalk.user.dto.exception;
 
 import lombok.Getter;
 
@@ -11,8 +11,8 @@ public class GlobalException extends RuntimeException {
         this.error = error;
     }
 
-    public GlobalException(GlobalError error, String message) {
-        super(error.getDesc() + " : " + message);
+    public GlobalException(GlobalError error, String detailedDesc) {
+        super(error.getDesc() + " : " + detailedDesc);
         this.error = error;
     }
 
