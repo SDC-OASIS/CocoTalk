@@ -1,4 +1,4 @@
-package com.cocotalk.user.mapper;
+package com.cocotalk.user.utils.mapper;
 
 import com.cocotalk.user.domain.entity.Friend;
 import com.cocotalk.user.domain.vo.FriendVo;
