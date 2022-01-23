@@ -1,12 +1,14 @@
 package com.cocotalk.user.controller;
 
 
+import com.cocotalk.user.domain.entity.User;
+import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.UserModifyRequest;
-import com.cocotalk.user.dto.response.UserResponse;
+import com.cocotalk.user.dto.response.GlobalResponse;
 import com.cocotalk.user.service.UserService;
-import com.cocotalk.user.support.GlobalResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ import java.util.List;
  * @author ybell1028
  * @version 1.0, 최초 작성
  * @see com.cocotalk.user.service.UserService
- * @see com.cocotalk.user.mapper.UserMapper
+ * @see com.cocotalk.user.utils.mapper.UserMapper
  */
 
 @RestController
@@ -38,8 +40,8 @@ public class UserController {
      */
     @ApiOperation(value = "유저 전체 조회")
     @GetMapping
-    public ResponseEntity<GlobalResponse<List<UserResponse>>> getAll() {
-        List<UserResponse> data = userService.findAll();
+    public ResponseEntity<GlobalResponse<List<UserVo>>> findAll() {
+        List<UserVo> data = userService.findAll();
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
     }
 
@@ -47,43 +49,89 @@ public class UserController {
      * 유저 id로 조회 API [GET] /api/user/{id}
      *
      * @param id 유저 id
-     * @return ResponseEntity<GlobalResponse<UserResponse>> 조회된 유저 정보가 데이터에 포함됩니다.
-     * @exception com.cocotalk.user.support.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
+     * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
+     * @exception com.cocotalk.user.dto.exception.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
     @ApiOperation(value = "유저 id로 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<GlobalResponse<UserResponse>> findById(@PathVariable Long id) {
-        UserResponse data = userService.findById(id);
+    public ResponseEntity<GlobalResponse<UserVo>> findById(@PathVariable Long id) {
+        UserVo data = userService.findById(id);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
     }
 
     /**
-     * 유저 id로 정보 수정 API [PUT] /api/user/{id}
+     * 유저 코코톡 id로 조회 API [GET] /api/user?cid=
      *
-     * @param id 유저 id
+     * @param cid 코코톡 id
+     * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
+     * @exception com.cocotalk.user.dto.exception.GlobalException 해당 코코톡 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
+     */
+    @ApiOperation(value = "유저 cid로 조회")
+    @GetMapping("/cid/{cid}")
+    public ResponseEntity<GlobalResponse<UserVo>> findByCid(
+            @ApiParam(value = "유저 코코톡 id", required = true, example = "ybell1028")
+            @RequestParam String cid) {
+        UserVo data = userService.findByCid(cid);
+        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 email로 조회 API [GET] /api/user?email=
+     *
+     * @param email 유저 email
+     * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
+     * @exception com.cocotalk.user.dto.exception.GlobalException 해당 email을 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
+     */
+    @ApiOperation(value = "유저 email로 조회")
+    @GetMapping("/email/{email}")
+    public ResponseEntity<GlobalResponse<UserVo>> findByEmail(
+            @ApiParam(value = "유저 email", required = true, example = "test@example.com")
+            @RequestParam String email) {
+        UserVo data = userService.findByEmail(email);
+        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 연락처로 조회 API [GET] /api/user?phone=[ string, ... ]
+     *
+     * @param phones 유저들의 연락처
+     * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
+     */
+    @ApiOperation(value = "유저 연락처로 조회")
+    @GetMapping("/phone")
+    public ResponseEntity<GlobalResponse<List<UserVo>>> findByPhone(
+            @ApiParam(value = "연락처", example = "[ \"01012345678\", \"01011112222\", ... ]")
+            @RequestParam List<String> phones) {
+        List<UserVo> data = userService.findByPhones(phones);
+        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
+    }
+
+
+    /**
+     * 유저 정보 수정 API [PUT] /api/user/{id}
+     *
      * @param request 수정할 내용을 담은 요청 모델
-     * @return ResponseEntity<GlobalResponse<UserResponse>> 수정된 유저 정보가 데이터에 포함됩니다.
-     * @exception com.cocotalk.user.support.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
+     * @return ResponseEntity<GlobalResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
+     * @exception com.cocotalk.user.dto.exception.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @ApiOperation(value = "유저 id로 정보 수정")
-    @PutMapping("/{id}")
-    public ResponseEntity<GlobalResponse<UserResponse>> modifyById(@PathVariable Long id, @RequestBody @Valid UserModifyRequest request) {
-        UserResponse data = userService.modify(id, request);
+    @ApiOperation(value = "유저 수정")
+    @PutMapping()
+    public ResponseEntity<GlobalResponse<UserVo>> modifyById(User user, @RequestBody @Valid UserModifyRequest request) {
+        UserVo data = userService.modify(user, request);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
     }
 
     /**
-     * 유저 id로 삭제 API [DELETE] /api/user/{id}
+     * 유저 삭제 API [DELETE] /api/user
      *
-     * @param id 유저 id
      * @return ResponseEntity<GlobalResponse<String>> 삭제된 유저 cid를 포함한 메시지가 포함됩니다.
-     * @exception com.cocotalk.user.support.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
+     * @exception com.cocotalk.user.dto.exception.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @ApiOperation(value = "유저 id로 삭제")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<GlobalResponse<String>> deleteById(@PathVariable Long id) {
-        String cid = userService.delete(id);
-        String message = String.format("유저 %s이 삭제되었습니다.", cid);
-        return new ResponseEntity<>(new GlobalResponse<>(message), HttpStatus.NO_CONTENT);
+    @ApiOperation(value = "유저 삭제")
+    @DeleteMapping
+    public ResponseEntity<GlobalResponse<String>> deleteById(User user) {
+        String cid = userService.delete(user);
+        String result = String.format("유저 %s이 삭제되었습니다.", cid);
+        return new ResponseEntity<>(new GlobalResponse<>(result), HttpStatus.NO_CONTENT);
     }
 }

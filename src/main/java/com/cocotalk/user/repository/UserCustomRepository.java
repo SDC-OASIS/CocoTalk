@@ -5,7 +5,5 @@ import com.cocotalk.user.domain.entity.User;
 import java.util.Optional;
 
 public interface UserCustomRepository {
-    Optional<User> findById(Long id);
-    Optional<User> findByEmail(String email);
-    Optional<User> findByCid(String Cid);
+    Optional<User> find(String cid, String email, String phones);
 }

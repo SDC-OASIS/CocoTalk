@@ -1,4 +1,4 @@
-package com.cocotalk.user.support;
+package com.cocotalk.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 public class GlobalResponse<T> {
-
-    private boolean success;
     private T data;
     private HttpStatus status;
     private int statusCode;

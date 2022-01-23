@@ -2,6 +2,7 @@ package com.cocotalk.user.repository;
 
 import com.cocotalk.user.domain.entity.QUser;
 import com.cocotalk.user.domain.entity.User;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,20 +17,35 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     QUser quser = QUser.user;
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> find(String cid, String email, String phone) {
         return Optional.ofNullable(jpaQueryFactory.select(quser)
-                        .from(quser)
-                        .where(quser.id.eq(id))
-                        .fetchOne());
+                .from(quser)
+                .where(cidOrEmailOrPhoneEq(cid, email, phone))
+                .fetchOne());
     }
 
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return Optional.empty();
+    private BooleanBuilder cidOrEmailOrPhoneEq(String cid, String email, String phone) {
+        return cidEq(cid).or(emailEq(email)).or(phoneEq(phone));
     }
 
-    @Override
-    public Optional<User> findByCid(String Cid) {
-        return Optional.empty();
+    private BooleanBuilder cidEq(String cid) {
+        // nullSafeBuilder(() -> quser.cid.eq(cid));
+        return cid == null ? new BooleanBuilder() : new BooleanBuilder(quser.cid.eq(cid));
     }
+
+    private BooleanBuilder emailEq(String email) {
+        return email == null ? new BooleanBuilder() : new BooleanBuilder(quser.email.eq(email));
+    }
+
+    private BooleanBuilder phoneEq(String phone) {
+        return phone == null ? new BooleanBuilder() : new BooleanBuilder(quser.phone.eq(phone));
+    }
+
+//    public static BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> f) {
+//        try {
+//            return new BooleanBuilder(f.get());
+//        } catch (IllegalArgumentException e) {
+//            return new BooleanBuilder();
+//        }
+//    }
 }
