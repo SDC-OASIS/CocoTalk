@@ -21,7 +21,6 @@ repositories {
 
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
@@ -81,8 +80,10 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
     //swagger
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+//    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+//    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 
 }
 
