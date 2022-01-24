@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "친구 API")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/friend")
 @RequiredArgsConstructor
 public class FriendController {
     private final FriendService friendService;
@@ -42,7 +42,7 @@ public class FriendController {
      * @exception
      */
     @ApiOperation(value = "친구 추가")
-    @PostMapping("/friend")
+    @PostMapping
     public ResponseEntity<GlobalResponse<FriendVo>> add(
             User fromUser,
             @RequestBody @Valid FriendAddRequest friendAddRequest) {
@@ -54,12 +54,26 @@ public class FriendController {
      * 친구 조회 API [GET] /api/user/friend
      *
      * @param fromUser 친구 조회를 요청하는 유저
-     * @return ResponseEntity<GlobalResponse<UserVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다;
+     * @return ResponseEntity<GlobalResponse<UserVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다.
      */
     @ApiOperation(value = "친구 조회")
-    @GetMapping("/friend")
+    @GetMapping
     public ResponseEntity<GlobalResponse<List<UserVo>>> find(User fromUser) {
         List<UserVo> data = friendService.find(fromUser);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 친구 삭제 API [DELETE] /api/user/friend/{id}
+     *
+     * @param fromUser 친구 삭제를 요청하는 유저
+     * @param id 삭제할 친구의 userId
+     * @return ResponseEntity<GlobalResponse<?>> 삭제 후엔 아무런 컨텐츠도 포함되지 않습니다.
+     */
+    @ApiOperation(value = "친구 삭제")
+    @GetMapping("/{id}")
+    public ResponseEntity<GlobalResponse<?>> delete(User fromUser, @PathVariable Long id) {
+        friendService.delete(fromUser, id);
+        return new ResponseEntity<>(new GlobalResponse<>(), HttpStatus.NO_CONTENT);
     }
 }
