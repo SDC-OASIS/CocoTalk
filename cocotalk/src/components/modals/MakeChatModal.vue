@@ -23,10 +23,8 @@
 				<div>
 					<div class="make-chat-modal-input row">
 						<span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
-						<input v-model="searchName" type="text" placeholder="ID를 입력하세요." maxlength="20" @keyup="filter" />
-						<div>
-							{{ searchName }}
-						</div>
+						<!-- @keyup="filter" -->
+						<input v-model="searchName" type="text" placeholder="ID를 입력하세요." maxlength="20" />
 					</div>
 					<div class="make-chat-modal-info row" style="justify-content: left">
 						<div class="friend-list-container" :style="{ height: height }">
@@ -57,6 +55,10 @@ import Button from "../common/Button.vue";
 
 export default {
 	name: "MakeChatModal",
+	components: {
+		Button,
+		ProfileImg,
+	},
 	data() {
 		return {
 			searchName: "",
@@ -64,6 +66,7 @@ export default {
 			searchFriends: [],
 		};
 	},
+
 	computed: {
 		...mapState("chat", ["friends"]),
 		selectedFriendsCnt() {
@@ -107,30 +110,27 @@ export default {
 			console.log(friend, idx);
 			this.selectedFriends.splice(idx, 1);
 		},
-		filter() {
-			if (this.searchName.length) {
-				// let value = this.searchName.toUpperCase();
-				// let arr = [];
-				let value = { username: this.searchName.toUpperCase() };
-				console.log(value);
+		// filter() {
+		// 	if (this.searchName.length) {
+		// 		// let value = this.searchName.toUpperCase();
+		// 		// let arr = [];
+		// 		let value = { username: this.searchName.toUpperCase() };
+		// 		console.log(value);
 
-				this.friends.includes(value);
-				// for (let friend in this.friends) {
-				// 	console.log("friend", friend);
-				// 	if (friend.username.includes(value)) {
-				// 		arr.push(friend);
-				// 	}
-				// }
-				return (this.searchFriends = this.friends.includes(value));
-			} else {
-				return (this.searchFriends = this.friends);
-			}
-		},
+		// 		this.friends.includes(value);
+		// 		// for (let friend in this.friends) {
+		// 		// 	console.log("friend", friend);
+		// 		// 	if (friend.username.includes(value)) {
+		// 		// 		arr.push(friend);
+		// 		// 	}
+		// 		// }
+		// 		return (this.searchFriends = this.friends.includes(value));
+		// 	} else {
+		// 		return (this.searchFriends = this.friends);
+		// 	}
+		// },
 	},
-	components: {
-		Button,
-		ProfileImg,
-	},
+
 	mounted() {
 		this.searchFriends = this.friends;
 	},
@@ -240,7 +240,6 @@ export default {
 .friend-list-container {
 	text-align: left;
 	width: 100%;
-
 	overflow: auto;
 }
 .friend-list-container::-webkit-scrollbar {

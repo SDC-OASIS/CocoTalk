@@ -94,6 +94,7 @@ export default {
 	border-left: 2px solid #9eac95;
 	border-right: 2px solid #9eac95;
 	font-size: 15px;
+	overflow: auto;
 }
 .friends-container > hr {
 	border-bottom: 1px solid #9eac95;
@@ -144,6 +145,21 @@ export default {
 
 .friend-list-container {
 	text-align: left;
+}
+.friends-container::-webkit-scrollbar {
+	background-color: #ffffff;
+	width: 18px;
+}
+.friends-container::-webkit-scrollbar-track {
+	background-color: #ffffff;
+	width: 10px;
+}
+.friends-container::-webkit-scrollbar-thumb {
+	background-color: #b8c8ae;
+	border-radius: 10px;
+	width: 10px;
+	background-clip: padding-box;
+	border: 5px solid transparent;
 }
 .friend-cnt {
 	/* margin-bottom: 100px; */

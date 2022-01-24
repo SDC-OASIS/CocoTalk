@@ -82,6 +82,7 @@ export default {
 	border-left: 2px solid #9eac95;
 	border-right: 2px solid #9eac95;
 	font-size: 15px;
+	overflow: auto;
 }
 .header {
 	justify-content: space-between;
@@ -116,12 +117,27 @@ export default {
 	padding: 20px 0;
 	text-align: left;
 }
+.chats-container::-webkit-scrollbar {
+	background-color: #ffffff;
+	width: 18px;
+}
+.chats-container::-webkit-scrollbar-track {
+	background-color: #ffffff;
+	width: 10px;
+}
+.chats-container::-webkit-scrollbar-thumb {
+	background-color: #b8c8ae;
+	border-radius: 10px;
+	width: 10px;
+	background-clip: padding-box;
+	border: 5px solid transparent;
+}
 .chat-list-container > span {
 	margin-bottom: 100px;
 	/* 왜 안되지! */
 }
 .chat-container {
-	padding: 7px 0;
+	padding: 10px 0;
 	align-items: center;
 	padding-left: 20px;
 	cursor: pointer;

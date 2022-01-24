@@ -61,6 +61,7 @@ export default {
 	justify-content: center;
 	background: #749f58;
 	display: float;
+	z-index: 4;
 }
 .nav-inner-container {
 	width: 550px;

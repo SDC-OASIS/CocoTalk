@@ -8,8 +8,12 @@
 			</div>
 			<span class="bold" style="font-size: 18px">채팅방 이름</span>
 			<div class="box">
-				<span class="iconify" data-icon="ant-design:search-outlined" style="color: black; padding-right: 10px"></span>
-				<span class="iconify" data-icon="charm:menu-hamburger" style="color: black"></span>
+				<span>
+					<span class="iconify" data-icon="ant-design:search-outlined" style="cursor: pointer; color: black; padding-right: 10px"></span>
+				</span>
+				<span @click="openSidebar">
+					<span class="iconify" data-icon="charm:menu-hamburger" style="color: black; cursor: pointer"></span>
+				</span>
 			</div>
 		</div>
 		<!-- 채팅 대화 -->
@@ -37,6 +41,7 @@
 			<textarea></textarea>
 			<Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
 		</div>
+		<Sidebar />
 	</div>
 </template>
 
@@ -44,6 +49,7 @@
 import { mapState } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
+import Sidebar from "../components/chat/Sidebar.vue";
 
 export default {
 	data() {
@@ -52,6 +58,7 @@ export default {
 	components: {
 		ProfileImg,
 		Button,
+		Sidebar,
 	},
 	created() {
 		console.log("채팅나와라");
@@ -85,6 +92,12 @@ export default {
 		changeNow() {
 			this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" }, { root: true });
 		},
+		openSidebar() {
+			const sidebar = document.querySelector(".sidebar-container");
+			const sidebarBack = document.querySelector(".sidebar-background");
+			sidebarBack.style.display = "block";
+			sidebar.style.right = "0px";
+		},
 	},
 };
 </script>
@@ -115,6 +128,7 @@ export default {
 .chat {
 	background-color: #d8eec0;
 	border-right: 2px solid #9eac95;
+	position: relative;
 }
 .bubble {
 	position: relative;
