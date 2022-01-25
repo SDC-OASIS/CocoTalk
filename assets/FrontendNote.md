@@ -316,6 +316,29 @@ this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: roomId } 
 
 
 
+#### ❓vuex 내부 데이터 값을 fals로 지정해둔 경우 데이터 변경시 에러
+
+>  `"TypeError: Cannot create property 'status' on boolean 'false'"`
+>
+> false로 지정해둔 모달 상태값에  true를 넣어 변경하려하니 에러가 발생했다.
+> 따라서 String으로 open과 close를 나누어주었다.
+>
+> => data를 false값으로 지정해두면 변경이 안되는걸까?
+
+https://stackoverflow.com/questions/55670250/how-to-fix-cannot-create-property-default-on-boolean-true/56566624
+
+
+
+#### ❗Dump Data에 name을 key로 넣었을 때 새로고침시 name이 사라지는 현상
+
+> name => username으로 키 이름을 변경해주니 해결되었다. 
+
+아마 Javascript 예약어 name 때문이 아닐까 하는 생각이든다.
+
+`"name"` 과 같이 예약어는 큰따옴표에 넣어주어 사용해야한다고한다. => 되도록 이런 경우에는 사용하지 않는게 좋지 않을까?
+
+[참고] https://ru-pert.tistory.com/19
+
 
 
 ## 5. CSS
@@ -416,6 +439,72 @@ http://happycgi.com/16392
 
 
 
+### style에 변수 넣기
+
+https://iancoding.tistory.com/213
+
+```html
+<div class="modal-container" :style="{ backgroundImage: `url(${userInfo.background})` }" @click.self="openFullImg(userInfo.background)">
+			<div @click="closeProfileModal">
+				...
+```
+
+
+
+### checkbox custom
+
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=taz0505&logNo=221183561041
+
+```html
+<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend.username" />
+								<label :for="'checked' + idx"> </label>
+```
+
+
+
+```css
+.wrap input[type="checkbox"] {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+.wrap input[type="checkbox"] + label {
+	display: inline-block;
+	position: relative;
+	padding-left: 26px;
+	cursor: pointer;
+}
+.wrap input[type="checkbox"] + label:before {
+	content: "";
+	position: absolute;
+	top: -15px;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	background: #fff;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	border-radius: 20px;
+} /* 보여질 부분의 스타일을 추가하면 된다. */
+.wrap input[type="checkbox"]:checked + label:after {
+	content: "✔";
+	text-align: center;
+	position: absolute;
+	top: -15px;
+	width: 30px;
+	height: 30px;
+	background-color: #fae64c;
+	border-radius: 20px;
+	color: #ffffff;
+	font-size: 20px;
+}
+```
+
 
 
 ## 6. Template
@@ -438,6 +527,68 @@ http://happycgi.com/16392
 ### 재사용 공통 컴퍼넌트 만들기
 
 https://kr.vuejs.org/v2/guide/class-and-style.html
+
+
+
+### 모달구현
+
+> `@click.self`로 간단하게 모달외부영역 클릭시 모달이 닫히도록 구현하였다.
+
+```html
+<div class="modal row" @click.self="closeProfileModal">
+	<div class="modal-container">
+		...
+	</div>
+</div>
+```
+
+
+
+### SVG
+
+> 카카오톡 프로필모양의 스쿼클을 구현하기위해 사용하였는데, figma의 iconify를 사용할때에도 code는 span이지만 브라우저상에서 svg로 아이콘이 그려지는 것을 확인하였다. 해당 아이콘 부분에서 모달을 띄울때 미세한 깜빡임이 발생하는 것을 파악해 이를 해결하고자 fontawesome으로 대체하였다. 그러니 깜빡임은 일어나지 않았다. 
+
+
+
+#### CheckBox구현
+
+> checkbox에 javascript로 Array에 넣어주는 작업을 해야할 것이라 생각했는데 신기하게도 v-model로 자동으로 `selectedFriends` 에 추가되고 삭제된다.
+
+https://mine-it-record.tistory.com/440
+
+```vue
+<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
+	...
+	<div class="friend-name" :id="'check' + idx">{{ friend.username }}</div>
+	<input v-model="selectedFriends" type="checkbox" :for="'check' + idx" :value="friend.username" @click="selectFriend(friend)" />
+</div>
+```
+
+
+
+### 상단에 새로운 요소 추가시 해당 갯수에 따라 하단컨테이너 크기조절
+
+```html
+computed: {
+		...
+		// 선택한 대화상대 갯수에 따라 친구목록 높이 지정
+		height() {
+			if (this.selectedFriendsCnt == 0) {
+				return "380px";
+			} else if (this.selectedFriendsCnt <= 3) {
+				return "340px";
+			} else {
+				return "300px";
+			}
+		},
+	},
+```
+
+
+
+### 한글 input 바인딩
+
+https://sso-feeling.tistory.com/675
 
 
 
