@@ -53,6 +53,7 @@ export default {
 	created() {
 		console.log("채팅목록");
 		console.log(this.$route.params);
+		this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
 	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),

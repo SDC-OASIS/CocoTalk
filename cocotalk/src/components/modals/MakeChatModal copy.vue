@@ -10,14 +10,12 @@
 						<span>대화상대 선택</span>
 						<span style="color: #aaaaaa; padding: 0 10px">{{ selectedFriendsCnt }}</span>
 					</div>
-					<div @click="openRoomNameModal">
-						<Button text="확인" width="60px" height="30px" />
-					</div>
+					<Button text="확인" width="60px" height="30px" />
 				</div>
 				<div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
 					<div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">
 						<div class="box">
-							{{ selectedFriend }}
+							{{ selectedFriend.username }}
 						</div>
 						<i class="delete-selected-friend fas fa-times" @click="deleteSelectedFriend(selectedFriend, idx)"></i>
 					</div>
@@ -31,11 +29,20 @@
 					<div class="make-chat-modal-info row" style="justify-content: left">
 						<div class="friend-list-container" :style="{ height: height }">
 							<div class="friend-cnt">친구 - 200</div>
-							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
-								<ProfileImg :imgUrl="friend.profile" width="50px" />
+							<div class="friend-container row" v-for="(friend, idx) in searchFriends" :key="idx" @click="selectFriend(friend, idx)">
+								<div>
+									<ProfileImg :imgUrl="friend.profile" width="50px" />
+								</div>
 								<div class="friend-name">{{ friend.username }}</div>
-								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend.username" />
-								<label :for="'checked' + idx"> </label>
+								<div>
+									{{ friend.check }}
+									<span v-if="!friend.check">x</span>
+									<span v-if="friend.check">o</span>
+								</div>
+								<!-- <div class="checkbox">
+									<input :id="'check' + idx" v-model="selectedFriends" type="checkbox" :value="friend.username" />
+									<label :for="'check' + idx"></label>
+								</div> -->
 							</div>
 						</div>
 						<!-- <div style="dispaly: inline-block; text-align: center">
@@ -71,7 +78,7 @@ export default {
 	computed: {
 		...mapState("chat", ["friends"]),
 		selectedFriendsCnt() {
-			console.log(this.selectedFriends);
+			// console.log(this.selectedFriends);
 			if (this.selectedFriends.length) {
 				return this.selectedFriends.length;
 			} else {
@@ -108,13 +115,15 @@ export default {
 			this.$store.dispatch("modal/closeMakeChatModal");
 		},
 		deleteSelectedFriend(friend, idx) {
-			console.log(friend, idx);
+			// console.log(friend, idx);
+			// let check = this.searchFriends.indexOf(friend);
+			// console.log(check);
+			this.searchFriends[friend.searchIdx] = 0;
+			// if (check != -1) {
+			// 	this.searchFriends[idx].check = false;
+			// 	this.selectedFriends.splice(check, 1);
+			// }
 			this.selectedFriends.splice(idx, 1);
-		},
-		openRoomNameModal() {
-			console.log("얍");
-			this.closeMakeChatModal();
-			this.$store.dispatch("modal/openRoomNameModal", "open", { root: true });
 		},
 		// filter() {
 		// 	if (this.searchName.length) {
@@ -133,6 +142,30 @@ export default {
 		// 		return (this.searchFriends = this.friends.includes(value));
 		// 	} else {
 		// 		return (this.searchFriends = this.friends);
+		// 	}
+		// },
+		selectFriend(friend, idx) {
+			// 선택한 목록에 있다면 선택취소
+			let check = this.selectedFriends.indexOf(friend.username);
+			// console.log(check);
+			if (check != -1) {
+				this.searchFriends[idx].check = false;
+				this.selectedFriends.splice(check, 1);
+			}
+			// if (this.selectedFriends.find((element) => element === friend.username)) {
+			// 	this.searchFriends[idx].check = false;
+			// 	this.selectedFriends.splice(element, 1);
+			// }
+			// 없으면 허용
+			else {
+				const data = { username: friend.username, searchIdx: idx };
+				this.selectedFriends.push(data);
+				this.searchFriends[idx].check = true;
+			}
+		},
+		// checkSelectedFriends(element, username) {
+		// 	if (element.name === username) {
+		// 		return true;
 		// 	}
 		// },
 	},
@@ -279,45 +312,15 @@ export default {
 	font-weight: bold;
 	padding-left: 15px;
 }
-
-.wrap input[type="checkbox"] {
-	position: absolute;
-	width: 10px;
-	height: 10px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	border: 0;
+/* 체크박스 */
+.checkbox input[type="checkbox"]:checked + label {
+	width: 40px;
+	height: 40px;
+	border: 2px solid #aaaaaa;
 }
-.wrap input[type="checkbox"] + label {
-	display: inline-block;
-	position: relative;
-	padding-left: 26px;
-	cursor: pointer;
-}
-.wrap input[type="checkbox"] + label:before {
-	content: "";
-	position: absolute;
-	top: -15px;
-	width: 30px;
-	height: 30px;
-	text-align: center;
-	background: #fff;
-	border: 1px solid #ccc;
-	box-sizing: border-box;
-	border-radius: 20px;
-} /* 보여질 부분의 스타일을 추가하면 된다. */
-.wrap input[type="checkbox"]:checked + label:after {
-	content: "✔";
-	text-align: center;
-	position: absolute;
-	top: -15px;
-	width: 30px;
-	height: 30px;
-	background-color: #fae64c;
-	border-radius: 20px;
-	color: #ffffff;
-	font-size: 20px;
+.checkbox input[type="checkbox"]:checked + label {
+	width: 40px;
+	height: 40px;
+	border: 2px solid #aaaaaa;
 }
 </style>

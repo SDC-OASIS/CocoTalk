@@ -21,7 +21,7 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link to="/chats/setting">
+					<router-link :to="{ path: getMainPath + '/setting' }">
 						<span class="iconify" data-icon="uil:setting"></span>
 					</router-link>
 				</li>
@@ -39,11 +39,6 @@
 import { mapState } from "vuex";
 
 export default {
-	data() {
-		return {
-			// pathname: "",
-		};
-	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),
 		changePath() {
@@ -51,6 +46,9 @@ export default {
 				return `${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
 			}
 			return this.pathname;
+		},
+		getMainPath() {
+			return `/${this.roomStatus.mainPage}`;
 		},
 	},
 };
