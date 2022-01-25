@@ -1,4 +1,4 @@
-package com.cocotalk.push;
+package com.cocotalk.push.controller;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.bind.annotation.GetMapping;

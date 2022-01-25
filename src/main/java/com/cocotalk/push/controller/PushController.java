@@ -1,4 +1,4 @@
-package com.cocotalk.push;
+package com.cocotalk.push.controller;
 
 import com.cocotalk.push.dto.RequestDto;
 import com.cocotalk.push.service.FCMService;
@@ -23,22 +23,11 @@ public class PushController {
 
     private final FCMService fcmService;
 
-    @GetMapping("/")
-    Flux<String> hello() {
-        return Flux.just("Hello", "World");
-    }
-
-    @GetMapping("/stream")
-    Flux<Map<String, Integer>> stream() {
-        Stream<Integer> stream = Stream.iterate(0, i -> i + 1); // Java8의 무한 Stream
-        return Flux.fromStream(stream.limit(10))
-                .map(i -> Collections.singletonMap("value", i));
-    }
-
-    @PostMapping("/fcm")
+    @PostMapping
     public Mono<ResponseEntity> pushMessage(@RequestBody @Valid RequestDto requestDto) throws IOException {
         log.info(requestDto.getTargetToken() + " " +requestDto.getTitle() + " " + requestDto.getBody());
         fcmService.sendMessageTo(requestDto.getTargetToken(), requestDto.getTitle(), requestDto.getBody());
         return Mono.just(ResponseEntity.ok().build());
     }
+
 }
