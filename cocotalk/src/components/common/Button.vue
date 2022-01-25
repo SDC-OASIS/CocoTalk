@@ -1,5 +1,5 @@
 <template>
-	<div class="button row" :style="{ width: width, height: height }">
+	<div class="button row" :style="style">
 		{{ text }}
 	</div>
 </template>
@@ -7,6 +7,11 @@
 <script>
 export default {
 	name: "Button",
+	data() {
+		return {
+			style: Object,
+		};
+	},
 	props: {
 		width: {
 			type: String,
@@ -17,6 +22,14 @@ export default {
 			default: "20px",
 		},
 		text: String,
+		backgroundColor: String,
+	},
+	mounted() {
+		this.style = {
+			width: this.width,
+			height: this.height,
+			backgroundColor: this.backgroundColor,
+		};
 	},
 };
 </script>
@@ -30,7 +43,7 @@ export default {
 	padding: 0px 3px;
 }
 .button:hover {
-	background-color: #c9b821;
+	background-color: #c9b821 !important;
 	border: 1px solid rgb(230, 207, 6);
 	cursor: pointer;
 }

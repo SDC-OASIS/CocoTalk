@@ -24,13 +24,23 @@
 					<ProfileImg :imgUrl="chatting.userInfo.profile" width="40px" />
 					<div class="chat-message">
 						<div style="padding-bottom: 7px">{{ chatting.userInfo.username }}</div>
-						<div class="bubble box">{{ chatting.message }}</div>
+						<div class="row">
+							<div class="bubble box">{{ chatting.message }}</div>
+							<div style="position: relative; width: 70px">
+								<div class="sent-time">오후2:00</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<!-- 내가 한 말 -->
 				<div v-else class="row" style="justify-content: right">
 					<div class="chat-message">
-						<div class="bubble-me box">{{ chatting.message }}</div>
+						<div class="row">
+							<div style="position: relative; width: 55px">
+								<div class="sent-time-me">오후2:00</div>
+							</div>
+							<div class="bubble-me box">{{ chatting.message }}</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -137,6 +147,9 @@ export default {
 	/* -webkit-border-radius: 100px; */
 	/* -moz-border-radius: 10px; */
 	border-radius: 5px;
+	margin-right: 5px;
+	max-width: 300px;
+	word-break: break-all;
 }
 
 .bubble:after {
@@ -151,6 +164,21 @@ export default {
 	left: -11px;
 	top: 8px;
 }
+.sent-time {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 70px;
+	height: 15px;
+	font-size: 12px;
+}
+.sent-time-me {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 15px;
+	font-size: 12px;
+}
 
 .bubble-me {
 	position: relative;
@@ -159,6 +187,8 @@ export default {
 	/* -webkit-border-radius: 100px; */
 	/* -moz-border-radius: 10px; */
 	border-radius: 5px;
+	max-width: 300px;
+	word-break: break-all;
 }
 
 .bubble-me:after {

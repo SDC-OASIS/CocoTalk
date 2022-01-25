@@ -53,6 +53,7 @@ export default {
 		if (screen.width <= 1600) {
 			this.width = "60px";
 		}
+		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
 	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),

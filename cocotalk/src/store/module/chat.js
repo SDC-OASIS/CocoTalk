@@ -5,6 +5,7 @@ const chat = {
 	plugins: [createPersistedState()],
 	state: {
 		roomStatus: {
+			mainPage: "",
 			chatPage: "chat",
 			roomId: "111",
 		},
@@ -172,7 +173,7 @@ const chat = {
 					username: "권희은",
 					profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 				},
-				message: "오늘도 화이팅!",
+				message: "오늘도 화이팅!sakldfjlkasjfkasl;fjsjkfals;jflkasjfljas;lfjk;sjdfklakjsljdflasjdfl;asj;f",
 				time: "23:00",
 			},
 			{
@@ -198,10 +199,16 @@ const chat = {
 			state.roomStatus.chatPage = payload.chat;
 			state.roomStatus.roomId = payload.roomId;
 		},
+		CHANGE_MAIN_PAGE(state, payload) {
+			state.roomStatus.mainPage = payload;
+		},
 	},
 	actions: {
 		changePage: function (context, payload) {
 			context.commit("CHANGE_PAGE", payload);
+		},
+		changeMainPage: function (context, payload) {
+			context.commit("CHANGE_MAIN_PAGE", payload);
 		},
 	},
 	modules: {},

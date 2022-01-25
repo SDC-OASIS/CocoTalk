@@ -6,6 +6,7 @@ const modal = {
 	state: {
 		addFriendModal: "close",
 		makeChatModal: "close",
+		roomNameModal: "close",
 		profileModal: {
 			status: "close",
 			userProfileInfo: Object,
@@ -34,6 +35,12 @@ const modal = {
 		CLOSE_MAKE_CHAT_MODAL(state) {
 			state.makeChatModal = "close";
 		},
+		OPEN_ROOM_NAME_MODAL(state, payload) {
+			state.roomNameModal = payload;
+		},
+		CLOSE_ROOM_NAME_MODAL(state) {
+			state.roomNameModal = "close";
+		},
 	},
 	actions: {
 		getScreen: function (context, payload) {
@@ -56,6 +63,12 @@ const modal = {
 		},
 		closeMakeChatModal: function (context) {
 			context.commit("CLOSE_MAKE_CHAT_MODAL");
+		},
+		openRoomNameModal: function (context, payload) {
+			context.commit("OPEN_ROOM_NAME_MODAL", payload);
+		},
+		closeRoomNameModal: function (context) {
+			context.commit("CLOSE_ROOM_NAME_MODAL");
 		},
 	},
 	modules: {},
