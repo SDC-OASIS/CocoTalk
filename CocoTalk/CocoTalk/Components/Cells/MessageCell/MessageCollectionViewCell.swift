@@ -45,13 +45,26 @@ class MessageCollectionViewCell: UICollectionViewCell {
         $0.isHidden = true
     }
     
-    /// 날짜뷰
-    private let lblDate = UILabel().then {
-        $0.font = .systemFont(ofSize: 10, weight: .medium)
-        $0.textColor = .secondaryLabel
-        $0.numberOfLines = 0
+    /// 메시지 메타 데이터 스택
+    private let stackView = UIStackView().then {
+        $0.axis = .vertical
         $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+    }
+    
+    /// 안 읽은 사람 수
+    private let lblUnreadMemberCount = UILabel().then {
+        $0.text = "99"
+        $0.font = .systemFont(ofSize: 10, weight: .bold)
+        $0.textColor = UIColor(red: 252/255, green: 235/255, blue: 88/255, alpha: 1)
+        $0.numberOfLines = 0
+    }
+
+    /// 날짜뷰
+    private let lblDate = UILabel().then {
+        $0.font = .systemFont(ofSize: 10, weight: .regular)
+        $0.textColor = .secondaryLabel
+        $0.numberOfLines = 0
     }
     
     // MARK: - Properties
@@ -104,7 +117,9 @@ class MessageCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Helper
     func setUI() {
-        [ivProfile, lblName, ivTail, lblMessage, mediaView, lblDate].forEach {
+        stackView.addArrangedSubview(lblUnreadMemberCount)
+        stackView.addArrangedSubview(lblDate)
+        [ivProfile, lblName, ivTail, lblMessage, mediaView, stackView].forEach {
             contentView.addSubview($0)
         }
         
@@ -126,16 +141,18 @@ class MessageCollectionViewCell: UICollectionViewCell {
             $0.bottom.equalToSuperview()
         }
         
-        lblDate.snp.makeConstraints {
+        stackView.snp.makeConstraints {
             $0.leading.equalTo(lblMessage.snp.trailing).offset(4)
             $0.trailing.lessThanOrEqualToSuperview().inset(24)
             $0.bottom.equalTo(lblMessage)
         }
+        #warning("내가 보낸 메시지는 trailing")
+        stackView.alignment = .leading
         
         ivTail.image = UIImage(named: "tail_left")
         ivTail.snp.makeConstraints {
             $0.top.equalTo(lblMessage)
-            $0.leading.equalTo(lblMessage).offset(-5)
+            $0.leading.equalTo(lblMessage).offset(-4.5)
             $0.width.equalTo(12)
             $0.height.equalTo(19)
         }
