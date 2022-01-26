@@ -1,18 +1,19 @@
 <template>
 	<div class="modal row" @click.self="closeProfileModal">
-		<div class="modal-container" :style="{ backgroundImage: `url(${userProfileInfo.background})` }" @click.self="openFullImg(userProfileInfo.background)">
+		<div class="modal-container" :style="{ backgroundImage: `url(${userProfileInfo.profile.background})` }" @click.self="openFullImg(userProfileInfo.profile.background)">
 			<div @click="closeProfileModal">
 				<span class="iconify exit" data-icon="bx:bx-x" style="color: white"></span>
 			</div>
 			<div class="modal-bottom-container">
-				<div class="profile-modal-info" @click.self="openFullImg(userProfileInfo.background)">
-					<div style="cursor: pointer; display: inline-block" @click="openFullImg(userProfileInfo.profile)">
-						<ProfileImg :imgUrl="userProfileInfo.profile" width="70px" />
+				<div class="profile-modal-info" @click.self="openFullImg(userProfileInfo.profile.background)">
+					<div style="cursor: pointer; display: inline-block" @click="openFullImg(userProfileInfo.profile.profile)">
+						<ProfileImg :imgUrl="userProfileInfo.profile.profile" width="70px" />
 					</div>
 					<br />
 					<span>{{ userProfileInfo.username }}</span>
 					<br />
-					<span>{{ userProfileInfo.statusMessage }}</span>
+					<span v-if="userProfileInfo.profile.message">{{ userProfileInfo.profile.message }}</span>
+					<div v-else style="height: 20px; width: 10px"></div>
 				</div>
 				<hr />
 				<div class="modal-profile-chat" style="display: inline-block; margin: 0 20px">
