@@ -130,8 +130,7 @@ public class UserController {
     @ApiOperation(value = "유저 삭제")
     @DeleteMapping
     public ResponseEntity<GlobalResponse<String>> deleteById(User user) {
-        String cid = userService.delete(user);
-        String result = String.format("유저 %s이 삭제되었습니다.", cid);
-        return new ResponseEntity<>(new GlobalResponse<>(result), HttpStatus.NO_CONTENT);
+        String result = userService.delete(user);
+        return new ResponseEntity<>(new GlobalResponse<>(result), HttpStatus.OK);
     }
 }

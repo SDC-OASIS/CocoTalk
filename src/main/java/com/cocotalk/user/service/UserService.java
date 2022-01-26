@@ -75,8 +75,8 @@ public class UserService {
 
     @Transactional
     public String delete(User user) {
-        String cid = user.getCid();
+        String message = String.format("유저 %s이 삭제되었습니다.", user.getCid());
         userRepository.delete(user);
-        return cid;
+        return message;
     }
 }
