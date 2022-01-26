@@ -31,8 +31,9 @@
 					<div class="make-chat-modal-info row" style="justify-content: left">
 						<div class="friend-list-container" :style="{ height: height }">
 							<div class="friend-cnt">친구 - 200</div>
+							{{ searchFriends }}
 							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
-								<ProfileImg :imgUrl="friend.profile" width="50px" />
+								<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
 								<div class="friend-name">{{ friend.username }}</div>
 								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend.username" />
 								<label :for="'checked' + idx"> </label>
@@ -69,7 +70,7 @@ export default {
 	},
 
 	computed: {
-		...mapState("chat", ["friends"]),
+		...mapState("friend", ["friends"]),
 		selectedFriendsCnt() {
 			console.log(this.selectedFriends);
 			if (this.selectedFriends.length) {

@@ -22,8 +22,9 @@
 			<div class="friend-cnt">친구 - 200</div>
 			<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
 				<div @click="openProfileModal(friend)">
-					<ProfileImg :imgUrl="friend.profile" width="50px" />
+					<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
 				</div>
+				<!-- {{ friend }} -->
 				<FriendListUserInfo :userInfo="friend" />
 			</div>
 		</div>
@@ -49,6 +50,7 @@ export default {
 	},
 	created() {
 		console.log("친구목록");
+		console.log(this.friends);
 		console.log(this.$route.params);
 		if (screen.width <= 1600) {
 			this.width = "60px";
@@ -57,7 +59,8 @@ export default {
 	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),
-		...mapState("chat", ["friends"]),
+		...mapState("friend", ["friends"]),
+
 		...mapState("userStore", ["userInfo"]),
 		...mapState("userStore", ["screenInfo"]),
 

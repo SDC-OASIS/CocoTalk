@@ -320,10 +320,10 @@ this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: roomId } 
 
 >  `"TypeError: Cannot create property 'status' on boolean 'false'"`
 >
-> false로 지정해둔 모달 상태값에  true를 넣어 변경하려하니 에러가 발생했다.
-> 따라서 String으로 open과 close를 나누어주었다.
+>  false로 지정해둔 모달 상태값에  true를 넣어 변경하려하니 에러가 발생했다.
+>  따라서 String으로 open과 close를 나누어주었다.
 >
-> => data를 false값으로 지정해두면 변경이 안되는걸까?
+>  => data를 false값으로 지정해두면 변경이 안되는걸까?
 
 https://stackoverflow.com/questions/55670250/how-to-fix-cannot-create-property-default-on-boolean-true/56566624
 
@@ -592,7 +592,113 @@ https://sso-feeling.tistory.com/675
 
 
 
-## 7.기능 구현
+## 7. 통신
+
+### 1. 친구목록 통신
+
+> 친구목록의 경우 채팅방 생성 모달과 채팅 내부의 대화상대초대등 다양한 component에서 사용하는 data이므로 전역에서 관리하기 위해 vuex에서 통신하고 저장하도록 구하였다.
+>
+> [참고] https://kamang-it.tistory.com/entry/Vue17vuex-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0actions%EB%A1%9C-%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%86%B5%EC%8B%A0
+
+* 로직 : 로그인성공 -> dispatch -> vuex actions 통신 -> 친구목록 state저장. -> 전역 사용
+
+> 로그인 성공시 dispatch로 actions 호출
+
+```javascript
+Login() {
+			this.$store.dispatch("friend/getFriends", token);
+		},
+```
+
+> vuex > actions에서 통신하여 친구목록 가져오기
+>
+> * token을 넣어야만 요청이 가기에 header에 넣어주었다.
+>
+> * `friends` `Array`안에 개별 `friend` 정보의 `profile`은 `String`으로 들어오는 Json형태 였기 때문에 반복문을 통해 Json으로 파싱하여 바꾸고 commit요청을 보냈다.
+>
+>   <details>
+>   <summary>{[참고]}</summary>
+>   <div markdown="1">       
+>     {https://webisfree.com/2020-03-23/[%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8]-%EA%B0%9D%EC%B2%B4%EA%B0%80-%EB%AC%B8%EC%9E%90%EC%97%B4%EC%9D%B8-%EA%B2%BD%EC%9A%B0-%EA%B0%9D%EC%B2%B4-%EB%98%90%EB%8A%94-json-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EB%B3%80%EA%B2%BD%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95}
+>   </div>
+>   </details>
+
+```javascript
+	actions: {
+		getFriends: function (context, payload) {
+			const token = payload;
+			console.log(token);
+			axios
+				.get("http://146.56.43.7:8080/api/user/friend", {
+					headers: {
+						"X-ACCESS-TOKEN": token,
+					},
+				})
+				.then((res) => {
+					let friends = res.data.data;
+					friends.forEach((e) => {
+						let str = e.profile;
+						e.profile = JSON.parse(str);
+						e.username = e.name;
+						context.commit("GET_FRIENDS", res.data.data);
+					});
+				});
+		},
+	},
+```
+
+> vuex > mutations에서 state의 friends 변경
+
+```javascript
+GET_FRIENDS(state, payload) {
+			state.friends = payload;
+			console.log(state, payload);
+		},
+```
+
+
+
+### Swagger, POST man 사용
+
+> json을 str형태로 보낼때 아래와 같이`"{}"` 에서 `\`를 따옴표 전에 붙여주어야한다.
+
+```json
+{
+  "birth": "1990-01-01",
+  "cid": "najihye",
+  "email": "najihye@naver.com",
+  "name": "나지혜",
+  "nickname": "대리니임",
+  "password": "skwlgP123^",
+  "phone": "01011111111",
+  "profile": "{ \"profile\":\"https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg\", \"background\" : \"https://ifh.cc/g/CgiChn.jpg\",\"messge\" : \"화이팅화이팅\"}",
+  "provider": "local",
+  "providerId": "heeeun",
+  "status": 0
+}
+```
+
+
+
+#### 로그인한 유저정보 저장 관리
+
+
+
+#### 친구목록 저장 관리
+
+=> 전역에서 사용해야하는 정보
+
+
+
+
+
+## 8.기능 구현
+
+### 1. 로그인 - Refresh Token
+
+
+
+
 
 ### 이미지 자르기 구현
 
