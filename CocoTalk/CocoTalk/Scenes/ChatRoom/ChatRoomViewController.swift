@@ -38,7 +38,6 @@ class ChatRoomViewController: UIViewController {
         configureSubviews()
         bind()
         viewModel.getMessages()
-//        collectionView.scrollToBottom(animated: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +54,11 @@ class ChatRoomViewController: UIViewController {
         navAppearance.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 19, weight: .semibold)]
         navigationController?.navigationBar.standardAppearance = navAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.scrollToBottom(animated: false)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -57,6 +57,8 @@ extension RootTabBarController {
                         inactivatedImage: UIImage(systemName: "lock"),
                         activatedImage: UIImage(systemName: "lock.fill"))
         ]
+        
+        selectedIndex = 1
     }
     
     func configureSubviews() {
