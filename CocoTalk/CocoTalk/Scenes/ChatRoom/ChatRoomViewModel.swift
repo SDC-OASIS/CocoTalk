@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol ChatRoomInput {
-    
+    var messages: [ModelMessage] { get set }
 }
 
 protocol ChatRoomDependency {
@@ -29,7 +29,7 @@ class ChatRoomViewModel {
     var output = Output()
     
     struct Input: ChatRoomInput {
-        
+        var messages: [ModelMessage] = []
     }
     
     struct Dependency: ChatRoomDependency {
@@ -44,4 +44,9 @@ class ChatRoomViewModel {
 
 extension ChatRoomViewModel {
     
+    func getMessages() {
+        for i in 0..<40 {
+            input.messages.append(ModelMessage.getRandomMessage(id: i))
+        }
+    }
 }

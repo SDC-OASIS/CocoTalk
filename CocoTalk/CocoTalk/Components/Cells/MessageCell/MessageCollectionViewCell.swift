@@ -17,18 +17,22 @@ class MessageCollectionViewCell: UICollectionViewCell {
     private let lblName = UILabel().then {
         $0.font = .systemFont(ofSize: 13)
         $0.textColor = .secondaryLabel
+        $0.isHidden = true
     }
     
     /// 프로필 이미지
-    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumnail_01"))
+    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumnail_01")).then {
+        $0.isHidden = true
+    }
     
     /// 꼬리
-    private let ivTail = UIImageView()
+    private let ivTail = UIImageView().then {
+        $0.isHidden = true
+    }
     
     /// 텍스트 라벨
     private let lblMessage = PaddingLabel().then {
         $0.font = .systemFont(ofSize: 14.5)
-        $0.backgroundColor = .white
         $0.numberOfLines = 0
         $0.lineBreakStrategy = .pushOut
         $0.layer.cornerRadius = 14
@@ -89,83 +93,133 @@ class MessageCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Lifecycle
     override init(frame: CGRect) {
-        super.init(frame: .zero)
-        setUI()
+        super.init(frame: frame)
+        configureView()
+        configureSubViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        let width = UIScreen.main.bounds.width
-        let height = UIScreen.main.bounds.height
-        lblMessage.bounds = CGRect(origin: .zero, size: CGSize(width: width, height: height))
+    override func layoutSubviews() {
+        configureSubViews()
+        super.layoutSubviews()
     }
     
-    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-        super.preferredLayoutAttributesFitting(layoutAttributes)
-        layoutIfNeeded()
-
-        let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
-        var frame = layoutAttributes.frame
-        frame.size.height = ceil(size.height)
-        layoutAttributes.frame = frame
-        return layoutAttributes
+    override func prepareForReuse() {
+        ivTail.image = nil
+        ivProfile.image = nil
+        lblMessage.text = ""
+        lblName.text = ""
+        lblDate.text = ""
+//        lblUnreadMemberCount.text = ""
+        
+        super.prepareForReuse()
     }
     
     // MARK: - Helper
-    func setUI() {
+    func configureView() {
         stackView.addArrangedSubview(lblUnreadMemberCount)
         stackView.addArrangedSubview(lblDate)
-        [ivProfile, lblName, ivTail, lblMessage, mediaView, stackView].forEach {
+        [ivProfile, ivTail, lblName, lblMessage, mediaView, stackView].forEach {
             contentView.addSubview($0)
         }
-        
-        ivProfile.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(12)
-            $0.width.height.equalTo(40)
+    }
+    
+    func configureSubViews() {
+        let width = UIScreen.main.bounds.width
+        let height = UIScreen.main.bounds.height
+        lblMessage.bounds = CGRect(origin: .zero, size: CGSize(width: width, height: height))
+        lblDate.bounds = CGRect(origin: .zero, size: CGSize(width: width, height: height))
+        [ivProfile, ivTail, lblName, lblMessage, mediaView, stackView].forEach {
+            $0.snp.removeConstraints()
         }
         
-        lblName.snp.makeConstraints {
-            $0.top.equalTo(ivProfile).offset(2)
-            $0.leading.equalToSuperview().offset(62)
+        ivProfile.isHidden = true
+        ivTail.isHidden = true
+        lblName.isHidden = true
+        
+        let hasTail = self.hasTail ?? false
+        let isMe = self.isMe ?? false
+        
+        if hasTail {
+            ivTail.isHidden = false
+            
+            if isMe {
+                ivTail.snp.makeConstraints {
+                    $0.top.equalTo(lblMessage)
+                    $0.leading.equalTo(lblMessage.snp.trailing).offset(-7)
+                    $0.width.equalTo(12)
+                    $0.height.equalTo(19)
+                }
+            } else {
+                ivProfile.isHidden = false
+                lblName.isHidden = false
+                
+                ivProfile.snp.makeConstraints {
+                    $0.top.equalToSuperview().offset(8)
+                    $0.leading.equalToSuperview().offset(12)
+                    $0.width.height.equalTo(36)
+                }
+                
+                lblName.snp.makeConstraints {
+                    $0.top.equalTo(ivProfile).offset(2)
+                    $0.leading.equalToSuperview().offset(62)
+                }
+                
+                ivTail.snp.makeConstraints {
+                    $0.top.equalTo(lblMessage)
+                    $0.leading.equalTo(lblMessage).offset(-4.5)
+                    $0.width.equalTo(12)
+                    $0.height.equalTo(19)
+                }
+            }
+            
         }
         
-        lblMessage.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(30)
-            $0.leading.equalToSuperview().offset(62)
-            $0.trailing.lessThanOrEqualToSuperview()
-            $0.bottom.equalToSuperview()
-        }
         
-        stackView.snp.makeConstraints {
-            $0.leading.equalTo(lblMessage.snp.trailing).offset(4)
-            $0.trailing.lessThanOrEqualToSuperview().inset(24)
-            $0.bottom.equalTo(lblMessage)
-        }
-        #warning("내가 보낸 메시지는 trailing")
-        stackView.alignment = .leading
-        
-        ivTail.image = UIImage(named: "tail_left")
-        ivTail.snp.makeConstraints {
-            $0.top.equalTo(lblMessage)
-            $0.leading.equalTo(lblMessage).offset(-4.5)
-            $0.width.equalTo(12)
-            $0.height.equalTo(19)
-        }
-        
-        contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        if isMe {
+            lblMessage.backgroundColor = UIColor(red: 250/255, green: 230/255, blue: 76/255, alpha: 1)
+            lblMessage.snp.makeConstraints {
+                $0.top.equalToSuperview()
+                $0.trailing.equalToSuperview().offset(-20)
+                $0.leading.greaterThanOrEqualToSuperview()
+                $0.bottom.equalToSuperview()
+            }
+            
+            stackView.alignment = .trailing
+            stackView.snp.makeConstraints {
+                $0.trailing.equalTo(lblMessage.snp.leading).offset(-4)
+                $0.leading.greaterThanOrEqualToSuperview().offset(56)
+                $0.bottom.equalTo(lblMessage)
+            }
+        } else {
+            lblMessage.backgroundColor = .white
+            lblMessage.snp.makeConstraints {
+                $0.top.equalToSuperview().offset(hasTail ? 30 : 0)
+                $0.leading.equalToSuperview().offset(56)
+                $0.trailing.lessThanOrEqualToSuperview()
+                $0.bottom.equalToSuperview()
+            }
+            
+            stackView.alignment = .leading
+            stackView.snp.makeConstraints {
+                $0.leading.equalTo(lblMessage.snp.trailing).offset(4)
+                $0.trailing.lessThanOrEqualToSuperview().inset(24)
+                $0.bottom.equalTo(lblMessage)
+            }
         }
     }
     
     func setData(data: ModelMessage) {
+        ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")!
         messageId = data.id ?? 0
         lblName.text = "테스트 이름"
         lblMessage.text = data.text ?? ""
+        isMe = data.isMe ?? false
+        hasTail = data.hasTail ?? false
+        ivTail.image = (isMe ?? false) ? UIImage(named: "tail_right") : UIImage(named: "tail_left")
         
         if let date = data.date {
             let dateFormatter = DateFormatter()

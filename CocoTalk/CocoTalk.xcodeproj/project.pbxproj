@@ -32,6 +32,8 @@
 		EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D558279797D000E1F39A /* ChatRoomViewController.swift */; };
 		EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55A279797DB00E1F39A /* ChatRoomViewModel.swift */; };
 		EA22D55D2797EA8000E1F39A /* ProfileCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55C2797EA8000E1F39A /* ProfileCellDelegate.swift */; };
+		EA22D55F2797FB6900E1F39A /* UILabel+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55E2797FB6900E1F39A /* UILabel+Ext.swift */; };
+		EA22D5612797FC2800E1F39A /* UIImageView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5602797FC2800E1F39A /* UIImageView+Ext.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -46,6 +48,14 @@
 		EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
+		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
+		EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A7279A981A00777EBF /* MessageEnum.swift */; };
+		EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A9279A986C00777EBF /* ModelMessage.swift */; };
+		EAE555FA279E10DF00777EBF /* ChatRoomTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555F9279E10DF00777EBF /* ChatRoomTextFieldView.swift */; };
+		EAE555FD279E21E800777EBF /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555FC279E21E800777EBF /* PaddingLabel.swift */; };
+		EAE55602279FDE2300777EBF /* UICollectionView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE55601279FDE2300777EBF /* UICollectionView+Ext.swift */; };
+		EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE5560927A154CD00777EBF /* MessageCollectionViewLayout.swift */; };
+		EAE5560C27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */; };
 		EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE575CC278BCA4000D959A0 /* SignupViewController.swift */; };
 		EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */; };
 		EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */; };
@@ -78,6 +88,8 @@
 		EA22D558279797D000E1F39A /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 		EA22D55A279797DB00E1F39A /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
 		EA22D55C2797EA8000E1F39A /* ProfileCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellDelegate.swift; sourceTree = "<group>"; };
+		EA22D55E2797FB6900E1F39A /* UILabel+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Ext.swift"; sourceTree = "<group>"; };
+		EA22D5602797FC2800E1F39A /* UIImageView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Ext.swift"; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
@@ -86,6 +98,14 @@
 		EA3F376E278C61E9007957EB /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		EA3F3771278C623F007957EB /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
 		EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
+		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
+		EAE555A7279A981A00777EBF /* MessageEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEnum.swift; sourceTree = "<group>"; };
+		EAE555A9279A986C00777EBF /* ModelMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelMessage.swift; sourceTree = "<group>"; };
+		EAE555F9279E10DF00777EBF /* ChatRoomTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomTextFieldView.swift; sourceTree = "<group>"; };
+		EAE555FC279E21E800777EBF /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
+		EAE55601279FDE2300777EBF /* UICollectionView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Ext.swift"; sourceTree = "<group>"; };
+		EAE5560927A154CD00777EBF /* MessageCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewLayout.swift; sourceTree = "<group>"; };
+		EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewLayoutDelegate.swift; sourceTree = "<group>"; };
 		EAE575CC278BCA4000D959A0 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmModalView.swift; sourceTree = "<group>"; };
 		EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsAuthViewController.swift; sourceTree = "<group>"; };
@@ -165,6 +185,7 @@
 		EA14D5082786BF4D00EDC892 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				EAE555A6279A980C00777EBF /* Enum */,
 				EAA6A3D02787E0D6001A7E46 /* Helpers */,
 				EAA6A3CF2787C3FB001A7E46 /* CoreData */,
 				EA14D50C2786C4AA00EDC892 /* Models */,
@@ -194,6 +215,9 @@
 			isa = PBXGroup;
 			children = (
 				EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */,
+				EA22D55E2797FB6900E1F39A /* UILabel+Ext.swift */,
+				EA22D5602797FC2800E1F39A /* UIImageView+Ext.swift */,
+				EAE55601279FDE2300777EBF /* UICollectionView+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -203,6 +227,7 @@
 			children = (
 				EA22D541279544E100E1F39A /* ModelProfile.swift */,
 				EA22D5552796816D00E1F39A /* ModelChatRoom.swift */,
+				EAE555A9279A986C00777EBF /* ModelMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -210,9 +235,10 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EAE555FB279E21C800777EBF /* PaddingLabel */,
 				EAE7F3BA278D0B0A002EB808 /* Modal */,
 				EAE575C4278BB5B600D959A0 /* Cells */,
-				EAE575C6278BB61F00D959A0 /* CustomTextFieldView */,
+				EAE575C6278BB61F00D959A0 /* ChatRoomTextFieldView */,
 				EAE575C5278BB5F600D959A0 /* ProfileImageView */,
 				EAE575C2278BB46100D959A0 /* SquareButtonView */,
 			);
@@ -277,6 +303,8 @@
 			children = (
 				EA22D558279797D000E1F39A /* ChatRoomViewController.swift */,
 				EA22D55A279797DB00E1F39A /* ChatRoomViewModel.swift */,
+				EAE5560927A154CD00777EBF /* MessageCollectionViewLayout.swift */,
+				EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */,
 			);
 			path = ChatRoom;
 			sourceTree = "<group>";
@@ -321,6 +349,30 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		EAE555A3279A700400777EBF /* MessageCell */ = {
+			isa = PBXGroup;
+			children = (
+				EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */,
+			);
+			path = MessageCell;
+			sourceTree = "<group>";
+		};
+		EAE555A6279A980C00777EBF /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				EAE555A7279A981A00777EBF /* MessageEnum.swift */,
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
+		EAE555FB279E21C800777EBF /* PaddingLabel */ = {
+			isa = PBXGroup;
+			children = (
+				EAE555FC279E21E800777EBF /* PaddingLabel.swift */,
+			);
+			path = PaddingLabel;
+			sourceTree = "<group>";
+		};
 		EAE575C1278BB37D00D959A0 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
@@ -353,6 +405,7 @@
 		EAE575C4278BB5B600D959A0 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				EAE555A3279A700400777EBF /* MessageCell */,
 				EA22D55227967CCB00E1F39A /* ChatRoomCell */,
 				EA22D5322794E25500E1F39A /* ProfileCell */,
 				EAE575C3278BB49B00D959A0 /* CheckBoxCell */,
@@ -368,11 +421,12 @@
 			path = ProfileImageView;
 			sourceTree = "<group>";
 		};
-		EAE575C6278BB61F00D959A0 /* CustomTextFieldView */ = {
+		EAE575C6278BB61F00D959A0 /* ChatRoomTextFieldView */ = {
 			isa = PBXGroup;
 			children = (
+				EAE555F9279E10DF00777EBF /* ChatRoomTextFieldView.swift */,
 			);
-			path = CustomTextFieldView;
+			path = ChatRoomTextFieldView;
 			sourceTree = "<group>";
 		};
 		EAE575C7278BB9E200D959A0 /* Signin */ = {
@@ -520,9 +574,11 @@
 				EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */,
 				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
 				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
+				EA22D5612797FC2800E1F39A /* UIImageView+Ext.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
 				EA22D5362794E4FD00E1F39A /* ProfileTableViewCell.swift in Sources */,
+				EAE55602279FDE2300777EBF /* UICollectionView+Ext.swift in Sources */,
 				EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */,
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
@@ -535,15 +591,23 @@
 				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
 				EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */,
 				EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */,
+				EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */,
+				EAE5560C27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift in Sources */,
 				EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */,
 				EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
+				EAE555FA279E10DF00777EBF /* ChatRoomTextFieldView.swift in Sources */,
 				EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */,
+				EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
+				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,
 				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
 				EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */,
+				EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
 				EA22D542279544E100E1F39A /* ModelProfile.swift in Sources */,
+				EA22D55F2797FB6900E1F39A /* UILabel+Ext.swift in Sources */,
+				EAE555FD279E21E800777EBF /* PaddingLabel.swift in Sources */,
 				EA22D55D2797EA8000E1F39A /* ProfileCellDelegate.swift in Sources */,
 				EA22D5562796816D00E1F39A /* ModelChatRoom.swift in Sources */,
 				EA22D55127967C2F00E1F39A /* ChatRoomListViewModel.swift in Sources */,

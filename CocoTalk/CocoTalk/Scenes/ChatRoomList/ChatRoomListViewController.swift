@@ -74,6 +74,10 @@ extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource
         guard let nav = self.navigationController else {
             return
         }
+        
+        let backBarButtonItem = UIBarButtonItem(title: "350", style: .plain, target: self, action: nil)
+        backBarButtonItem.tintColor = .black
+        navigationItem.backBarButtonItem = backBarButtonItem
         nav.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
