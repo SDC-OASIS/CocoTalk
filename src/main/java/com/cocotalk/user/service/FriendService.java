@@ -48,9 +48,11 @@ public class FriendService {
     }
 
     @Transactional
-    public void delete(User fromUser, Long toUid) {
+    public String delete(User fromUser, Long toUid) {
         User toUser = userRepository.findById(toUid).orElseThrow(() -> INVALID_ID);
         Friend friend = friendRepository.findByFromUserIdAndToUserId(fromUser.getId(), toUser.getId());
+        String message = String.format("%s 님을 친구에서 삭제했습니다.", toUser.getCid());
         friendRepository.delete(friend);
+        return message;
     }
 }
