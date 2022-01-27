@@ -34,7 +34,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // Spring Cloud
-    // implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     // test & Api Docs
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
