@@ -185,6 +185,7 @@
 		EA14D5082786BF4D00EDC892 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				F2C36D6A27A406D900DEE2B3 /* Repository */,
 				EAE555A6279A980C00777EBF /* Enum */,
 				EAA6A3D02787E0D6001A7E46 /* Helpers */,
 				EAA6A3CF2787C3FB001A7E46 /* CoreData */,
@@ -478,6 +479,13 @@
 				EA22D54A27963CF500E1F39A /* ProfileModal */,
 			);
 			path = Modal;
+			sourceTree = "<group>";
+		};
+		F2C36D6A27A406D900DEE2B3 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Repository;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
