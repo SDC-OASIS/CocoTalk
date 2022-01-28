@@ -38,7 +38,7 @@ dependencies {
 
     // test & Api Docs
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.3'
 
     // DB
     runtimeOnly 'com.h2database:h2'

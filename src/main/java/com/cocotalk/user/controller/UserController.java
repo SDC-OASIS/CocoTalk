@@ -6,9 +6,9 @@ import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.response.GlobalResponse;
 import com.cocotalk.user.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,7 @@ import java.util.List;
  */
 
 @RestController
-@Api(tags = "유저 API")
-@RequestMapping("/api/user")
+@Tag(name = "유저 API")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -38,7 +37,7 @@ public class UserController {
      *
      * @return ResponseEntity<GlobalResponse<List<UserResponse>>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
-    @ApiOperation(value = "유저 전체 조회")
+    @Operation(summary = "유저 전체 조회")
     @GetMapping
     public ResponseEntity<GlobalResponse<List<UserVo>>> findAll() {
         List<UserVo> data = userService.findAll();
@@ -52,7 +51,7 @@ public class UserController {
      * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      * @exception com.cocotalk.user.dto.exception.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @ApiOperation(value = "유저 id로 조회")
+    @Operation(summary = "유저 id로 조회")
     @GetMapping("/{id}")
     public ResponseEntity<GlobalResponse<UserVo>> findById(@PathVariable Long id) {
         UserVo data = userService.findById(id);
@@ -66,10 +65,10 @@ public class UserController {
      * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      * @exception com.cocotalk.user.dto.exception.GlobalException 해당 코코톡 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @ApiOperation(value = "유저 cid로 조회")
+    @Operation(summary = "유저 cid로 조회")
     @GetMapping("/cid/{cid}")
     public ResponseEntity<GlobalResponse<UserVo>> findByCid(
-            @ApiParam(value = "유저 코코톡 id", required = true, example = "ybell1028")
+            @Parameter(name = "유저 코코톡 id", required = true, example = "ybell1028")
             @RequestParam String cid) {
         UserVo data = userService.findByCid(cid);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
@@ -82,10 +81,10 @@ public class UserController {
      * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      * @exception com.cocotalk.user.dto.exception.GlobalException 해당 email을 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @ApiOperation(value = "유저 email로 조회")
+    @Operation(summary = "유저 email로 조회")
     @GetMapping("/email/{email}")
     public ResponseEntity<GlobalResponse<UserVo>> findByEmail(
-            @ApiParam(value = "유저 email", required = true, example = "test@example.com")
+            @Parameter(name = "유저 email", required = true, example = "test@example.com")
             @RequestParam String email) {
         UserVo data = userService.findByEmail(email);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
@@ -97,10 +96,10 @@ public class UserController {
      * @param phones 유저들의 연락처
      * @return ResponseEntity<GlobalResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
-    @ApiOperation(value = "유저 연락처로 조회")
+    @Operation(summary = "유저 연락처로 조회")
     @GetMapping("/phone")
     public ResponseEntity<GlobalResponse<List<UserVo>>> findByPhone(
-            @ApiParam(value = "연락처", example = "[ \"01012345678\", \"01011112222\", ... ]")
+            @Parameter(name = "연락처", example = "[ \"01012345678\", \"01011112222\", ... ]")
             @RequestParam List<String> phones) {
         List<UserVo> data = userService.findByPhones(phones);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
@@ -114,7 +113,7 @@ public class UserController {
      * @return ResponseEntity<GlobalResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
      * @exception com.cocotalk.user.dto.exception.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @ApiOperation(value = "유저 수정")
+    @Operation(summary = "유저 수정")
     @PutMapping()
     public ResponseEntity<GlobalResponse<UserVo>> modifyById(User user, @RequestBody @Valid UserModifyRequest request) {
         UserVo data = userService.modify(user, request);
@@ -127,7 +126,7 @@ public class UserController {
      * @return ResponseEntity<GlobalResponse<String>> 삭제된 유저 cid를 포함한 메시지가 포함됩니다.
      * @exception com.cocotalk.user.dto.exception.GlobalException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @ApiOperation(value = "유저 삭제")
+    @Operation(summary = "유저 삭제")
     @DeleteMapping
     public ResponseEntity<GlobalResponse<String>> deleteById(User user) {
         String result = userService.delete(user);

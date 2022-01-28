@@ -6,8 +6,8 @@ import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.FriendAddRequest;
 import com.cocotalk.user.dto.response.GlobalResponse;
 import com.cocotalk.user.service.FriendService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,9 +27,9 @@ import java.util.List;
  */
 
 @Slf4j
-@Api(tags = "친구 API")
+@Tag(name = "친구 API")
 @RestController
-@RequestMapping("/api/user/friend")
+@RequestMapping("/friend")
 @RequiredArgsConstructor
 public class FriendController {
     private final FriendService friendService;
@@ -41,7 +41,7 @@ public class FriendController {
      * @return ResponseEntity<GlobalResponse<FriendResponse>> 추가된 친구 정보가 데이터에 포함됩니다.
      * @exception
      */
-    @ApiOperation(value = "친구 추가")
+    @Operation(summary = "친구 추가")
     @PostMapping
     public ResponseEntity<GlobalResponse<FriendVo>> add(
             User fromUser,
@@ -56,7 +56,7 @@ public class FriendController {
      * @param fromUser 친구 조회를 요청하는 유저
      * @return ResponseEntity<GlobalResponse<UserVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다.
      */
-    @ApiOperation(value = "친구 조회")
+    @Operation(summary = "친구 조회")
     @GetMapping
     public ResponseEntity<GlobalResponse<List<UserVo>>> find(User fromUser) {
         List<UserVo> data = friendService.find(fromUser);
@@ -70,7 +70,7 @@ public class FriendController {
      * @param id 삭제할 친구의 userId
      * @return ResponseEntity<GlobalResponse<String>> 삭제된 유저 cid를 포함한 메시지가 포함됩니다.
      */
-    @ApiOperation(value = "친구 삭제")
+    @Operation(summary = "친구 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<GlobalResponse<?>> delete(User fromUser, @PathVariable Long id) {
         String result = friendService.delete(fromUser, id);
