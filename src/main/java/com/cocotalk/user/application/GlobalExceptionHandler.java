@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse<?>> unknownException(Exception e) {
         String stackTrace = e.getStackTrace()[0].toString();
-        ErrorDetails details = new ErrorDetails(GlobalError.UNKNOWN_ERROR, stackTrace);
+        ErrorDetails details = new ErrorDetails(GlobalError.UNKNOWN, stackTrace);
 
         log.error("UnknownException : " + e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse<>(details));

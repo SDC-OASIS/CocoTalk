@@ -1,18 +1,22 @@
 package com.cocotalk.user.service;
 
-import com.cocotalk.user.domain.entity.User;
+import com.cocotalk.user.dto.TokenPayload;
+import com.cocotalk.user.dto.exception.GlobalError;
+import com.cocotalk.user.dto.exception.GlobalException;
 import com.cocotalk.user.repository.UserRepository;
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 
 @Service
 @RequiredArgsConstructor
@@ -35,62 +39,18 @@ public class JwtService {
         return request.getHeader("X-REFRESH-TOKEN");
     }
 
-    public String getUserCid() {
+    public TokenPayload getPayload() {
         String accessToken = getAccessToken();
-        if (accessToken == null)
-            return null;
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody();
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken);
-            String userCid = claims.getBody().get("userCid", String.class);
-            if (StringUtils.isEmpty(userCid))
-                return null;
-            User user = userRepository.findByCid(userCid).orElse(null);
-            if (user == null)
-                return null;
-            return userCid;
-        } catch (Exception exception) {
-            return null;
-        }
-    }
-
-    public User getUser() {
-        String accessToken = getAccessToken();
-        if (accessToken == null)
-            return null;
-        try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken);
-            String userCid = claims.getBody().get("userCid", String.class);
-            if (StringUtils.isEmpty(userCid))
-                return null;
-            User userDB = userRepository.findByCid(userCid).orElse(null);
-            if (userDB == null)
-                return null;
-            return userDB;
-        } catch (Exception exception) {
-            return null;
-        }
-    }
-
-    public Jws<Claims> getClaims(String jwtToken) {
-        try {
-            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-        } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
-            throw ex;
-        } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
-            throw ex;
-        }
-        catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
-            throw ex;
-        }
-        catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
-            throw ex;
-        } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
-            throw ex;
+            TokenPayload payload = objectMapper.readValue(claims.getSubject(), TokenPayload.class);
+            return payload;
+        } catch (JacksonException e) {
+            throw new GlobalException(GlobalError.JSON_PARSE, e);
         }
     }
 }

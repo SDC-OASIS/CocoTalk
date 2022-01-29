@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "친구 API")
 @RestController
-@RequestMapping("/friend")
+@RequestMapping("/friends")
 @RequiredArgsConstructor
 public class FriendController {
     private final FriendService friendService;
