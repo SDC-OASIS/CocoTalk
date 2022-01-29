@@ -1,5 +1,7 @@
 package com.cocotalk.user.domain.entity;
 
+import com.cocotalk.user.domain.BaseTime;
+import com.cocotalk.user.domain.Provider;
 import com.cocotalk.user.dto.request.UserModifyRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

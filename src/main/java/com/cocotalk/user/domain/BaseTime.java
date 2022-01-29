@@ -1,4 +1,4 @@
-package com.cocotalk.user.domain.entity;
+package com.cocotalk.user.domain;
 
 import lombok.Getter;
 import lombok.Setter;

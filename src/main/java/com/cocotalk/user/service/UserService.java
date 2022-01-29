@@ -2,8 +2,8 @@ package com.cocotalk.user.service;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.UserVo;
-import com.cocotalk.user.dto.exception.GlobalError;
-import com.cocotalk.user.dto.exception.GlobalException;
+import com.cocotalk.user.exception.CustomError;
+import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.repository.UserCustomRepositoryImpl;
 import com.cocotalk.user.repository.UserRepository;
@@ -22,9 +22,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserCustomRepositoryImpl userCustomRepository;
 
-    public static final GlobalException INVALID_ID = new GlobalException(GlobalError.BAD_REQUEST, "해당 id를 갖는 유저가 존재하지 않습니다.");
-    public static final GlobalException INVALID_CID = new GlobalException(GlobalError.BAD_REQUEST, "해당 코코톡 id를 갖는 유저가 존재하지 않습니다.");
-    public static final GlobalException INVALID_EMAIL = new GlobalException(GlobalError.BAD_REQUEST, "해당 email을 갖는 유저가 존재하지 않습니다.");
+    public static final CustomException INVALID_USERID =
+            new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
+    public static final CustomException INVALID_CID =
+            new CustomException(CustomError.BAD_REQUEST, "해당 코코톡 id를 갖는 유저가 존재하지 않습니다.");
+    public static final CustomException INVALID_EMAIL =
+            new CustomException(CustomError.BAD_REQUEST, "해당 email을 갖는 유저가 존재하지 않습니다.");
 
     public static final User EMPTY_USER = new User();
 
@@ -37,7 +40,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserVo findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> INVALID_ID);
+        User user = userRepository.findById(id).orElseThrow(() -> INVALID_USERID);
         return userMapper.toVo(user);
     }
 

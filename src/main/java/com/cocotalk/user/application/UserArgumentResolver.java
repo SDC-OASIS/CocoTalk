@@ -2,8 +2,8 @@ package com.cocotalk.user.application;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.dto.TokenPayload;
-import com.cocotalk.user.dto.exception.GlobalError;
-import com.cocotalk.user.dto.exception.GlobalException;
+import com.cocotalk.user.exception.CustomError;
+import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.repository.UserRepository;
 import com.cocotalk.user.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
-    public static final GlobalException INVALID_USER_ID = new GlobalException(GlobalError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
+    public static final CustomException INVALID_USERID =
+            new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -39,9 +40,9 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     ){
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         String token = req.getHeader("X-ACCESS-TOKEN");
-        if (!StringUtils.hasLength(token)) throw new GlobalException(GlobalError.NOT_LOGIN);
+        if (!StringUtils.hasLength(token)) throw new CustomException(CustomError.NOT_LOGIN);
         TokenPayload payload = jwtService.getPayload();
         Long userId = payload.getUserId();
-        return userRepository.findById(userId).orElseThrow(() -> INVALID_USER_ID);
+        return userRepository.findById(userId).orElseThrow(() -> INVALID_USERID);
     }
 }

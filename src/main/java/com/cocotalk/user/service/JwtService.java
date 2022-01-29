@@ -1,8 +1,8 @@
 package com.cocotalk.user.service;
 
 import com.cocotalk.user.dto.TokenPayload;
-import com.cocotalk.user.dto.exception.GlobalError;
-import com.cocotalk.user.dto.exception.GlobalException;
+import com.cocotalk.user.exception.CustomError;
+import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +50,7 @@ public class JwtService {
             TokenPayload payload = objectMapper.readValue(claims.getSubject(), TokenPayload.class);
             return payload;
         } catch (JacksonException e) {
-            throw new GlobalException(GlobalError.JSON_PARSE, e);
+            throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 }
