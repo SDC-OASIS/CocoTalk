@@ -14,13 +14,16 @@ const connectingElement = document.querySelector('.connecting');
 let stompClient = null;
 let userId = null;
 let friendId = null;
+let token = null;
 
 let room = null;
 let roomId = null;
 
 let socket = null;
 
-const domain = "http://localhost:8080/api/v1/chat";
+let headers = null;
+
+const domain = "http://localhost:8083";
 
 const colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -30,18 +33,24 @@ const colors = [
 function enter(event) {
     userId = document.querySelector('#userId').value.trim();
     friendId = document.querySelector('#friendId').value.trim();
+    token = document.querySelector('#token').value.trim();
+
+    headers = {
+        'X-ACCESS-TOKEN': token,
+        'Accept': '*/*'
+    }
 
     if (userId && friendId) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
-        axios.get(domain + "/rooms/private?userid=" + userId + "&friendid=" + friendId)
+        axios.get(domain + "/rooms/private/" + friendId, {headers})
             .then(res => {
                 console.log(res);
 
                 console.log("enter roomId = " + roomId);
 
-                if (!res.data.data) {
+                if (!res.data.data.id) {
                     console.log('채팅방 없음');
                     console.log("createRoomAndConnectAndSend 이벤트 리스너에 등록됨");
                     messageForm.addEventListener('submit', createRoomAndConnectAndSend, true);
@@ -74,23 +83,8 @@ function createRoomAndConnectAndSend(event){
         name: "RoomName",
         img: "img",
         type: 0,
-        members: [
-            {
-                userId: userId,
-                isJoining: true,
-                accessedAt: now,
-                joinedAt: now
-            },
-            {
-                userId: friendId,
-                isJoining: true,
-                accessedAt: now,
-                joinedAt: now
-            }
-        ],
-        messageIds: [],
-        noticeIds: []
-    }).then(res => {
+        memberIds: [userId, friendId],
+    }, {headers}).then(res => {
         console.log(res);
         roomId = res.data.data.id;
         console.log('채팅방 생성됨 roomId = ' + roomId);
@@ -128,7 +122,7 @@ function onConnectAndSend() {
             sentAt: getLocalDateTime()
         };
 
-        stompClient.send("/simple/chat/" + roomId + "/send", {}, JSON.stringify(chatMessage));
+        stompClient.send("/simple/" + roomId + "/send", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
 
@@ -154,7 +148,7 @@ function sendMessage(event) {
             sentAt: getLocalDateTime()
         };
 
-        stompClient.send("/simple/chat/" + roomId + "/send", {}, JSON.stringify(chatMessage));
+        stompClient.send("/simple/" + roomId + "/send", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -165,13 +159,14 @@ function invite (event) {
     if(inviteeIds && stompClient) {
         let inviteMessage = { // 일종의 joinMessage
             roomId: roomId,
-            userId: inviteeIds,
-            type: 1,
+            userId: userId,
+            invitees: inviteeIds,
+            type: 3,
             content: null,
             sentAt: getLocalDateTime()
         }
 
-        stompClient.send("/simple/chat/" + roomId + "/invite", {}, JSON.stringify(inviteMessage));
+        stompClient.send("/simple/" + roomId + "/invite", {}, JSON.stringify(inviteMessage));
         inviteInput.value = '';
     }
     event.preventDefault();
@@ -186,7 +181,7 @@ function leave(event) {
         sentAt: getLocalDateTime()
     }
 
-    stompClient.send("/simple/chat/" + roomId + "/leave", {}, JSON.stringify(leaveMessage));
+    stompClient.send("/simple/" + roomId + "/leave", {}, JSON.stringify(leaveMessage));
     messageInput.value = '';
 
     chatPage.classList.add('hidden');
@@ -194,7 +189,10 @@ function leave(event) {
 
     const headers = {
     };
-    if(!stompClient) stompClient.disconnect(() => {}, headers);
+    if(!stompClient) {
+        stompClient.unsubscribe('/topic/' + roomId);
+        stompClient.disconnect(() => {}, headers);
+    }
 
     event.preventDefault();
 }
@@ -214,7 +212,10 @@ function onMessageReceived(payload) { // subscribe시 이 함수로 처리
     } else if (message.type === 2) { // leave
         messageElement.classList.add('event-message');
         message.content = message.userId + ' left!';
-    } else if (message.type === 3) { // away
+    } else if (message.type === 3) { // invite
+        messageElement.classList.add('event-message');
+        message.content = message.invitees + ' invited!';
+    } else if (message.type === 4) { // away
         messageElement.classList.add('event-message');
         message.content = message.userId + ' away from keyboard!';
     } else {
