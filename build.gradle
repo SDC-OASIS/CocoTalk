@@ -27,13 +27,15 @@ ext {
 dependencies {
     //Spring-Boot MVC
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // test & Api Docs
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.3'
 
     //WebSocket + STOMP
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -58,9 +60,18 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     // Spring Cloud
-    // implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     // implementation 'org.springframework.cloud:spring-cloud-starter-zookeeper-config'
     // implementation 'org.springframework.cloud:spring-cloud-starter-zookeeper-discovery'
+
+    //JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.11.2'
+
+    // Jackson
+    // implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+
 }
 
 //def querydslGeneratedDir = "$buildDir/generated/querydsl" as Object
