@@ -5,8 +5,11 @@ import com.cocotalk.user.domain.vo.FriendVo;
 import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.FriendAddRequest;
 import com.cocotalk.user.dto.response.CustomResponse;
+import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.service.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,12 +42,13 @@ public class FriendController {
      * @param fromUser 친구 추가를 요청하는 유저
      * @param friendAddRequest 친구로 추가되는 유저 id를 포함한 요청 모델
      * @return ResponseEntity<CustomResponse<FriendResponse>> 추가된 친구 정보가 데이터에 포함됩니다.
-     * @exception
+     * @exception CustomException 해당 id를 가진 친구가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다.
      */
     @Operation(summary = "친구 추가")
     @PostMapping
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<FriendVo>> add(
-            User fromUser,
+            @Parameter(hidden = true) User fromUser,
             @RequestBody @Valid FriendAddRequest friendAddRequest) {
         FriendVo data = friendService.add(fromUser, friendAddRequest);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
@@ -58,7 +62,8 @@ public class FriendController {
      */
     @Operation(summary = "친구 조회")
     @GetMapping
-    public ResponseEntity<CustomResponse<List<UserVo>>> find(User fromUser) {
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<List<UserVo>>> find(@Parameter(hidden = true) User fromUser) {
         List<UserVo> data = friendService.find(fromUser);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -69,11 +74,13 @@ public class FriendController {
      * @param fromUser 친구 삭제를 요청하는 유저
      * @param id 삭제할 친구의 userId
      * @return ResponseEntity<CustomResponse<String>> 삭제된 유저 cid를 포함한 메시지가 포함됩니다.
+     * @exception CustomException 해당 id를 가진 친구가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다.
      */
     @Operation(summary = "친구 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomResponse<?>> delete(User fromUser, @PathVariable Long id) {
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<?>> delete(@Parameter(hidden = true) User fromUser, @PathVariable Long id) {
         String result = friendService.delete(fromUser, id);
-        return new ResponseEntity<>(new CustomResponse<>(), HttpStatus.OK);
+        return new ResponseEntity<>(new CustomResponse<>(result), HttpStatus.OK);
     }
 }

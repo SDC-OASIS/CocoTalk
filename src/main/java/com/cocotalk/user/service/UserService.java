@@ -24,10 +24,6 @@ public class UserService {
 
     public static final CustomException INVALID_USERID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
-    public static final CustomException INVALID_CID =
-            new CustomException(CustomError.BAD_REQUEST, "해당 코코톡 id를 갖는 유저가 존재하지 않습니다.");
-    public static final CustomException INVALID_EMAIL =
-            new CustomException(CustomError.BAD_REQUEST, "해당 email을 갖는 유저가 존재하지 않습니다.");
 
     public static final User EMPTY_USER = new User();
 
@@ -46,13 +42,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserVo findByCid(String cid) {
-        User user = userRepository.findByCid(cid).orElseThrow(() -> INVALID_CID);
+        User user = userRepository.findByCid(cid).orElse(EMPTY_USER);
         return userMapper.toVo(user);
     }
 
     @Transactional(readOnly = true)
     public UserVo findByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> INVALID_EMAIL);
+        User user = userRepository.findByEmail(email).orElse(EMPTY_USER);
         return userMapper.toVo(user);
     }
 

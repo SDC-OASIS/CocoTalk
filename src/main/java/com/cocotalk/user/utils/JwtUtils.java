@@ -1,48 +1,47 @@
-package com.cocotalk.user.service;
+package com.cocotalk.user.utils;
 
-import com.cocotalk.user.dto.TokenPayload;
+import com.cocotalk.user.domain.vo.TokenPayload;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
-import com.cocotalk.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
-public class JwtService {
-    private final UserRepository userRepository;
+@Component
+public class JwtUtils {
+    private static String jwtSecret;
 
     @Value("${jwt.secret}")
-    private String secretKey;
+    public void setJwtSecret(String secret) {
+        jwtSecret = secret;
+    }
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public String getAccessToken() {
+    public static String getAccessToken() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("X-ACCESS-TOKEN");
     }
 
-    public String getRefreshToken() {
+    public static String getRefreshToken() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("X-REFRESH-TOKEN");
     }
 
-    public TokenPayload getPayload() {
+    public static TokenPayload getPayload() {
         String accessToken = getAccessToken();
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecret))
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody();

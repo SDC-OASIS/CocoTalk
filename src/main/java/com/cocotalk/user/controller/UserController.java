@@ -9,6 +9,7 @@ import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,6 @@ public class UserController {
      *
      * @param cid 코코톡 id
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
-     * @exception CustomException 해당 코코톡 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
     @Operation(summary = "유저 cid로 조회")
     @GetMapping("/cid/{cid}")
@@ -80,7 +80,6 @@ public class UserController {
      *
      * @param email 유저 email
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
-     * @exception CustomException 해당 email을 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
     @Operation(summary = "유저 email로 조회")
     @GetMapping("/email/{email}")
@@ -112,11 +111,11 @@ public class UserController {
      *
      * @param request 수정할 내용을 담은 요청 모델
      * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
-     * @exception CustomException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
     @Operation(summary = "유저 수정")
-    @PutMapping()
-    public ResponseEntity<CustomResponse<UserVo>> modifyById(User user, @RequestBody @Valid UserModifyRequest request) {
+    @PutMapping
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<UserVo>> modify(@Parameter(hidden = true) User user, @RequestBody @Valid UserModifyRequest request) {
         UserVo data = userService.modify(user, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -125,11 +124,11 @@ public class UserController {
      * 유저 삭제 API [DELETE] /api/user
      *
      * @return ResponseEntity<CustomResponse<String>> 삭제된 유저 cid를 포함한 메시지가 포함됩니다.
-     * @exception CustomException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
     @Operation(summary = "유저 삭제")
     @DeleteMapping
-    public ResponseEntity<CustomResponse<String>> deleteById(User user) {
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<String>> delete(@Parameter(hidden = true) User user) {
         String result = userService.delete(user);
         return new ResponseEntity<>(new CustomResponse<>(result), HttpStatus.OK);
     }

@@ -1,11 +1,11 @@
 package com.cocotalk.user.application;
 
 import com.cocotalk.user.domain.entity.User;
-import com.cocotalk.user.dto.TokenPayload;
+import com.cocotalk.user.domain.vo.TokenPayload;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.repository.UserRepository;
-import com.cocotalk.user.service.JwtService;
+import com.cocotalk.user.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private final UserRepository userRepository;
-    private final JwtService jwtService;
 
     public static final CustomException INVALID_USERID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
@@ -41,7 +40,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         String token = req.getHeader("X-ACCESS-TOKEN");
         if (!StringUtils.hasLength(token)) throw new CustomException(CustomError.NOT_LOGIN);
-        TokenPayload payload = jwtService.getPayload();
+        TokenPayload payload = JwtUtils.getPayload();
         Long userId = payload.getUserId();
         return userRepository.findById(userId).orElseThrow(() -> INVALID_USERID);
     }

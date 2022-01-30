@@ -1,4 +1,4 @@
-package com.cocotalk.user.dto;
+package com.cocotalk.user.domain.vo;
 
 import lombok.Getter;
 
