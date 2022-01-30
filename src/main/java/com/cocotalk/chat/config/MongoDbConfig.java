@@ -66,13 +66,7 @@ public class MongoDbConfig extends AbstractMongoClientConfiguration {
             // conParam = "?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 
         }
-        String mongoUrl = String.format(
-                "mongodb://%s%s:%s/%s",
-                userInfo,
-                getHost(),
-                getPort(),
-                getDatabase()
-        );
+        String mongoUrl = String.format("mongodb://%s%s:%s/%s", userInfo, getHost(), getPort(), getDatabase());
 
         log.info("mongo url : {}", mongoUrl);
 

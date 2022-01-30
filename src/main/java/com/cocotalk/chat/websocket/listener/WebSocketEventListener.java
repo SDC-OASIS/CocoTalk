@@ -1,7 +1,7 @@
 package com.cocotalk.chat.websocket.listener;
 
-import com.cocotalk.chat.document.message.ChatMessage;
-import com.cocotalk.chat.document.message.MessageType;
+import com.cocotalk.chat.domain.entity.message.ChatMessage;
+import com.cocotalk.chat.domain.entity.message.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;

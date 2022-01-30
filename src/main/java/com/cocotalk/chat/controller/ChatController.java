@@ -1,7 +1,7 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.document.message.ChatMessage;
-import com.cocotalk.chat.document.message.InviteMessage;
+import com.cocotalk.chat.domain.entity.message.ChatMessage;
+import com.cocotalk.chat.domain.entity.message.InviteMessage;
 import com.cocotalk.chat.service.ChatMessageService;
 import com.cocotalk.chat.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-@MessageMapping("/chat")
 public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageService chatMessageService;
@@ -39,7 +38,6 @@ public class ChatController {
     @SendTo("/topic/{roomId}")
     public ChatMessage send(@DestinationVariable String roomId,
                             @Payload ChatMessage chatMessage) {
-        // 페이로드를 바로 저장하는게 맞을까?
         chatMessageService.saveChatMessage(chatMessage);
         roomService.saveMessageId(roomId, chatMessage);
         return chatMessage;
@@ -51,8 +49,8 @@ public class ChatController {
                                @Payload InviteMessage inviteMessage,
                                SimpMessageHeaderAccessor headerAccessor) {
         chatMessageService.saveInviteMessage(inviteMessage);
-        inviteMessage.getInvitees()
-                        .forEach(userId -> headerAccessor.getSessionAttributes().put("userId", userId));
+        inviteMessage.getInvitees().parallelStream()
+                .forEach(userId -> headerAccessor.getSessionAttributes().put("userId", userId));
         roomService.invite(roomId, inviteMessage.getInvitees());
         return inviteMessage;
     }
