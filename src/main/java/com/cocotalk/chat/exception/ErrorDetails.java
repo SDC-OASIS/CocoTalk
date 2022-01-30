@@ -14,19 +14,19 @@ public class ErrorDetails {
     private String desc;
     private String type;
 
-    public ErrorDetails(GlobalException e) {
+    public ErrorDetails(CustomException e) {
         this.code = e.getError().getCode();
         this.desc = e.getMessage();
         this.type = e.getError().getType();
     }
 
-    public ErrorDetails(GlobalError e) {
+    public ErrorDetails(CustomError e) {
         this.code = e.getCode();
         this.desc = e.getDesc();
         this.type = e.toString();
     }
 
-    public ErrorDetails(GlobalError e, String desc) {
+    public ErrorDetails(CustomError e, String desc) {
         this.code = e.getCode();
         this.desc = desc;
         this.type = e.toString();

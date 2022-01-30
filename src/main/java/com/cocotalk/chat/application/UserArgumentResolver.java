@@ -3,8 +3,8 @@ package com.cocotalk.chat.application;
 import com.cocotalk.chat.domain.vo.UserVo;
 import com.cocotalk.chat.dto.TokenPayload;
 import com.cocotalk.chat.dto.response.GlobalResponse;
-import com.cocotalk.chat.exception.GlobalError;
-import com.cocotalk.chat.exception.GlobalException;
+import com.cocotalk.chat.exception.CustomError;
+import com.cocotalk.chat.exception.CustomException;
 import com.cocotalk.chat.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +37,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private String USER_SERVICE_URL;
     private static final String TOKEN_HEADER_NAME = "X-ACCESS-TOKEN";
 
-    public static final GlobalException INVALID_USERID =
-            new GlobalException(GlobalError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
+    public static final CustomException INVALID_USERID =
+            new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -54,7 +54,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     ){
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         String token = req.getHeader(TOKEN_HEADER_NAME);
-        if (!StringUtils.hasLength(token)) throw new GlobalException(GlobalError.NOT_LOGIN);
+        if (!StringUtils.hasLength(token)) throw new CustomException(CustomError.NOT_LOGIN);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(TOKEN_HEADER_NAME, token);

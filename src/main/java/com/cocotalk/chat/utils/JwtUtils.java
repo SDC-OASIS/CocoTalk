@@ -1,8 +1,8 @@
 package com.cocotalk.chat.utils;
 
 import com.cocotalk.chat.dto.TokenPayload;
-import com.cocotalk.chat.exception.GlobalError;
-import com.cocotalk.chat.exception.GlobalException;
+import com.cocotalk.chat.exception.CustomError;
+import com.cocotalk.chat.exception.CustomException;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -49,7 +49,7 @@ public class JwtUtils {
             TokenPayload payload = objectMapper.readValue(claims.getSubject(), TokenPayload.class);
             return payload;
         } catch (JacksonException e) {
-             throw new GlobalException(GlobalError.JSON_PARSE, e);
+             throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 }

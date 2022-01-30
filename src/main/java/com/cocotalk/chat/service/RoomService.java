@@ -10,8 +10,8 @@ import com.cocotalk.chat.domain.vo.RoomListVo;
 import com.cocotalk.chat.domain.vo.RoomVo;
 import com.cocotalk.chat.domain.vo.UserVo;
 import com.cocotalk.chat.dto.request.RoomRequest;
-import com.cocotalk.chat.exception.GlobalError;
-import com.cocotalk.chat.exception.GlobalException;
+import com.cocotalk.chat.exception.CustomError;
+import com.cocotalk.chat.exception.CustomException;
 import com.cocotalk.chat.repository.RoomRepository;
 import com.cocotalk.chat.utils.mapper.ChatMessageMapper;
 import com.cocotalk.chat.utils.mapper.RoomMapper;
@@ -39,10 +39,10 @@ public class RoomService {
 
     public static final Room emptyRoom = new Room();
     public static final List<ObjectId> emptyObjectIdList = new ArrayList<>();
-    public static final GlobalException INVALID_ROOMID =
-            new GlobalException(GlobalError.BAD_REQUEST, "해당 roomId를 갖는 채팅방이 존재하지 않습니다.");
-    public static final GlobalException INVALID_ROOMMEMBER =
-            new GlobalException(GlobalError.BAD_REQUEST, "해당 채팅방에 속해 있지 않은 유저입니다.");
+    public static final CustomException INVALID_ROOMID =
+            new CustomException(CustomError.BAD_REQUEST, "해당 roomId를 갖는 채팅방이 존재하지 않습니다.");
+    public static final CustomException INVALID_ROOMMEMBER =
+            new CustomException(CustomError.BAD_REQUEST, "해당 채팅방에 속해 있지 않은 유저입니다.");
 
     public RoomVo create(RoomRequest request) { // C
         LocalDateTime now = LocalDateTime.now();

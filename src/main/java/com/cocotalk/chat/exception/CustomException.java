@@ -3,20 +3,20 @@ package com.cocotalk.chat.exception;
 import lombok.Getter;
 
 @Getter
-public class GlobalException extends RuntimeException {
-    private final GlobalError error;
+public class CustomException extends RuntimeException {
+    private final CustomError error;
 
-    public GlobalException(GlobalError error) {
+    public CustomException(CustomError error) {
         super(error.getDesc());
         this.error = error;
     }
 
-    public GlobalException(GlobalError error, String detailedDesc) {
+    public CustomException(CustomError error, String detailedDesc) {
         super(error.getDesc() + " : " + detailedDesc);
         this.error = error;
     }
 
-    public GlobalException(GlobalError error, Throwable cause) {
+    public CustomException(CustomError error, Throwable cause) {
         super(error.getDesc(), cause);
         this.error = error;
     }
