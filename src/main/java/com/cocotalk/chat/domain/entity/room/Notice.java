@@ -1,4 +1,4 @@
-package com.cocotalk.chat.document.room;
+package com.cocotalk.chat.domain.entity.room;
 
 import com.mongodb.DBRef;
 import lombok.AllArgsConstructor;

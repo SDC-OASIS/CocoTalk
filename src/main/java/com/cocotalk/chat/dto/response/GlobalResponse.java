@@ -1,9 +1,10 @@
-package com.cocotalk.chat.model.response;
+package com.cocotalk.chat.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ public class GlobalResponse<T> {
     private int statusCode;
     private String message;
 
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime timestamp;
 
     public GlobalResponse(T data) {

@@ -1,63 +1,85 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.document.room.Room;
-import com.cocotalk.chat.model.request.RoomRequest;
-import com.cocotalk.chat.model.response.GlobalResponse;
-import com.cocotalk.chat.model.response.RoomResponse;
+import com.cocotalk.chat.domain.vo.RoomListVo;
+import com.cocotalk.chat.domain.vo.RoomVo;
+import com.cocotalk.chat.domain.vo.UserVo;
+import com.cocotalk.chat.dto.request.RoomRequest;
+import com.cocotalk.chat.dto.response.GlobalResponse;
 import com.cocotalk.chat.service.RoomService;
-import com.cocotalk.chat.utils.mapper.RoomMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
-@Controller
+@RestController
+@Tag(name = "채팅방 API")
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/chat/rooms")
+@RequestMapping(value = "/rooms")
 public class RoomController {
     private final RoomService roomService;
-    private final RoomMapper roomMapper;
 
     @PostMapping
-    public ResponseEntity<GlobalResponse<?>> create(@RequestBody @Valid RoomRequest request){
-        Room room = roomService.save(roomMapper.toEntity(request));
-        RoomResponse data = roomMapper.toDto(room);
+    @Operation(summary = "채팅방 생성")
+    public ResponseEntity<GlobalResponse<?>> create(@Parameter(hidden = true) UserVo userVo,
+                                                    @RequestBody @Valid RoomRequest request){
+        RoomVo data = roomService.create(request);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 
+
+    @GetMapping
+    @Operation(summary = "유저가 포함된 모든 채팅방 상세 정보 조회")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<GlobalResponse<?>> findAll(@Parameter(hidden = true) UserVo userVo){
+        List<RoomVo> data = new ArrayList<>(roomService.findAll(userVo));
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "유저가 포함된 모든 채팅방 리스트 조회")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<GlobalResponse<?>> findRoomList(@Parameter(hidden = true) UserVo userVo){
+        List<RoomListVo> data = new ArrayList<>(roomService.findRoomList(userVo));
+        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<GlobalResponse<?>> find(@PathVariable String id){
-        Room room = roomService.find(id);
-        RoomResponse data = roomMapper.toDto(room);
+    @Operation(summary = "채팅방 id로 조회")
+    public ResponseEntity<GlobalResponse<?>> findById(@PathVariable String id){
+        RoomVo data = roomService.findById(id);
         return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<GlobalResponse<?>> findAll(@PathVariable Long userId){
-        List<RoomResponse> data = roomService.findAll(userId).stream()
-                .map(roomMapper::toDto)
-                .collect(Collectors.toList());
+
+    @GetMapping("/private/{friendId}")
+    @Operation(summary = "내 정보와 친구 userId로 개인 채팅방 조회")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<GlobalResponse<?>> findPrivate(@Parameter(hidden = true) UserVo userVo, @PathVariable Long friendId){
+        RoomVo data = roomService.findPrivate(userVo, friendId);
         return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 
-    @GetMapping("/private")
-    public ResponseEntity<GlobalResponse<?>> findPrivate(@RequestParam Long userid, @RequestParam Long friendid){
-        Room room = roomService.findPrivate(userid, friendid);
-        RoomResponse data = roomMapper.toDto(room);
-        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    @PutMapping("/{id}")
+    @Operation(summary = "채팅방 id로 수정")
+    public ResponseEntity<GlobalResponse<?>> modify(@PathVariable String id, @RequestBody @Valid RoomRequest request){
+        RoomVo data = roomService.modify(id, request);
+        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<GlobalResponse<?>> modify(@RequestBody RoomRequest request){
-        Room room = roomService.save(roomMapper.toEntity(request));
-        RoomResponse data = roomMapper.toDto(room);
-        return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    @Operation(summary = "채팅방 id로 삭제")
+    public ResponseEntity<GlobalResponse<?>> modify(@PathVariable String id){
+        String data = roomService.delete(id);
+        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 }

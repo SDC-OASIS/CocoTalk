@@ -1,8 +1,8 @@
 package com.cocotalk.chat.utils.mapper;
 
-import com.cocotalk.chat.document.room.Room;
-import com.cocotalk.chat.model.request.RoomRequest;
-import com.cocotalk.chat.model.response.RoomResponse;
+import com.cocotalk.chat.domain.entity.room.Room;
+import com.cocotalk.chat.domain.vo.RoomVo;
+import com.cocotalk.chat.dto.request.RoomRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -13,8 +13,6 @@ import org.mapstruct.ReportingPolicy;
 )
 
 public interface RoomMapper {
-
-    RoomResponse toDto(Room room);
-
+    RoomVo toVo(Room room);
     Room toEntity(RoomRequest roomRequest);
 }

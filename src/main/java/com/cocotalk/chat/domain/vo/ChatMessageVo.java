@@ -1,24 +1,20 @@
-package com.cocotalk.chat.document.message;
+package com.cocotalk.chat.domain.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Getter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "message")
-public class ChatMessage {
-    @Id
+public class ChatMessageVo {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 

@@ -1,6 +1,6 @@
-package com.cocotalk.chat.model.response;
+package com.cocotalk.chat.dto.response;
 
-import com.cocotalk.chat.document.room.RoomMember;
+import com.cocotalk.chat.domain.entity.room.RoomMember;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;

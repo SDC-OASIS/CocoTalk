@@ -1,4 +1,4 @@
-package com.cocotalk.chat.model.exception;
+package com.cocotalk.chat.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,27 +13,23 @@ public class ErrorDetails {
     private int code;
     private String desc;
     private String type;
-    private String stackTrace; // debug용
 
     public ErrorDetails(GlobalException e) {
         this.code = e.getError().getCode();
         this.desc = e.getMessage();
-        this.type = e.toString();
-        this.stackTrace = e.getStackTrace()[0].toString();
+        this.type = e.getError().getType();
     }
 
-    public ErrorDetails(GlobalError e, String stackTrace) {
+    public ErrorDetails(GlobalError e) {
         this.code = e.getCode();
         this.desc = e.getDesc();
         this.type = e.toString();
-        this.stackTrace = stackTrace;
     }
 
-    public ErrorDetails(GlobalError e, String desc, String stackTrace) {
+    public ErrorDetails(GlobalError e, String desc) {
         this.code = e.getCode();
         this.desc = desc;
         this.type = e.toString();
-        this.stackTrace = stackTrace;
     }
 
 //    public ErrorDetails(int errorCode, String desc) {

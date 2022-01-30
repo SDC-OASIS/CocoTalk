@@ -1,6 +1,6 @@
-package com.cocotalk.chat.model.request;
+package com.cocotalk.chat.domain.vo;
 
-import com.cocotalk.chat.document.room.RoomMember;
+import com.cocotalk.chat.domain.entity.room.RoomMember;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -9,20 +9,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomRequest {
-    @NotBlank(message = "방 이름은 필수값 입니다.")
+public class RoomVo {
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId id;
+
     private String name;
 
     private String img;
 
-    private Short type;
+    private int type;
 
     private List<RoomMember> members;
 

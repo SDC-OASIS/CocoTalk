@@ -1,4 +1,4 @@
-package com.cocotalk.chat.document.message;
+package com.cocotalk.chat.domain.entity.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

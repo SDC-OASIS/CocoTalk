@@ -1,38 +1,35 @@
-package com.cocotalk.chat.document.room;
+package com.cocotalk.chat.domain.entity.message;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "room")
-public class Room {
+@Document(collection = "message")
+public class ChatMessage {
     @Id
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 
-    private String name;
-
-    private String img;
-
-    private int type; // 0=갠톡, 1=단톡, 2=오픈톡
-
-    private List<RoomMember> members;
-
     @JsonSerialize(using = ToStringSerializer.class)
-    private List<ObjectId> messageIds;
+    private ObjectId roomId;
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private List<ObjectId> noticeIds;
+    private Long userId;
+
+    private int type;
+
+    private String content;
+
+    private LocalDateTime sentAt;
 }

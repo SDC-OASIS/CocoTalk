@@ -1,4 +1,4 @@
-package com.cocotalk.chat.model.exception;
+package com.cocotalk.chat.exception;
 
 import lombok.Getter;
 

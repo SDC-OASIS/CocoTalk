@@ -1,4 +1,4 @@
-package com.cocotalk.chat.model.vo;
+package com.cocotalk.chat.domain.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -7,27 +7,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessageVo {
+public class RoomListVo {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId roomId;
+    private String name;
 
-    private Long userId;
+    private String img;
 
     private int type;
 
-    private String content;
+    private ChatMessageVo lastChatMessageVo;
 
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
-    private LocalDateTime sentAt;
+    private Long unreadNumber;
 }
