@@ -1,5 +1,6 @@
 package com.cocotalk.gateway.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springdoc.core.SwaggerUiConfigParameters;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cloud.gateway.route.RouteDefinition;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SwaggerConfig {
+public class SpringDocConfig {
     @Bean
     public CommandLineRunner openApiGroups(
             RouteDefinitionLocator locator,
