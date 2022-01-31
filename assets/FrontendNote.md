@@ -303,7 +303,11 @@ this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: roomId } 
 
 이상하게 `$route.params.roomId`를 data 변수에 담고 해당 변수를 watch하면 변화를 감지하지 못한다.
 
+#### 로그인페이지에 있을 경우에만 Navbar 안보이게
 
+router주소 변경을 인식하지 못해 navbar가 모든 페이지에서 새로고침 없이는 보이지 않는 현상
+
+전역에서 routing 관리를 하는 곳에서 변수를 설정해 로그인 페이지인 router의 경우에만 navbar 안보이게 설정
 
 ## 4. Vuex
 
@@ -680,6 +684,99 @@ GET_FRIENDS(state, payload) {
 
 
 
+### 2. 로그인 - access token, refresh token
+
+> 인증(Authentication) : 로그인. 권한이 주어진 회원임을 인증 받는 것
+>
+> 인가(Authorization) : 인증 받은 사용자가 서비스 기능을 사용할 때 허가 받는 것
+> ​                                      로그인한 사용자임을 확인함
+>
+> 로그인 : 데이터 베이스 저장된 사용자 계정 해시값을 가져와 사용자 암호를 복잡하게 계산해 일치하는지 확인해야함 => 계산 어려움 + 데이터베이스에서 꺼내오는 것도 자원 시간 많이 듬 / 매 요청마다 아이디 비번에 오가면 보안상 좋지 않음
+>
+> 세션 : 사용자가 로그인에 성공하면 세션 표딱지 출력 - 반은 사용자 브라우저 / 반은 메모리에 올려둠(데이터베이스에 넣기도 함) => 서버에 로그인이 지속되어 있는 상태
+> => 단점 : 사용자가 동시 접속하면 메모리에 부하. 서버에 문제있어서 꺼지면 다 날아감
+>    매 요청마다 하드에 두는건.. 서랍여닫듯 닫았다 열었다 하면... 느려짐
+>   서버여러대인 경우 복잡 : 여러 서버 사이에 분산해주면 서버간에 load balancing. 세션관리해주는 서버, 기능에 사용하는 서버가 다른 경우 세션이없으므로 좋지않음 -> 공용창고나 redis와 같은 메모리형 데이터베이스에 두면.. 엎어지면 난리남.
+> => 이런 부담을 없애자! JWT 등장. 
+> 서버는 token만 주고 저장하지 않음.  `header. payload . verify signature` 로 세 부분으로 나뉘어짐
+>
+> => payload : base64 디코딩 -> json으로 누가 누구에게 발급. 언제까지 유효.  사용자에게 공개하길 원하는 내용 등이 모드 담겨 있음 = claim
+> -> 일일이 서버가 뒤져볼 필요는 없음
+> -> 사용자가 디코딩해서 볼수도 있는거 아닌가.. 그래서 header : type: JWT, algo : 서명값 만드는 알고지정
+> 암호화 알고리즘은 한쪽에선 계산이 되지만 반대는 안됨. 서버만 알고있음 ( 서버 비밀키와 함께 알고 돌림)
+>
+> => 서명과 동일해야함!
+>
+> => 비밀값만 가지고 있음된다 - == stateless : 시간에 따라 바뀌는 상태값을 가지지 않는 것
+> <-> 세션 : stateful
+>
+> ==> 단점 : 다중로그인. 유저관리하기엔 세션이 더 쉬움. token은 통제가 안됨. token칼취된 경우 보안 안됨.. => 만료시간을 가깝게 잡아 token수명을 짧게 준다. access token . 길게 준 refresh token 발급
+>
+> [참고] https://tansfil.tistory.com/59
+>
+> ![img](https://t1.daumcdn.net/cfile/tistory/99DB8C475B5CA1C936)
+>
+> => refresh token을 지워버리더라도(인가 못받게) access token이 살아있는 경우에는 바로 차단할 수는 없음
+> 완전한 해결책이라고 보기는 어려움. JWT한계. 
+
+
+
+=> 다중 로그인한 경우 : 로그인해서 새로운 access refresh를 받으니 다른 pc에서는 만료되는것? 그럼 즉시 차단은 안되겠네? 
+
+
+
+=>
+
+##### refresh token cookie 저장
+
+[참고] https://velog.io/@hschoi1104/AccessToken-RefreshToken-OAuth2.0-%EA%B8%B0%EB%B0%98-%EB%A1%9C%EA%B7%B8%EC%9D%B8%EC%9D%B8%EC%A6%9D-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-Node.js-Vue.js-1%ED%8E%B8
+
+
+
+1안) login component에서 로그인통신 -> 토큰 저장/ vuex map actions: 친구목록가져오기(token)/router.push(친구목록)
+
+2안) login클릭 -> map actions:로그인통신->토큰저장/ map actions 친구목록가져오기 / router.push(친구목록)
+
+#### mutations에서 비동기처리를 하면 안 되는 이유
+
+https://happy-coding-day.tistory.com/m/134?category=713313
+
+#### vuex actions 비동기 처리
+
+https://vuex.vuejs.org/kr/guide/actions.html
+
+
+
+* 1. 로그인 새로 한 경우
+
+     => 인증. isLogin : true => 친구목록페이지 - connection!
+
+  2. 로그인했지만 토큰 만료된 경우
+
+     1. rest 통신에서 access 만료신호. 재발급 API호출
+
+  3. 다른 기기에서 로그인한 경우
+
+     => websocket으로 
+
+connection할때 다른기기로그인되어있는지 확인.
+
+다른기기 로그인 되어있으면 logout
+
+안되어있으면 login
+
+url: / => islogin true : => friends/로 보내줌
+
+=> islogin false: => / 유지 : 로그인 페이지
+
+
+
+login -> connect
+
+#### 네비게이션 가드
+
+
+
 #### 로그인한 유저정보 저장 관리
 
 
@@ -688,7 +785,7 @@ GET_FRIENDS(state, payload) {
 
 => 전역에서 사용해야하는 정보
 
-
+https://minu0807.tistory.com/64
 
 
 
@@ -696,7 +793,7 @@ GET_FRIENDS(state, payload) {
 
 ### 1. 로그인 - Refresh Token
 
-
+> 로그인페이지에서 id password dispatch => vuex = 로그인 저장
 
 
 
@@ -762,3 +859,22 @@ export default {
 
 
 
+## 9. Javascript
+
+### 1. Promise
+
+https://www.youtube.com/watch?v=DHvZLI7Db8E
+
+
+
+
+
+vuex router
+
+https://blog.j2p.io/vuex-actions-%EC%95%88%EC%97%90%EC%84%9C-router-%EB%B3%80%EA%B2%BD%ED%95%98%EA%B8%B0
+
+
+
+object object 나올때
+
+https://cupdisin.tistory.com/16
