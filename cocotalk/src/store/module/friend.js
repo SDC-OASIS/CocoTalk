@@ -1,5 +1,8 @@
 import createPersistedState from "vuex-persistedstate";
+import userStore from "./userStore";
+
 import axios from "axios";
+// import user from "./user.js";
 
 const friend = {
 	namespaced: true,
@@ -107,8 +110,12 @@ const friend = {
 		// 	context.commit("CHANGE_PAGE", payload);
 		// },
 		getFriends: function (context, payload) {
+			console.log(userStore.state);
 			const token = payload;
+			// const token2 = store.userStore.state.accessToken;
 			console.log(token);
+
+			// console.log(token2);
 			axios
 				.get("http://146.56.43.7:8080/api/user/friend", {
 					headers: {
@@ -122,6 +129,8 @@ const friend = {
 						e.profile = JSON.parse(str);
 						e.username = e.name;
 						console.log(e.profile);
+						console.log(userStore.state);
+
 						context.commit("GET_FRIENDS", res.data.data);
 					});
 				});

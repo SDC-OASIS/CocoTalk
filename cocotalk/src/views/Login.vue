@@ -2,10 +2,10 @@
 	<div class="login row">
 		<div>
 			<img src="../images/mococo.png" alt="" />
-			<input type="text" placeholder="ID" v-model="user.id" />
-			<input type="password" placeholder="PW" v-model="user.pass" />
+			<input type="text" placeholder="ID" v-model.trim="user.cid" />
+			<input type="password" placeholder="PW" v-model.trim="user.password" />
 			<div>
-				<button class="button-login" @click="Login">로그인</button>
+				<button class="button-login" @click="Login" @keyup.enter="Login">로그인</button>
 				<!-- <button @click="loginCancel" class="button-cancel">취소</button> -->
 			</div>
 		</div>
@@ -18,17 +18,21 @@ export default {
 	data() {
 		return {
 			user: {
-				id: "",
-				username: "",
+				cid: "",
+				password: "",
 			},
 		};
 	},
 	methods: {
 		Login() {
+			this.user.cid = this.user.cid.replace(/\s/g, "");
+			this.user.password = this.user.password.replace(/\s/g, "");
+
 			console.log("로그인 클릭");
 			console.log(this.user);
-			const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE2NDMxOTcwODEsImV4cCI6MTY0MzIwMDY4MSwidXNlckNpZCI6ImhlZWV1biJ9.Ok3jh3JJUgVwNtoSKNlcsHnDUOJO0XKDaGQn0vDMUzs";
-			this.$store.dispatch("friend/getFriends", token);
+			this.$store.dispatch("userStore/login", this.user);
+
+			// const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE2NDMxOTcwODEsImV4cCI6MTY0MzIwMDY4MSwidXNlckNpZCI6ImhlZWV1biJ9.Ok3jh3JJUgVwNtoSKNlcsHnDUOJO0XKDaGQn0vDMUzs";
 		},
 	},
 };
