@@ -37,7 +37,11 @@ class ChatRoomViewController: UIViewController {
         configureView()
         configureSubviews()
         bind()
+        #warning("fetch로 수정")
         viewModel.getMessages()
+        
+        #warning("눈 내리기 이펙트")
+        // http://minsone.github.io/mac/ios/falling-snow-with-spritekit-on-uiview-in-swift
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,13 +78,8 @@ class ChatRoomViewController: UIViewController {
 // MARK: - BaseViewController
 extension ChatRoomViewController {
     func configureView() {
-//        let flowLayout = UICollectionViewFlowLayout()
         let flowLayout = MessageCollectionViewLayout()
         flowLayout.delegate = self
-//        flowLayout.minimumInteritemSpacing = 4
-//        let width = view.frame.width
-//        let height = view.frame.height
-//        flowLayout.estimatedItemSize = CGSize(width: width, height: height)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 10, right: 0);
         collectionView.backgroundColor = .clear
