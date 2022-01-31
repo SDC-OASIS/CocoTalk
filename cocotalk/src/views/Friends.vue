@@ -56,6 +56,7 @@ export default {
 			this.width = "60px";
 		}
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
+		// this.$store.dispatch("friend/getFriends");
 	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),

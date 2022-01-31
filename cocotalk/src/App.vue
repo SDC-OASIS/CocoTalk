@@ -42,13 +42,19 @@ export default {
 		const width = screen.width;
 		this.$store.dispatch("userStore/getScreen", { width: width });
 		// 로그인 페이지에서는 navbar 안보이게 만들기
-		if (window.location.pathname == "/") {
+		console.log("nav" + window.location.pathname);
+		// if (window.location.pathname == "/") {
+		// 	this.nav = false;
+		// }
+		if (this.roomStatus.mainPage == "") {
 			this.nav = false;
+		} else {
+			this.nav = true;
 		}
 	},
 	computed: {
 		...mapState("userStore", ["screenInfo"]),
-		...mapState("chat", ["friends"]),
+		...mapState("chat", ["friends", "roomStatus"]),
 		...mapState("modal", ["addFriendModal", "profileModal", "makeChatModal", "roomNameModal"]),
 
 		// ...mapState(userStore, {
