@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class RoomController {
 
     @PostMapping
     @Operation(summary = "채팅방 생성")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<GlobalResponse<?>> create(@Parameter(hidden = true) UserVo userVo,
                                                     @RequestBody @Valid RoomRequest request){
         RoomVo data = roomService.create(request);
@@ -55,7 +57,7 @@ public class RoomController {
 
     @GetMapping("/{id}")
     @Operation(summary = "채팅방 id로 조회")
-    public ResponseEntity<GlobalResponse<?>> findById(@PathVariable String id){
+    public ResponseEntity<GlobalResponse<?>> findById(@PathVariable ObjectId id){
         RoomVo data = roomService.findById(id);
         return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
@@ -71,14 +73,14 @@ public class RoomController {
 
     @PutMapping("/{id}")
     @Operation(summary = "채팅방 id로 수정")
-    public ResponseEntity<GlobalResponse<?>> modify(@PathVariable String id, @RequestBody @Valid RoomRequest request){
+    public ResponseEntity<GlobalResponse<?>> modify(@PathVariable ObjectId id, @RequestBody @Valid RoomRequest request){
         RoomVo data = roomService.modify(id, request);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "채팅방 id로 삭제")
-    public ResponseEntity<GlobalResponse<?>> modify(@PathVariable String id){
+    public ResponseEntity<GlobalResponse<?>> modify(@PathVariable ObjectId id){
         String data = roomService.delete(id);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }

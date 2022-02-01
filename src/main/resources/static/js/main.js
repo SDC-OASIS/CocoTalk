@@ -111,21 +111,6 @@ function onConnected() {
 }
 
 function onConnectAndSend() {
-    const messageContent = messageInput.value.trim();
-
-    if(messageContent && stompClient) {
-        let chatMessage = {
-            roomId: roomId,
-            userId: userId,
-            type: 0,
-            content: messageInput.value,
-            sentAt: getLocalDateTime()
-        };
-
-        stompClient.send("/simple/" + roomId + "/send", {}, JSON.stringify(chatMessage));
-        messageInput.value = '';
-    }
-
     messageForm.removeEventListener('submit', createRoomAndConnectAndSend, true)
     onConnected();
 }
@@ -145,7 +130,7 @@ function sendMessage(event) {
             userId: userId,
             type: 0,
             content: messageInput.value,
-            sentAt: getLocalDateTime()
+            // sentAt: getLocalDateTime()
         };
 
         stompClient.send("/simple/" + roomId + "/send", {}, JSON.stringify(chatMessage));
@@ -160,10 +145,10 @@ function invite (event) {
         let inviteMessage = { // 일종의 joinMessage
             roomId: roomId,
             userId: userId,
-            invitees: inviteeIds,
+            inviteeIds: inviteeIds,
             type: 3,
             content: null,
-            sentAt: getLocalDateTime()
+            // sentAt: getLocalDateTime()
         }
 
         stompClient.send("/simple/" + roomId + "/invite", {}, JSON.stringify(inviteMessage));
@@ -177,8 +162,8 @@ function leave(event) {
         roomId: roomId,
         userId: userId,
         type: 2,
-        content: null,
-        sentAt: getLocalDateTime()
+        content: userId + '가 방에서 나갔습니다.',
+        // sentAt: getLocalDateTime()
     }
 
     stompClient.send("/simple/" + roomId + "/leave", {}, JSON.stringify(leaveMessage));
@@ -188,8 +173,9 @@ function leave(event) {
     usernamePage.classList.remove('hidden');
 
     const headers = {
+        behavior: 'leave'
     };
-    if(!stompClient) {
+    if(stompClient) {
         stompClient.unsubscribe('/topic/' + roomId);
         stompClient.disconnect(() => {}, headers);
     }
@@ -214,7 +200,7 @@ function onMessageReceived(payload) { // subscribe시 이 함수로 처리
         message.content = message.userId + ' left!';
     } else if (message.type === 3) { // invite
         messageElement.classList.add('event-message');
-        message.content = message.invitees + ' invited!';
+        message.content = message.inviteeIds + ' invited!';
     } else if (message.type === 4) { // away
         messageElement.classList.add('event-message');
         message.content = message.userId + ' away from keyboard!';

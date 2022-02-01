@@ -10,34 +10,26 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "messages")
-public class ChatMessage {
+@Document(collection = "messagebundles")
+public class MessageBundle {
     @Id
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId messageBundleId;
+    private ObjectId roomId;
 
-    private Long userId;
+    private int count;
 
-    private int type;
+    private List<ObjectId> messageIds;
 
-    private String content;
-
-    private LocalDateTime sentAt;
-
-    public void setMessageBundleId(ObjectId messageBundleId) {
-        this.messageBundleId = messageBundleId;
-    }
-
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
+    public void setCount(int count) {
+        this.count = count;
     }
 }

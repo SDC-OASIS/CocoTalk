@@ -1,10 +1,9 @@
-package com.cocotalk.chat.domain.entity.message;
+package com.cocotalk.chat.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -12,7 +11,6 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "messages")
-public class InviteMessage extends ChatMessage {
+public class InviteMessageRequest extends ChatMessageRequest {
     List<Long> inviteeIds;
 }

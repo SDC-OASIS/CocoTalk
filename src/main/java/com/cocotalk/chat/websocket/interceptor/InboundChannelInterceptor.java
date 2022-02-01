@@ -44,16 +44,27 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
                     // 메인화면 글로벌 소켓 예정
                 }
             }
-        }  else if(command.equals(StompCommand.DISCONNECT)) {
+        } else if (command.equals(StompCommand.DISCONNECT)) {
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-            if(sessionAttributes != null) {
-                String view = sessionAttributes.get("view").toString();
-                if(view.equals("chatroom")) {
-                    Long userId = Long.parseLong(sessionAttributes.get("userId").toString());
-                    ObjectId roomId = new ObjectId(sessionAttributes.get("roomId").toString());
-                    roomService.saveLeftAt(roomId.toHexString(), userId);
-                } else if (view.equals("main")) {
-                    // 메인화면 글로벌 소켓 예정
+            if (sessionAttributes != null) {
+                List<String> behaviorList = accessor.getNativeHeader("behavior");
+                if(behaviorList != null) { // 채팅방에서 나가기 버튼 눌렀을 때
+                    String behavior = behaviorList.get(0);
+                    sessionAttributes.put("behavior", behavior);
+                } else {
+                    String view = sessionAttributes.get("view").toString();
+                    if (view.equals("chatroom")) {
+                        String behavior = sessionAttributes.get("behavior").toString();
+                        if(behavior != null && behavior.equals("leave")) {
+                            // code something
+                        } else {
+                            Long userId = Long.parseLong(sessionAttributes.get("userId").toString());
+                            ObjectId roomId = new ObjectId(sessionAttributes.get("roomId").toString());
+                            roomService.saveLeftAt(roomId, userId);
+                        }
+                    } else if (view.equals("main")) {
+                        // 메인화면 글로벌 소켓 예정
+                    }
                 }
             }
         }

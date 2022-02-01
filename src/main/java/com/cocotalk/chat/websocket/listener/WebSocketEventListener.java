@@ -58,7 +58,6 @@ public class WebSocketEventListener {
                 log.info("User Disconnected - userId = " + userId);
                 ChatMessage chatMessage = ChatMessage.builder()
                         .userId(userId)
-                        .roomId(roomId)
                         .type(MessageType.AWAY.ordinal())
                         .sentAt(LocalDateTime.now())
                         .build();

@@ -14,5 +14,6 @@ import org.mapstruct.ReportingPolicy;
 
 public interface RoomMapper {
     RoomVo toVo(Room room);
+    Room toEntity(RoomVo roomVo);
     Room toEntity(RoomRequest roomRequest);
 }
