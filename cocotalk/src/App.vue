@@ -8,6 +8,7 @@
 				<router-view name="right" class="right-container" />
 			</div>
 		</div>
+		<Alert v-if="alert.status == 'open'" :text="alert.text" />
 		<AddFriendModal v-if="addFriendModal == 'open'" />
 		<MakeChatModal v-if="makeChatModal == 'open'" />
 		<RoomNameModal v-if="roomNameModal == 'open'" />
@@ -22,6 +23,7 @@ import AddFriendModal from "@/components/modals/AddFriendModal.vue";
 import MakeChatModal from "@/components/modals/MakeChatModal.vue";
 import RoomNameModal from "@/components/modals/RoomNameModal.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
+import Alert from "@/components/modals/Alert.vue";
 // import	RoomNameModal from "@/components/modals	RoomNameModal.vue";
 
 export default {
@@ -37,6 +39,7 @@ export default {
 		MakeChatModal,
 		RoomNameModal,
 		ProfileModal,
+		Alert,
 	},
 	created() {
 		const width = screen.width;
@@ -55,7 +58,7 @@ export default {
 	computed: {
 		...mapState("userStore", ["screenInfo"]),
 		...mapState("chat", ["friends", "roomStatus"]),
-		...mapState("modal", ["addFriendModal", "profileModal", "makeChatModal", "roomNameModal"]),
+		...mapState("modal", ["alert", "addFriendModal", "profileModal", "makeChatModal", "roomNameModal"]),
 
 		// ...mapState(userStore, {
 		// 	screenInfo: (state) => state.roomStatus,
