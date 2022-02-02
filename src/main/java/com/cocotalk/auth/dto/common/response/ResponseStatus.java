@@ -40,22 +40,22 @@ public enum ResponseStatus {
 
     // 404 Not Found - 클라이언트가 요청한 자원이 존재하지 않다.
     NOT_FOUND(404, 2006, "NOT FOUND"),
+    NOT_FOUND_FCM_TOKEN(404, 2007, "해당 유저의 fcm token 기록이 존재하지 않습니다"),
 
     // 405 Method Not Allowed - 클라이언트의 요청이 허용되지 않는 메소드인 경우
-    METHOD_NOT_ALLOWED(405, 2007, "허용되지 않는 HTTP Method 입니다."),
+    METHOD_NOT_ALLOWED(405, 2008, "허용되지 않는 HTTP Method 입니다."),
 
     // 409 Conflict - 클라이언트의 요청이 서버의 상태와 충돌이 발생한 경우
-    CONFLICT(409, 2008, "충돌이 발생하였습니다."),
+    CONFLICT(409, 2009, "충돌이 발생하였습니다."),
 
     // 429 Too Many Requests - 클라이언트가 일정 시간 동안 너무 많은 요청을 보낸 경우
-    TOO_MANY_REQUESTS(429, 2009, "요청이 너무 많습니다."),
+    TOO_MANY_REQUESTS(429, 2010, "요청이 너무 많습니다."),
 
     /*
      * 5XX Server errors
      */
     // 500 내부 서버 오류가 발생한 경우
-    SERVER_ERROR(500, 2010, "서버와의 통신에 실패하였습니다."),
-    INFOTECH_SERVER_ERROR(500, 2011, "서버와의 통신에 실패하였습니다."),
+    SERVER_ERROR(500, 2011, "서버와의 통신에 실패하였습니다."),
     DATABASE_ERROR(500, 2012, "데이터베이스 연결에 실패하였습니다.");
 
     private final int status;

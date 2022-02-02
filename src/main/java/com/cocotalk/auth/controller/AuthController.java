@@ -1,11 +1,12 @@
 package com.cocotalk.auth.controller;
 
+import com.cocotalk.auth.dto.common.ClientType;
 import com.cocotalk.auth.dto.common.TokenDto;
 import com.cocotalk.auth.dto.email.issue.IssueInput;
 import com.cocotalk.auth.service.AuthService;
 import com.cocotalk.auth.dto.email.issue.IssueOutput;
 import com.cocotalk.auth.dto.email.validation.ValidationInput;
-import com.cocotalk.auth.dto.email.validation.ValidationOutput;
+import com.cocotalk.auth.dto.common.ValidationDto;
 import com.cocotalk.auth.dto.signin.SigninInput;
 import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.dto.signup.SignupOutput;
@@ -35,8 +36,8 @@ public class AuthController {
      */
     @ApiOperation(value = "로그인")
     @PostMapping("/signin")
-    public ResponseEntity<Response<TokenDto>> signin(@RequestBody @Valid SigninInput signinInput) {
-        return authService.signin(signinInput);
+    public ResponseEntity<Response<TokenDto>> signin(ClientType clientType, @RequestBody @Valid SigninInput signinInput) {
+        return authService.signin(clientType, signinInput);
     }
 
     /**
@@ -46,8 +47,8 @@ public class AuthController {
      */
     @ApiOperation(value = "로그아웃")
     @GetMapping("/signout")
-    public ResponseEntity<Response<Object>> signout() {
-        return authService.signout();
+    public ResponseEntity<Response<Object>> signout(ClientType clientType) {
+        return authService.signout(clientType);
     }
 
     /**
@@ -71,9 +72,9 @@ public class AuthController {
     // Body
     @ApiOperation(value = "ACCESS TOKEN 재발급")
     @GetMapping("/reissue")
-    public ResponseEntity<Response<TokenDto>> reissue() {
+    public ResponseEntity<Response<TokenDto>> reissue(ClientType clientType) {
         log.info("[POST] /api/users/reissue");
-        return authService.reissue();
+        return authService.reissue(clientType);
     }
 
     /**
@@ -90,17 +91,28 @@ public class AuthController {
     }
 
     /**
-     * 이메일 인증 코드 확인 API [POST] /api/users/email
+     * 이메일 인증 코드 확인 API [POST] /api/auth/email/validation
      *
-     * @return ResponseEntity<Response<EmailOutput>>
+     * @return ResponseEntity<Response<ValidationDto>>
      */
     // Body
     @ApiOperation(value = "Eamil 인증 코드 확인")
     @PostMapping("/email/validation")
-    public ResponseEntity<Response<ValidationOutput>> checkMail(@RequestBody @Valid ValidationInput validationInput) {
-        log.info("[POST] /users/email");
+    public ResponseEntity<Response<ValidationDto>> checkMail(@RequestBody @Valid ValidationInput validationInput) {
+        log.info("[POST] /email/validation");
         return authService.checkMail(validationInput);
     }
 
+    /**
+     * refresh token 유효성 검증 API [POST] /api/auth/token/validation
+     * @return ResponseEntity<Response<ValidationDto>>
+     */
+    // Body
+    @ApiOperation(value = "refresh token이 유효한지 확인")
+    @GetMapping("/token/validation")
+    public ResponseEntity<Response<ValidationDto>>checkRefershToken(ClientType clientType) {
+        log.info("[POST] /token/validation");
+        return authService.isValidRefreshToken(clientType);
+    }
 
 }

@@ -60,4 +60,6 @@ public class User extends BaseTime {
     @Column(name = "loggedin_at")
     private LocalDateTime loggedinAt; // 최종 접속 기록
 
+
+
 }

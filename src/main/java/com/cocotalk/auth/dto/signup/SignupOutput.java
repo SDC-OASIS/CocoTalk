@@ -14,14 +14,16 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class SignupOutput {
+    private Long id;
     private String cid; // 코코톡 아이디
     private String name;
     private String nickname;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate birth;
-    private String phone;
     private String email;
+    private String phone;
+    private String profile;
     @Enumerated(EnumType.STRING)
     private Provider provider;
     private String providerId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate birth;
 }
