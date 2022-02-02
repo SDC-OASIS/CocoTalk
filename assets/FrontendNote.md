@@ -1,4 +1,4 @@
-# CocoTalk-Frontend 학습내용 정리dd
+# CocoTalk-Frontend 학습내용 정리
 
 [TOC]
 
@@ -598,7 +598,54 @@ https://sso-feeling.tistory.com/675
 
 ## 7. 통신
 
-### 1. 친구목록 통신
+### 1. axios interceptor
+
+[참고] https://stackoverflow.com/questions/41833424/how-to-access-vuex-module-getters-and-mutations
+
+* axios는 Promise 기반의 HTTP Client이다. 따라서 resolve와 reject 설정이 가능한데, error가 있는 경우에는 에러를 발생시키도록 설정하기위해 `Promise.reject()`를 사용한다.
+  [참고] https://redux-advanced.vlpt.us/2/02.html
+
+
+
+```javascript
+import VueAxios from "axios";
+import store from "@/store";
+
+const axios = VueAxios.create({
+	// MSA 구조로 요청 주소가 각기 달라 향후 통합가능한 부분이 있으면 수정 예정
+	// baseURL: 'http://....',
+	// headers: {
+	// 	"Content-type": "application/json",
+	// },
+});
+
+axios.interceptors.request.use(
+	function (config) {
+		config.headers["X-ACCESS-TOKEN"] = store.getters["userStore/accessToken"];
+		// config.headers["X-REFRESH-TOKEN"] = state.refreshToken;
+		console.log("헤더 넣기 완료");
+		console.log(store.getters["userStore/accessToken"]);
+		return config;
+	},
+	function (error) {
+		return Promise.reject(error);
+	},
+);
+
+export default axios;
+```
+
+
+
+```javascript
+import axios from "@/utils/axios";
+```
+
+
+
+
+
+### 2. 친구목록 통신
 
 > 친구목록의 경우 채팅방 생성 모달과 채팅 내부의 대화상대초대등 다양한 component에서 사용하는 data이므로 전역에서 관리하기 위해 vuex에서 통신하고 저장하도록 구하였다.
 >
@@ -684,7 +731,7 @@ GET_FRIENDS(state, payload) {
 
 
 
-### 2. 로그인 - access token, refresh token
+### 3. 로그인 - access token, refresh token
 
 > 인증(Authentication) : 로그인. 권한이 주어진 회원임을 인증 받는 것
 >
