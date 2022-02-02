@@ -1,6 +1,5 @@
 package com.cocotalk.push.service;
 
-import com.cocotalk.push.dto.common.response.ResponseStatus;
 import com.cocotalk.push.dto.device.*;
 import com.cocotalk.push.dto.common.ClientType;
 import com.cocotalk.push.entity.Device;
@@ -23,14 +22,17 @@ import static com.cocotalk.push.dto.common.response.ResponseStatus.*;
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper mapper;
 
     public Mono<Device> find(long id) {
         return deviceRepository.findById(id);
     }
 
-    public Flux<Device> findByUserId(SelectInput selectInput) {
-        return deviceRepository.findByUserId(selectInput.getUserId());
+    public Flux<Device> findByOptions(SelectInput selectInput) {
+        if(selectInput.getType()==null)
+            return deviceRepository.findByUserId(selectInput.getUserId());
+        short type = (short)selectInput.getType().ordinal();
+        return Flux.from(deviceRepository.findByUserIdAndType(selectInput.getUserId(), type));
     }
 
     public Mono<Device> create(ClientInfo clientInfo, CreateInput createInput) {
@@ -74,11 +76,13 @@ public class DeviceService {
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {
         log.info("client ip : "+ clientInfo);
         short clientType = parseClientType(clientInfo.getAgent());
+        log.info("userId and type : "+deleteInput.getUserId()+","+clientType);
         deviceRepository.findByUserIdAndType(deleteInput.getUserId(), clientType)
                 .doOnNext(target -> {
-                    deviceRepository.delete(target);
+                    deviceRepository.delete(target).subscribe();
                 })
-                .doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
+                .doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);})
+                .subscribe();
     }
 
     private short parseClientType(String userAgent){

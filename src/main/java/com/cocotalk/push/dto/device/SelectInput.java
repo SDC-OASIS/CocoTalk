@@ -1,6 +1,7 @@
 package com.cocotalk.push.dto.device;
 
 
+import com.cocotalk.push.dto.common.ClientType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,5 +11,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class SelectInput {
     @NotNull
-    long userId;
+    Long userId;
+    ClientType type;
 }

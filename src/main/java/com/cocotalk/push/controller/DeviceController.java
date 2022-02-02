@@ -30,11 +30,11 @@ public class DeviceController {
         return deviceService.find(id);
     }
 
-    @ApiOperation(value = "해당 user의 device 정보 찾기")
+    @ApiOperation(value = "(userId) 혹은 (userId,type)으로 device 정보 찾기")
     @GetMapping
     public Flux<Device> findByUserId(@Valid SelectInput selectInput) {
         log.info("[device/post] findByUserId device");
-        return deviceService.findByUserId(selectInput);
+        return deviceService.findByOptions(selectInput);
     }
 
     @ApiOperation(value = "device 등록하기")
@@ -53,7 +53,7 @@ public class DeviceController {
 
     @ApiOperation(value = "device 삭제하기")
     @DeleteMapping
-    public void delete(ClientInfo clientInfo, @RequestBody @Valid DeleteInput deleteInput) {
+    public void delete(ClientInfo clientInfo, @Valid DeleteInput deleteInput) {
         log.info("[device/delete] delete device");
         deviceService.delete(clientInfo, deleteInput);
     }
