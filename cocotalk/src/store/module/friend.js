@@ -1,7 +1,5 @@
 import createPersistedState from "vuex-persistedstate";
-import userStore from "./userStore";
-
-import axios from "axios";
+import axios from "@/utils/axios";
 // import user from "./user.js";
 
 const friend = {
@@ -109,31 +107,35 @@ const friend = {
 		// changePage: function (context, payload) {
 		// 	context.commit("CHANGE_PAGE", payload);
 		// },
-		getFriends: function (context, payload) {
-			console.log(userStore.state);
-			const token = payload;
+		getFriends: function (context) {
 			// const token2 = store.userStore.state.accessToken;
-			console.log(token);
+			// console.log(userStore.state);
+			// const token = payload;
+			// // const token2 = store.userStore.state.accessToken;
+			// console.log(token);
+
+			// // console.log(token2);
+			// axios
+			// 	.get("http://146.56.43.7:8080/api/user/friend", {
+			// 		headers: {
+			// 			"X-ACCESS-TOKEN": token,
+			// 		},
+			// 	})
 
 			// console.log(token2);
-			axios
-				.get("http://146.56.43.7:8080/api/user/friend", {
-					headers: {
-						"X-ACCESS-TOKEN": token,
-					},
-				})
-				.then((res) => {
-					let friends = res.data.data;
-					friends.forEach((e) => {
-						let str = e.profile;
-						e.profile = JSON.parse(str);
-						e.username = e.name;
-						console.log(e.profile);
-						console.log(userStore.state);
-
-						context.commit("GET_FRIENDS", res.data.data);
-					});
+			axios.get("http://146.56.43.7:8080/api/user/friend").then((res) => {
+				console.log("친구목록 가져오기");
+				let friends = res.data.data;
+				console.log(friends);
+				friends.forEach((e) => {
+					let str = e.profile;
+					e.profile = JSON.parse(str);
+					e.username = e.name;
+					console.log("친구프로필데이터 파싱완료");
+					context.commit("GET_FRIENDS", res.data.data);
 				});
+				context.commit("GET_FRIENDS", res.data.data);
+			});
 		},
 	},
 	modules: {},
