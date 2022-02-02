@@ -31,8 +31,6 @@ import java.util.Map;
 public class JwtUtils {
     private static String jwtSecret;
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
     @Value("${jwt.secret}")
     public void setJwtSecret(String jwtSecret) {
         this.jwtSecret = jwtSecret;

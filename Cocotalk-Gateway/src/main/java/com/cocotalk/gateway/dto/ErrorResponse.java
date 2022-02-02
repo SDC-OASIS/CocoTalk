@@ -1,5 +1,6 @@
 package com.cocotalk.gateway.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class ErrorResponse<T> {
     private T error;
     private HttpStatus status;
     private int statusCode;
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
     public ErrorResponse(T error) {
