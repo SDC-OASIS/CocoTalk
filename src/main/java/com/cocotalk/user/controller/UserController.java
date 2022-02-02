@@ -35,7 +35,7 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * 유저 전체 조회 API [GET] /api/user
+     * 유저 전체 조회 API [GET] /user
      *
      * @return ResponseEntity<CustomResponse<List<UserResponse>>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
@@ -47,13 +47,27 @@ public class UserController {
     }
 
     /**
-     * 유저 id로 조회 API [GET] /api/user/{id}
+     * 유저 accessToken으로 조회 API [GET] /user/{id}
+     *
+     * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
+     * @exception CustomException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
+     */
+    @Operation(summary = "유저 Access Token으로 조회")
+    @GetMapping("/token")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<UserVo>> findByAccessToken(@Parameter(hidden = true) User user) {
+        UserVo data = userService.findByAccessToken(user);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 id로 조회 API [GET] /user/{id}
      *
      * @param id 유저 id
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      * @exception CustomException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @Operation(summary = "유저 id로 조회")
+    @Operation(summary = "유저 accessToken으로 조회")
     @GetMapping("/{id}")
     public ResponseEntity<CustomResponse<UserVo>> findById(@PathVariable Long id) {
         UserVo data = userService.findById(id);
@@ -61,53 +75,47 @@ public class UserController {
     }
 
     /**
-     * 유저 코코톡 id로 조회 API [GET] /api/user?cid=
+     * 유저 코코톡 id로 조회 API [GET] /user?cid=
      *
      * @param cid 코코톡 id
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 cid로 조회")
-    @GetMapping("/cid/{cid}")
-    public ResponseEntity<CustomResponse<UserVo>> findByCid(
-            @Parameter(name = "유저 코코톡 id", required = true, example = "ybell1028")
-            @RequestParam String cid) {
-        UserVo data = userService.findByCid(cid);
+    @GetMapping("/cid/{cocotalkId}")
+    public ResponseEntity<CustomResponse<UserVo>> findByCid(@PathVariable String cocotalkId) {
+        UserVo data = userService.findByCid(cocotalkId);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
     /**
-     * 유저 email로 조회 API [GET] /api/user?email=
+     * 유저 email로 조회 API [GET] /user?email=
      *
      * @param email 유저 email
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 email로 조회")
     @GetMapping("/email/{email}")
-    public ResponseEntity<CustomResponse<UserVo>> findByEmail(
-            @Parameter(name = "유저 email", required = true, example = "test@example.com")
-            @RequestParam String email) {
+    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@RequestParam String email) {
         UserVo data = userService.findByEmail(email);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
     /**
-     * 유저 연락처로 조회 API [GET] /api/user?phone=[ string, ... ]
+     * 유저 연락처로 조회 API [GET] /user?phone=[ string, ... ]
      *
      * @param phones 유저들의 연락처
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 연락처로 조회")
     @GetMapping("/phone")
-    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(
-            @Parameter(name = "연락처", example = "[ \"01012345678\", \"01011112222\", ... ]")
-            @RequestParam List<String> phones) {
+    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(@RequestParam List<String> phones) {
         List<UserVo> data = userService.findByPhones(phones);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
 
     /**
-     * 유저 정보 수정 API [PUT] /api/user/{id}
+     * 유저 정보 수정 API [PUT] /user/{id}
      *
      * @param request 수정할 내용을 담은 요청 모델
      * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
@@ -121,7 +129,7 @@ public class UserController {
     }
 
     /**
-     * 유저 삭제 API [DELETE] /api/user
+     * 유저 삭제 API [DELETE] /user
      *
      * @return ResponseEntity<CustomResponse<String>> 삭제된 유저 cid를 포함한 메시지가 포함됩니다.
      */

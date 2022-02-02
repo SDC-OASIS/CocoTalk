@@ -34,6 +34,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public UserVo findByAccessToken(User user) {
+        return userMapper.toVo(user);
+    }
+
     @Transactional(readOnly = true)
     public UserVo findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> INVALID_USERID);
