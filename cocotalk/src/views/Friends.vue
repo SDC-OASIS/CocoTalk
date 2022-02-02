@@ -29,10 +29,12 @@
 			</div>
 		</div>
 		{{ roomStatus }}
+		<button @click="test">리프레시테스트</button>
 	</div>
 </template>
 
 <script>
+import axios from "../utils/axios";
 import { mapState } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import FriendListUserInfo from "../components/friends/FriendListUserInfo.vue";
@@ -82,6 +84,17 @@ export default {
 		openAddFriendModal() {
 			console.log("얍");
 			this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
+		},
+		test() {
+			axios
+				.get("http://146.56.43.7:8080/api/user/friend")
+				.then((res) => {
+					console.log("리프레시");
+					console.log(res);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		},
 	},
 };

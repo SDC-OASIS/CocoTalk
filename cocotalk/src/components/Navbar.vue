@@ -27,7 +27,9 @@
 				</li>
 				<li>
 					<router-link to="/">
-						<span class="iconify" data-icon="fe:logout"></span>
+						<span @click="logout">
+							<span class="iconify" data-icon="fe:logout"></span>
+						</span>
 					</router-link>
 				</li>
 			</ul>
@@ -49,6 +51,11 @@ export default {
 		},
 		getMainPath() {
 			return `/${this.roomStatus.mainPage}`;
+		},
+	},
+	methods: {
+		logout() {
+			this.$store.dispatch("userStore/logout", { root: true });
 		},
 	},
 };
