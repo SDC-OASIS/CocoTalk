@@ -1,60 +1,61 @@
 package com.cocotalk.push.controller;
 
+import com.cocotalk.push.dto.device.*;
 import com.cocotalk.push.entity.Device;
-import com.cocotalk.push.repository.DeviceRepository;
-import com.cocotalk.push.response.Response;
-import com.cocotalk.push.response.ResponseStatus;
-import lombok.AllArgsConstructor;
+import com.cocotalk.push.service.DeviceService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.relational.core.sql.Update;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static com.cocotalk.push.response.ResponseStatus.*;
+import javax.validation.Valid;
 
 @Slf4j
+@Api(tags = "디바이스 API")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/device")
-@AllArgsConstructor
 public class DeviceController {
 
-    private  final DeviceRepository deviceRepository;
+    private final DeviceService deviceService;
 
+    @ApiOperation(value = "pk로 device 찾기")
     @GetMapping("/{id}")
     public Mono<Device> find(@PathVariable long id) {
         log.info("[device/post] find device");
-        return deviceRepository.findById(id);
+        return deviceService.find(id);
     }
 
+    @ApiOperation(value = "해당 user의 device 정보 찾기")
     @GetMapping
-    public Flux<Device> findAll() {
-        log.info("[device/post] findAll device");
-        return deviceRepository.findAll();
+    public Flux<Device> findByUserId(@Valid SelectInput selectInput) {
+        log.info("[device/post] findByUserId device");
+        return deviceService.findByUserId(selectInput);
     }
 
+    @ApiOperation(value = "device 등록하기")
     @PostMapping
-    public Mono<Device> create() {
+    public Mono<Device> create(ClientInfo clientInfo, @RequestBody @Valid CreateInput createInput) {
         log.info("[device/post] create device");
-        try{
-            Device device = Device.builder()
-                    .userId((long)1)
-                    .token("token")
-                    .ip("0.0.0.0")
-                    .os("Windows")
-                    .type((short)1)
-                    .build();
-//            Mono<Device> output = deviceRepository.save(device);
-//            return output;
-            return null;
-        }catch(Exception e){
-            log.error("[device/post] database error",e);
-            return null;
-//            return Mono.just(ResponseEntity.status(HttpStatus.OK).body(new Response<>(DATABASE_ERROR)));
-        }
+        return deviceService.create(clientInfo, createInput);
+    }
+    
+    @ApiOperation(value = "device 수정하기")
+    @PutMapping
+    public Mono<Device> update(ClientInfo clientInfo, @RequestBody @Valid UpdateInput updateInput) {
+        log.info("[device/put] update device");
+        return deviceService.update(clientInfo, updateInput);
+    }
+
+    @ApiOperation(value = "device 삭제하기")
+    @DeleteMapping
+    public void delete(ClientInfo clientInfo, @RequestBody @Valid DeleteInput deleteInput) {
+        log.info("[device/delete] delete device");
+        deviceService.delete(clientInfo, deleteInput);
     }
 
 }

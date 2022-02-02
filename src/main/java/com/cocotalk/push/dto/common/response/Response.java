@@ -1,4 +1,4 @@
-package com.cocotalk.push.response;
+package com.cocotalk.push.dto.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

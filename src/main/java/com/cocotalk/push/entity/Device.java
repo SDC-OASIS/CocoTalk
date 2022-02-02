@@ -3,16 +3,17 @@ package com.cocotalk.push.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder
+@ToString
 @Table("device")
 public class Device {
     @Id
@@ -28,8 +29,8 @@ public class Device {
     @Column("ip")
     private String ip;
 
-    @Column("os")
-    private String os;
+    @Column("agent")
+    private String agent;
 
     @Column("type")
     private Short type;
