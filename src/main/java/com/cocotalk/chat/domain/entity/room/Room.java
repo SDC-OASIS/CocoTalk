@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "room")
+@Document(collection = "rooms")
 public class Room {
     @Id
     @JsonSerialize(using = ToStringSerializer.class)
@@ -29,7 +29,7 @@ public class Room {
     private List<RoomMember> members;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private List<ObjectId> messageIds;
+    private List<ObjectId> messageBundleIds;
 
     @JsonSerialize(using = ToStringSerializer.class)
     private List<ObjectId> noticeIds;

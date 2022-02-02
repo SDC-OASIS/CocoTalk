@@ -1,4 +1,4 @@
-package com.cocotalk.chat.domain.vo;
+package com.cocotalk.chat.dto.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -14,12 +14,9 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessageVo {
+public class ChatMessageRequest {
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId id;
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId messageBundleId;
+    private ObjectId roomId;
 
     private Long userId;
 

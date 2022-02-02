@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ChatMessageRepository extends MongoRepository<ChatMessage, String>, QuerydslPredicateExecutor<ChatMessage> {
+public interface ChatMessageRepository extends MongoRepository<ChatMessage, ObjectId>, QuerydslPredicateExecutor<ChatMessage> {
     Optional<ChatMessage> findById(ObjectId id);
 }

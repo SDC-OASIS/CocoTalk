@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,15 +12,16 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "room_member")
 public class RoomMember {
     private Long userId; // MySQL userId
 
-    private Boolean isJoining; // 갠톡에서만 사용
+    private boolean joining;
 
     private LocalDateTime joinedAt;
 
-    private LocalDateTime leftAt;
+    private LocalDateTime awayAt; // 소켓 끊어진 시간
+
+    private LocalDateTime leftAt; // 나간 시간
 
     @Override
     public boolean equals(Object obj) {
@@ -31,12 +31,16 @@ public class RoomMember {
         return Objects.equals(userId, roomMember.userId);
     }
 
-    public void setJoining(Boolean joining) {
-        isJoining = joining;
+    public void setJoining(boolean joining) {
+        this.joining = joining;
     }
 
     public void setJoinedAt(LocalDateTime joinedAt) {
         this.joinedAt = joinedAt;
+    }
+
+    public void setAwayAt(LocalDateTime awayAt) {
+        this.awayAt = awayAt;
     }
 
     public void setLeftAt(LocalDateTime leftAt) {

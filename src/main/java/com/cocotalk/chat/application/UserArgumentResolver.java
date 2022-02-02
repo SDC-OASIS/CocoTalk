@@ -32,7 +32,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private static final RestTemplate restTemplate = new RestTemplate();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-
     @Value(value = "${oci.user.url}")
     private String USER_SERVICE_URL;
     private static final String TOKEN_HEADER_NAME = "X-ACCESS-TOKEN";

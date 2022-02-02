@@ -14,9 +14,11 @@ import java.time.LocalDateTime;
 public class RoomMemberVo {
     private Long userId;
 
-    private Boolean isJoining;
+    private boolean joining;
 
     private LocalDateTime joinedAt;
+
+    private LocalDateTime awayAt;
 
     private LocalDateTime leftAt;
 }
