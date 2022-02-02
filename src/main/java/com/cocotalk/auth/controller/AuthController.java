@@ -108,11 +108,11 @@ public class AuthController {
      * @return ResponseEntity<Response<ValidationDto>>
      */
     // Body
-    @ApiOperation(value = "refresh token이 유효한지 확인")
-    @GetMapping("/token/validation")
-    public ResponseEntity<Response<ValidationDto>>checkRefershToken(ClientType clientType) {
-        log.info("[POST] /token/validation");
-        return authService.isValidRefreshToken(clientType);
+    @ApiOperation(value = "마지막으로 로그인한 기기가 맞는지 체크")
+    @GetMapping("/device")
+    public ResponseEntity<Response<ValidationDto>>checkLastly(ClientType clientType) {
+        log.info("[POST] /device");
+        return authService.checkLastly(clientType);
     }
 
 }

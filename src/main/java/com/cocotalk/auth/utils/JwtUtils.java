@@ -49,7 +49,7 @@ public class JwtUtils {
     public static String createAccessToken(long userId, String fcmToken) {
         TokenPayload tokenPayload = TokenPayload.builder()
                 .userId(userId)
-//                .fcmToken(fcmToken)
+                .fcmToken(fcmToken)
                 .build();
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(jwtSecret);
@@ -73,7 +73,7 @@ public class JwtUtils {
     public static String createRefreshToken(long userId, String fcmToken) {
         TokenPayload tokenPayload = TokenPayload.builder()
                 .userId(userId)
-//                .fcmToken(fcmToken)
+                .fcmToken(fcmToken)
                 .build();
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(jwtSecret);

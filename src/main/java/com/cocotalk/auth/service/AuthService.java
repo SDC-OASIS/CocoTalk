@@ -1,15 +1,12 @@
 package com.cocotalk.auth.service;
 
 import com.cocotalk.auth.application.AuthException;
-import com.cocotalk.auth.dto.common.ClientType;
-import com.cocotalk.auth.dto.common.DeviceDto;
+import com.cocotalk.auth.dto.common.*;
 import com.cocotalk.auth.repository.UserRepository;
 import com.cocotalk.auth.dto.common.response.ResponseStatus;
-import com.cocotalk.auth.dto.common.TokenDto;
 import com.cocotalk.auth.dto.email.issue.IssueInput;
 import com.cocotalk.auth.dto.email.issue.IssueOutput;
 import com.cocotalk.auth.dto.email.validation.ValidationInput;
-import com.cocotalk.auth.dto.common.ValidationDto;
 import com.cocotalk.auth.dto.signin.SigninInput;
 import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.dto.signup.SignupOutput;
@@ -78,6 +75,7 @@ public class AuthService {
         String accessToken;
         String refreshToken;
         String fcmToken = device.getToken();
+        log.info("fcm token : "+fcmToken);
 
         try {
             accessToken = JwtUtils.createAccessToken(userId, fcmToken);
@@ -229,24 +227,22 @@ public class AuthService {
     }
 
 
-    /**
-     * refresh token 유효성 검사 (마지막으로 로그인한 사용자가 맞는지 확인)
-     * @return ResponseEntity<Response<ValidationDto>>
-     */
-    public ResponseEntity<Response<ValidationDto>> isValidRefreshToken(ClientType clientType) {
-        String refreshToken = JwtUtils.getRefreshToken();
-        if(refreshToken==null)
+    public ResponseEntity<Response<ValidationDto>> checkLastly(ClientType clientType) {
+        String accessToken = JwtUtils.getAccessToken();
+        if(accessToken==null)
             return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.UNAUTHORIZED));
-        try{
-            long userId = JwtUtils.getPayload(refreshToken).getUserId();
-            String storeRefreshToken = redisService.getRefreshToken(clientType, userId);
-            Boolean res = refreshToken.equals(storeRefreshToken);
-            ValidationDto validationDto = ValidationDto.builder().isValid(res).build();
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(validationDto, ResponseStatus.SUCCESS));
-        }catch(Exception e){
-            ValidationDto validationDto = ValidationDto.builder().isValid(false).build();
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(validationDto, UNAUTHORIZED));
-        }
+        /*
+         [인증 요청한 기기]의 FCM Token과
+         서버에 기록된 [마지막 로그인 기기]의 FCM Token
+         일치하는지 비교
+         */
+        TokenPayload currTP = JwtUtils.getPayload(accessToken);
+
+        String lastlyRToken = redisService.getRefreshToken(clientType, currTP.getUserId()); //마지막 로그인 유저의 refresh token
+        String lastlyFToken = JwtUtils.getPayload(lastlyRToken).getFcmToken(); //lastlyRToken로 마지막 로그인한 기기 fcm token 구함
+        Boolean res = currTP.getFcmToken().equals(lastlyFToken);
+        ValidationDto validationDto = ValidationDto.builder().isValid(res).build();
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(validationDto, ResponseStatus.SUCCESS));
     }
 
     private DeviceDto getFcmToken(long userId, ClientType clientType){
