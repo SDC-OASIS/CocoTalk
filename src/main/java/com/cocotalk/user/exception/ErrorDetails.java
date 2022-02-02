@@ -18,7 +18,7 @@ public class ErrorDetails {
     public ErrorDetails(CustomException e) {
         this.code = e.getError().getCode();
         this.desc = e.getMessage();
-        this.type = e.toString();
+        this.type = e.getError().getType();
         this.stackTrace = e.getStackTrace()[0].toString();
     }
 
