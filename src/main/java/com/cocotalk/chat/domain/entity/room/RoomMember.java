@@ -19,7 +19,9 @@ public class RoomMember {
 
     private LocalDateTime joinedAt;
 
-    private LocalDateTime leftAt;
+    private LocalDateTime awayAt; // 소켓 끊어진 시간
+
+    private LocalDateTime leftAt; // 나간 시간
 
     @Override
     public boolean equals(Object obj) {
@@ -29,8 +31,16 @@ public class RoomMember {
         return Objects.equals(userId, roomMember.userId);
     }
 
+    public void setJoining(boolean joining) {
+        this.joining = joining;
+    }
+
     public void setJoinedAt(LocalDateTime joinedAt) {
         this.joinedAt = joinedAt;
+    }
+
+    public void setAwayAt(LocalDateTime awayAt) {
+        this.awayAt = awayAt;
     }
 
     public void setLeftAt(LocalDateTime leftAt) {

@@ -34,10 +34,10 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     /*어플리케이션 내부에서 사용할 path를 지정할 수 있음*/
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // /test 경로로 시작하는 STOMP 메시지의 "destination' 헤더는 @Controller 객체의 @MessageMapping 메서드로 라우팅 된다.
+        // STOMP 메시지의 "destination' 헤더는 @Controller 객체의 @MessageMapping 메서드로 라우팅 된다.
         registry.setPreservePublishOrder(true) // clientOutboundChannel에 pub된 순서를 보장
-                .setApplicationDestinationPrefixes("/simple")
-                .enableSimpleBroker("/topic", "/queue");
+                .setApplicationDestinationPrefixes("/simple") // 작성된 메시지는 이곳으로 보내짐
+                .enableSimpleBroker("/topic", "/queue"); // 이곳을 subscribe하고 있으면 메시지를 맞을 수 있음
     }
 
     @Override

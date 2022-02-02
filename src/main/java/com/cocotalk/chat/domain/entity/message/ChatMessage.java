@@ -25,6 +25,9 @@ public class ChatMessage {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId messageBundleId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId roomId;
+
     private Long userId;
 
     private int type;

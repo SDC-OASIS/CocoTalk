@@ -81,7 +81,7 @@ public class RoomController {
     @DeleteMapping("/{id}")
     @Operation(summary = "채팅방 id로 삭제")
     public ResponseEntity<GlobalResponse<?>> modify(@PathVariable ObjectId id){
-        String data = roomService.delete(id);
+        String data = roomService.deleteById(id);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.CREATED);
     }
 }

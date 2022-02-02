@@ -12,7 +12,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -22,6 +21,7 @@ import java.util.Map;
 public class InboundChannelInterceptor implements ChannelInterceptor {
     private final RoomService roomService;
     private final ChannelLogger channelLogger;
+    // private final SimpMessageSendingOperations messagingTemplate;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -29,42 +29,38 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
         StompCommand command = accessor.getCommand();
         if (command.equals(StompCommand.CONNECT)) {
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-            List<String> viewList = accessor.getNativeHeader("view");
-            if (sessionAttributes != null && viewList != null) {
-                String view = viewList.get(0);
+            String view = accessor.getFirstNativeHeader("view");
+            if (sessionAttributes != null && view != null) {
                 sessionAttributes.put("view", view);
-                if(view.equals("chatroom")) {
-                    List<String> uiList = accessor.getNativeHeader("userId");
-                    List<String> riList = accessor.getNativeHeader("roomId");
-                    if(uiList != null && riList != null) {
-                        sessionAttributes.put("userId", uiList.get(0));
-                        sessionAttributes.put("roomId", riList.get(0));
-                    }
-                } else if (view.equals("main")) {
-                    // 메인화면 글로벌 소켓 예정
+                if (view.equals("chatRoom")) { // 두 세션 ID 다르다는 것을 전제로
+                    String roomId = accessor.getFirstNativeHeader("roomId");
+                    String userId = accessor.getFirstNativeHeader("userId");
+                    if (roomId != null) sessionAttributes.put("roomId", roomId);
+                    if (userId != null) sessionAttributes.put("userId", userId);
+                } else if (view.equals("chatList")) {
+                    String userId = accessor.getFirstNativeHeader("userId");
+                    if (userId != null) sessionAttributes.put("userId", userId);
                 }
             }
         } else if (command.equals(StompCommand.DISCONNECT)) {
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-            if (sessionAttributes != null) {
-                List<String> behaviorList = accessor.getNativeHeader("behavior");
-                if(behaviorList != null) { // 채팅방에서 나가기 버튼 눌렀을 때
-                    String behavior = behaviorList.get(0);
-                    sessionAttributes.put("behavior", behavior);
-                } else {
-                    String view = sessionAttributes.get("view").toString();
-                    if (view.equals("chatroom")) {
-                        String behavior = sessionAttributes.get("behavior").toString();
-                        if(behavior != null && behavior.equals("leave")) {
-                            // code something
+            if (sessionAttributes != null && sessionAttributes.get("view") != null) {
+                String view = sessionAttributes.get("view").toString();
+                if (view.equals("chatRoom")) {
+                    String action = accessor.getFirstNativeHeader("action");
+                    if (action != null) { // 채팅방에서 나가기 버튼 눌렀을 때, 첫번째 Disconnect 일때
+                        sessionAttributes.put("action", action);
+                    } else { // 두번째 Disconnect일 때
+                        Long userId = Long.parseLong(sessionAttributes.get("userId").toString());
+                        ObjectId roomId = new ObjectId(sessionAttributes.get("roomId").toString());
+                        if (sessionAttributes.get("action") != null) {
+                            if (sessionAttributes.get("action").equals("left"))
+                                roomService.saveLeftAt(roomId, userId);
                         } else {
-                            Long userId = Long.parseLong(sessionAttributes.get("userId").toString());
-                            ObjectId roomId = new ObjectId(sessionAttributes.get("roomId").toString());
-                            roomService.saveLeftAt(roomId, userId);
+                            roomService.saveAwayAt(roomId, userId); // left action이 없으면 away
                         }
-                    } else if (view.equals("main")) {
-                        // 메인화면 글로벌 소켓 예정
                     }
+                } else if (view.equals("chatList")) {
                 }
             }
         }
