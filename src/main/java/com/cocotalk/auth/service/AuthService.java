@@ -15,6 +15,7 @@ import com.cocotalk.auth.entity.User;
 import com.cocotalk.auth.entity.mapper.UserMapper;
 import com.cocotalk.auth.dto.common.response.Response;
 import com.cocotalk.auth.utils.JwtUtils;
+import com.cocotalk.auth.utils.SHA256Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
@@ -23,7 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -41,7 +42,7 @@ import static com.cocotalk.auth.dto.common.response.ResponseStatus.*;
 public class AuthService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
     private final RedisService redisService;
     private final JavaMailSender mailSender;
 
@@ -56,7 +57,9 @@ public class AuthService {
         User user;
         try {
             user = userRepository.findByCid(signinInput.getCid()).orElse(null);
-            if (user == null || !passwordEncoder.matches(signinInput.getPassword(), user.getPassword())) {
+
+            if (user == null || !SHA256Utils.getEncrypt(signinInput.getPassword()).equals(user.getPassword())) {
+//            if (user == null || !passwordEncoder.matches(signinInput.getPassword(), user.getPassword())) {
                 return ResponseEntity.status(HttpStatus.OK).body(new Response<>(BAD_REQUEST));
             }
             user.setLoggedinAt(LocalDateTime.now());
@@ -114,7 +117,8 @@ public class AuthService {
             }
 
             user = userMapper.toEntity(signupInput);
-            user.setPassword(passwordEncoder.encode(signupInput.getPassword()));
+//            user.setPassword(passwordEncoder.encode(signupInput.getPassword()));
+            user.setPassword(SHA256Utils.getEncrypt(signupInput.getPassword()));
             user = userRepository.save(user);
 
         } catch (Exception e) {

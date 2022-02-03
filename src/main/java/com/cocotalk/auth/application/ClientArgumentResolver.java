@@ -20,10 +20,8 @@ public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         log.info("ClientArgumentResolver");
-//        log.info("has @ClientIp : "+parameter.hasParameterAnnotation(ClientType.class));
         log.info("has ClientIp : "+parameter.getParameterType().equals(ClientType.class));
 
-//        return parameter.hasParameterAnnotation(ClientType.class);
         return parameter.getParameterType().equals(ClientType.class);
 
     }
