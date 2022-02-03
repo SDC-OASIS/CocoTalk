@@ -249,17 +249,21 @@ public class AuthService {
 
     private DeviceDto getFcmToken(long userId, ClientType clientType){
         WebClient webClient = WebClient.create(pushApiUrl);
-        DeviceDto device = webClient
-                .get()
-                .uri(uriBuilder -> uriBuilder.path("/api/device")
-                        .queryParam("userId",userId)
-                        .queryParam("type",clientType)
-                        .build()
-                )
-                .retrieve()
-                .bodyToFlux(DeviceDto.class)
-                .blockFirst();
-        log.info("device Dto :" + device);
-        return device;
+        try{
+            DeviceDto device = webClient
+                    .get()
+                    .uri(uriBuilder -> uriBuilder.path("/device")
+                            .queryParam("userId",userId)
+                            .queryParam("type",clientType)
+                            .build()
+                    )
+                    .retrieve()
+                    .bodyToFlux(DeviceDto.class)
+                    .blockFirst();
+            log.info("device Dto :" + device);
+            return device;
+        }catch (Exception e){
+            throw new AuthException(SERVER_ERROR,e);
+        }
     }
 }
