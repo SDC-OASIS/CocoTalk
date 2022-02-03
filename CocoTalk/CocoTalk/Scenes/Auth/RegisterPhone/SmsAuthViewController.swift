@@ -165,8 +165,12 @@ extension SmsAuthViewController {
     func bindButton() {
         btnConfirm.rx.tap
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.authenticationFailAlert()
+                guard let self = self else {
+                    return
+                }
+                if self.textFieldAuthNumber.text?.count == 4 {
+                    self.authenticationFailAlert()
+                }
             }).disposed(by: bag)
         
         btnChangePhoneNumber.rx.tap
@@ -182,10 +186,24 @@ extension SmsAuthViewController {
     func bindTextField() {
         textFieldAuthNumber.rx.text
             .orEmpty
-            .scan("") { oldValue, newValue in
+            .scan("") { [weak self] oldValue, newValue in
+                guard let self = self else {
+                    return oldValue
+                }
+                
                 if newValue.isNumber() && newValue.count < 5 {
+                    if newValue.count == 4 {
+                        self.btnConfirm.backgroundColor = .systemGreen
+                    } else {
+                        self.btnConfirm.backgroundColor = .systemGray
+                    }
                     return newValue
                 } else {
+                    if oldValue.count == 4 {
+                        self.btnConfirm.backgroundColor = .systemGreen
+                    } else {
+                        self.btnConfirm.backgroundColor = .systemGray
+                    }
                     return oldValue
                 }
             }.bind(to: textFieldAuthNumber.rx.text)
