@@ -14,7 +14,6 @@ import RxCocoa
 class CheckBoxCell: UITableViewCell {
     
     // MARK: - UI Properties
-    #warning("동의 여부 바인딩하기")
     let ivCheckBox = UIImageView().then {
         $0.image = UIImage(systemName: "checkmark.circle")!
     }
