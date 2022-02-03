@@ -13,7 +13,7 @@
 		</div>
 		<div class="myprofile row">
 			<div @click="openProfileModal(userInfo)">
-				<ProfileImg :imgUrl="userInfo.profile" :width="width" />
+				<ProfileImg :imgUrl="userInfo.profile.profile" :width="width" />
 			</div>
 			<FriendListUserInfo :userInfo="userInfo" />
 		</div>
@@ -58,6 +58,8 @@ export default {
 			this.width = "60px";
 		}
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
+		this.$store.dispatch("userStore/getUser");
+
 		// this.$store.dispatch("friend/getFriends");
 	},
 	computed: {

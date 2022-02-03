@@ -10,7 +10,7 @@ const userStore = {
 		screenInfo: {
 			width: Number,
 		},
-		accessToken: "",
+		accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ7XCJ1c2VySWRcIjogMTB9IiwiaWF0IjoxNTE2MjM5MDIyfQ.nsVZnx3lFAA52CdJmH5qei0D830M3FUmoUjFBbLrZUM",
 		refreshToken: "",
 		userInfo: {
 			username: "권희은",
@@ -48,30 +48,41 @@ const userStore = {
 			state.refreshToken = "";
 			console.log("refreshToken 삭제");
 		},
+		SET_USER(state, payload) {
+			state.userInfo = payload;
+		},
+		TEST() {
+			store.dispatch("friend/getFriends");
+			store.dispatch("userStore/getUser");
+			router.push({ name: "friends" }).catch(() => {});
+		},
 	},
 	actions: {
 		getScreen: function (context, payload) {
 			context.commit("GET_SCREEN", payload);
 		},
 		login: function (context, payload) {
-			const userInfo = payload;
-			axios
-				.post("http://146.56.152.87:8080/api/auth/signin", userInfo)
-				.then((res) => {
-					console.log("로그인 요청");
-					context.commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
-					context.commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
-				})
-				.catch((err) => {
-					console.log(err);
-					console.log("뭔가틀림");
-					const payload = {
-						status: "open",
-						text: "아이디와 비밀번호를 확인해주세요.",
-					};
-					store.dispatch("modal/openAlert", payload, { root: true });
-					// alert("아이디 비번을 다시 확인해주세요.");
-				});
+			// const userInfo = payload;
+			// axios
+			// 	.post("http://146.56.152.87:8080/api/auth/signin", userInfo)
+			// 	.then((res) => {
+			// 		console.log("로그인 요청");
+			// 		context.commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
+			// 		context.commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
+			// 	})
+			// 	.catch((err) => {
+			// 		console.log(err);
+			// 		console.log("뭔가틀림");
+			// 		const payload = {
+			// 			status: "open",
+			// 			text: "아이디와 비밀번호를 확인해주세요.",
+			// 		};
+			// 		store.dispatch("modal/openAlert", payload, { root: true });
+			// 		// alert("아이디 비번을 다시 확인해주세요.");
+			// 	});
+			// ===================================[원래코드]
+			context.commit("TEST");
+			console.log("무시하세요" + payload);
 		},
 		logout: function (context) {
 			console.log("로그아웃합니다");
@@ -79,9 +90,13 @@ const userStore = {
 			context.commit("CLEAR_REFRESH_TOKEN");
 		},
 		getUser: function (context) {
-			axios.get("http://138.2.88.163/user/token").then((res) => {
+			axios.get("http://138.2.88.163:8000/user/token").then((res) => {
 				console.log("유저정보 가져오기");
-				console.log(res);
+				console.log(res.data.data);
+				let userInfo = res.data.data;
+				userInfo.profile = JSON.parse(userInfo.profile);
+				userInfo.username = userInfo.name;
+				context.commit("SET_USER", res.data.data);
 			});
 			console.log(context);
 		},
