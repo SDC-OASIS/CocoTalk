@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.4'
+	id 'org.springframework.boot' version '2.6.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -12,10 +12,43 @@ repositories {
 	mavenCentral()
 }
 
+ext { // (1)
+	set('springCloudVersion', "2021.0.0")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// lombok
+	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+	// firebase sdk
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
+	// okhttp
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
+
+	// R2DBC
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	runtimeOnly("mysql:mysql-connector-java")
+	runtimeOnly("dev.miku:r2dbc-mysql")
+
+	// 통합 Springdoc
+	implementation 'org.springdoc:springdoc-openapi-webflux-core:1.6.5'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	//eureka
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	dependencyManagement { // (3)
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
+
 }
 
 test {
