@@ -29,6 +29,8 @@ class TermViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.hidesBackButton = true
+        
         title = "이용약관에 동의해 주세요"
         
         configureView()

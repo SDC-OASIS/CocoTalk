@@ -21,7 +21,7 @@ class SmsAuthViewController: UIViewController {
     }
     
     /// 인증번호 텍스트 필드
-    #warning("4자리 제한")
+#warning("4자리 제한")
     private let textFieldAuthNumber = UITextField().then {
         $0.placeholder = "인증번호 4자리"
         $0.textAlignment = .center
@@ -32,10 +32,9 @@ class SmsAuthViewController: UIViewController {
     
     /// 인증번호 만료 시간
     private let lblAuthExpireTime = UILabel().then {
-        $0.text = "인증번호는 180초 내에 도착합니다."
         $0.font = .systemFont(ofSize: 14)
     }
-
+    
     /// 확인 버튼
     private let btnConfirm = UIButton().then {
         $0.setTitle("확인", for: .normal)
@@ -49,34 +48,71 @@ class SmsAuthViewController: UIViewController {
         $0.backgroundColor = .clear
     }
     
+    #warning("재요청 보내기 버튼 생성")
+    
     // MARK: - Properties
     let bag = DisposeBag()
+    let viewModel = SmsAuthViewModel()
+    let phoenNumber: String
     
     // MARK: - Life cycle
+    init(phoneNumber: String) {
+        self.phoenNumber = phoneNumber
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.hidesBackButton = true
         
         title = "문자 인증"
+        
+        lblPhoneNumber.text = phoenNumber.pretty()
         
         configureView()
         configureSubviews()
         bindRx()
+        startTimer()
     }
     
     // MARK: - Helper
+    private func startTimer() {
+        viewModel.dependency.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateCounter() {
+        var count = viewModel.dependency.countDown.value
+        if count > 0 {
+            lblAuthExpireTime.text = "인증번호는 \(count)초 이후에 다시 요청할 수 있습니다."
+            lblAuthExpireTime.textColor = .red
+            count -= 1
+            viewModel.dependency.countDown.accept(count)
+        } else {
+            authenticationFailAlert()
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+    
     func authenticationFailAlert() {
         let alert = UIAlertController(title: "인증 실패", message: "문자인증에 실패했습니다.", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "확인", style: .cancel) { [weak self] _ in
-            guard let self = self,
-                  let navigationController = self.navigationController  else {
-                      return
-                  }
-            let vc = PasswordViewController()
-            navigationController.pushViewController(vc, animated: true)
+            guard let self = self else {
+                return
+            }
+            self.pushPasswordVC()
         }
         alert.addAction(okAction)
         present(alert, animated: true)
+    }
+    
+    func pushPasswordVC() {
+        let vc = PasswordViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -107,7 +143,7 @@ extension SmsAuthViewController {
         }
         
         btnConfirm.snp.makeConstraints {
-            $0.top.equalTo(lblAuthExpireTime.snp.bottom).offset(30)
+            $0.top.equalTo(textFieldAuthNumber.snp.bottom).offset(40)
             $0.leading.trailing.equalTo(textFieldAuthNumber)
             $0.height.equalTo(44)
         }
@@ -123,6 +159,7 @@ extension SmsAuthViewController {
 extension SmsAuthViewController {
     func bindRx() {
         bindButton()
+        bindTextField()
     }
     
     func bindButton() {
@@ -140,5 +177,18 @@ extension SmsAuthViewController {
                       }
                 navigationController.popViewController(animated: true)
             }).disposed(by: bag)
+    }
+    
+    func bindTextField() {
+        textFieldAuthNumber.rx.text
+            .orEmpty
+            .scan("") { oldValue, newValue in
+                if newValue.isNumber() && newValue.count < 5 {
+                    return newValue
+                } else {
+                    return oldValue
+                }
+            }.bind(to: textFieldAuthNumber.rx.text)
+            .disposed(by: bag)
     }
 }

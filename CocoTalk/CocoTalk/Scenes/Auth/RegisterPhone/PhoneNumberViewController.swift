@@ -29,12 +29,6 @@ class PhoneNumberViewController: UIViewController {
         $0.backgroundColor = .systemBlue
     }
     
-    /// 인증 번호 보내기 모달
-    #warning("UIKit 모달로 수정")
-    private let confirmModal = ConfirmModalView().then {
-        $0.isHidden = true
-    }
-    
     // MARK: - Properties
     let bag = DisposeBag()
     
@@ -42,6 +36,8 @@ class PhoneNumberViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.hidesBackButton = true
+        
         title = "전화번호를 입력해 주세요"
         
         configureView()
@@ -50,12 +46,38 @@ class PhoneNumberViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func showConfirmAlert() {
+        guard let phoneNumber = textFieldPhoneNumber.text else {
+            return
+        }
+        
+        let alertController = UIAlertController(title: "\(phoneNumber)", message: "\n이 전화번호로 인증번호를 보냅니다.\n\n전화번호를 수정하려면 아래 취소 버튼을 선택해주세요.", preferredStyle: .alert)
+        
+        alertController.addAction(UIAlertAction(title: "취소", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.move2SmsVC()
+        }))
+        
+        present(alertController, animated: true)
+    }
+    
+    private func move2SmsVC() {
+        guard let phoneNumber = textFieldPhoneNumber.text else {
+            return
+        }
+        
+        let vc = SmsAuthViewController(phoneNumber: phoneNumber)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 // MARK: - BaseViewController
 extension PhoneNumberViewController {
     func configureView() {
-        [textFieldPhoneNumber, btnConfirm, confirmModal].forEach {
+        [textFieldPhoneNumber, btnConfirm].forEach {
             view.addSubview($0)
         }
     }
@@ -74,32 +96,34 @@ extension PhoneNumberViewController {
             $0.leading.trailing.equalTo(textFieldPhoneNumber)
             $0.height.equalTo(44)
         }
-        
-        confirmModal.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
     }
 }
 
 // MARK: - Bindable
 extension PhoneNumberViewController {
     func bindRx() {
+        bindTextField()
         bindButton()
     }
     
     func bindButton() {
-        confirmModal.btnConfirm.rx.tap
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.confirmModal.isHidden = true
-                let vc = SmsAuthViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
-            }).disposed(by: confirmModal.bag)
-        
         btnConfirm.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.confirmModal.isHidden = false
+                self.showConfirmAlert()
             }).disposed(by: bag)
+    }
+    
+    func bindTextField() {
+        textFieldPhoneNumber.rx.text
+            .orEmpty
+            .scan("") { oldValue, newValue in
+                if newValue.isNumber() {
+                    return newValue
+                } else {
+                    return oldValue
+                }
+            }.bind(to: textFieldPhoneNumber.rx.text)
+            .disposed(by: bag)
     }
 }
