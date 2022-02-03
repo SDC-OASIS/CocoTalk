@@ -59,7 +59,7 @@ class PasswordViewController: UIViewController {
     
     private let btnConfirm = UIButton().then {
         $0.setTitle("확인", for: .normal)
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = .systemGreen
     }
     
     // MARK: - Properties
@@ -77,6 +77,20 @@ class PasswordViewController: UIViewController {
     }
     
     // MARK: - Helper
+    func isValidPassword() -> Bool {
+        return textFieldPassword.text?.count ?? 0 > 7
+    }
+    
+    func checkButton() {
+        if textFieldPassword.text?.count ?? 0 > 7,
+           textFieldPassword.text == textFieldConfirmPassword.text {
+            lblWarning.isHidden = true
+            btnConfirm.backgroundColor = .systemGreen
+        } else {
+            lblWarning.isHidden = false
+            btnConfirm.backgroundColor = .systemGray
+        }
+    }
 }
 
 // MARK: - BaseViewController
@@ -133,17 +147,40 @@ extension PasswordViewController {
 extension PasswordViewController {
     func bindRx() {
         bindButton()
+        bindTextFields()
     }
     
     func bindButton() {
         btnConfirm.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self,
-                      let navigationController = self.navigationController  else {
+                      let navigationController = self.navigationController,
+                      self.isValidPassword(),
+                      self.textFieldConfirmPassword.text == self.textFieldPassword.text else {
                           return
                       }
                 let vc = NewProfileViewController()
                 navigationController.pushViewController(vc, animated: true)
+            }).disposed(by: bag)
+    }
+    
+    func bindTextFields() {
+        textFieldPassword.rx.text
+            .orEmpty
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.checkButton()
+            }).disposed(by: bag)
+        
+        textFieldConfirmPassword.rx.text
+            .orEmpty
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.checkButton()
             }).disposed(by: bag)
     }
 }
