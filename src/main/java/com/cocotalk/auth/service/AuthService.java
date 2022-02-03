@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -42,7 +41,6 @@ import static com.cocotalk.auth.dto.common.response.ResponseStatus.*;
 public class AuthService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
     private final RedisService redisService;
     private final JavaMailSender mailSender;
 
