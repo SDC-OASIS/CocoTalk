@@ -14,9 +14,9 @@
 		<div class="chat-list-container">
 			<div class="chat-container row" v-for="(chat, idx) in chats" :key="idx">
 				<div>
-					<ProfileImg :imgUrl="chat.profile" width="50px" />
+					<ProfileImg :imgUrl="chat.img" width="50px" />
 				</div>
-				<div class="chat-info-container row" @click="goChat(chat.roomId)">
+				<div class="chat-info-container row" @click="goChat(chat.id)">
 					<ChatListInfo :chatInfo="chat" />
 					<div class="box row chat-detail-info">
 						<div class="received-time">오후3:00</div>
@@ -54,6 +54,8 @@ export default {
 		console.log("채팅목록");
 		console.log(this.$route.params);
 		this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
+
+		this.$store.dispatch("chat/getChatList");
 	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),
@@ -69,8 +71,8 @@ export default {
 			// console.log("헛");
 			this.$store.dispatch("modal/openMakeChatModal", "open", { root: true });
 		},
-		goChat(roomId) {
-			this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: roomId } }).catch(() => {});
+		goChat(id) {
+			this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: id } }).catch(() => {});
 		},
 	},
 };

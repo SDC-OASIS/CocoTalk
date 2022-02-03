@@ -1,9 +1,15 @@
 import createPersistedState from "vuex-persistedstate";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
+import axios from "../../utils/axios";
 
 const chat = {
 	namespaced: true,
 	plugins: [createPersistedState()],
 	state: {
+		socket: {
+			client: undefined,
+		},
 		roomStatus: {
 			mainPage: "",
 			chatPage: "chat",
@@ -202,6 +208,12 @@ const chat = {
 		CHANGE_MAIN_PAGE(state, payload) {
 			state.roomStatus.mainPage = payload;
 		},
+		SET_CHATLIST(state, payload) {
+			state.chats = payload;
+		},
+		SET_CONNECTION(state, payload) {
+			state.socket.client = payload;
+		},
 	},
 	actions: {
 		changePage: function (context, payload) {
@@ -209,6 +221,57 @@ const chat = {
 		},
 		changeMainPage: function (context, payload) {
 			context.commit("CHANGE_MAIN_PAGE", payload);
+		},
+		getChatList: function (context) {
+			axios.get("http://138.2.68.7:8080/rooms").then((res) => {
+				console.log("채팅방목록 가져오기");
+				console.log(res.data.data);
+				let chatList = res.data.data;
+				chatList.forEach((e) => {
+					if (e.img == "string") {
+						delete e["img"];
+					}
+				});
+				context.commit("SET_CHATLIST", res.data.data);
+			});
+		},
+		startConnection: function (context) {
+			const serverURL = "http://138.2.88.163:8000/chat/stomp";
+			let socket = new SockJS(serverURL);
+			this.stompClient = Stomp.over(socket);
+			this.stompClient.connect(
+				{},
+				(frame) => {
+					// 소켓 연결 성공
+					// this.connected = true;
+					console.log("소켓 연결 성공", frame);
+					// 서버의 메시지 전송 endpoint를 구독
+					// 이런형태를 pub sub 구조라고 함
+					// this.stompClient.subscribe("/sub/chat/room/" + this.roomId, (res) => {
+					// 	console.log("구독으로 받은 메시지 입니다.", res.body);
+					// 	// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
+					// 	this.recvList.push(JSON.parse(res.body));
+					// });
+					// const msg = {
+					// 	type: "JOIN",
+					// 	roomId: this.roomId,
+					// 	sender: this.userName,
+					// };
+					// this.stompClient.send("/pub/chat/message", JSON.stringify(msg), {});
+				},
+				(error) => {
+					// 소켓 연결 실패
+					console.log("소켓 연결 실패", error);
+					// this.connected = false;
+				},
+			);
+			context.commit("SET_CONNECTION", this.stompClient);
+			console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
+		},
+		getChat(context, payload) {
+			console.log("chat");
+			console.log(payload);
+			console.log(context);
 		},
 	},
 	modules: {},
