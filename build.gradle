@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.springframework.boot' version '2.6.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
 
@@ -8,12 +8,17 @@ ext {
     set('springCloudVersion', "2021.0.0")
 }
 
+
 group = 'com.cocotalk'
 version = '1.0'
 
 compileJava.options.encoding = 'UTF-8'
 
-def querydslVersion = '4.3.1'
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 repositories {
     mavenCentral()
@@ -21,26 +26,25 @@ repositories {
 
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
+    // Spring MVC
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.4'
     implementation group: 'org.json', name: 'json', version: '20190722'
     implementation group: 'org.apache.clerezza.ext', name: 'org.json.simple', version: '0.4'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
 
     //spring cloud
-//    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.0.RELEASE') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
 
-    // Web
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     // DB
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.0.RELEASE'
@@ -48,24 +52,13 @@ dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
 
-    // Authentication
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation 'org.springframework.security:spring-security-test'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
-
+    //JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.11.2'
 
     implementation group : 'com.squareup.okhttp3', name : 'mockwebserver', version: '4.7.2'
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.14'
-
-    // Querydsl
-    implementation group: 'com.querydsl', name: 'querydsl-jpa', version: querydslVersion
-    implementation group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion
-    implementation group: 'com.querydsl', name: 'querydsl-core', version: querydslVersion
-
-    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion
-    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion, classifier: 'jpa'
-    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
-    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 
     // Mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -81,16 +74,26 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
     //swagger
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+//    implementation 'io.springfox:springfox-boot-starter:3.0.0' //기존 swagger
+    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.3' //통합 Springdoc
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+
+    //webClient를 위한 webFlux
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
 }
 
-//dependencyManagement {
-//    imports {
-//        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-//    }
-//}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+
+test {
+    useJUnitPlatform()
+}
 
 clean {
     delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성위치
