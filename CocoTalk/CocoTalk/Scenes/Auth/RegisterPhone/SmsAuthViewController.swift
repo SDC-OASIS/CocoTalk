@@ -112,6 +112,7 @@ class SmsAuthViewController: UIViewController {
     
     func pushPasswordVC() {
         let vc = PasswordViewController()
+        viewModel.dependency.timer?.invalidate()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
