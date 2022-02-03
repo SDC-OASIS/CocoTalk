@@ -52,13 +52,14 @@ export default {
 	},
 	created() {
 		console.log("친구목록");
-		console.log(this.friends);
-		console.log(this.$route.params);
+		// console.log(this.friends);
+		// console.log(this.$route.params);
 		if (screen.width <= 1600) {
 			this.width = "60px";
 		}
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
 		this.$store.dispatch("userStore/getUser");
+		this.$store.dispatch("chat/startConnection");
 
 		// this.$store.dispatch("friend/getFriends");
 	},

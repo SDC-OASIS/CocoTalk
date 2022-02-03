@@ -73,6 +73,9 @@ export default {
 	created() {
 		console.log("채팅나와라");
 	},
+	mounted() {
+		this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
+	},
 	computed: {
 		...mapState("chat", ["roomStatus", "friends", "chattings"]),
 		...mapState("userStore", ["userInfo"]),
@@ -96,6 +99,7 @@ export default {
 				},
 				{ root: true },
 			);
+			this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
 		},
 	},
 	methods: {

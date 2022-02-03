@@ -92,13 +92,13 @@ const userStore = {
 		getUser: function (context) {
 			axios.get("http://138.2.88.163:8000/user/token").then((res) => {
 				console.log("유저정보 가져오기");
-				console.log(res.data.data);
+				// console.log(res.data.data);
 				let userInfo = res.data.data;
 				userInfo.profile = JSON.parse(userInfo.profile);
 				userInfo.username = userInfo.name;
 				context.commit("SET_USER", res.data.data);
 			});
-			console.log(context);
+			// console.log(context);
 		},
 	},
 	modules: {},
