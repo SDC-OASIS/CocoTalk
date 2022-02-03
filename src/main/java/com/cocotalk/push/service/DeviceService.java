@@ -36,12 +36,10 @@ public class DeviceService {
     }
 
     public Mono<Device> create(ClientInfo clientInfo, CreateInput createInput) {
-        log.info("client ip : "+ clientInfo);
         short clientType = parseClientType(clientInfo.getAgent());
 
         Mono<Device> output = deviceRepository.existsByUserIdAndType(createInput.getUserId(), clientType)
                 .flatMap(res -> {
-                    log.info("isExists:"+res.booleanValue());
                     if(res.booleanValue()==true)
                         return Mono.error(new PushException(EXISTS_INFO));
                     Device device = Device.builder()
@@ -59,7 +57,6 @@ public class DeviceService {
     }
 
     public Mono<Device> update(ClientInfo clientInfo, UpdateInput updateInput) {
-        log.info("client ip : "+ clientInfo);
         short clientType = parseClientType(clientInfo.getAgent());
         Mono<Device> device = deviceRepository.findByUserIdAndType(updateInput.getUserId(), clientType)
                 .flatMap(target -> {
@@ -74,7 +71,6 @@ public class DeviceService {
     }
 
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {
-        log.info("client ip : "+ clientInfo);
         short clientType = parseClientType(clientInfo.getAgent());
         log.info("userId and type : "+deleteInput.getUserId()+","+clientType);
         deviceRepository.findByUserIdAndType(deleteInput.getUserId(), clientType)

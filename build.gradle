@@ -12,6 +12,10 @@ repositories {
 	mavenCentral()
 }
 
+ext { // (1)
+	set('springCloudVersion', "2021.0.0")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -32,14 +36,18 @@ dependencies {
 	runtimeOnly("mysql:mysql-connector-java")
 	runtimeOnly("dev.miku:r2dbc-mysql")
 
-	//swagger
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	// 통합 Springdoc
+	implementation 'org.springdoc:springdoc-openapi-webflux-core:1.6.5'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
-	//JWT
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
-	runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.11.2'
+	//eureka
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	dependencyManagement { // (3)
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
 
 }
 
