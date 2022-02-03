@@ -34,6 +34,16 @@
 		EA22D55D2797EA8000E1F39A /* ProfileCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55C2797EA8000E1F39A /* ProfileCellDelegate.swift */; };
 		EA22D55F2797FB6900E1F39A /* UILabel+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55E2797FB6900E1F39A /* UILabel+Ext.swift */; };
 		EA22D5612797FC2800E1F39A /* UIImageView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5602797FC2800E1F39A /* UIImageView+Ext.swift */; };
+		EA2913D627AA2DAD00324476 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = EA2913D527AA2DAD00324476 /* Moya */; };
+		EA2913D827AA2DAD00324476 /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = EA2913D727AA2DAD00324476 /* ReactiveMoya */; };
+		EA2913DA27AA2DAD00324476 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = EA2913D927AA2DAD00324476 /* RxMoya */; };
+		EA2913DD27AA349D00324476 /* BaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913DC27AA349D00324476 /* BaseRepository.swift */; };
+		EA2913DF27AA43D800324476 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913DE27AA43D800324476 /* APIError.swift */; };
+		EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E027AA520B00324476 /* ProfileRepository.swift */; };
+		EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */; };
+		EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E427AA6B3200324476 /* MessageRepository.swift */; };
+		EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E627AB6CE300324476 /* UserRepository.swift */; };
+		EA2913E927AB6D4000324476 /* ModelUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E827AB6D4000324476 /* ModelUser.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -90,6 +100,13 @@
 		EA22D55C2797EA8000E1F39A /* ProfileCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellDelegate.swift; sourceTree = "<group>"; };
 		EA22D55E2797FB6900E1F39A /* UILabel+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Ext.swift"; sourceTree = "<group>"; };
 		EA22D5602797FC2800E1F39A /* UIImageView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Ext.swift"; sourceTree = "<group>"; };
+		EA2913DC27AA349D00324476 /* BaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRepository.swift; sourceTree = "<group>"; };
+		EA2913DE27AA43D800324476 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		EA2913E027AA520B00324476 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
+		EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomRepository.swift; sourceTree = "<group>"; };
+		EA2913E427AA6B3200324476 /* MessageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRepository.swift; sourceTree = "<group>"; };
+		EA2913E627AB6CE300324476 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
+		EA2913E827AB6D4000324476 /* ModelUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUser.swift; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +136,9 @@
 			files = (
 				EA3F3759278BD00D007957EB /* RxSwift in Frameworks */,
 				EA3F3757278BD00D007957EB /* RxRelay in Frameworks */,
+				EA2913D627AA2DAD00324476 /* Moya in Frameworks */,
+				EA2913DA27AA2DAD00324476 /* RxMoya in Frameworks */,
+				EA2913D827AA2DAD00324476 /* ReactiveMoya in Frameworks */,
 				EA14D5172786CA8800EDC892 /* IQKeyboardManagerSwift in Frameworks */,
 				EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */,
 				EA22D5472795925700E1F39A /* Kingfisher in Frameworks */,
@@ -185,13 +205,13 @@
 		EA14D5082786BF4D00EDC892 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				F2C36D6A27A406D900DEE2B3 /* Repository */,
 				EAE555A6279A980C00777EBF /* Enum */,
 				EAA6A3D02787E0D6001A7E46 /* Helpers */,
+				EA2913DB27AA305200324476 /* Repository */,
 				EAA6A3CF2787C3FB001A7E46 /* CoreData */,
+				EA14D50A2786C44800EDC892 /* Networking */,
 				EA14D50C2786C4AA00EDC892 /* Models */,
 				EA14D50B2786C45000EDC892 /* Extension */,
-				EA14D50A2786C44800EDC892 /* Networking */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -208,6 +228,7 @@
 		EA14D50A2786C44800EDC892 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				EA2913DE27AA43D800324476 /* APIError.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -226,6 +247,7 @@
 		EA14D50C2786C4AA00EDC892 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				EA2913E827AB6D4000324476 /* ModelUser.swift */,
 				EA22D541279544E100E1F39A /* ModelProfile.swift */,
 				EA22D5552796816D00E1F39A /* ModelChatRoom.swift */,
 				EAE555A9279A986C00777EBF /* ModelMessage.swift */,
@@ -308,6 +330,18 @@
 				EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */,
 			);
 			path = ChatRoom;
+			sourceTree = "<group>";
+		};
+		EA2913DB27AA305200324476 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				EA2913DC27AA349D00324476 /* BaseRepository.swift */,
+				EA2913E027AA520B00324476 /* ProfileRepository.swift */,
+				EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */,
+				EA2913E427AA6B3200324476 /* MessageRepository.swift */,
+				EA2913E627AB6CE300324476 /* UserRepository.swift */,
+			);
+			path = Repository;
 			sourceTree = "<group>";
 		};
 		EA3F375A278BD068007957EB /* Splash */ = {
@@ -481,13 +515,6 @@
 			path = Modal;
 			sourceTree = "<group>";
 		};
-		F2C36D6A27A406D900DEE2B3 /* Repository */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Repository;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -513,6 +540,9 @@
 				EA3F3758278BD00D007957EB /* RxSwift */,
 				EA3F3766278C4145007957EB /* RxGesture */,
 				EA22D5462795925700E1F39A /* Kingfisher */,
+				EA2913D527AA2DAD00324476 /* Moya */,
+				EA2913D727AA2DAD00324476 /* ReactiveMoya */,
+				EA2913D927AA2DAD00324476 /* RxMoya */,
 			);
 			productName = CocoTalk;
 			productReference = EA14D4EC2786B16C00EDC892 /* CocoTalk.app */;
@@ -549,6 +579,7 @@
 				EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EA3F3765278C4144007957EB /* XCRemoteSwiftPackageReference "RxGesture" */,
 				EA22D5452795925700E1F39A /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				EA2913D427AA2DAD00324476 /* XCRemoteSwiftPackageReference "Moya" */,
 			);
 			productRefGroup = EA14D4ED2786B16C00EDC892 /* Products */;
 			projectDirPath = "";
@@ -578,11 +609,14 @@
 			files = (
 				EA22D53B2794F7CF00E1F39A /* FriendListViewController.swift in Sources */,
 				EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */,
+				EA2913E927AB6D4000324476 /* ModelUser.swift in Sources */,
 				EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */,
 				EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */,
 				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
 				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
+				EA2913DD27AA349D00324476 /* BaseRepository.swift in Sources */,
 				EA22D5612797FC2800E1F39A /* UIImageView+Ext.swift in Sources */,
+				EA2913DF27AA43D800324476 /* APIError.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
 				EA22D5362794E4FD00E1F39A /* ProfileTableViewCell.swift in Sources */,
@@ -590,12 +624,14 @@
 				EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */,
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
+				EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */,
 				EA22D5382794E76E00E1F39A /* ProfileImageView.swift in Sources */,
 				EA22D54F27967C1500E1F39A /* ChatRoomListViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
 				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
 				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
 				EA22D54C27963D0F00E1F39A /* ProfileModalViewModel.swift in Sources */,
+				EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */,
 				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
 				EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */,
 				EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */,
@@ -603,6 +639,7 @@
 				EAE5560C27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift in Sources */,
 				EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */,
 				EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */,
+				EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
 				EAE555FA279E10DF00777EBF /* ChatRoomTextFieldView.swift in Sources */,
 				EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */,
@@ -610,6 +647,7 @@
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,
 				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
+				EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */,
 				EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */,
 				EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,
@@ -850,6 +888,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		EA2913D427AA2DAD00324476 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.0;
+			};
+		};
 		EA3F3753278BD00D007957EB /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
@@ -894,6 +940,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA22D5452795925700E1F39A /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		EA2913D527AA2DAD00324476 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA2913D427AA2DAD00324476 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		EA2913D727AA2DAD00324476 /* ReactiveMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA2913D427AA2DAD00324476 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = ReactiveMoya;
+		};
+		EA2913D927AA2DAD00324476 /* RxMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA2913D427AA2DAD00324476 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = RxMoya;
 		};
 		EA3F3754278BD00D007957EB /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
