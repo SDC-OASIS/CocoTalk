@@ -30,7 +30,7 @@
 					</div>
 					<div class="make-chat-modal-info row" style="justify-content: left">
 						<div class="friend-list-container" :style="{ height: height }">
-							<div class="friend-cnt">친구 - 200</div>
+							<div class="friend-cnt">친구 - {{ searchFriendsCnt }}</div>
 							<!-- {{ searchFriends }} -->
 							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
 								<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
@@ -75,6 +75,14 @@ export default {
 			console.log(this.selectedFriends);
 			if (this.selectedFriends.length) {
 				return this.selectedFriends.length;
+			} else {
+				return "";
+			}
+		},
+		searchFriendsCnt() {
+			console.log(this.searchFriends);
+			if (this.searchFriends.length) {
+				return this.searchFriends.length;
 			} else {
 				return "";
 			}
