@@ -53,7 +53,7 @@ class SigninViewController: UIViewController {
     /// 로그인 버튼
     private let btnSignin = UIButton().then {
         $0.setTitle("코코톡 로그인", for: .normal)
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = .systemGreen
     }
     
     /// 가입 버튼

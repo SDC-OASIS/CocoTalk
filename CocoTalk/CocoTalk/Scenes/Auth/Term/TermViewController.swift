@@ -102,7 +102,7 @@ extension TermViewController {
                 }
                 
                 if isAgreed {
-                    self.btnAgree.backgroundColor = .systemBlue
+                    self.btnAgree.backgroundColor = .systemGreen
                 } else {
                     self.btnAgree.backgroundColor = .systemGray
                 }

@@ -41,7 +41,7 @@ class NewProfileViewController: UIViewController {
     /// 확인 버튼
     private let btnConfirm = UIButton().then {
         $0.setTitle("확인", for: .normal)
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = .systemGreen
     }
     
     
