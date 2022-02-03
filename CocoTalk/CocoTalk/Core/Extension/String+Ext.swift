@@ -8,6 +8,11 @@
 import Foundation
 
 extension String {
+    
+    func isNumber() -> Bool {
+        return CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: self))
+    }
+    
     func pretty() -> String {
         let _str = self.trimmingCharacters(in: .whitespacesAndNewlines)
         if let regex = try? NSRegularExpression(pattern: "([0-9]{3})([0-9]{3,4})([0-9]{4})", options: .caseInsensitive) {
