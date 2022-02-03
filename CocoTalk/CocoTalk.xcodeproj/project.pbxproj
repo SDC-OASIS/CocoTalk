@@ -66,7 +66,6 @@
 		EAE55602279FDE2300777EBF /* UICollectionView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE55601279FDE2300777EBF /* UICollectionView+Ext.swift */; };
 		EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE5560927A154CD00777EBF /* MessageCollectionViewLayout.swift */; };
 		EAE5560C27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */; };
-		EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE575CC278BCA4000D959A0 /* SignupViewController.swift */; };
 		EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */; };
 		EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */; };
 		EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */; };
@@ -123,7 +122,6 @@
 		EAE55601279FDE2300777EBF /* UICollectionView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Ext.swift"; sourceTree = "<group>"; };
 		EAE5560927A154CD00777EBF /* MessageCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewLayout.swift; sourceTree = "<group>"; };
 		EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewLayoutDelegate.swift; sourceTree = "<group>"; };
-		EAE575CC278BCA4000D959A0 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		EAE7F3BB278D0B16002EB808 /* ConfirmModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmModalView.swift; sourceTree = "<group>"; };
 		EAE7F3C0278D258E002EB808 /* SmsAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsAuthViewController.swift; sourceTree = "<group>"; };
 		EAFFC86D278E7820003EE1E4 /* UIButton+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ext.swift"; sourceTree = "<group>"; };
@@ -416,7 +414,6 @@
 				EAE575CB278BC6E600D959A0 /* Password */,
 				EAE575CA278BC6D400D959A0 /* RegisterPhone */,
 				EAE575C9278BC6CE00D959A0 /* Term */,
-				EAE575C8278BB9EF00D959A0 /* Signup */,
 				EAE575C7278BB9E200D959A0 /* Signin */,
 			);
 			path = Auth;
@@ -470,14 +467,6 @@
 				EA3F3751278BCCDE007957EB /* SigninViewController.swift */,
 			);
 			path = Signin;
-			sourceTree = "<group>";
-		};
-		EAE575C8278BB9EF00D959A0 /* Signup */ = {
-			isa = PBXGroup;
-			children = (
-				EAE575CC278BCA4000D959A0 /* SignupViewController.swift */,
-			);
-			path = Signup;
 			sourceTree = "<group>";
 		};
 		EAE575C9278BC6CE00D959A0 /* Term */ = {
@@ -623,7 +612,6 @@
 				EAE55602279FDE2300777EBF /* UICollectionView+Ext.swift in Sources */,
 				EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */,
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
-				EAE575CD278BCA4000D959A0 /* SignupViewController.swift in Sources */,
 				EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */,
 				EA22D5382794E76E00E1F39A /* ProfileImageView.swift in Sources */,
 				EA22D54F27967C1500E1F39A /* ChatRoomListViewController.swift in Sources */,
