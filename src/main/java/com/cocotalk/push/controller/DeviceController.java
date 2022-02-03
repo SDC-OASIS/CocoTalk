@@ -4,6 +4,7 @@ import com.cocotalk.push.dto.device.*;
 import com.cocotalk.push.entity.Device;
 import com.cocotalk.push.service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,21 +40,21 @@ public class DeviceController {
 
     @Operation(summary = "device 등록하기")
     @PostMapping
-    public Mono<Device> create(ClientInfo clientInfo, @RequestBody @Valid CreateInput createInput) {
+    public Mono<Device> create(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid CreateInput createInput) {
         log.info("[device/post] create device");
         return deviceService.create(clientInfo, createInput);
     }
     
     @Operation(summary = "device 수정하기")
     @PutMapping
-    public Mono<Device> update(ClientInfo clientInfo, @RequestBody @Valid UpdateInput updateInput) {
+    public Mono<Device> update(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid UpdateInput updateInput) {
         log.info("[device/put] update device");
         return deviceService.update(clientInfo, updateInput);
     }
 
     @Operation(summary = "device 삭제하기")
     @DeleteMapping
-    public void delete(ClientInfo clientInfo, @Valid DeleteInput deleteInput) {
+    public void delete(@Parameter(hidden = true)  ClientInfo clientInfo, @Valid DeleteInput deleteInput) {
         log.info("[device/delete] delete device");
         deviceService.delete(clientInfo, deleteInput);
     }
