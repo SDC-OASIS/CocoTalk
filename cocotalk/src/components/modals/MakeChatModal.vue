@@ -17,7 +17,7 @@
 				<div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
 					<div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">
 						<div class="box">
-							{{ selectedFriend }}
+							{{ selectedFriend.username }}
 						</div>
 						<i class="delete-selected-friend fas fa-times" @click="deleteSelectedFriend(selectedFriend, idx)"></i>
 					</div>
@@ -31,11 +31,11 @@
 					<div class="make-chat-modal-info row" style="justify-content: left">
 						<div class="friend-list-container" :style="{ height: height }">
 							<div class="friend-cnt">친구 - 200</div>
-							{{ searchFriends }}
+							<!-- {{ searchFriends }} -->
 							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
 								<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
 								<div class="friend-name">{{ friend.username }}</div>
-								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend.username" />
+								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend" />
 								<label :for="'checked' + idx"> </label>
 							</div>
 						</div>
