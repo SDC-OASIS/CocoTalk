@@ -64,12 +64,20 @@ class PasswordViewController: UIViewController {
     
     // MARK: - Properties
     var bag = DisposeBag()
+    var signupData: ModelSignupData?
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationItem.hidesBackButton = true
+        
+        #warning("UserDefault extension에 completion handler로 빼기")
+        if let savedData = UserDefaults.standard.object(forKey: ModelSignupData.identifier) as? Data,
+           let signupData = ModelSignupData.decode(savedData: savedData) {
+            self.signupData = signupData
+            lblPhoneNumber.text = signupData.phoneNumber
+        }
         
         configureView()
         configureSubviews()
@@ -90,6 +98,18 @@ class PasswordViewController: UIViewController {
             lblWarning.isHidden = false
             btnConfirm.backgroundColor = .systemGray
         }
+    }
+    
+    func pushNewProfileVC() {
+        guard let password = textFieldPassword.text,
+              var signupData = self.signupData else {
+                  return
+              }
+        signupData.password = password
+        UserDefaults.standard.set(signupData.encode() ?? nil, forKey: ModelSignupData.identifier)
+        
+        let vc = NewProfileViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -159,8 +179,7 @@ extension PasswordViewController {
                       self.textFieldConfirmPassword.text == self.textFieldPassword.text else {
                           return
                       }
-                let vc = NewProfileViewController()
-                navigationController.pushViewController(vc, animated: true)
+                self.pushNewProfileVC()
             }).disposed(by: bag)
     }
     

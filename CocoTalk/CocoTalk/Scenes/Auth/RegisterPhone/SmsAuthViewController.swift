@@ -21,7 +21,6 @@ class SmsAuthViewController: UIViewController {
     }
     
     /// 인증번호 텍스트 필드
-#warning("4자리 제한")
     private let textFieldAuthNumber = UITextField().then {
         $0.placeholder = "인증번호 4자리"
         $0.textAlignment = .center

@@ -33,12 +33,20 @@ class TermViewController: UIViewController {
         
         title = "이용약관에 동의해 주세요"
         
+        UserDefaults.standard.set(nil, forKey: "SignupData")
+        
         configureView()
         configureSubviews()
         bindRx()
     }
     
     // MARK: - Helper
+    func pushPhoneVC() {
+        let signupData = ModelSignupData(terms: true)
+        UserDefaults.standard.set(signupData.encode() ?? nil, forKey: ModelSignupData.identifier)
+        let vc = PhoneNumberViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 // MARK: - BaseViewController
@@ -120,8 +128,7 @@ extension TermViewController {
                     return
                 }
                 
-                let vc = PhoneNumberViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
+                self.pushPhoneVC()
             })
             .disposed(by: bag)
     }
