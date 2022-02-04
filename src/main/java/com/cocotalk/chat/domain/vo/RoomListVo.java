@@ -13,14 +13,7 @@ import org.bson.types.ObjectId;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomListVo {
-    @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId id;
-
-    private String name;
-
-    private String img;
-
-    private int type;
+    private RoomVo roomVo;
 
     private ChatMessageVo lastChatMessageVo;
 

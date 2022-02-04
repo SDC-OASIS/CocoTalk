@@ -19,13 +19,13 @@ public class ChatMessageVo {
     private ObjectId id;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId messageBundleId;
+    private ObjectId roomId;
 
     private Long userId;
 
-    private int type;
-
     private String content;
+
+    private int type;
 
     private LocalDateTime sentAt;
 }

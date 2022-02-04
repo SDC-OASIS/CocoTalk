@@ -43,7 +43,7 @@ public class RoomController {
     @Operation(summary = "유저가 포함된 모든 채팅방 상세 정보 조회")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<GlobalResponse<?>> findAll(@Parameter(hidden = true) UserVo userVo){
-        List<RoomVo> data = new ArrayList<>(roomService.findAll(userVo));
+        List<RoomVo> data = new ArrayList<>(roomService.findAllJoining(userVo));
         return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 

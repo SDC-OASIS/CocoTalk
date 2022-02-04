@@ -1,6 +1,5 @@
 package com.cocotalk.chat.service;
 
-import com.cocotalk.chat.domain.entity.message.MessageType;
 import com.cocotalk.chat.domain.entity.room.*;
 import com.cocotalk.chat.domain.vo.*;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
@@ -14,6 +13,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +32,9 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final MongoOperations mongoOperations;
 
+    @Value(value = "${cocotalk.message-bundle-limit}")
+    private int messageBundleLimit;
+
     QRoom qRoom = QRoom.room;
     QRoomMember qRoomMember = QRoomMember.roomMember;
 
@@ -47,6 +50,10 @@ public class RoomService {
             new CustomException(CustomError.BAD_REQUEST, "채팅방에서 나간 유저가 없습니다.");
     public static final CustomException INVALID_MESSAGE_TYPE =
             new CustomException(CustomError.BAD_REQUEST, "해당 채팅방에서 사용할 수 없는 메시지 타입입니다.");
+    public static final CustomException DUPLICATED_ROOM_MEMBER =
+            new CustomException(CustomError.BAD_REQUEST, "현재 채팅방에 참가 중인 유저를 초대할 수 없습니다.");
+    public static final CustomException EXCEEDED_ROOM_MEMBER =
+            new CustomException(CustomError.BAD_REQUEST, "초대한 유저보다 추가하려는 유저 수가 많습니다.");
 
     public RoomVo create(RoomRequest request) { // C
         LocalDateTime now = LocalDateTime.now();
@@ -73,7 +80,9 @@ public class RoomService {
                     .noticeIds(emptyObjectIdList)
                     .build());
 
-            return roomMapper.toVo(createdRoom);
+            MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
+            createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
+            return roomMapper.toVo(roomRepository.save(createdRoom));
         } else {
             throw WRONG_MEMBER_SIZE;
         }
@@ -84,54 +93,31 @@ public class RoomService {
         return roomMapper.toVo(room);
     }
 
-    public ChatMessageVo saveChatMessage(ObjectId roomId, ChatMessageRequest request) {
-        RoomVo roomVo = this.findById(roomId);
-        int beforeSize = roomVo.getMessageBundleIds().size();
-        MessageSaveVo messageSaveVo = messageBundleService.findRecentMessageBundle(roomVo);
-        roomVo = messageSaveVo.getRoomVo();
-        int afterSize = roomVo.getMessageBundleIds().size();
-
-        ChatMessageVo chatMessageVo = chatMessageService.createChatMessage(request, messageSaveVo.getMessageBundleVo());
-
-        if(chatMessageVo.getType() == MessageType.AWAKE.ordinal()) { // 개인 채팅방에서 사용
-            if(roomVo.getType() == RoomType.PRIVATE.ordinal()){
-                LocalDateTime now = LocalDateTime.now();
-
-                List<RoomMember> members = roomVo.getMembers();
-                List<RoomMember> awayList = members.stream()
-                        .filter(roomMember -> !roomMember.isJoining())
-                        .map(roomMember -> {
-                            roomMember.setJoinedAt(now);
-                            roomMember.setJoining(true);
-                            return roomMember;
-                        })
-                        .collect(Collectors.toList());
-
-                if (awayList.size() == 0) throw AWAYED_NOT_EXIST;
-
-                members.removeAll(awayList);
-                members.addAll(awayList);
-            } else {
-                throw INVALID_MESSAGE_TYPE;
-            }
+    public MessageVo<ChatMessageVo> saveChatMessage(ObjectId roomId, ChatMessageRequest request) {
+        MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request); // (1) 메시지 저장
+        BundleIdVo bundleIdVo = messageVo.getBundleId(); // (6) 이 메시지가 저장된 번들 Id와 다음 메시지가 저장할 번들 Id가 들어있는 Vo
+        if(!bundleIdVo.getCurrentMessageBundleId().equals(bundleIdVo.getNextMessageBundleId())) {
+            RoomVo roomVo = this.findById(roomId);
+            roomVo.getMessageBundleIds().add(bundleIdVo.getNextMessageBundleId());
+            this.save(roomVo);
         }
-
-        if(beforeSize != afterSize || chatMessageVo.getType() == MessageType.AWAKE.ordinal()) this.save(roomVo);
-
-        return chatMessageVo;
+        return messageVo;
     }
 
-    public InviteMessageVo saveInviteMessage(ObjectId roomId, InviteMessageRequest request) {
+    public MessageWithRoomVo<InviteMessageVo> saveInviteMessage(ObjectId roomId, InviteMessageRequest request) {
+        MessageVo<InviteMessageVo> messageVo = chatMessageService.createInviteMessage(request);
+        BundleIdVo bundleIdVo = messageVo.getBundleId();
+
         RoomVo roomVo = this.findById(roomId);
-        
-        MessageSaveVo messageSaveVo = messageBundleService.findRecentMessageBundle(roomVo);
-        roomVo = messageSaveVo.getRoomVo();
+
+        if(!bundleIdVo.getCurrentMessageBundleId().equals(bundleIdVo.getNextMessageBundleId()))
+            roomVo.getMessageBundleIds().add(bundleIdVo.getNextMessageBundleId());
 
         List<RoomMember> members = roomVo.getMembers();
 
         LocalDateTime now = LocalDateTime.now();
 
-        List<RoomMember> invitees = request.getInviteeIds().stream()
+        List<RoomMember> invitees = messageVo.getChatMessage().getInviteeIds().stream()
                 .map(id -> RoomMember.builder()
                         .userId(id)
                         .joining(true)
@@ -141,19 +127,37 @@ public class RoomService {
                         .build())
                 .filter(invitee -> !members.contains(invitee)) // 중복 제거
                 .collect(Collectors.toList());
-        members.addAll(invitees);
         
-        this.save(roomVo); // member 업데이트 때문에 필수
+        int estimateSize = members.size() + request.getInviteeIds().size();
+        int amountSize = members.size() + invitees.size();
+        if(estimateSize != amountSize) {
+            if(estimateSize > amountSize) {
+                throw DUPLICATED_ROOM_MEMBER;
+            } else  {
+                throw EXCEEDED_ROOM_MEMBER;
+            }
+        }
+        
+        members.addAll(invitees);
 
-        return chatMessageService.createInviteMessage(request, messageSaveVo.getMessageBundleVo());
+        roomVo = this.save(roomVo); // member 업데이트 때문에 필수
+
+        return new MessageWithRoomVo<>(messageVo, roomVo);
     }
 
-    public ChatMessageVo saveLeaveMessage(ObjectId roomId, ChatMessageRequest request) {
+    public MessageWithRoomVo<ChatMessageVo> saveLeaveMessage(ObjectId roomId, ChatMessageRequest request) {
+        boolean saveRoom = false;
+
+        MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
+        ChatMessageVo leaveMessageVo = messageVo.getChatMessage();
+        BundleIdVo bundleIdVo = messageVo.getBundleId();
+
         RoomVo roomVo = this.findById(roomId);
 
-        MessageSaveVo messageSaveVo = messageBundleService.findRecentMessageBundle(roomVo);
-        ChatMessageVo leaveMessageVo = chatMessageService.createChatMessage(request, messageSaveVo.getMessageBundleVo());
-        roomVo = messageSaveVo.getRoomVo();
+        if(!bundleIdVo.getCurrentMessageBundleId().equals(bundleIdVo.getNextMessageBundleId())) {
+            roomVo.getMessageBundleIds().add(bundleIdVo.getNextMessageBundleId());
+            saveRoom = true;
+        }
 
         RoomMember leaver = this.findMember(roomVo, leaveMessageVo.getUserId());
 
@@ -163,12 +167,15 @@ public class RoomService {
         if(roomVo.getType() == RoomType.PRIVATE.ordinal()) {
             leaver.setJoining(false);
             members.add(leaver);
-            this.save(roomVo);
+            saveRoom = true;
         } else {
             if (members.size() == 0) this.deleteById(roomId);
-            else this.save(roomVo);
+            else saveRoom = true;
         }
-        return leaveMessageVo;
+
+        if(saveRoom) this.save(roomVo);
+
+        return new MessageWithRoomVo<>(messageVo, roomVo);
     }
 
     public Room find(ObjectId roomId) { // R
@@ -180,7 +187,7 @@ public class RoomService {
         return roomMapper.toVo(room);
     }
 
-    public List<RoomVo> findAll(UserVo userVo) {
+    public List<RoomVo> findAllJoining(UserVo userVo) {
         return roomRepository.findByUserIdAndJoiningIsTrue(userVo.getId()).stream()
                 .map(roomMapper::toVo)
                 .collect(Collectors.toList());
@@ -191,7 +198,7 @@ public class RoomService {
                 o2.getLastChatMessageVo().getSentAt().compareTo(o1.getLastChatMessageVo().getSentAt());
 
         //MemberUserId -> 인덱싱?
-        return this.findAll(userVo).stream() // parallel?
+        return this.findAllJoining(userVo).stream() // parallel?
                 .map(roomVo -> {
                     RoomMember me = this.findMember(roomVo, userVo.getId());
 
@@ -202,11 +209,8 @@ public class RoomService {
                     MessageBundleVo messageBundle = messageBundleService.find(messageBundleIds.get(mbIdx));
                     List<ObjectId> messageIds = messageBundle.getMessageIds(); // slicing 필요?
 
-                    ChatMessageVo lastChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1));
-                    // REST로 가져오는 짧은 시간 안에 메시지가 오면 어떻하지?
-
                     // Pagination을 제한적으로 사용하기 때문에 (전부 읽었을 수도 있고, 일정 갯수 넘어가면 탈출) 따로 limit 쿼리를 쓸 필요는 없어 보인다.
-                    while(amountUnread < 10 && mbIdx >= 0) {
+                    while(amountUnread < messageBundleLimit && mbIdx >= 0) {
                         // 현재 메시지 번들에서 읽지 않은 메시지 수 계산
                         long partUnread = messageBundle.getMessageIds().stream() // parallel?
                                 .map(chatMessageService::find)
@@ -217,16 +221,15 @@ public class RoomService {
                         }
                         else {
                             amountUnread += partUnread;
-                            if(amountUnread >= 10) amountUnread = 10;
+                            if(amountUnread >= messageBundleLimit) amountUnread = messageBundleLimit;
                             messageBundle = messageBundleService.find(messageBundleIds.get(mbIdx--)); // 이전 메시지 번들로 갱신
                         }
                     }
 
+                    ChatMessageVo lastChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1)); // nope!
+
                     return RoomListVo.builder()
-                            .id(roomVo.getId())
-                            .name(roomVo.getName())
-                            .img(roomVo.getImg())
-                            .type(roomVo.getType())
+                            .roomVo(roomVo)
                             .lastChatMessageVo(lastChatMessageVo)
                             .unreadNumber(amountUnread)
                             .build();

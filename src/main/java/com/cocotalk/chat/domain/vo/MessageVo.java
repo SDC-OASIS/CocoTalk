@@ -1,16 +1,16 @@
 package com.cocotalk.chat.domain.vo;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
 @Getter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InviteMessageVo extends ChatMessageVo {
-    private List<Long> inviteeIds;
+public class MessageVo<T> {
+    private T chatMessage;
+    private BundleIdVo bundleId;
 }

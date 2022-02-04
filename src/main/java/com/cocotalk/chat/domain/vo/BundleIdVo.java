@@ -1,29 +1,21 @@
-package com.cocotalk.chat.dto.request;
+package com.cocotalk.chat.domain.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDateTime;
-
 @Getter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessageRequest {
+public class BundleIdVo {
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId roomId;
+    private ObjectId currentMessageBundleId;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId messageBundleId;
-
-    private Long userId;
-
-    private String content;
-
-    private int type;
+    private ObjectId nextMessageBundleId;
 }

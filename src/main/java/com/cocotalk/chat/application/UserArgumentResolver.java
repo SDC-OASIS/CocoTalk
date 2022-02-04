@@ -62,7 +62,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         TokenPayload payload = JwtUtils.getPayload();
 
         UriComponentsBuilder uriComponentsBuilder =
-                UriComponentsBuilder.fromHttpUrl(USER_SERVICE_URL).path(payload.getUserId().toString());
+                UriComponentsBuilder.fromHttpUrl(USER_SERVICE_URL);
 
         ResponseEntity<GlobalResponse> response = restTemplate.exchange(
                 URI.create(uriComponentsBuilder.build().toUriString()),

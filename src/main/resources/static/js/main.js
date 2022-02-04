@@ -19,13 +19,15 @@ let token = null;
 
 let room = null;
 let roomId = null;
+let messageBundleIds = null;
+let recentBundleId = null;
 
 let chatRoomSocket = null;
 // let chatListSocket = null;
 
 let headers = null;
 
-const domain = "http://localhost:8083";
+const domain = "http://localhost:8080";
 
 const colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -58,7 +60,11 @@ function enter(event) {
                     messageForm.addEventListener('submit', createRoomAndConnectAndSend, true);
                 } else {
                     roomId = res.data.data.id;
+                    messageBundleIds = res.data.data.messageBundleIds
+                    messageBundleIds = messageBundleIds.substring(1, messageBundleIds.length - 1).split(", ");
                     console.log('채팅방 존재 -> roomId = ' + roomId);
+                    console.log("messageBundleIds = " + messageBundleIds);
+                    recentBundleId = messageBundleIds[messageBundleIds.length - 1];
 
                     chatRoomSocket = new SockJS('/stomp');
                     // chatListSocket = new SockJS('/stomp');
@@ -99,6 +105,11 @@ function createRoomAndConnectAndSend(event){
         roomId = res.data.data.id;
         console.log('채팅방 생성됨 roomId = ' + roomId);
 
+        messageBundleIds = res.data.data.messageBundleIds
+        messageBundleIds = messageBundleIds.substring(1, messageBundleIds.length - 1).split(", ");
+        console.log("messageBundleIds = " + messageBundleIds);
+        recentBundleId = messageBundleIds[messageBundleIds.length - 1];
+
         chatRoomSocket = new SockJS('/stomp');
         // chatListSocket = new SockJS('/stomp');
 
@@ -123,13 +134,34 @@ function createRoomAndConnectAndSend(event){
 }
 
 function onConnected() {
+    console.log("onConnected 호출됨")
+    console.log("sendMessage submit에 이벤트 리스너 등록됨")
     messageForm.addEventListener('submit', sendMessage, true)
-    chatRoomClient.subscribe('/topic/' + roomId, onMessageReceived); // /chatroom/topic?
+    chatRoomClient.subscribe('/topic/' + roomId + '/message', onMessageReceived); // /chatroom/topic?
     // chatListClient.subscribe('/topic/' + userId, onMessageReceived);
     connectingElement.classList.add('hidden');
 }
 
 function onConnectAndSend() {
+    const messageContent = messageInput.value.trim();
+
+    if(messageContent && chatRoomClient) {
+        let chatMessage = {
+            roomId: roomId,
+            userId: userId,
+            messageBundleId: recentBundleId,
+            type: 0,
+            content: messageInput.value
+            // sentAt: getLocalDateTime()
+        };
+
+        chatRoomClient.send("/simple/chatroom/" + roomId + "/message/send", {}, JSON.stringify(chatMessage));
+        // chatListClient.send("/simple/chatlist/" + userId + "/send", {}, JSON.stringify(chatMessage)); // 자기 자신에게는 메시지 보내지 않음
+        messageInput.value = '';
+    }
+
+    console.log("onConnectAndSend() 호출됨")
+    console.log("createRoomAndConnectAndSend() submit에 이벤트 리스너 제거됨")
     messageForm.removeEventListener('submit', createRoomAndConnectAndSend, true)
     onConnected();
 }
@@ -141,17 +173,23 @@ function onError() {
 }
 
 function sendMessage(event) {
+    console.log("sendMessage 이벤트 발생")
+
     const messageContent = messageInput.value.trim();
+
+    console.log("recentBundleId = " + recentBundleId);
+
     if(messageContent && chatRoomClient) {
         let chatMessage = {
             roomId: roomId,
             userId: userId,
+            messageBundleId: recentBundleId,
             type: 0,
-            content: messageInput.value,
+            content: messageInput.value
             // sentAt: getLocalDateTime()
         };
 
-        chatRoomClient.send("/simple/chatroom/" + roomId + "/send", {}, JSON.stringify(chatMessage));
+        chatRoomClient.send("/simple/chatroom/" + roomId + "/message/send", {}, JSON.stringify(chatMessage));
         // chatListClient.send("/simple/chatlist/" + userId + "/send", {}, JSON.stringify(chatMessage)); // 자기 자신에게는 메시지 보내지 않음
         messageInput.value = '';
     }
@@ -165,12 +203,13 @@ function invite (event) {
             roomId: roomId,
             userId: userId,
             inviteeIds: inviteeIds,
+            messageBundleId: recentBundleId,
             type: 3,
             content: userId + '가 입장했습니다.'
             // sentAt: getLocalDateTime()
         }
 
-        chatRoomClient.send("/simple/chatroom/" + roomId + "/invite", {}, JSON.stringify(inviteMessage));
+        chatRoomClient.send("/simple/chatroom/" + roomId + "/message/invite", {}, JSON.stringify(inviteMessage));
         inviteInput.value = '';
     }
     event.preventDefault();
@@ -180,12 +219,13 @@ function leave(event) {
     let leaveMessage = {
         roomId: roomId,
         userId: userId,
+        messageBundleId: recentBundleId,
         type: 2,
         content: userId + '가 나갔습니다.',
         // sentAt: getLocalDateTime()
     }
 
-    chatRoomClient.send("/simple/chatroom/" + roomId + "/leave", {}, JSON.stringify(leaveMessage));
+    chatRoomClient.send("/simple/chatroom/" + roomId + "/message/leave", {}, JSON.stringify(leaveMessage));
     messageInput.value = '';
 
     chatPage.classList.add('hidden');
@@ -195,7 +235,7 @@ function leave(event) {
         action: 'left'
     };
     if(chatRoomClient) {
-        chatRoomClient.unsubscribe('/topic/' + roomId);
+        chatRoomClient.unsubscribe('/topic/' + roomId + '/message');
         // chatListClient.unsubscribe('/topic/' + userId);
 
         chatRoomClient.disconnect(() => {}, headers);
@@ -210,7 +250,11 @@ function onMessageReceived(payload) { // subscribe시 이 함수로 처리
     console.log('onMessageReceived');
     console.log(payload);
 
-    const message = JSON.parse(payload.body);
+    const body = JSON.parse(payload.body);
+    const message = body.chatMessage;
+    recentBundleId = body.bundleId.nextMessageBundleId;
+    console.log(message);
+    console.log(recentBundleId);
 
     const messageElement = document.createElement('li');
 
