@@ -11,7 +11,7 @@
 		<Alert v-if="alert.status == 'open'" :text="alert.text" />
 		<AddFriendModal v-if="addFriendModal == 'open'" />
 		<MakeChatModal v-if="makeChatModal == 'open'" />
-		<RoomNameModal v-if="roomNameModal == 'open'" />
+		<RoomNameModal v-if="roomNameModal.status == 'open'" />
 		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
 	</div>
 </template>

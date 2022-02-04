@@ -121,9 +121,15 @@ export default {
 			this.selectedFriends.splice(idx, 1);
 		},
 		openRoomNameModal() {
-			console.log("얍");
 			this.closeMakeChatModal();
-			this.$store.dispatch("modal/openRoomNameModal", "open", { root: true });
+			console.log("채팅방 멤버 선택완료");
+			console.log(this.selectedFriends);
+			// const status = "open";
+			// const payload = {
+			// 	status: status,
+			// 	selectedFriends: ,
+			// };
+			this.$store.dispatch("modal/openRoomNameModal", this.selectedFriends, { root: true });
 		},
 		// filter() {
 		// 	if (this.searchName.length) {

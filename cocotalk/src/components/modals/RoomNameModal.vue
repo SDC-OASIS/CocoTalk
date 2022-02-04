@@ -10,20 +10,28 @@
 				</div>
 				<div class="roomname-modal-info row" style="justify-content: center">
 					<div style="dispaly: inline-block; text-align: center">
-						<div v-if="selectedFriends.length == 1">
+						<div v-if="roomNameModal.selectedFriends.length == 1">
 							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
 						</div>
-						<div v-if="selectedFriends.length == 2" style="width: 110px; height: 120px">
+						<div v-if="roomNameModal.selectedFriends.length == 2" style="width: 110px; height: 120px">
 							<div style="position: absolute">
 								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
 								<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 70px" class="two-friends-second-img" :radius="1" />
 							</div>
 						</div>
-						<div v-if="selectedFriends.length >= 3" style="width: 110px; height: 90px; padding-top: 50px">
+						<div v-if="roomNameModal.selectedFriends.length == 3" style="width: 110px; height: 90px; padding-top: 50px">
 							<div style="position: absolute">
 								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
 								<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 70px" class="three-friends-second-img" :radius="1" />
 								<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 70px" class="three-friends-third-img" :radius="2" />
+							</div>
+						</div>
+						<div v-if="roomNameModal.selectedFriends.length >= 4" style="width: 110px; height: 90px; padding-top: 50px">
+							<div style="position: absolute">
+								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 60px" />
+								<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 60px" class="four-friends-second-img" :radius="1" />
+								<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-third-img" :radius="2" />
+								<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-forth-img" :radius="2" />
 							</div>
 						</div>
 					</div>
@@ -39,7 +47,9 @@
 				<hr />
 				<div style="font-size: 15px; color: #535353">설정한 그룹채팅방의 사진과 이름은 다른 모든 대화상대에게도 동일하게 보입니다.</div>
 				<div class="row" style="justify-content: right; padding-top: 10px">
-					<Button text="확인" width="50px" height="30px" style="margin-right: 20px" />
+					<div @click="createChatRoom">
+						<Button text="확인" width="50px" height="30px" style="margin-right: 20px" />
+					</div>
 					<div @click="closeRoomNameModal">
 						<Button text="취소" width="50px" height="30px" backgroundColor="#ffffff" />
 					</div>
@@ -50,6 +60,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import ProfileImg from "../common/ProfileImg.vue";
 import Button from "../common/Button.vue";
 export default {
@@ -57,10 +68,14 @@ export default {
 	data() {
 		return {
 			roomName: "dd",
-			selectedFriends: [],
+			// roomNameModal: {
+			// 	selectedFriends: [],
+			// },
+			// selectedFriends: [],
 		};
 	},
 	computed: {
+		...mapState("modal", ["roomNameModal"]),
 		friendIdCnt() {
 			if (this.roomName.length) {
 				return this.roomName.length;
@@ -68,6 +83,7 @@ export default {
 				return 0;
 			}
 		},
+		// roomName() {},
 	},
 
 	components: {
@@ -82,12 +98,40 @@ export default {
 			this.roomName = "";
 			this.roomName = e.target.value;
 		},
+		setRoomname() {
+			console.log("채팅방 이름 설정");
+			console.log(this.roomNameModal);
+			// this.roomNameModal.selectedFriends = ["권희은", "김민정", "고병학", "황종훈"];
+			let selectedNames = "";
+			this.roomNameModal.selectedFriends.forEach((e) => {
+				// console.log(e);
+				selectedNames += e.username + ", ";
+			});
+			this.roomName = selectedNames;
+		},
+		createChatRoom() {
+			"채팅방생성 버튼 클릭";
+			let type = 0;
+			if (this.roomNameModal.selectedFriends.length > 1) {
+				type = 1;
+			}
+
+			let memberIds = [];
+			this.roomNameModal.selectedFriends.forEach((e) => {
+				memberIds.push(e.id);
+			});
+			const payload = {
+				name: this.roomName,
+				img: "",
+				type: type,
+				memberIds: memberIds,
+			};
+			console.log(payload);
+			this.$store.dispatch("chat/createChat", payload, { root: true });
+		},
 	},
 	created() {
-		this.selectedFriends = ["권희은", "김민정", "고병학"];
-		let selectedNames = "";
-		this.selectedFriends.forEach((e) => (selectedNames += e + ", "));
-		return (this.roomName = selectedNames);
+		this.setRoomname();
 	},
 };
 </script>
@@ -171,5 +215,27 @@ export default {
 	position: relative;
 	top: -135px;
 	left: -45px;
+}
+.four-friends-first-img {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	z-index: 3;
+}
+.four-friends-second-img {
+	position: relative;
+	top: -60px;
+	left: 10px;
+	z-index: 3;
+}
+.four-friends-third-img {
+	position: relative;
+	top: -125px;
+	left: -55px;
+}
+.four-friends-forth-img {
+	position: relative;
+	top: -125px;
+	left: 10px;
 }
 </style>
