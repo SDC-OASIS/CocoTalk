@@ -21,7 +21,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     /// 프로필 이미지
-    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumnail_01")).then {
+    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumbnail_01")).then {
         $0.isHidden = true
     }
     
@@ -213,7 +213,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     func setData(data: ModelMessage) {
-        ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")!
+        ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
         messageId = data.id ?? 0
         lblName.text = "테스트 이름"
         lblMessage.text = data.text ?? ""

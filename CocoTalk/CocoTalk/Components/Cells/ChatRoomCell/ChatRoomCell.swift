@@ -197,9 +197,9 @@ class ChatRoomCell: UITableViewCell {
     func setData(data: ModelChatRoom) {
         #warning("이미지 적용")
         if let _img = data.roomImageURL {
-            ivRoomImage.image = UIImage(named: "profile_noimg_thumnail_01")!
+            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
         } else {
-            ivRoomImage.image = UIImage(named: "profile_noimg_thumnail_0\(Int.random(in: 1..<4))")!
+            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_0\(Int.random(in: 1..<4))")!
         }
         
         lblTitle.text = data.roomTitle ?? ""

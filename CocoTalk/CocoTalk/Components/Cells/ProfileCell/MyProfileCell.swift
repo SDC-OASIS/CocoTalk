@@ -91,9 +91,9 @@ class MyProfileCell: UITableViewCell {
     func setData(data: ModelProfile) {
         #warning("이미지 적용")
         if let _img = data.profileImageUrl {
-            ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")!
+            ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
         } else {
-            ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")!
+            ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
         }
         
         if let _bio = data.bio {
