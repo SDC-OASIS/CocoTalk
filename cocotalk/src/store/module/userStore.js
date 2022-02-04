@@ -62,27 +62,27 @@ const userStore = {
 			context.commit("GET_SCREEN", payload);
 		},
 		login: function (context, payload) {
-			// const userInfo = payload;
-			// axios
-			// 	.post("http://146.56.152.87:8080/api/auth/signin", userInfo)
-			// 	.then((res) => {
-			// 		console.log("로그인 요청");
-			// 		context.commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
-			// 		context.commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
-			// 	})
-			// 	.catch((err) => {
-			// 		console.log(err);
-			// 		console.log("뭔가틀림");
-			// 		const payload = {
-			// 			status: "open",
-			// 			text: "아이디와 비밀번호를 확인해주세요.",
-			// 		};
-			// 		store.dispatch("modal/openAlert", payload, { root: true });
-			// 		// alert("아이디 비번을 다시 확인해주세요.");
-			// 	});
+			const userInfo = payload;
+			axios
+				.post("http://138.2.88.163:8000/auth/signin", userInfo)
+				.then((res) => {
+					console.log("로그인 요청");
+					context.commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
+					context.commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
+				})
+				.catch((err) => {
+					console.log(err);
+					console.log("뭔가틀림");
+					const payload = {
+						status: "open",
+						text: "아이디와 비밀번호를 확인해주세요.",
+					};
+					store.dispatch("modal/openAlert", payload, { root: true });
+					// alert("아이디 비번을 다시 확인해주세요.");
+				});
 			// ===================================[원래코드]
-			context.commit("TEST");
-			console.log("무시하세요" + payload);
+			// context.commit("TEST");
+			// console.log("무시하세요" + payload);
 		},
 		logout: function (context) {
 			console.log("로그아웃합니다");

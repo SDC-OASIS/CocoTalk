@@ -15,92 +15,92 @@ const chat = {
 			chatPage: "chat",
 			roomId: "111",
 		},
-		friends: [
-			{
-				username: "권희은",
-				statusMessage: "오늘도 좋은 하루",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-			{
-				username: "고병학",
-				statusMessage: "햇빛이 쨍쨍",
-			},
-			{
-				username: "김민정",
-				statusMessage: "룰루~~ 신나는 오늘~",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/qKgD7C.png",
-			},
-			{
-				username: "황종훈",
-				statusMessage: "얍얍 오늘도 화이팅",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-			{
-				username: "김김김",
-				statusMessage: "오늘도 좋은 하루",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-			{
-				username: "박박박",
-				statusMessage: "햇빛이 쨍쨍",
-			},
-			{
-				username: "리리리",
-				statusMessage: "룰루~~ 신나는 오늘~",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/qKgD7C.png",
-			},
-			{
-				username: "황황황",
-				statusMessage: "얍얍 오늘도 화이팅",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-			{
-				username: "김김김",
-				statusMessage: "오늘도 좋은 하루",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-			{
-				username: "박박박",
-				statusMessage: "햇빛이 쨍쨍",
-			},
-			{
-				username: "리리리",
-				statusMessage: "룰루~~ 신나는 오늘~",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/qKgD7C.png",
-			},
-			{
-				username: "황황황",
-				statusMessage: "얍얍 오늘도 화이팅",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-			{
-				username: "김김김",
-				statusMessage: "오늘도 좋은 하루",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-			{
-				username: "박박박",
-				statusMessage: "햇빛이 쨍쨍",
-			},
-			{
-				username: "리리리",
-				statusMessage: "룰루~~ 신나는 오늘~",
-				profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
-				background: "https://ifh.cc/g/qKgD7C.png",
-			},
-			{
-				username: "황황황",
-				statusMessage: "얍얍 오늘도 화이팅",
-				background: "https://ifh.cc/g/CgiChn.jpg",
-			},
-		],
+		// friends: [
+		// 	{
+		// 		username: "권희은",
+		// 		statusMessage: "오늘도 좋은 하루",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// 	{
+		// 		username: "고병학",
+		// 		statusMessage: "햇빛이 쨍쨍",
+		// 	},
+		// 	{
+		// 		username: "김민정",
+		// 		statusMessage: "룰루~~ 신나는 오늘~",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/qKgD7C.png",
+		// 	},
+		// 	{
+		// 		username: "황종훈",
+		// 		statusMessage: "얍얍 오늘도 화이팅",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// 	{
+		// 		username: "김김김",
+		// 		statusMessage: "오늘도 좋은 하루",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// 	{
+		// 		username: "박박박",
+		// 		statusMessage: "햇빛이 쨍쨍",
+		// 	},
+		// 	{
+		// 		username: "리리리",
+		// 		statusMessage: "룰루~~ 신나는 오늘~",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/qKgD7C.png",
+		// 	},
+		// 	{
+		// 		username: "황황황",
+		// 		statusMessage: "얍얍 오늘도 화이팅",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// 	{
+		// 		username: "김김김",
+		// 		statusMessage: "오늘도 좋은 하루",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// 	{
+		// 		username: "박박박",
+		// 		statusMessage: "햇빛이 쨍쨍",
+		// 	},
+		// 	{
+		// 		username: "리리리",
+		// 		statusMessage: "룰루~~ 신나는 오늘~",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/qKgD7C.png",
+		// 	},
+		// 	{
+		// 		username: "황황황",
+		// 		statusMessage: "얍얍 오늘도 화이팅",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// 	{
+		// 		username: "김김김",
+		// 		statusMessage: "오늘도 좋은 하루",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// 	{
+		// 		username: "박박박",
+		// 		statusMessage: "햇빛이 쨍쨍",
+		// 	},
+		// 	{
+		// 		username: "리리리",
+		// 		statusMessage: "룰루~~ 신나는 오늘~",
+		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+		// 		background: "https://ifh.cc/g/qKgD7C.png",
+		// 	},
+		// 	{
+		// 		username: "황황황",
+		// 		statusMessage: "얍얍 오늘도 화이팅",
+		// 		background: "https://ifh.cc/g/CgiChn.jpg",
+		// 	},
+		// ],
 		chats: [
 			{
 				chatname: "오아시스팀",
@@ -223,9 +223,9 @@ const chat = {
 			context.commit("CHANGE_MAIN_PAGE", payload);
 		},
 		getChatList: function (context) {
-			axios.get("http://138.2.68.7:8080/rooms").then((res) => {
+			axios.get("http://138.2.88.163:8000/chat/rooms").then((res) => {
 				console.log("채팅방목록 가져오기");
-				console.log(res.data.data);
+				console.log(res);
 				let chatList = res.data.data;
 				chatList.forEach((e) => {
 					if (e.img == "string") {
@@ -272,6 +272,21 @@ const chat = {
 			console.log("chat");
 			console.log(payload);
 			console.log(context);
+		},
+		createChat(context, payload) {
+			console.log("chatCreate");
+			console.log(payload);
+			axios.post("http://138.2.88.163:8000/chat/rooms", payload).then((res) => {
+				console.log("채팅방생성!!!!");
+				console.log(res);
+				// let chatList = res.data.data;
+				// chatList.forEach((e) => {
+				// 	if (e.img == "string") {
+				// 		delete e["img"];
+				// 	}
+				// });
+				// context.commit("SET_CHATLIST", res.data.data);
+			});
 		},
 	},
 	modules: {},

@@ -10,7 +10,10 @@ const modal = {
 		},
 		addFriendModal: "close",
 		makeChatModal: "close",
-		roomNameModal: "close",
+		roomNameModal: {
+			status: "open",
+			selectedFriends: Object,
+		},
 		profileModal: {
 			status: "close",
 			userProfileInfo: Object,
@@ -47,10 +50,11 @@ const modal = {
 			state.makeChatModal = "close";
 		},
 		OPEN_ROOM_NAME_MODAL(state, payload) {
-			state.roomNameModal = payload;
+			state.roomNameModal.status = "open";
+			state.roomNameModal.selectedFriends = payload;
 		},
 		CLOSE_ROOM_NAME_MODAL(state) {
-			state.roomNameModal = "close";
+			state.roomNameModal.status = "close";
 		},
 	},
 	actions: {
@@ -82,6 +86,8 @@ const modal = {
 			context.commit("CLOSE_MAKE_CHAT_MODAL");
 		},
 		openRoomNameModal: function (context, payload) {
+			console.log("채팅방 멤버 옮기기");
+			console.log(payload);
 			context.commit("OPEN_ROOM_NAME_MODAL", payload);
 		},
 		closeRoomNameModal: function (context) {

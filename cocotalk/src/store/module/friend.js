@@ -126,7 +126,7 @@ const friend = {
 			axios.get("http://138.2.88.163:8000/user/friends").then((res) => {
 				console.log("친구목록 가져오기");
 				let friends = res.data.data;
-				// console.log(friends);
+				console.log(res);
 				friends.forEach((e) => {
 					e.profile = JSON.parse(e.profile);
 					e.username = e.name;
