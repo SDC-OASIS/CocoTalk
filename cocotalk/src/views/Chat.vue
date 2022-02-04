@@ -1,9 +1,11 @@
 <template>
-	<div class="chat">
+	<div class="chat" :key="componentChat">
 		<!-- 채팅방 Header -->
 		<div class="chat-header row align-center">
 			<div class="row align-center">
-				<span class="iconify" data-icon="eva:arrow-ios-back-outline"></span>
+				<div @click="exitChat">
+					<span class="iconify exit-chat" data-icon="eva:arrow-ios-back-outline"></span>
+				</div>
 				<span class="bold" style="font-size: 18px">999+</span>
 			</div>
 			<span class="bold" style="font-size: 18px">채팅방 이름</span>
@@ -63,7 +65,10 @@ import Sidebar from "../components/chat/Sidebar.vue";
 
 export default {
 	data() {
-		return {};
+		return {
+			componentChat: 0,
+			roomId: this.$route.params.roomId,
+		};
 	},
 	components: {
 		ProfileImg,
@@ -72,9 +77,20 @@ export default {
 	},
 	created() {
 		console.log("채팅나와라");
+		this.$store.dispatch(
+			"chat/changePage",
+			{
+				chat: this.$route.params.chat,
+				roomId: this.$route.params.roomId,
+			},
+			{ root: true },
+		);
 	},
 	mounted() {
 		this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
+		console.log("채팅연결시작");
+		console.log(this.roomId);
+		this.$store.dispatch("chat/startChatConnection", this.roomId);
 	},
 	computed: {
 		...mapState("chat", ["roomStatus", "friends", "chattings"]),
@@ -99,7 +115,8 @@ export default {
 				},
 				{ root: true },
 			);
-			this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
+			// this.forceRerender();
+			// this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
 		},
 	},
 	methods: {
@@ -111,6 +128,14 @@ export default {
 			const sidebarBack = document.querySelector(".sidebar-background");
 			sidebarBack.style.display = "block";
 			sidebar.style.right = "0px";
+		},
+		exitChat() {
+			console.log("채팅방 나가기");
+			this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
+		},
+		forceRerender() {
+			console.log("재로딩");
+			this.componentChat += 1;
 		},
 	},
 };
@@ -125,6 +150,9 @@ export default {
 .chat-header .iconify {
 	font-size: 25px;
 	font-weight: bold;
+}
+.exit-chat {
+	cursor: pointer;
 }
 .chat-messages-container {
 	padding: 0px 50px;

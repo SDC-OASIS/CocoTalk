@@ -59,7 +59,6 @@ export default {
 		}
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
 		this.$store.dispatch("userStore/getUser");
-		this.$store.dispatch("chat/startConnection");
 
 		// this.$store.dispatch("friend/getFriends");
 	},

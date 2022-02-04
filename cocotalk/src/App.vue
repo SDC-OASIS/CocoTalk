@@ -54,6 +54,8 @@ export default {
 		} else {
 			this.nav = true;
 		}
+		// 채팅방 목록용 소켓
+		// this.$store.dispatch("chat/startConnection");
 	},
 	computed: {
 		...mapState("userStore", ["screenInfo"]),

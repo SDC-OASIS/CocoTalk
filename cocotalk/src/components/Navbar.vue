@@ -6,12 +6,12 @@
 		<div class="nav-inner-container">
 			<ul class="nav row">
 				<li>
-					<router-link :to="{ path: '/friends/' + changePath }">
+					<router-link :to="{ path: '/friends' + changePath }">
 						<span class="iconify" data-icon="fa-solid:user-friends"></span>
 					</router-link>
 				</li>
 				<li>
-					<router-link :to="{ path: '/chats/' + changePath }">
+					<router-link :to="{ path: '/chats' + changePath }">
 						<span class="iconify" data-icon="ant-design:message-filled"></span>
 					</router-link>
 				</li>
@@ -44,10 +44,14 @@ export default {
 	computed: {
 		...mapState("chat", ["roomStatus"]),
 		changePath() {
-			if (this.roomStatus.chatPage == "chat") {
-				return `${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
+			// roomId가 있는 경우 == 채팅창이 열려있는 경우
+			if (this.roomStatus.roomId) {
+				return `/${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
 			}
-			return this.pathname;
+			// 채팅창이 닫혀있는 경우
+			else {
+				return "";
+			}
 		},
 		getMainPath() {
 			return `/${this.roomStatus.mainPage}`;

@@ -54,7 +54,6 @@ export default {
 		console.log("채팅목록");
 		console.log(this.$route.params);
 		this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
-
 		this.$store.dispatch("chat/getChatList");
 	},
 	computed: {
