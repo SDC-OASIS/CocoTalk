@@ -42,7 +42,7 @@ public class ChatController {
         MessageVo<InviteMessageVo> inviteMessageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
 
-        inviteMessageVo.getChatMessage().getInviteeIds().forEach(userId -> headerAccessor.getSessionAttributes().put("userId", userId));
+        inviteMessageVo.getMessage().getInviteeIds().forEach(userId -> headerAccessor.getSessionAttributes().put("userId", userId));
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", inviteMessageVo);
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomVo);
     }

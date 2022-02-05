@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,20 +41,22 @@ public class ChatMessageService {
         ChatMessageVo chatMessageVo = messageMapper.toVo(chatMessageRepository.save(chatMessage)); // (2) 메시지 저장
         MessageBundleVo oldMessageBundleVo = messageBundleService.find(request.getMessageBundleId()); // (3) 기존 메시지 번들 조회
         int count = messageBundleService.saveMessageId(oldMessageBundleVo, chatMessageVo).getCount(); // (4) 기존 메시지 번들에 메시지 Id 저장
-        BundleIdVo bundleIdVo;
+        BundleInfoVo bundleInfoVo;
         if (count >= messageBundleLimit) {
             MessageBundleVo newMessageBundleVo = messageBundleService.create(request.getRoomId()); // (5) 카운트가 넘어갔다면 새로운 메시지 번들 생성
-            bundleIdVo = BundleIdVo.builder()
+            bundleInfoVo = BundleInfoVo.builder()
+                    .currentCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(newMessageBundleVo.getId())
                     .build();
         } else {
-            bundleIdVo = BundleIdVo.builder()
+            bundleInfoVo = BundleInfoVo.builder()
+                    .currentCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(oldMessageBundleVo.getId())
                     .build();
         }
-        return new MessageVo<>(chatMessageVo, bundleIdVo);
+        return new MessageVo<>(chatMessageVo, bundleInfoVo);
     }
 
     public MessageVo<InviteMessageVo> createInviteMessage(InviteMessageRequest request) {
@@ -62,20 +67,39 @@ public class ChatMessageService {
         MessageBundleVo oldMessageBundleVo = messageBundleService.find(request.getMessageBundleId());
         int count = messageBundleService.saveMessageId(oldMessageBundleVo, inviteMessageVo).getCount();
 
-        BundleIdVo bundleIdVo;
+        BundleInfoVo bundleInfoVo;
         if (count >= messageBundleLimit) {
             MessageBundleVo newMessageBundleVo = messageBundleService.create(request.getRoomId());
-            bundleIdVo = BundleIdVo.builder()
+            bundleInfoVo = BundleInfoVo.builder()
+                    .currentCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(newMessageBundleVo.getId())
                     .build();
         } else {
-            bundleIdVo = BundleIdVo.builder()
+            bundleInfoVo = BundleInfoVo.builder()
+                    .currentCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(oldMessageBundleVo.getId())
                     .build();
         }
-        return new MessageVo<>(inviteMessageVo, bundleIdVo);
+        return new MessageVo<>(inviteMessageVo, bundleInfoVo);
+    }
+
+    public List<ChatMessageVo> findMessagePage(ObjectId roomId, ObjectId bundleId, int count, int size) {
+        List<ObjectId> messageIds = new ArrayList<>();
+        if(count >= size) {
+            int start = count - size;
+            messageIds.addAll(messageBundleService.findSlice(bundleId, start, size).getMessageIds()); ;
+        } else {
+            int diff = size - count; // count = 6, size = 10면 diff = 4
+            int start = messageBundleLimit - diff;
+            MessageBundleVo justBeforeBundle = messageBundleService.findJustBeforeAndSlice(roomId, bundleId, start, diff);
+            if(justBeforeBundle.getMessageIds() != null) {
+                messageIds.addAll(justBeforeBundle.getMessageIds());
+            }
+            messageIds.addAll(messageBundleService.findSlice(bundleId, 0, size - diff).getMessageIds());
+        }
+        return messageIds.stream().map(this::find).collect(Collectors.toList());
     }
 
     public ChatMessageVo modifyChatMessage(ChatMessageVo chatMessageVo) {

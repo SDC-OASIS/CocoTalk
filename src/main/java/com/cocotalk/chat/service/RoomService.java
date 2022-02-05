@@ -95,10 +95,10 @@ public class RoomService {
 
     public MessageVo<ChatMessageVo> saveChatMessage(ObjectId roomId, ChatMessageRequest request) {
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request); // (1) 메시지 저장
-        BundleIdVo bundleIdVo = messageVo.getBundleId(); // (6) 이 메시지가 저장된 번들 Id와 다음 메시지가 저장할 번들 Id가 들어있는 Vo
-        if(!bundleIdVo.getCurrentMessageBundleId().equals(bundleIdVo.getNextMessageBundleId())) {
+        BundleInfoVo bundleInfoVo = messageVo.getBundleInfo(); // (6) 이 메시지가 저장된 번들 Id와 다음 메시지가 저장할 번들 Id가 들어있는 Vo
+        if(!bundleInfoVo.getCurrentMessageBundleId().equals(bundleInfoVo.getNextMessageBundleId())) {
             RoomVo roomVo = this.findById(roomId);
-            roomVo.getMessageBundleIds().add(bundleIdVo.getNextMessageBundleId());
+            roomVo.getMessageBundleIds().add(bundleInfoVo.getNextMessageBundleId());
             this.save(roomVo);
         }
         return messageVo;
@@ -106,18 +106,18 @@ public class RoomService {
 
     public MessageWithRoomVo<InviteMessageVo> saveInviteMessage(ObjectId roomId, InviteMessageRequest request) {
         MessageVo<InviteMessageVo> messageVo = chatMessageService.createInviteMessage(request);
-        BundleIdVo bundleIdVo = messageVo.getBundleId();
+        BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
 
         RoomVo roomVo = this.findById(roomId);
 
-        if(!bundleIdVo.getCurrentMessageBundleId().equals(bundleIdVo.getNextMessageBundleId()))
-            roomVo.getMessageBundleIds().add(bundleIdVo.getNextMessageBundleId());
+        if(!bundleInfoVo.getCurrentMessageBundleId().equals(bundleInfoVo.getNextMessageBundleId()))
+            roomVo.getMessageBundleIds().add(bundleInfoVo.getNextMessageBundleId());
 
         List<RoomMember> members = roomVo.getMembers();
 
         LocalDateTime now = LocalDateTime.now();
 
-        List<RoomMember> invitees = messageVo.getChatMessage().getInviteeIds().stream()
+        List<RoomMember> invitees = messageVo.getMessage().getInviteeIds().stream()
                 .map(id -> RoomMember.builder()
                         .userId(id)
                         .joining(true)
@@ -149,13 +149,13 @@ public class RoomService {
         boolean saveRoom = false;
 
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
-        ChatMessageVo leaveMessageVo = messageVo.getChatMessage();
-        BundleIdVo bundleIdVo = messageVo.getBundleId();
+        ChatMessageVo leaveMessageVo = messageVo.getMessage();
+        BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
 
         RoomVo roomVo = this.findById(roomId);
 
-        if(!bundleIdVo.getCurrentMessageBundleId().equals(bundleIdVo.getNextMessageBundleId())) {
-            roomVo.getMessageBundleIds().add(bundleIdVo.getNextMessageBundleId());
+        if(!bundleInfoVo.getCurrentMessageBundleId().equals(bundleInfoVo.getNextMessageBundleId())) {
+            roomVo.getMessageBundleIds().add(bundleInfoVo.getNextMessageBundleId());
             saveRoom = true;
         }
 

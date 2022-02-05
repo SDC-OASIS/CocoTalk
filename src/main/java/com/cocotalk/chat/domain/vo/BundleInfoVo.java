@@ -12,7 +12,9 @@ import org.bson.types.ObjectId;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BundleIdVo {
+public class BundleInfoVo {
+    private int currentCount;
+
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId currentMessageBundleId;
 

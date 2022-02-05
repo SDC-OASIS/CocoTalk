@@ -27,7 +27,7 @@ let chatRoomSocket = null;
 
 let headers = null;
 
-const domain = "http://localhost:8080";
+const domain = "http://localhost:8083";
 
 const colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
