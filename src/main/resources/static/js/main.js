@@ -20,14 +20,15 @@ let token = null;
 let room = null;
 let roomId = null;
 let messageBundleIds = null;
-let recentBundleId = null;
+let nextMessageBundleId = null;
+let currentMessageBundleCount = null;
 
 let chatRoomSocket = null;
 // let chatListSocket = null;
 
 let headers = null;
 
-const domain = "http://localhost:8083";
+const domain = "http://localhost:8080";
 
 const colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -64,7 +65,7 @@ function enter(event) {
                     messageBundleIds = messageBundleIds.substring(1, messageBundleIds.length - 1).split(", ");
                     console.log('채팅방 존재 -> roomId = ' + roomId);
                     console.log("messageBundleIds = " + messageBundleIds);
-                    recentBundleId = messageBundleIds[messageBundleIds.length - 1];
+                    nextMessageBundleId = messageBundleIds[messageBundleIds.length - 1];
 
                     chatRoomSocket = new SockJS('/stomp');
                     // chatListSocket = new SockJS('/stomp');
@@ -108,7 +109,7 @@ function createRoomAndConnectAndSend(event){
         messageBundleIds = res.data.data.messageBundleIds
         messageBundleIds = messageBundleIds.substring(1, messageBundleIds.length - 1).split(", ");
         console.log("messageBundleIds = " + messageBundleIds);
-        recentBundleId = messageBundleIds[messageBundleIds.length - 1];
+        nextMessageBundleId = messageBundleIds[messageBundleIds.length - 1];
 
         chatRoomSocket = new SockJS('/stomp');
         // chatListSocket = new SockJS('/stomp');
@@ -138,6 +139,7 @@ function onConnected() {
     console.log("sendMessage submit에 이벤트 리스너 등록됨")
     messageForm.addEventListener('submit', sendMessage, true)
     chatRoomClient.subscribe('/topic/' + roomId + '/message', onMessageReceived); // /chatroom/topic?
+    chatRoomClient.subscribe('/topic/' + roomId + '/room', onRoomReceived); // /chatroom/topic?
     // chatListClient.subscribe('/topic/' + userId, onMessageReceived);
     connectingElement.classList.add('hidden');
 }
@@ -149,7 +151,7 @@ function onConnectAndSend() {
         let chatMessage = {
             roomId: roomId,
             userId: userId,
-            messageBundleId: recentBundleId,
+            messageBundleId: nextMessageBundleId,
             type: 0,
             content: messageInput.value
             // sentAt: getLocalDateTime()
@@ -177,13 +179,13 @@ function sendMessage(event) {
 
     const messageContent = messageInput.value.trim();
 
-    console.log("recentBundleId = " + recentBundleId);
+    console.log("nextMessageBundleId = " + nextMessageBundleId);
 
     if(messageContent && chatRoomClient) {
         let chatMessage = {
             roomId: roomId,
             userId: userId,
-            messageBundleId: recentBundleId,
+            messageBundleId: nextMessageBundleId,
             type: 0,
             content: messageInput.value
             // sentAt: getLocalDateTime()
@@ -203,7 +205,7 @@ function invite (event) {
             roomId: roomId,
             userId: userId,
             inviteeIds: inviteeIds,
-            messageBundleId: recentBundleId,
+            messageBundleId: nextMessageBundleId,
             type: 3,
             content: userId + '가 입장했습니다.'
             // sentAt: getLocalDateTime()
@@ -219,7 +221,7 @@ function leave(event) {
     let leaveMessage = {
         roomId: roomId,
         userId: userId,
-        messageBundleId: recentBundleId,
+        messageBundleId: nextMessageBundleId,
         type: 2,
         content: userId + '가 나갔습니다.',
         // sentAt: getLocalDateTime()
@@ -232,11 +234,11 @@ function leave(event) {
     usernamePage.classList.remove('hidden');
 
     const headers = {
-        action: 'left'
+        action: 'leave'
     };
     if(chatRoomClient) {
         chatRoomClient.unsubscribe('/topic/' + roomId + '/message');
-        // chatListClient.unsubscribe('/topic/' + userId);
+        chatRoomClient.unsubscribe('/topic/' + roomId + '/room');
 
         chatRoomClient.disconnect(() => {}, headers);
         // chatListClient.disconnect(() => {}, {});
@@ -251,10 +253,12 @@ function onMessageReceived(payload) { // subscribe시 이 함수로 처리
     console.log(payload);
 
     const body = JSON.parse(payload.body);
-    const message = body.chatMessage;
-    recentBundleId = body.bundleId.nextMessageBundleId;
+    const message = body.message;
+    const bundleInfo = body.bundleInfo;
+    currentMessageBundleCount = bundleInfo.currentMessageBundleCount;
+    nextMessageBundleId = bundleInfo.nextMessageBundleId;
     console.log(message);
-    console.log(recentBundleId);
+    console.log(bundleInfo);
 
     const messageElement = document.createElement('li');
 
@@ -296,6 +300,12 @@ function onMessageReceived(payload) { // subscribe시 이 함수로 처리
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
+function onRoomReceived(payload) {
+    console.log('Room Received');
+    console.log(payload);
+
+    const body = JSON.parse(payload.body);
+}
 
 function getAvatarColor(messageSender) {
     let hash = 0;

@@ -42,12 +42,12 @@ public class MessageBundleService {
     }
 
     public MessageBundleVo findSlice(ObjectId id, int start, int unit) {
-        MessageBundle messageBundle = messageBundleRepository.findSlice(id, start, unit);
+        MessageBundle messageBundle = messageBundleRepository.findBundleAndSlice(id, start, unit);
         return messageBundleMapper.toVo(messageBundle);
     }
 
-    public MessageBundleVo findJustBeforeAndSlice(ObjectId roomId, ObjectId currentBundleId, int start, int diff) {
-        MessageBundle messageBundle = messageBundleRepository.findJustBeforeAndSlice(
+    public MessageBundleVo findBeforeBundleAndSlice(ObjectId roomId, ObjectId currentBundleId, int start, int diff) {
+        MessageBundle messageBundle = messageBundleRepository.findBeforeBundleAndSlice(
                 roomId,
                 currentBundleId,
                 start,

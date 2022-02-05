@@ -40,7 +40,7 @@ public class RoomController {
 
 
     @GetMapping
-    @Operation(summary = "유저가 포함된 모든 채팅방 상세 정보 조회")
+    @Operation(summary = "유저가 포함된 모든 채팅방 상세 정보 조회 (참가하고 있지 않은 방 포함)")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<GlobalResponse<?>> findAll(@Parameter(hidden = true) UserVo userVo){
         List<RoomVo> data = new ArrayList<>(roomService.findAllJoining(userVo));
@@ -63,11 +63,11 @@ public class RoomController {
     }
 
 
-    @GetMapping("/private/{friendId}")
-    @Operation(summary = "내 정보와 친구 userId로 개인 채팅방 조회")
+    @GetMapping("/private/{userId}")
+    @Operation(summary = "내 정보와 다른 userId로 개인 채팅방 조회")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<GlobalResponse<?>> findPrivate(@Parameter(hidden = true) UserVo userVo, @PathVariable Long friendId){
-        RoomVo data = roomService.findPrivate(userVo, friendId);
+    public ResponseEntity<GlobalResponse<?>> findPrivate(@Parameter(hidden = true) UserVo userVo, @PathVariable Long userId){
+        RoomVo data = roomService.findPrivate(userVo, userId);
         return new ResponseEntity<>(new GlobalResponse(data), HttpStatus.OK);
     }
 

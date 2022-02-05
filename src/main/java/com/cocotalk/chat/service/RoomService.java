@@ -1,6 +1,9 @@
 package com.cocotalk.chat.service;
 
-import com.cocotalk.chat.domain.entity.room.*;
+import com.cocotalk.chat.domain.entity.room.QRoom;
+import com.cocotalk.chat.domain.entity.room.Room;
+import com.cocotalk.chat.domain.entity.room.RoomMember;
+import com.cocotalk.chat.domain.entity.room.RoomType;
 import com.cocotalk.chat.domain.vo.*;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
 import com.cocotalk.chat.dto.request.InviteMessageRequest;
@@ -14,7 +17,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,13 +32,11 @@ public class RoomService {
     private final MessageBundleService messageBundleService;
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
-    private final MongoOperations mongoOperations;
 
     @Value(value = "${cocotalk.message-bundle-limit}")
     private int messageBundleLimit;
 
     QRoom qRoom = QRoom.room;
-    QRoomMember qRoomMember = QRoomMember.roomMember;
 
     public static final Room emptyRoom = new Room();
     public static final List<ObjectId> emptyObjectIdList = new ArrayList<>();
@@ -46,8 +46,8 @@ public class RoomService {
             new CustomException(CustomError.BAD_REQUEST, "해당 채팅방에 속해 있지 않은 유저입니다.");
     public static final CustomException WRONG_MEMBER_SIZE =
             new CustomException(CustomError.BAD_REQUEST, "채팅방 멤버는 둘 이상이어야 합니다.");
-    public static final CustomException AWAYED_NOT_EXIST =
-            new CustomException(CustomError.BAD_REQUEST, "채팅방에서 나간 유저가 없습니다.");
+    public static final CustomException TARGET_YOURSELF =
+            new CustomException(CustomError.BAD_REQUEST, "자기 자신을 대상으로 할 수 없습니다.");
     public static final CustomException INVALID_MESSAGE_TYPE =
             new CustomException(CustomError.BAD_REQUEST, "해당 채팅방에서 사용할 수 없는 메시지 타입입니다.");
     public static final CustomException DUPLICATED_ROOM_MEMBER =
@@ -58,7 +58,7 @@ public class RoomService {
     public RoomVo create(RoomRequest request) { // C
         LocalDateTime now = LocalDateTime.now();
 
-        List<Long> memberIds = request.getMemberIds();
+        List<Long> memberIds = request.getMemberIds().stream().distinct().collect(Collectors.toList()); // 중복 제거
 
         if (memberIds.size() >= 2) {
             List<RoomMember> roomMembers = request.getMemberIds().stream()
@@ -118,6 +118,7 @@ public class RoomService {
         LocalDateTime now = LocalDateTime.now();
 
         List<RoomMember> invitees = messageVo.getMessage().getInviteeIds().stream()
+                .distinct() // 중복 입력 제거
                 .map(id -> RoomMember.builder()
                         .userId(id)
                         .joining(true)
@@ -125,7 +126,7 @@ public class RoomService {
                         .awayAt(now)
                         .leftAt(now)
                         .build())
-                .filter(invitee -> !members.contains(invitee)) // 중복 제거
+                .filter(invitee -> !members.contains(invitee)) // 기존 멤버와 중복 제거
                 .collect(Collectors.toList());
         
         int estimateSize = members.size() + request.getInviteeIds().size();
@@ -188,31 +189,35 @@ public class RoomService {
     }
 
     public List<RoomVo> findAllJoining(UserVo userVo) {
-        return roomRepository.findByUserIdAndJoiningIsTrue(userVo.getId()).stream()
+        return roomRepository.findJoiningRoom(userVo.getId()).stream()
                 .map(roomMapper::toVo)
                 .collect(Collectors.toList());
     }
 
     public List<RoomListVo> findRoomList(UserVo userVo) { // sort 타입 패러미터 추가 예정
         Comparator<RoomListVo> comparator = (o1, o2) ->
-                o2.getLastChatMessageVo().getSentAt().compareTo(o1.getLastChatMessageVo().getSentAt());
+                o2.getRecentChatMessage().getSentAt().compareTo(o1.getRecentChatMessage().getSentAt());
 
-        //MemberUserId -> 인덱싱?
-        return this.findAllJoining(userVo).stream() // parallel?
+        // (1) 내가 참가중인 모든 방 조회
+        return this.findAllJoining(userVo).stream()
                 .map(roomVo -> {
-                    RoomMember me = this.findMember(roomVo, userVo.getId());
+                    RoomMember me = this.findMember(roomVo, userVo.getId()); // (2) 방 내부 내 정보 조회
 
-                    List<ObjectId> messageBundleIds = roomVo.getMessageBundleIds();
+                    List<ObjectId> messageBundleIds = roomVo.getMessageBundleIds(); // (3) 방 내부 메시지 번들 조회
 
                     long amountUnread = 0;
-                    int mbIdx = messageBundleIds.size() - 1; // messageBundleId는 room 생성시 자동 생성되기 때문에 무조건 하나는 있음 
-                    MessageBundleVo messageBundle = messageBundleService.find(messageBundleIds.get(mbIdx));
-                    List<ObjectId> messageIds = messageBundle.getMessageIds(); // slicing 필요?
+                    int mbIdx = messageBundleIds.size() - 1; // (4) messageBundleId는 room 생성시 자동 생성되기 때문에 무조건 하나는 있음
+                    MessageBundleVo messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx)); // (5) 가장 최신 메시지 번들
+                    int recentMessageBundleCount = messageBundleVo.getCount();
+
+                    List<ObjectId> messageIds = messageBundleVo.getMessageIds(); // slicing 필요?
+
+                    ChatMessageVo recentChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1)); // nope!
 
                     // Pagination을 제한적으로 사용하기 때문에 (전부 읽었을 수도 있고, 일정 갯수 넘어가면 탈출) 따로 limit 쿼리를 쓸 필요는 없어 보인다.
                     while(amountUnread < messageBundleLimit && mbIdx >= 0) {
                         // 현재 메시지 번들에서 읽지 않은 메시지 수 계산
-                        long partUnread = messageBundle.getMessageIds().stream() // parallel?
+                        long partUnread = messageBundleVo.getMessageIds().stream() // parallel?
                                 .map(chatMessageService::find)
                                 .filter(chatMessage -> chatMessage.getSentAt().isAfter(me.getAwayAt())) // 인자보다 미래시간일때 true 반환
                                 .count();
@@ -222,17 +227,17 @@ public class RoomService {
                         else {
                             amountUnread += partUnread;
                             if(amountUnread >= messageBundleLimit) amountUnread = messageBundleLimit;
-                            messageBundle = messageBundleService.find(messageBundleIds.get(mbIdx--)); // 이전 메시지 번들로 갱신
+                            messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx--)); // 이전 메시지 번들로 갱신
                         }
                     }
 
-                    ChatMessageVo lastChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1)); // nope!
-
                     return RoomListVo.builder()
-                            .roomVo(roomVo)
-                            .lastChatMessageVo(lastChatMessageVo)
+                            .room(roomVo)
+                            .recentChatMessage(recentChatMessageVo)
+                            .recentMessageBundleCount(recentMessageBundleCount)
                             .unreadNumber(amountUnread)
                             .build();
+
                 })
                 .sorted(comparator)
                 .collect(Collectors.toList());
@@ -245,11 +250,10 @@ public class RoomService {
                 .orElseThrow(() -> INVALID_ROOM_MEMBER);
     } // Service 내부에서만 사용
 
-    public RoomVo findPrivate(UserVo userVo, Long friendId) {
-        Long userId = userVo.getId();
-
-        Predicate userIdPredicate = qRoom.members.get(0).userId.in(userId, friendId);
-        Predicate friendIdPredicate = qRoom.members.get(1).userId.in(userId, friendId);
+    public RoomVo findPrivate(UserVo userVo, Long userId) {
+        if(userVo.getId().equals(userId)) throw TARGET_YOURSELF;
+        Predicate userIdPredicate = qRoom.members.get(0).userId.in(userVo.getId(), userId);
+        Predicate friendIdPredicate = qRoom.members.get(1).userId.in(userVo.getId(), userId);
         BooleanExpression roomTypePredicate = qRoom.type.eq(RoomType.PRIVATE.ordinal());
         Predicate predicate = roomTypePredicate.and(friendIdPredicate).and(userIdPredicate);
         Room room = roomRepository.findOne(predicate).orElse(emptyRoom);

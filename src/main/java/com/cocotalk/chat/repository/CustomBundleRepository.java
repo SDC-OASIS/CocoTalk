@@ -6,5 +6,6 @@ import org.bson.types.ObjectId;
 import java.util.Optional;
 
 public interface CustomBundleRepository {
-    Optional<MessageBundle> findJustBeforeAndSlice(ObjectId roomId, ObjectId currentMessageBundleId, int start, int diff);
+     MessageBundle findBundleAndSlice(ObjectId id, int start, int unit);
+     Optional<MessageBundle> findBeforeBundleAndSlice(ObjectId roomId, ObjectId currentId, int start, int diff);
 }

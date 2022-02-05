@@ -29,7 +29,6 @@ public class ChatMessage {
     private ObjectId messageBundleId;
 
     private Long userId;
-
     private String content;
 
     private int type;

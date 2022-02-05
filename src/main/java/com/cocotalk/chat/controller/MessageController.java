@@ -30,9 +30,9 @@ public class MessageController {
     @Operation(summary = "채팅방 메시지 페이징")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<GlobalResponse<List<ChatMessageVo>>> findRoomList(@RequestParam ObjectId roomid,
-                                                          @RequestParam ObjectId bundleid,
-                                                          @RequestParam int count,
-                                                          @RequestParam int size){ // 페이지 단위 수 = 0, 1
+                                                                            @RequestParam ObjectId bundleid,
+                                                                            @RequestParam int count,
+                                                                            @RequestParam int size){ // 페이징 단위 - bundle-limit 보다 작거나 같아야함
         List<ChatMessageVo> data = chatMessageService.findMessagePage(roomid, bundleid, count, size);
         return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
     }

@@ -45,13 +45,13 @@ public class ChatMessageService {
         if (count >= messageBundleLimit) {
             MessageBundleVo newMessageBundleVo = messageBundleService.create(request.getRoomId()); // (5) 카운트가 넘어갔다면 새로운 메시지 번들 생성
             bundleInfoVo = BundleInfoVo.builder()
-                    .currentCount(count)
+                    .currentMessageBundleCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(newMessageBundleVo.getId())
                     .build();
         } else {
             bundleInfoVo = BundleInfoVo.builder()
-                    .currentCount(count)
+                    .currentMessageBundleCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(oldMessageBundleVo.getId())
                     .build();
@@ -71,13 +71,13 @@ public class ChatMessageService {
         if (count >= messageBundleLimit) {
             MessageBundleVo newMessageBundleVo = messageBundleService.create(request.getRoomId());
             bundleInfoVo = BundleInfoVo.builder()
-                    .currentCount(count)
+                    .currentMessageBundleCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(newMessageBundleVo.getId())
                     .build();
         } else {
             bundleInfoVo = BundleInfoVo.builder()
-                    .currentCount(count)
+                    .currentMessageBundleCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
                     .nextMessageBundleId(oldMessageBundleVo.getId())
                     .build();
@@ -91,13 +91,13 @@ public class ChatMessageService {
             int start = count - size;
             messageIds.addAll(messageBundleService.findSlice(bundleId, start, size).getMessageIds()); ;
         } else {
-            int diff = size - count; // count = 6, size = 10면 diff = 4
-            int start = messageBundleLimit - diff;
-            MessageBundleVo justBeforeBundle = messageBundleService.findJustBeforeAndSlice(roomId, bundleId, start, diff);
-            if(justBeforeBundle.getMessageIds() != null) {
-                messageIds.addAll(justBeforeBundle.getMessageIds());
+            int diff = size - count; // count = 4, size = 10면 diff = 6
+            int start = messageBundleLimit - diff; // 10 - 6 = 4
+            MessageBundleVo beforeBundleVo = messageBundleService.findBeforeBundleAndSlice(roomId, bundleId, start, diff);
+            if(beforeBundleVo.getMessageIds() != null) {
+                messageIds.addAll(beforeBundleVo.getMessageIds());
             }
-            messageIds.addAll(messageBundleService.findSlice(bundleId, 0, size - diff).getMessageIds());
+            messageIds.addAll(messageBundleService.findSlice(bundleId, 0, count).getMessageIds()); // 예외 처리 필요?
         }
         return messageIds.stream().map(this::find).collect(Collectors.toList());
     }
