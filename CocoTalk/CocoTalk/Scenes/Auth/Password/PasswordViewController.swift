@@ -73,7 +73,7 @@ class PasswordViewController: UIViewController {
         navigationItem.hidesBackButton = true
         
         #warning("UserDefault extension에 completion handler로 빼기")
-        if let savedData = UserDefaults.standard.object(forKey: ModelSignupData.identifier) as? Data,
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
            let signupData = ModelSignupData.decode(savedData: savedData) {
             self.signupData = signupData
             lblPhoneNumber.text = signupData.phoneNumber
@@ -106,7 +106,7 @@ class PasswordViewController: UIViewController {
                   return
               }
         signupData.password = password
-        UserDefaults.standard.set(signupData.encode() ?? nil, forKey: ModelSignupData.identifier)
+        UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
         
         let vc = NewProfileViewController()
         navigationController?.pushViewController(vc, animated: true)

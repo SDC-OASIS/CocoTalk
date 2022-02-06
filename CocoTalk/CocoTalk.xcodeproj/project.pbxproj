@@ -49,6 +49,8 @@
 		EA2913F027ABFA8200324476 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = EA2913EF27ABFA8200324476 /* FirebaseCrashlytics */; };
 		EA2913F427AC0B1E00324476 /* SmsAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913F327AC0B1E00324476 /* SmsAuthViewModel.swift */; };
 		EA2913F627AC0F5900324476 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913F527AC0F5900324476 /* String+Ext.swift */; };
+		EA2913FA27AC4D7000324476 /* ModelSignupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913F927AC4D6F00324476 /* ModelSignupData.swift */; };
+		EA2913FC27AF5F4500324476 /* UserDefaultsKeyEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913FB27AF5F4500324476 /* UserDefaultsKeyEnum.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -113,6 +115,8 @@
 		EA2913E827AB6D4000324476 /* ModelUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUser.swift; sourceTree = "<group>"; };
 		EA2913F327AC0B1E00324476 /* SmsAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsAuthViewModel.swift; sourceTree = "<group>"; };
 		EA2913F527AC0F5900324476 /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
+		EA2913F927AC4D6F00324476 /* ModelSignupData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSignupData.swift; sourceTree = "<group>"; };
+		EA2913FB27AF5F4500324476 /* UserDefaultsKeyEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeyEnum.swift; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
@@ -260,6 +264,7 @@
 				EA22D541279544E100E1F39A /* ModelProfile.swift */,
 				EA22D5552796816D00E1F39A /* ModelChatRoom.swift */,
 				EAE555A9279A986C00777EBF /* ModelMessage.swift */,
+				EA2913F927AC4D6F00324476 /* ModelSignupData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -405,6 +410,7 @@
 			isa = PBXGroup;
 			children = (
 				EAE555A7279A981A00777EBF /* MessageEnum.swift */,
+				EA2913FB27AF5F4500324476 /* UserDefaultsKeyEnum.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -624,6 +630,7 @@
 				EA22D5612797FC2800E1F39A /* UIImageView+Ext.swift in Sources */,
 				EA2913DF27AA43D800324476 /* APIError.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
+				EA2913FC27AF5F4500324476 /* UserDefaultsKeyEnum.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
 				EA2913F627AC0F5900324476 /* String+Ext.swift in Sources */,
 				EA22D5362794E4FD00E1F39A /* ProfileTableViewCell.swift in Sources */,
@@ -649,6 +656,7 @@
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
 				EAE555FA279E10DF00777EBF /* ChatRoomTextFieldView.swift in Sources */,
 				EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */,
+				EA2913FA27AC4D7000324476 /* ModelSignupData.swift in Sources */,
 				EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,

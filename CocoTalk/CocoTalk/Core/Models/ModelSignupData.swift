@@ -19,9 +19,7 @@ struct ModelSignupData: Codable {
     var password: String = ""
 }
 
-extension ModelSignupData {
-    static let identifier = "SignupData"
-    
+extension ModelSignupData {    
     
     func encode() -> Data? {
         if let encoded = try? JSONEncoder().encode(self) {

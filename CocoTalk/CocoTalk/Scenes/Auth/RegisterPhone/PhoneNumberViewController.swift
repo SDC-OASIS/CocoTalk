@@ -69,10 +69,10 @@ class PhoneNumberViewController: UIViewController {
             return
         }
     
-        if let savedData = UserDefaults.standard.object(forKey: ModelSignupData.identifier) as? Data,
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
            var signupData = ModelSignupData.decode(savedData: savedData) {
             signupData.phoneNumber = textFieldPhoneNumber.text ?? ""
-            UserDefaults.standard.set(signupData.encode() ?? nil, forKey: ModelSignupData.identifier)
+            UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
         }
         let vc = SmsAuthViewController(phoneNumber: phoneNumber)
         self.navigationController?.pushViewController(vc, animated: true)
