@@ -10,7 +10,7 @@
 						<span>대화상대 선택</span>
 						<span style="color: #aaaaaa; padding: 0 10px">{{ selectedFriendsCnt }}</span>
 					</div>
-					<div @click="openRoomNameModal">
+					<div @click="openroomNameModal">
 						<Button text="확인" width="60px" height="30px" />
 					</div>
 				</div>
@@ -39,10 +39,6 @@
 								<label :for="'checked' + idx"> </label>
 							</div>
 						</div>
-						<!-- <div style="dispaly: inline-block; text-align: center">
-							<div style="font-weight: bold">모코코</div>
-							<div>모코코는 행복해</div>
-						</div> -->
 					</div>
 				</div>
 			</div>
@@ -120,7 +116,7 @@ export default {
 			console.log(friend, idx);
 			this.selectedFriends.splice(idx, 1);
 		},
-		openRoomNameModal() {
+		openroomNameModal() {
 			this.closeMakeChatModal();
 			console.log("채팅방 멤버 선택완료");
 			console.log(this.selectedFriends);
@@ -129,7 +125,7 @@ export default {
 			// 	status: status,
 			// 	selectedFriends: ,
 			// };
-			this.$store.dispatch("modal/openRoomNameModal", this.selectedFriends, { root: true });
+			this.$store.dispatch("modal/openroomNameModal", this.selectedFriends, { root: true });
 		},
 		// filter() {
 		// 	if (this.searchName.length) {

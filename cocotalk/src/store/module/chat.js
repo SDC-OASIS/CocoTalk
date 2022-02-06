@@ -249,7 +249,7 @@ const chat = {
 					if (e.img == "string" || e.img == "img" || e.img == "" || e.img == null) {
 						delete e["img"];
 					}
-					e.roomname = e.name;
+					e.roomName = e.name;
 					e.messageBundleIds = e.messageBundleIds.slice(1, -1).split(", ");
 				});
 				context.commit("SET_CHATLIST", res.data.data);

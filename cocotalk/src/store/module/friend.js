@@ -1,6 +1,5 @@
 import createPersistedState from "vuex-persistedstate";
 import axios from "@/utils/axios";
-// import user from "./user.js";
 
 const friend = {
 	namespaced: true,
@@ -94,35 +93,12 @@ const friend = {
 		],
 	},
 	mutations: {
-		// CHANGE_PAGE(state, payload) {
-		// 	state.roomStatus.chatPage = payload.chat;
-		// 	state.roomStatus.roomId = payload.roomId;
-		// },
 		GET_FRIENDS(state, payload) {
 			state.friends = payload;
-			// console.log(state, payload);
 		},
 	},
 	actions: {
-		// changePage: function (context, payload) {
-		// 	context.commit("CHANGE_PAGE", payload);
-		// },
 		getFriends: function (context) {
-			// const token2 = store.userStore.state.accessToken;
-			// console.log(userStore.state);
-			// const token = payload;
-			// // const token2 = store.userStore.state.accessToken;
-			// console.log(token);
-
-			// // console.log(token2);
-			// axios
-			// 	.get("http://146.56.43.7:8080/api/user/friend", {
-			// 		headers: {
-			// 			"X-ACCESS-TOKEN": token,
-			// 		},
-			// 	})
-
-			// console.log(token2);
 			axios.get("http://138.2.88.163:8000/user/friends").then((res) => {
 				console.log("친구목록 가져오기");
 				let friends = res.data.data;

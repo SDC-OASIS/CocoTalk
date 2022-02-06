@@ -85,12 +85,12 @@ const modal = {
 		closeMakeChatModal: function (context) {
 			context.commit("CLOSE_MAKE_CHAT_MODAL");
 		},
-		openRoomNameModal: function (context, payload) {
+		openroomNameModal: function (context, payload) {
 			console.log("채팅방 멤버 옮기기");
 			console.log(payload);
 			context.commit("OPEN_ROOM_NAME_MODAL", payload);
 		},
-		closeRoomNameModal: function (context) {
+		closeroomNameModal: function (context) {
 			context.commit("CLOSE_ROOM_NAME_MODAL");
 		},
 	},

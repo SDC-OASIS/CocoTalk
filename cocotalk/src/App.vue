@@ -26,7 +26,7 @@ import MakeChatModal from "@/components/modals/MakeChatModal.vue";
 import RoomNameModal from "@/components/modals/RoomNameModal.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
 import Alert from "@/components/modals/Alert.vue";
-// import	RoomNameModal from "@/components/modals	RoomNameModal.vue";
+// import	roomNameModal from "@/components/modals	roomNameModal.vue";
 
 export default {
 	name: "App",
@@ -64,16 +64,6 @@ export default {
 		...mapState("userStore", ["screenInfo"]),
 		...mapState("chat", ["friends", "roomStatus"]),
 		...mapState("modal", ["alert", "addFriendModal", "profileModal", "makeChatModal", "roomNameModal"]),
-
-		// ...mapState(userStore, {
-		// 	screenInfo: (state) => state.roomStatus,
-		// 	friends: (state) => state.friends,
-		// }),
-	},
-	methods: {
-		// showProfile() {
-		// 	console.log("조회");
-		// },
 	},
 };
 </script>

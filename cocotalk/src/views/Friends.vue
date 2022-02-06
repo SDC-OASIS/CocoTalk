@@ -51,15 +51,12 @@ export default {
 		};
 	},
 	created() {
-		console.log("친구목록");
-		// console.log(this.friends);
-		// console.log(this.$route.params);
+		console.log("친구목록입니다.");
 		if (screen.width <= 1600) {
 			this.width = "60px";
 		}
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
 		this.$store.dispatch("userStore/getUser");
-
 		// this.$store.dispatch("friend/getFriends");
 	},
 	mounted() {
@@ -68,16 +65,8 @@ export default {
 	computed: {
 		...mapState("chat", ["roomStatus"]),
 		...mapState("friend", ["friends"]),
-
 		...mapState("userStore", ["userInfo"]),
 		...mapState("userStore", ["screenInfo"]),
-
-		// ...mapState({
-		// 	roomStatus: (state) => state.roomStatus,
-		// 	friends: (state) => state.friends,
-		// 	userInfo: (state) => state.userInfo,
-		// 	screenInfo: (state) => state.screenInfo,
-		// }),
 	},
 	methods: {
 		noImage(e) {
@@ -87,7 +76,6 @@ export default {
 			this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
 		},
 		openAddFriendModal() {
-			console.log("얍");
 			this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
 		},
 		test() {

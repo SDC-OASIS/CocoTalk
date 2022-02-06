@@ -95,13 +95,6 @@ export default {
 	computed: {
 		...mapState("chat", ["roomStatus", "friends", "chattings"]),
 		...mapState("userStore", ["userInfo"]),
-
-		// ...mapState({
-		// 	userInfo: (state) => state.userInfo,
-		// 	roomStatus: (state) => state.roomStatus,
-		// 	friends: (state) => state.friends,
-		// 	chattings: (state) => state.chattings,
-		// }),
 	},
 	watch: {
 		"$route.params.roomId": function () {
