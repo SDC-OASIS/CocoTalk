@@ -1,7 +1,7 @@
 package com.cocotalk.chat.controller;
 
 import com.cocotalk.chat.domain.vo.ChatMessageVo;
-import com.cocotalk.chat.dto.response.GlobalResponse;
+import com.cocotalk.chat.dto.response.CustomResponse;
 import com.cocotalk.chat.service.ChatMessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,11 +29,11 @@ public class MessageController {
     @GetMapping
     @Operation(summary = "채팅방 메시지 페이징")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<GlobalResponse<List<ChatMessageVo>>> findRoomList(@RequestParam ObjectId roomid,
+    public ResponseEntity<CustomResponse<List<ChatMessageVo>>> findRoomList(@RequestParam ObjectId roomid,
                                                                             @RequestParam ObjectId bundleid,
                                                                             @RequestParam int count,
                                                                             @RequestParam int size){ // 페이징 단위 - bundle-limit 보다 작거나 같아야함
         List<ChatMessageVo> data = chatMessageService.findMessagePage(roomid, bundleid, count, size);
-        return new ResponseEntity<>(new GlobalResponse<>(data), HttpStatus.OK);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 }

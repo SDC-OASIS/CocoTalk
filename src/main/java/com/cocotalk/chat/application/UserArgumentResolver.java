@@ -2,7 +2,7 @@ package com.cocotalk.chat.application;
 
 import com.cocotalk.chat.domain.vo.UserVo;
 import com.cocotalk.chat.dto.TokenPayload;
-import com.cocotalk.chat.dto.response.GlobalResponse;
+import com.cocotalk.chat.dto.response.CustomResponse;
 import com.cocotalk.chat.exception.CustomError;
 import com.cocotalk.chat.exception.CustomException;
 import com.cocotalk.chat.utils.JwtUtils;
@@ -64,11 +64,11 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         UriComponentsBuilder uriComponentsBuilder =
                 UriComponentsBuilder.fromHttpUrl(USER_SERVICE_URL);
 
-        ResponseEntity<GlobalResponse> response = restTemplate.exchange(
+        ResponseEntity<CustomResponse> response = restTemplate.exchange(
                 URI.create(uriComponentsBuilder.build().toUriString()),
                 HttpMethod.GET,
                 request,
-                GlobalResponse.class);
+                CustomResponse.class);
 
         Object data = response.getBody().getData();
 

@@ -39,7 +39,12 @@ public class RoomService {
     QRoom qRoom = QRoom.room;
 
     public static final Room emptyRoom = new Room();
+    public static final ChatMessageVo emptyChatMessageVo = ChatMessageVo.builder()
+            .content("채팅방에 메시지가 없습니다.")
+            .build();
     public static final List<ObjectId> emptyObjectIdList = new ArrayList<>();
+
+
     public static final CustomException INVALID_ROOM_ID =
             new CustomException(CustomError.BAD_REQUEST, "해당 roomId를 갖는 채팅방이 존재하지 않습니다.");
     public static final CustomException INVALID_ROOM_MEMBER =
@@ -72,7 +77,7 @@ public class RoomService {
                     .collect(Collectors.toList());
 
             Room createdRoom = roomRepository.save(Room.builder()
-                    .name(request.getName())
+                    .roomName(request.getRoomName())
                     .img(request.getImg())
                     .type(request.getType())
                     .members(roomMembers)
@@ -194,6 +199,8 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
+
+
     public List<RoomListVo> findRoomList(UserVo userVo) { // sort 타입 패러미터 추가 예정
         Comparator<RoomListVo> comparator = (o1, o2) ->
                 o2.getRecentChatMessage().getSentAt().compareTo(o1.getRecentChatMessage().getSentAt());
@@ -212,7 +219,9 @@ public class RoomService {
 
                     List<ObjectId> messageIds = messageBundleVo.getMessageIds(); // slicing 필요?
 
-                    ChatMessageVo recentChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1)); // nope!
+                    ChatMessageVo recentChatMessageVo;
+                    if(messageIds.size() > 0) recentChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1));
+                    else recentChatMessageVo = emptyChatMessageVo;
 
                     // Pagination을 제한적으로 사용하기 때문에 (전부 읽었을 수도 있고, 일정 갯수 넘어가면 탈출) 따로 limit 쿼리를 쓸 필요는 없어 보인다.
                     while(amountUnread < messageBundleLimit && mbIdx >= 0) {

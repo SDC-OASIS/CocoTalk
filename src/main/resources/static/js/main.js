@@ -97,7 +97,7 @@ function enter(event) {
 function createRoomAndConnectAndSend(event){
     console.log("createRoomAndConnect 이벤트 발생");
     axios.post(domain + "/rooms", {
-        name: "RoomName",
+        roomName: "RoomName",
         img: "img",
         type: 0,
         memberIds: [userId, friendId],
