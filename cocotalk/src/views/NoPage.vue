@@ -30,10 +30,7 @@ export default {
 		...mapState("chat", ["roomStatus"]),
 	},
 	created() {
-		console.log("에러");
-	},
-	mounted() {
-		// this.$store.dispatch("chat/changeMainPage", "error", { root: true });
+		console.log("에러페이지입니다.");
 	},
 };
 </script>

@@ -1,14 +1,14 @@
 <template>
-	<div class="modal row" @click.self="closeRoomNameModal">
+	<div class="modal row" @click.self="closeroomNameModal">
 		<div class="modal-container">
-			<div @click="closeRoomNameModal">
+			<div @click="closeroomNameModal">
 				<span class="iconify exit" data-icon="bx:bx-x"></span>
 			</div>
 			<div class="modal-inner-container">
-				<div class="roomname-modal-header">
+				<div class="roomName-modal-header">
 					<div style="font-size: 20px">그룹채팅방 정보 설정</div>
 				</div>
-				<div class="roomname-modal-info row" style="justify-content: center">
+				<div class="roomName-modal-info row" style="justify-content: center">
 					<div style="dispaly: inline-block; text-align: center">
 						<div v-if="roomNameModal.selectedFriends.length == 1">
 							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<div>
-					<div class="roomname-modal-input row">
+					<div class="roomName-modal-input row">
 						<input :value="roomName" type="text" maxlength="50" @input="changeName" />
 						<span>
 							{{ friendIdCnt + "/50" }}
@@ -50,7 +50,7 @@
 					<div @click="createChatRoom">
 						<Button text="확인" width="50px" height="30px" style="margin-right: 20px" />
 					</div>
-					<div @click="closeRoomNameModal">
+					<div @click="closeroomNameModal">
 						<Button text="취소" width="50px" height="30px" backgroundColor="#ffffff" />
 					</div>
 				</div>
@@ -67,11 +67,7 @@ export default {
 	name: "RoomNameModal",
 	data() {
 		return {
-			roomName: "dd",
-			// roomNameModal: {
-			// 	selectedFriends: [],
-			// },
-			// selectedFriends: [],
+			roomName: "",
 		};
 	},
 	computed: {
@@ -83,7 +79,6 @@ export default {
 				return 0;
 			}
 		},
-		// roomName() {},
 	},
 
 	components: {
@@ -91,14 +86,14 @@ export default {
 		Button,
 	},
 	methods: {
-		closeRoomNameModal() {
-			this.$store.dispatch("modal/closeRoomNameModal");
+		closeroomNameModal() {
+			this.$store.dispatch("modal/closeroomNameModal");
 		},
 		changeName(e) {
 			this.roomName = "";
 			this.roomName = e.target.value;
 		},
-		setRoomname() {
+		setroomName() {
 			console.log("채팅방 이름 설정");
 			console.log(this.roomNameModal);
 			// this.roomNameModal.selectedFriends = ["권희은", "김민정", "고병학", "황종훈"];
@@ -131,7 +126,7 @@ export default {
 		},
 	},
 	created() {
-		this.setRoomname();
+		this.setroomName();
 	},
 };
 </script>
@@ -157,19 +152,19 @@ export default {
 	padding: 25px 30px;
 	text-align: left;
 }
-.roomname-modal-header > div {
+.roomName-modal-header > div {
 	color: #42652b;
 	font-weight: bold;
 	margin: 10px 0;
 }
-.roomname-modal-input {
+.roomName-modal-input {
 	text-align: center;
 	border-radius: 20px;
 	height: 35px;
 	align-items: center;
 	justify-content: center;
 }
-.roomname-modal-input > input {
+.roomName-modal-input > input {
 	/* display: block; */
 	border: none;
 	border-radius: 20px;
@@ -179,15 +174,15 @@ export default {
 	font-size: 20px;
 	color: #aaaaaa;
 }
-.roomname-modal-input > input::placeholder {
+.roomName-modal-input > input::placeholder {
 	font-size: 17px;
 	color: #aaaaaa;
 }
-.roomname-modal-input > input:focus {
+.roomName-modal-input > input:focus {
 	outline: none;
 	/* outline: 2px solid #fce41e; */
 }
-.roomname-modal-input > span {
+.roomName-modal-input > span {
 	height: 20px;
 	line-height: 20px;
 	padding-right: 20px;
@@ -195,7 +190,7 @@ export default {
 	font-weight: bold;
 	/* outline: 2px solid #fce41e; */
 }
-.roomname-modal-info {
+.roomName-modal-info {
 	padding: 25px 0 5px 0;
 	margin-left: -20px;
 }

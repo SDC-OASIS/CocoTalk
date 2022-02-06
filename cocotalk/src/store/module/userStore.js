@@ -70,15 +70,12 @@ const userStore = {
 					context.commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
 					context.commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
 				})
-				.catch((err) => {
-					console.log(err);
-					console.log("뭔가틀림");
+				.catch(() => {
 					const payload = {
 						status: "open",
 						text: "아이디와 비밀번호를 확인해주세요.",
 					};
 					store.dispatch("modal/openAlert", payload, { root: true });
-					// alert("아이디 비번을 다시 확인해주세요.");
 				});
 			// ===================================[원래코드]
 			// context.commit("TEST");
@@ -92,13 +89,10 @@ const userStore = {
 		getUser: function (context) {
 			axios.get("http://138.2.88.163:8000/user/token").then((res) => {
 				console.log("유저정보 가져오기");
-				// console.log(res.data.data);
 				let userInfo = res.data.data;
 				userInfo.profile = JSON.parse(userInfo.profile);
-				// userInfo.userName = userInfo.name;
 				context.commit("SET_USER", res.data.data);
 			});
-			// console.log(context);
 		},
 	},
 	modules: {},

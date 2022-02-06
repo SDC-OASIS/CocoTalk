@@ -26,7 +26,7 @@ import MakeChatModal from "@/components/modals/MakeChatModal.vue";
 import RoomNameModal from "@/components/modals/RoomNameModal.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
 import Alert from "@/components/modals/Alert.vue";
-// import	RoomNameModal from "@/components/modals	RoomNameModal.vue";
+// import	roomNameModal from "@/components/modals	roomNameModal.vue";
 
 export default {
 	name: "App",
@@ -47,7 +47,6 @@ export default {
 		const width = screen.width;
 		this.$store.dispatch("userStore/getScreen", { width: width });
 		// 로그인 페이지에서는 navbar 안보이게 만들기
-		console.log("nav" + window.location.pathname);
 		// if (window.location.pathname == "/") {
 		// 	this.nav = false;
 		// }
@@ -55,7 +54,6 @@ export default {
 			this.nav = false;
 		} else {
 			this.nav = true;
-			console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
 		// 채팅방 목록용 소켓
 		// this.$store.dispatch("chat/startConnection");
@@ -64,16 +62,6 @@ export default {
 		...mapState("userStore", ["screenInfo"]),
 		...mapState("chat", ["friends", "roomStatus"]),
 		...mapState("modal", ["alert", "addFriendModal", "profileModal", "makeChatModal", "roomNameModal"]),
-
-		// ...mapState(userStore, {
-		// 	screenInfo: (state) => state.roomStatus,
-		// 	friends: (state) => state.friends,
-		// }),
-	},
-	methods: {
-		// showProfile() {
-		// 	console.log("조회");
-		// },
 	},
 };
 </script>

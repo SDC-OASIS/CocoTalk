@@ -19,16 +19,11 @@ export default {
 		};
 	},
 	created() {
-		console.log("채팅을 시작해주세요");
+		console.log("채팅시작전페이지입니다.");
 	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),
 		...mapState("chat", ["friends"]),
-
-		// ...mapState({
-		// 	roomStatus: (state) => state.roomStatus,
-		// 	friends: (state) => state.friends,
-		// }),
 	},
 	watch: {
 		"$route.params.roomId": function () {

@@ -77,11 +77,6 @@ export default {
 		console.log(this.profileInfo);
 	},
 };
-
-// const LayerPopup = document.getElementsByClassName(".modal");
-// if (LayerPopup.length === 0) {
-// 	closeProfileModal();
-// }
 </script>
 
 <style scoped>

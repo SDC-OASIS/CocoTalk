@@ -27,12 +27,9 @@ export default {
 		Login() {
 			this.user.cid = this.user.cid.replace(/\s/g, "");
 			this.user.password = this.user.password.replace(/\s/g, "");
-
 			console.log("로그인 클릭");
 			console.log(this.user);
 			this.$store.dispatch("userStore/login", this.user);
-
-			// const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE2NDMxOTcwODEsImV4cCI6MTY0MzIwMDY4MSwidXNlckNpZCI6ImhlZWV1biJ9.Ok3jh3JJUgVwNtoSKNlcsHnDUOJO0XKDaGQn0vDMUzs";
 		},
 	},
 };

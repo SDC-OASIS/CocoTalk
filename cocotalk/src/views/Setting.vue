@@ -2,9 +2,6 @@
 	<div class="chat-default-container row">
 		<h1>설정페이지입니다.</h1>
 		<button @click="check">ss</button>
-		<!-- <button @click="changeNow">kkk</button>
-		{{ this.$route.params.roomId }}
-		{{ roomStatus }} -->
 	</div>
 </template>
 
@@ -25,11 +22,6 @@ export default {
 	computed: {
 		...mapState("chat", ["roomStatus"]),
 		...mapState("friends", ["friends"]),
-
-		// ...mapState({
-		// 	roomStatus: (state) => state.roomStatus,
-		// 	friends: (state) => state.friends,
-		// }),
 	},
 	watch: {
 		"$route.params.roomId": function () {
