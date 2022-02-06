@@ -12,9 +12,8 @@ import com.cocotalk.chat.exception.CustomError;
 import com.cocotalk.chat.exception.CustomException;
 import com.cocotalk.chat.repository.RoomRepository;
 import com.cocotalk.chat.utils.mapper.RoomMapper;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RoomService {
@@ -99,6 +99,7 @@ public class RoomService {
     }
 
     public MessageVo<ChatMessageVo> saveChatMessage(ObjectId roomId, ChatMessageRequest request) {
+        log.info("chatMessageRequest : {}", request.toString());
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request); // (1) 메시지 저장
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo(); // (6) 이 메시지가 저장된 번들 Id와 다음 메시지가 저장할 번들 Id가 들어있는 Vo
         if(!bundleInfoVo.getCurrentMessageBundleId().equals(bundleInfoVo.getNextMessageBundleId())) {
@@ -110,6 +111,7 @@ public class RoomService {
     }
 
     public MessageWithRoomVo<InviteMessageVo> saveInviteMessage(ObjectId roomId, InviteMessageRequest request) {
+        log.info("inviteMessageRequest : {}", request.toString());
         MessageVo<InviteMessageVo> messageVo = chatMessageService.createInviteMessage(request);
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
 
@@ -152,6 +154,7 @@ public class RoomService {
     }
 
     public MessageWithRoomVo<ChatMessageVo> saveLeaveMessage(ObjectId roomId, ChatMessageRequest request) {
+        log.info("leaveMessageRequest : {}", request.toString());
         boolean saveRoom = false;
 
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
@@ -181,6 +184,24 @@ public class RoomService {
 
         if(saveRoom) this.save(roomVo);
 
+        return new MessageWithRoomVo<>(messageVo, roomVo);
+    }
+
+    public MessageWithRoomVo<ChatMessageVo> saveAwakeMessage(ObjectId roomId, ChatMessageRequest request) {
+        log.info("awakeMessageRequest : {}", request.toString());
+        MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
+        BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
+        Room room = this.find(roomId);
+        room.setMembers(room.getMembers().stream()
+                .map(roomMember -> {
+                    roomMember.setJoining(true);
+                    return roomMember;
+                })
+                .collect(Collectors.toList()));
+        if(!bundleInfoVo.getCurrentMessageBundleId().equals(bundleInfoVo.getNextMessageBundleId())) {
+            room.getMessageBundleIds().add(bundleInfoVo.getNextMessageBundleId());
+        }
+        RoomVo roomVo = roomMapper.toVo(roomRepository.save(room));
         return new MessageWithRoomVo<>(messageVo, roomVo);
     }
 
@@ -261,11 +282,7 @@ public class RoomService {
 
     public RoomVo findPrivate(UserVo userVo, Long userId) {
         if(userVo.getId().equals(userId)) throw TARGET_YOURSELF;
-        Predicate userIdPredicate = qRoom.members.get(0).userId.in(userVo.getId(), userId);
-        Predicate friendIdPredicate = qRoom.members.get(1).userId.in(userVo.getId(), userId);
-        BooleanExpression roomTypePredicate = qRoom.type.eq(RoomType.PRIVATE.ordinal());
-        Predicate predicate = roomTypePredicate.and(friendIdPredicate).and(userIdPredicate);
-        Room room = roomRepository.findOne(predicate).orElse(emptyRoom);
+        Room room = roomRepository.findPrivate(userVo.getId(), userId).orElse(emptyRoom);
         return roomMapper.toVo(room);
     }
 

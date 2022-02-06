@@ -56,4 +56,12 @@ public class ChatController {
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageWithRoomVo.getMessageVo());
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/room", messageWithRoomVo.getRoomVo());
     }
+
+    @MessageMapping("/{roomId}/message/awake")
+    public void awake(@DestinationVariable ObjectId roomId,
+                      @Payload ChatMessageRequest awakeMessageRequest) {
+        MessageWithRoomVo<ChatMessageVo> messageWithRoomVo = roomService.saveAwakeMessage(roomId, awakeMessageRequest);
+        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageWithRoomVo.getMessageVo());
+        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/room", messageWithRoomVo.getRoomVo());
+    }
 }

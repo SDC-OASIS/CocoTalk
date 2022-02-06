@@ -70,8 +70,7 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.11.2'
 
     // Jackson
-    // implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
-
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
 }
 
 //def querydslGeneratedDir = "$buildDir/generated/querydsl" as Object

@@ -5,9 +5,11 @@ const chatPage = document.querySelector('#chat-page');
 const usernameForm = document.querySelector('#usernameForm');
 const messageForm = document.querySelector('#messageForm');
 const inviteForm = document.querySelector('#inviteForm');
-const inviteInput = document.querySelector('#inviteeId');
+const awakeForm = document.querySelector('#awakeForm');
 const leaveForm = document.querySelector('#leaveForm');
 const messageInput = document.querySelector('#message');
+const inviteInput = document.querySelector('#inviteeId');
+const awakeInput = document.querySelector('#awakeMessage');
 const messageArea = document.querySelector('#messageArea');
 const connectingElement = document.querySelector('.connecting');
 
@@ -154,7 +156,6 @@ function onConnectAndSend() {
             messageBundleId: nextMessageBundleId,
             type: 0,
             content: messageInput.value
-            // sentAt: getLocalDateTime()
         };
 
         chatRoomClient.send("/simple/chatroom/" + roomId + "/message/send", {}, JSON.stringify(chatMessage));
@@ -188,7 +189,6 @@ function sendMessage(event) {
             messageBundleId: nextMessageBundleId,
             type: 0,
             content: messageInput.value
-            // sentAt: getLocalDateTime()
         };
 
         chatRoomClient.send("/simple/chatroom/" + roomId + "/message/send", {}, JSON.stringify(chatMessage));
@@ -208,10 +208,26 @@ function invite (event) {
             messageBundleId: nextMessageBundleId,
             type: 3,
             content: userId + '가 입장했습니다.'
-            // sentAt: getLocalDateTime()
         }
 
         chatRoomClient.send("/simple/chatroom/" + roomId + "/message/invite", {}, JSON.stringify(inviteMessage));
+        inviteInput.value = '';
+    }
+    event.preventDefault();
+}
+
+function awake(event) {
+    const messageContent = awakeInput.value.trim();
+    if(messageContent && chatRoomClient) {
+        let awakeMessage = {
+            roomId: roomId,
+            userId: userId,
+            messageBundleId: nextMessageBundleId,
+            type: 5,
+            content: messageContent
+        }
+
+        chatRoomClient.send("/simple/chatroom/" + roomId + "/message/awake", {}, JSON.stringify(awakeMessage));
         inviteInput.value = '';
     }
     event.preventDefault();
@@ -334,3 +350,4 @@ function getLocalDateTime() {
 usernameForm.addEventListener('submit', enter, true)
 inviteForm.addEventListener('submit', invite, true)
 leaveForm.addEventListener('submit', leave, true)
+awakeForm.addEventListener('submit', awake, true)
