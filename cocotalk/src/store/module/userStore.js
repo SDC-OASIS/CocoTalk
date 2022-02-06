@@ -13,7 +13,7 @@ const userStore = {
 		accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ7XCJ1c2VySWRcIjogMTB9IiwiaWF0IjoxNTE2MjM5MDIyfQ.nsVZnx3lFAA52CdJmH5qei0D830M3FUmoUjFBbLrZUM",
 		refreshToken: "",
 		userInfo: {
-			username: "권희은",
+			userName: "권희은",
 			statusMessage: "오늘도 좋은 하루",
 			profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		},
@@ -95,7 +95,7 @@ const userStore = {
 				// console.log(res.data.data);
 				let userInfo = res.data.data;
 				userInfo.profile = JSON.parse(userInfo.profile);
-				userInfo.username = userInfo.name;
+				// userInfo.userName = userInfo.name;
 				context.commit("SET_USER", res.data.data);
 			});
 			// console.log(context);

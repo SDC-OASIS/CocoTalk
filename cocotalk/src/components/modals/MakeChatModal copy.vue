@@ -15,7 +15,7 @@
 				<div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
 					<div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">
 						<div class="box">
-							{{ selectedFriend.username }}
+							{{ selectedFriend.userName }}
 						</div>
 						<i class="delete-selected-friend fas fa-times" @click="deleteSelectedFriend(selectedFriend, idx)"></i>
 					</div>
@@ -33,14 +33,14 @@
 								<div>
 									<ProfileImg :imgUrl="friend.profile" width="50px" />
 								</div>
-								<div class="friend-name">{{ friend.username }}</div>
+								<div class="friend-name">{{ friend.userName }}</div>
 								<div>
 									{{ friend.check }}
 									<span v-if="!friend.check">x</span>
 									<span v-if="friend.check">o</span>
 								</div>
 								<!-- <div class="checkbox">
-									<input :id="'check' + idx" v-model="selectedFriends" type="checkbox" :value="friend.username" />
+									<input :id="'check' + idx" v-model="selectedFriends" type="checkbox" :value="friend.userName" />
 									<label :for="'check' + idx"></label>
 								</div> -->
 							</div>
@@ -100,7 +100,7 @@ export default {
 		// 		const arr = [];
 		// 		for (let friend in this.friends) {
 		// 			console.log(friend)
-		// 			if (friend.username.includes(this.searchName)) {
+		// 			if (friend.userName.includes(this.searchName)) {
 		// 				arr.push(friend);
 		// 			}
 		// 		}
@@ -129,13 +129,13 @@ export default {
 		// 	if (this.searchName.length) {
 		// 		// let value = this.searchName.toUpperCase();
 		// 		// let arr = [];
-		// 		let value = { username: this.searchName.toUpperCase() };
+		// 		let value = { userName: this.searchName.toUpperCase() };
 		// 		console.log(value);
 
 		// 		this.friends.includes(value);
 		// 		// for (let friend in this.friends) {
 		// 		// 	console.log("friend", friend);
-		// 		// 	if (friend.username.includes(value)) {
+		// 		// 	if (friend.userName.includes(value)) {
 		// 		// 		arr.push(friend);
 		// 		// 	}
 		// 		// }
@@ -146,25 +146,25 @@ export default {
 		// },
 		selectFriend(friend, idx) {
 			// 선택한 목록에 있다면 선택취소
-			let check = this.selectedFriends.indexOf(friend.username);
+			let check = this.selectedFriends.indexOf(friend.userName);
 			// console.log(check);
 			if (check != -1) {
 				this.searchFriends[idx].check = false;
 				this.selectedFriends.splice(check, 1);
 			}
-			// if (this.selectedFriends.find((element) => element === friend.username)) {
+			// if (this.selectedFriends.find((element) => element === friend.userName)) {
 			// 	this.searchFriends[idx].check = false;
 			// 	this.selectedFriends.splice(element, 1);
 			// }
 			// 없으면 허용
 			else {
-				const data = { username: friend.username, searchIdx: idx };
+				const data = { userName: friend.userName, searchIdx: idx };
 				this.selectedFriends.push(data);
 				this.searchFriends[idx].check = true;
 			}
 		},
-		// checkSelectedFriends(element, username) {
-		// 	if (element.name === username) {
+		// checkSelectedFriends(element, userName) {
+		// 	if (element.name === userName) {
 		// 		return true;
 		// 	}
 		// },

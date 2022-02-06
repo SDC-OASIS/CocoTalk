@@ -16,13 +16,14 @@
 				<div>
 					<ProfileImg :imgUrl="chat.img" width="50px" />
 				</div>
-				<div class="chat-info-container row" @click="goChat(chat.id)">
+				<div class="chat-info-container row" @click="goChat(chat)">
 					<ChatListInfo :chatInfo="chat" />
 					<div class="box row chat-detail-info">
 						<div class="received-time">오후3:00</div>
 						<div class="message-cnt box">{{ chat.cnt }}</div>
 					</div>
 				</div>
+				<!-- {{ chat }} -->
 			</div>
 		</div>
 		{{ roomStatus }}
@@ -70,8 +71,14 @@ export default {
 			// console.log("헛");
 			this.$store.dispatch("modal/openMakeChatModal", "open", { root: true });
 		},
-		goChat(id) {
-			this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: id } }).catch(() => {});
+		goChat(chat) {
+			let payload = {
+				roomId: chat.id,
+				nextMessageBundleId: chat.messageBundleIds[chat.messageBundleIds.length - 1],
+				recentMessageBundelCount: chat.recentMessageBundelCount,
+			};
+			this.$store.dispatch("chat/getChat", payload, { root: true });
+			// this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: chat.id } }).catch(() => {});
 		},
 	},
 };

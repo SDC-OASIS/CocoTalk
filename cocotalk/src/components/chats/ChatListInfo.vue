@@ -1,6 +1,6 @@
 <template>
 	<div class="box">
-		<div style="font-weight: bold">{{ chatInfo.chatname }}</div>
+		<div style="font-weight: bold">{{ chatInfo.roomname }}</div>
 		<div>{{ chatInfo.lastMessage }}</div>
 	</div>
 </template>

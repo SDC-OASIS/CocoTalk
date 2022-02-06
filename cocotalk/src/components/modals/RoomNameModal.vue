@@ -105,7 +105,7 @@ export default {
 			let selectedNames = "";
 			this.roomNameModal.selectedFriends.forEach((e) => {
 				// console.log(e);
-				selectedNames += e.username + ", ";
+				selectedNames += e.userName + ", ";
 			});
 			this.roomName = selectedNames;
 		},
