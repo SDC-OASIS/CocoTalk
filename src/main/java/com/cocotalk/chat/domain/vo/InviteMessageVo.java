@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviteMessageVo extends ChatMessageVo {
-    List<Long> inviteeIds;
+    private List<Long> inviteeIds;
 }

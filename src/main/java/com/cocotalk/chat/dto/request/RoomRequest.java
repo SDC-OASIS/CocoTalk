@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomRequest {
     @NotBlank(message = "방 이름은 필수값 입니다.")
-    private String name;
+    private String roomName;
 
     private String img;
 

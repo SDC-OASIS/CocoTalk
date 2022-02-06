@@ -1,6 +1,5 @@
-package com.cocotalk.chat.dto.response;
+package com.cocotalk.chat.domain.vo;
 
-import com.cocotalk.chat.domain.entity.room.RoomMember;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -9,27 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
-import java.util.List;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomResponse {
-    @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId id;
-
-    private String name;
-
-    private String img;
-
-    private int type;
-
-    private List<RoomMember> members;
+public class BundleInfoVo {
+    private int currentMessageBundleCount;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private List<ObjectId> messageIds;
+    private ObjectId currentMessageBundleId;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private List<ObjectId> noticeIds;
+    private ObjectId nextMessageBundleId;
 }

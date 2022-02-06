@@ -54,10 +54,10 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
                         Long userId = Long.parseLong(sessionAttributes.get("userId").toString());
                         ObjectId roomId = new ObjectId(sessionAttributes.get("roomId").toString());
                         if (sessionAttributes.get("action") != null) {
-                            if (sessionAttributes.get("action").equals("left"))
+                            if (sessionAttributes.get("action").equals("leave"))
                                 roomService.saveLeftAt(roomId, userId);
                         } else {
-                            roomService.saveAwayAt(roomId, userId); // left action이 없으면 away
+                            roomService.saveAwayAt(roomId, userId); // leave action이 없으면 away
                         }
                     }
                 } else if (view.equals("chatList")) {

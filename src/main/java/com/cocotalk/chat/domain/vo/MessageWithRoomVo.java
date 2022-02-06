@@ -1,15 +1,15 @@
 package com.cocotalk.chat.domain.vo;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Getter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageSaveVo {
+public class MessageWithRoomVo<T> {
+    private MessageVo<T> messageVo;
     private RoomVo roomVo;
-    private MessageBundleVo messageBundleVo;
 }

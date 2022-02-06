@@ -18,11 +18,12 @@ public class ChatMessageRequest {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId roomId;
 
-    private Long userId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId messageBundleId;
 
-    private int type;
+    private Long userId;
 
     private String content;
 
-    private LocalDateTime sentAt;
+    private int type;
 }

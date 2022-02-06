@@ -19,7 +19,7 @@ public class RoomVo {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 
-    private String name;
+    private String roomName;
 
     private String img;
 

@@ -9,12 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomListVo {
-    private RoomVo room;
-
-    private ChatMessageVo recentChatMessage;
-
-    private int recentMessageBundleCount;
-
-    private Long unreadNumber;
+public class MessageVo<T> {
+    private T message;
+    private BundleInfoVo bundleInfo;
 }

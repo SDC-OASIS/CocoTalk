@@ -1,7 +1,7 @@
 package com.cocotalk.chat.utils.mapper;
 
 import com.cocotalk.chat.domain.entity.room.RoomMember;
-import com.cocotalk.chat.dto.response.RoomMemberResponse;
+import com.cocotalk.chat.domain.vo.RoomMemberVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -11,5 +11,5 @@ import org.mapstruct.ReportingPolicy;
 )
 
 public interface RoomMemberMapper {
-    RoomMemberResponse toDto(RoomMember roomMember);
+    RoomMemberVo toVo(RoomMember roomMember);
 }

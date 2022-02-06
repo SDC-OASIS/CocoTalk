@@ -40,6 +40,7 @@ public class JwtUtils {
 
     public static TokenPayload getPayload() {
         String accessToken = getAccessToken();
+        log.info("헤더에 들어있는 X-ACCESS-TOKEN : {}", accessToken);
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecret))
                 .build()

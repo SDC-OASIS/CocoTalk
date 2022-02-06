@@ -23,16 +23,15 @@ public class ChatMessage {
     private ObjectId id;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId messageBundleId;
-
-    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId roomId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId messageBundleId;
+
     private Long userId;
+    private String content;
 
     private int type;
-
-    private String content;
 
     private LocalDateTime sentAt;
 

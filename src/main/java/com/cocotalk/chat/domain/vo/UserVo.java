@@ -20,7 +20,7 @@ public class UserVo {
 
     private String cid;
 
-    private String name;
+    private String userName;
 
     private String nickname;
 
