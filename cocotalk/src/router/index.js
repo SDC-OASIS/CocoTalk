@@ -26,6 +26,10 @@ const routes = [
 			left: Friends,
 			right: ChatDefault,
 		},
+		beforeEnter: (to, from, next) => {
+			store.dispatch("chat/changeMainPage", "friends", { root: true });
+			return next();
+		},
 	},
 	{
 		path: "/chats",
@@ -73,8 +77,9 @@ const routes = [
 		components: {
 			error: NoPage,
 		},
-		beforeEnter: () => {
+		beforeEnter: (to, from, next) => {
 			store.dispatch("chat/changeMainPage", "error", { root: true });
+			return next();
 		},
 	},
 	{
