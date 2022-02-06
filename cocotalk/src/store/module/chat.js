@@ -9,7 +9,8 @@ const chat = {
 	plugins: [createPersistedState()],
 	state: {
 		socket: {
-			client: undefined,
+			client: Object,
+			recentMessageBundleId: "",
 		},
 		roomStatus: {
 			mainPage: "",
@@ -221,7 +222,9 @@ const chat = {
 				state.roomStatus.roomId = payload.roomId;
 			}
 		},
-		// GET_CHAT(state, payload) {},
+		GET_CHAT(state, payload) {
+			state.socket.recentMessageBundleId = payload.nextMessageBundleId;
+		},
 		CHANGE_MAIN_PAGE(state, payload) {
 			state.roomStatus.mainPage = payload;
 		},
@@ -348,12 +351,16 @@ const chat = {
 		getChat(context, payload) {
 			console.log("chat");
 			console.log(payload);
-			// const url = `http://138.2.88.163/chat/messages?roomid=${payload.roomId}&bundleid=${payload.nextMessageBundleId}&count=${payload.recentMessageBundelCount}&size=10`;
-			const url = `http://138.2.88.163:8000/chat/messages?roomid=${payload.roomId}&bundleid=${payload.nextMessageBundleId}&count=0&size=10`;
-			axios.get(url).then((res) => {
-				console.log(res);
+			// const url = `http://138.2.88.163:8000/chat/messages?roomid=${payload.roomId}&bundleid=${payload.nextMessageBundleId}&count=0&size=10`;
+			// axios.get(url).then((res) => {
+			// 	console.log(res);
+			// });
+			context.commit("GET_CHAT", payload);
+			context.commit("CHANGE_PAGE", {
+				chat: "chat",
+				roomId: payload.roomId,
 			});
-			// this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: chat.id } }).catch(() => {});
+			router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
 		},
 
 		createChat(context, payload) {

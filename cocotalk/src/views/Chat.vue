@@ -50,8 +50,10 @@
 		<button @click="changeNow">kkk</button>
 		{{ roomStatus }}
 		<div class="message-input-container row">
-			<textarea></textarea>
-			<Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
+			<textarea v-model="message"></textarea>
+			<div @click="send">
+				<Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
+			</div>
 		</div>
 		<Sidebar />
 	</div>
@@ -62,12 +64,17 @@ import { mapState } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
 import Sidebar from "../components/chat/Sidebar.vue";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 export default {
 	data() {
 		return {
 			componentChat: 0,
 			roomId: this.$route.params.roomId,
+			chatMessages: [],
+			message: "",
+			// stompClientChat: Object,
 		};
 	},
 	components: {
@@ -85,15 +92,16 @@ export default {
 			},
 			{ root: true },
 		);
+		this.startChatConnection();
 	},
 	mounted() {
-		this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
+		this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId, nextMessageBundleId: this.socket.recentMessageBundleId }, { root: true });
 		console.log("채팅연결시작");
 		console.log(this.roomId);
-		this.$store.dispatch("chat/startChatConnection", this.roomId);
+		// this.$store.dispatch("chat/startChatConnection", this.roomId);
 	},
 	computed: {
-		...mapState("chat", ["roomStatus", "friends", "chattings"]),
+		...mapState("chat", ["roomStatus", "friends", "chattings", "socket"]),
 		...mapState("userStore", ["userInfo"]),
 	},
 	watch: {
@@ -129,6 +137,62 @@ export default {
 		forceRerender() {
 			console.log("재로딩");
 			this.componentChat += 1;
+		},
+		startChatConnection: function () {
+			const serverURL = "http://138.2.88.163:8000/chat/stomp";
+			let socket = new SockJS(serverURL);
+			this.stompClientChat = Stomp.over(socket);
+			this.stompClientChat.connect(
+				{ view: "chatRoom", userId: this.userInfo.userId, roomId: this.roomStatus.roomId },
+				(frame) => {
+					// 소켓 연결 성공
+					this.connected = true;
+					console.log("소켓 연결 성공", frame);
+					// 서버의 메시지 전송 endpoint를 구독
+					// 이런형태를 pub sub 구조라고 함
+					this.stompClientChat.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
+						console.log("구독으로 받은 메시지 입니다.");
+						console.log(res);
+						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
+						// this.recvList.push(JSON.parse(res.body));
+					});
+					// 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
+					const msg = {
+						type: 3,
+						roomId: this.roomStatus.roomId,
+						userId: this.userInfo.id,
+						inviteIds: [10],
+						messageBundleId: this.socket.recentMessageBundleId,
+						content: "초대메세지",
+					};
+					console.log("초대");
+					this.stompClientChat.send(`/chat/${this.roomStatus.roomId}/message/invite`, JSON.stringify(msg), {});
+				},
+				(error) => {
+					// 소켓 연결 실패
+					console.log("소켓 연결 실패", error);
+					this.connected = false;
+				},
+			);
+			console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
+		},
+		send() {
+			console.log("Send message");
+			if (this.stompClientChat && this.stompClientChat.connected) {
+				const msg = {
+					type: 0,
+					roomId: this.roomStatus.roomId,
+					userId: this.userInfo.id,
+					messageBundleId: this.socket.recentMessageBundleId,
+					content: this.message,
+				};
+				// console.log(msg);
+				// JSON.stringify(msg)
+				this.stompClientChat.send(`/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg), (res) => {
+					console.log("ddddd");
+					console.log("메세지 보내기", res);
+				});
+			}
 		},
 	},
 };

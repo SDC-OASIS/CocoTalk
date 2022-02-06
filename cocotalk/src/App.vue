@@ -47,7 +47,6 @@ export default {
 		const width = screen.width;
 		this.$store.dispatch("userStore/getScreen", { width: width });
 		// 로그인 페이지에서는 navbar 안보이게 만들기
-		console.log("nav" + window.location.pathname);
 		// if (window.location.pathname == "/") {
 		// 	this.nav = false;
 		// }
@@ -55,7 +54,6 @@ export default {
 			this.nav = false;
 		} else {
 			this.nav = true;
-			console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
 		// 채팅방 목록용 소켓
 		// this.$store.dispatch("chat/startConnection");

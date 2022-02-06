@@ -73,6 +73,7 @@ export default {
 				recentMessageBundelCount: chat.recentMessageBundelCount,
 			};
 			this.$store.dispatch("chat/getChat", payload, { root: true });
+
 			// this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: chat.id } }).catch(() => {});
 		},
 	},
