@@ -22,10 +22,10 @@
 		<div class="chat-messages-container">
 			<div class="chat-messages" v-for="(chatting, idx) in chattings" :key="idx">
 				<!-- 상대가 한 말 -->
-				<div v-if="chatting.userInfo.username != userInfo.username" class="row">
+				<div v-if="chatting.userInfo.userName != userInfo.userName" class="row">
 					<ProfileImg :imgUrl="chatting.userInfo.profile" width="40px" />
 					<div class="chat-message">
-						<div style="padding-bottom: 7px">{{ chatting.userInfo.username }}</div>
+						<div style="padding-bottom: 7px">{{ chatting.userInfo.userName }}</div>
 						<div class="row">
 							<div class="bubble box">{{ chatting.message }}</div>
 							<div style="position: relative; width: 70px">

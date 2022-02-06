@@ -8,86 +8,86 @@ const friend = {
 	state: {
 		friends: [
 			// {
-			// 	username: "권희은",
+			// 	userName: "권희은",
 			// 	statusMessage: "오늘도 좋은 하루",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
 			// {
-			// 	username: "고병학",
+			// 	userName: "고병학",
 			// 	statusMessage: "햇빛이 쨍쨍",
 			// },
 			// {
-			// 	username: "김민정",
+			// 	userName: "김민정",
 			// 	statusMessage: "룰루~~ 신나는 오늘~",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/qKgD7C.png",
 			// },
 			// {
-			// 	username: "황종훈",
+			// 	userName: "황종훈",
 			// 	statusMessage: "얍얍 오늘도 화이팅",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
 			// {
-			// 	username: "김김김",
+			// 	userName: "김김김",
 			// 	statusMessage: "오늘도 좋은 하루",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
 			// {
-			// 	username: "박박박",
+			// 	userName: "박박박",
 			// 	statusMessage: "햇빛이 쨍쨍",
 			// },
 			// {
-			// 	username: "리리리",
+			// 	userName: "리리리",
 			// 	statusMessage: "룰루~~ 신나는 오늘~",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/qKgD7C.png",
 			// },
 			// {
-			// 	username: "황황황",
+			// 	userName: "황황황",
 			// 	statusMessage: "얍얍 오늘도 화이팅",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
 			// {
-			// 	username: "김김김",
+			// 	userName: "김김김",
 			// 	statusMessage: "오늘도 좋은 하루",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
 			// {
-			// 	username: "박박박",
+			// 	userName: "박박박",
 			// 	statusMessage: "햇빛이 쨍쨍",
 			// },
 			// {
-			// 	username: "리리리",
+			// 	userName: "리리리",
 			// 	statusMessage: "룰루~~ 신나는 오늘~",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/qKgD7C.png",
 			// },
 			// {
-			// 	username: "황황황",
+			// 	userName: "황황황",
 			// 	statusMessage: "얍얍 오늘도 화이팅",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
 			// {
-			// 	username: "김김김",
+			// 	userName: "김김김",
 			// 	statusMessage: "오늘도 좋은 하루",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
 			// {
-			// 	username: "박박박",
+			// 	userName: "박박박",
 			// 	statusMessage: "햇빛이 쨍쨍",
 			// },
 			// {
-			// 	username: "리리리",
+			// 	userName: "리리리",
 			// 	statusMessage: "룰루~~ 신나는 오늘~",
 			// 	profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 			// 	background: "https://ifh.cc/g/qKgD7C.png",
 			// },
 			// {
-			// 	username: "황황황",
+			// 	userName: "황황황",
 			// 	statusMessage: "얍얍 오늘도 화이팅",
 			// 	background: "https://ifh.cc/g/CgiChn.jpg",
 			// },
@@ -129,7 +129,7 @@ const friend = {
 				console.log(res);
 				friends.forEach((e) => {
 					e.profile = JSON.parse(e.profile);
-					e.username = e.name;
+					e.userName = e.name;
 					console.log("친구프로필데이터 파싱완료");
 					context.commit("GET_FRIENDS", res.data.data);
 				});

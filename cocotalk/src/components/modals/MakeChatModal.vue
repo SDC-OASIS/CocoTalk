@@ -17,7 +17,7 @@
 				<div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
 					<div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">
 						<div class="box">
-							{{ selectedFriend.username }}
+							{{ selectedFriend.userName }}
 						</div>
 						<i class="delete-selected-friend fas fa-times" @click="deleteSelectedFriend(selectedFriend, idx)"></i>
 					</div>
@@ -34,7 +34,7 @@
 							<!-- {{ searchFriends }} -->
 							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
 								<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
-								<div class="friend-name">{{ friend.username }}</div>
+								<div class="friend-name">{{ friend.userName }}</div>
 								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend" />
 								<label :for="'checked' + idx"> </label>
 							</div>
@@ -102,7 +102,7 @@ export default {
 		// 		const arr = [];
 		// 		for (let friend in this.friends) {
 		// 			console.log(friend)
-		// 			if (friend.username.includes(this.searchName)) {
+		// 			if (friend.userName.includes(this.searchName)) {
 		// 				arr.push(friend);
 		// 			}
 		// 		}
@@ -135,13 +135,13 @@ export default {
 		// 	if (this.searchName.length) {
 		// 		// let value = this.searchName.toUpperCase();
 		// 		// let arr = [];
-		// 		let value = { username: this.searchName.toUpperCase() };
+		// 		let value = { userName: this.searchName.toUpperCase() };
 		// 		console.log(value);
 
 		// 		this.friends.includes(value);
 		// 		// for (let friend in this.friends) {
 		// 		// 	console.log("friend", friend);
-		// 		// 	if (friend.username.includes(value)) {
+		// 		// 	if (friend.userName.includes(value)) {
 		// 		// 		arr.push(friend);
 		// 		// 	}
 		// 		// }

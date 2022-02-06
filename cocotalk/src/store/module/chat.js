@@ -18,86 +18,86 @@ const chat = {
 		},
 		// friends: [
 		// 	{
-		// 		username: "권희은",
+		// 		userName: "권희은",
 		// 		statusMessage: "오늘도 좋은 하루",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
 		// 	{
-		// 		username: "고병학",
+		// 		userName: "고병학",
 		// 		statusMessage: "햇빛이 쨍쨍",
 		// 	},
 		// 	{
-		// 		username: "김민정",
+		// 		userName: "김민정",
 		// 		statusMessage: "룰루~~ 신나는 오늘~",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/qKgD7C.png",
 		// 	},
 		// 	{
-		// 		username: "황종훈",
+		// 		userName: "황종훈",
 		// 		statusMessage: "얍얍 오늘도 화이팅",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
 		// 	{
-		// 		username: "김김김",
+		// 		userName: "김김김",
 		// 		statusMessage: "오늘도 좋은 하루",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
 		// 	{
-		// 		username: "박박박",
+		// 		userName: "박박박",
 		// 		statusMessage: "햇빛이 쨍쨍",
 		// 	},
 		// 	{
-		// 		username: "리리리",
+		// 		userName: "리리리",
 		// 		statusMessage: "룰루~~ 신나는 오늘~",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/qKgD7C.png",
 		// 	},
 		// 	{
-		// 		username: "황황황",
+		// 		userName: "황황황",
 		// 		statusMessage: "얍얍 오늘도 화이팅",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
 		// 	{
-		// 		username: "김김김",
+		// 		userName: "김김김",
 		// 		statusMessage: "오늘도 좋은 하루",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
 		// 	{
-		// 		username: "박박박",
+		// 		userName: "박박박",
 		// 		statusMessage: "햇빛이 쨍쨍",
 		// 	},
 		// 	{
-		// 		username: "리리리",
+		// 		userName: "리리리",
 		// 		statusMessage: "룰루~~ 신나는 오늘~",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/qKgD7C.png",
 		// 	},
 		// 	{
-		// 		username: "황황황",
+		// 		userName: "황황황",
 		// 		statusMessage: "얍얍 오늘도 화이팅",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
 		// 	{
-		// 		username: "김김김",
+		// 		userName: "김김김",
 		// 		statusMessage: "오늘도 좋은 하루",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
 		// 	{
-		// 		username: "박박박",
+		// 		userName: "박박박",
 		// 		statusMessage: "햇빛이 쨍쨍",
 		// 	},
 		// 	{
-		// 		username: "리리리",
+		// 		userName: "리리리",
 		// 		statusMessage: "룰루~~ 신나는 오늘~",
 		// 		profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		// 		background: "https://ifh.cc/g/qKgD7C.png",
 		// 	},
 		// 	{
-		// 		username: "황황황",
+		// 		userName: "황황황",
 		// 		statusMessage: "얍얍 오늘도 화이팅",
 		// 		background: "https://ifh.cc/g/CgiChn.jpg",
 		// 	},
@@ -174,10 +174,14 @@ const chat = {
 			},
 			{ chatname: "스토브캠프", lastMessage: "햇빛이 쨍쨍", roomId: "222", cnt: 3 },
 		],
+		chatInfo: {
+			nextMessageBundleId: "",
+			recentMessageBundelCount: 0,
+		},
 		chattings: [
 			{
 				userInfo: {
-					username: "권희은",
+					userName: "권희은",
 					profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 				},
 				message: "오늘도 화이팅!sakldfjlkasjfkasl;fjsjkfals;jflkasjfljas;lfjk;sjdfklakjsljdflasjdfl;asj;f",
@@ -185,7 +189,7 @@ const chat = {
 			},
 			{
 				userInfo: {
-					username: "김민정",
+					userName: "김민정",
 					profile: undefined,
 				},
 				message: "넵넵",
@@ -193,7 +197,7 @@ const chat = {
 			},
 			{
 				userInfo: {
-					username: "고병학",
+					userName: "고병학",
 					profile: undefined,
 				},
 				message: "화이팅!!!",
@@ -216,6 +220,7 @@ const chat = {
 				state.roomStatus.roomId = payload.roomId;
 			}
 		},
+		// GET_CHAT(state, payload) {},
 		CHANGE_MAIN_PAGE(state, payload) {
 			state.roomStatus.mainPage = payload;
 		},
@@ -239,9 +244,11 @@ const chat = {
 				console.log(res);
 				let chatList = res.data.data;
 				chatList.forEach((e) => {
-					if (e.img == "string") {
+					if (e.img == "string" || e.img == "img" || e.img == "") {
 						delete e["img"];
 					}
+					e.roomname = e.name;
+					e.messageBundleIds = e.messageBundleIds.slice(1, -1).split(", ");
 				});
 				context.commit("SET_CHATLIST", res.data.data);
 			});
@@ -338,7 +345,12 @@ const chat = {
 		getChat(context, payload) {
 			console.log("chat");
 			console.log(payload);
-			console.log(context);
+			// const url = `http://138.2.88.163/chat/messages?roomid=${payload.roomId}&bundleid=${payload.nextMessageBundleId}&count=${payload.recentMessageBundelCount}&size=10`;
+			const url = `http://138.2.88.163:8000/chat/messages?roomid=${payload.roomId}&bundleid=${payload.nextMessageBundleId}&count=0&size=10`;
+			axios.get(url).then((res) => {
+				console.log(res);
+			});
+			// this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: chat.id } }).catch(() => {});
 		},
 
 		createChat(context, payload) {

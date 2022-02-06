@@ -37,7 +37,7 @@
 							<div @click="openProfileModal(friend)">
 								<ProfileImg :imgUrl="friend.profile" width="50px" />
 							</div>
-							<div class="friend-name" :id="'check' + idx">{{ friend.username }}</div>
+							<div class="friend-name" :id="'check' + idx">{{ friend.userName }}</div>
 						</div>
 					</div>
 				</div>
