@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Entity
@@ -33,4 +34,11 @@ public class Friend {
     @JoinColumn(name = "to_uid")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User toUser;
+
+    @NotNull
+    private boolean hidden;
+
+    public void setHidden(boolean hide) {
+        this.hidden = hide;
+    }
 }

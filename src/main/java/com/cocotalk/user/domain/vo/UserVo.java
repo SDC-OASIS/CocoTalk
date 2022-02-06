@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class UserVo {
     private Long id;
     private String cid;
-    private String name;
+    private String userName;
     private String nickname;
     private LocalDate birth;
     private String phone;

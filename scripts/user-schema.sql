@@ -3,7 +3,7 @@ create table user
     id          bigint auto_increment primary key,
     cid         varchar(20)  not null,
     password    varchar(64)  not null,
-    name        varchar(20)  not null,
+    user_name   varchar(20)  not null,
     nickname    varchar(20)  not null,
     email       varchar(125),
     phone       varchar(20)  not null,

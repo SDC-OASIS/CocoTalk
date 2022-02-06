@@ -15,4 +15,5 @@ public class FriendVo {
     private Long id;
     private User fromUser;
     private User toUser;
+    private boolean hidden;
 }
