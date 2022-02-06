@@ -13,18 +13,6 @@ import java.io.IOException;
 @RequestMapping(value = "/kafka")
 public class KafkaController {
     private final KafkaProducer producer;
-    private final KafkaConsumer consumer;
-
-
-    @GetMapping
-    public String listenMessage(@RequestParam("message") String message) {
-        try {
-            this.consumer.consume(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "success";
-    }
 
     @PostMapping
     public String sendMessage(@RequestParam("message") String message) {
