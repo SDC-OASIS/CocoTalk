@@ -35,7 +35,7 @@ public class User extends BaseTime {
 
     @NotNull
     @Column(length = 20)
-    private String name;
+    private String userName;
 
     @NotNull
     @Column(length = 20)
@@ -65,7 +65,7 @@ public class User extends BaseTime {
     private LocalDateTime loggedinAt; // 최종 접속 기록
 
     public void modify(UserModifyRequest request) {
-        this.name = request.getName();
+        this.userName = request.getName();
         this.nickname = request.getNickname();
         this.birth = request.getBirth();
         this.phone = request.getPhone();
