@@ -1,6 +1,8 @@
 <template>
 	<div id="app">
 		<router-view name="login" />
+		<router-view name="error" />
+
 		<div>
 			<Navbar v-if="nav" />
 			<div class="content-container">
@@ -49,10 +51,11 @@ export default {
 		// if (window.location.pathname == "/") {
 		// 	this.nav = false;
 		// }
-		if (this.roomStatus.mainPage == "") {
+		if (this.roomStatus.mainPage == "" || this.roomStatus.mainPage == "error") {
 			this.nav = false;
 		} else {
 			this.nav = true;
+			console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
 		// 채팅방 목록용 소켓
 		// this.$store.dispatch("chat/startConnection");

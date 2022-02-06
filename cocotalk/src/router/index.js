@@ -6,6 +6,8 @@ import Chats from "../views/Chats.vue";
 import Chat from "../views/Chat.vue";
 import ChatDefault from "../views/ChatDefault.vue";
 import Setting from "../views/Setting.vue";
+import NoPage from "../views/NoPage.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -64,6 +66,23 @@ const routes = [
 			left: Chats,
 			right: Chat,
 		},
+	},
+	{
+		path: "/error",
+		name: "Error",
+		components: {
+			error: NoPage,
+		},
+		beforeEnter: () => {
+			store.dispatch("chat/changeMainPage", "error", { root: true });
+		},
+	},
+	{
+		path: "*",
+		redirect: "/error",
+
+		// 아래처럼 바로 NotFound 경로를 매칭해도 됨
+		// component: NotFound
 	},
 
 	// },

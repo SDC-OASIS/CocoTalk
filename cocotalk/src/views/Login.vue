@@ -52,7 +52,7 @@ export default {
 }
 .login img {
 	padding-right: 50px;
-	width: 50%;
+	width: 60%;
 }
 .login input {
 	display: block;
