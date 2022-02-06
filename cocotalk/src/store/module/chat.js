@@ -207,6 +207,7 @@ const chat = {
 	},
 	mutations: {
 		CHANGE_PAGE(state, payload) {
+			console.log("1111");
 			// roomId가 존재하지 않는 경우 == 채팅방이 닫혀있는 경우
 			if (!payload.roomId) {
 				state.roomStatus.roomId = "";
@@ -240,11 +241,12 @@ const chat = {
 		},
 		getChatList: function (context) {
 			axios.get("http://138.2.88.163:8000/chat/rooms").then((res) => {
+				// axios.get("http://138.2.68.7:8080/rooms/list").then((res) => {
 				console.log("채팅방목록 가져오기");
 				console.log(res);
 				let chatList = res.data.data;
 				chatList.forEach((e) => {
-					if (e.img == "string" || e.img == "img" || e.img == "") {
+					if (e.img == "string" || e.img == "img" || e.img == "" || e.img == null) {
 						delete e["img"];
 					}
 					e.roomname = e.name;
@@ -252,6 +254,7 @@ const chat = {
 				});
 				context.commit("SET_CHATLIST", res.data.data);
 			});
+			// .catch((err) => console.log(err));
 		},
 		startConnection: function (context) {
 			const serverURL = "http://138.2.88.163:8000/chat/stomp";

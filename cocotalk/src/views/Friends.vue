@@ -62,6 +62,9 @@ export default {
 
 		// this.$store.dispatch("friend/getFriends");
 	},
+	mounted() {
+		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
+	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),
 		...mapState("friend", ["friends"]),
