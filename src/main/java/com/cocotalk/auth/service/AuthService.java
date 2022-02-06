@@ -50,14 +50,12 @@ public class AuthService {
     @Value("${mail.exp}")
     long mailCodeExp;
     public ResponseEntity<Response<TokenDto>> signin(ClientType clientType, SigninInput signinInput) {
-        log.info("url : " +"http://"+pushApiUrl);
         // 1. user 정보 가져오기
         User user;
         try {
             user = userRepository.findByCid(signinInput.getCid()).orElse(null);
 
             if (user == null || !SHA256Utils.getEncrypt(signinInput.getPassword()).equals(user.getPassword())) {
-//            if (user == null || !passwordEncoder.matches(signinInput.getPassword(), user.getPassword())) {
                 return ResponseEntity.status(HttpStatus.OK).body(new Response<>(BAD_REQUEST));
             }
             user.setLoggedinAt(LocalDateTime.now());

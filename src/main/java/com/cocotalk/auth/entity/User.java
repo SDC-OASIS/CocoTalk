@@ -29,8 +29,8 @@ public class User extends BaseTime {
     private String password;
 
     @NotNull
-    @Column(length = 20)
-    private String name;
+    @Column(name="user_name", length = 20)
+    private String userName;
 
     @NotNull
     @Column(length = 20)

@@ -18,7 +18,7 @@ public class SignupInput {
     @NotBlank(message = "비밀번호는 필수값 입니다.")
     private String password;
     @NotBlank
-    private String name;
+    private String userName;
     @NotBlank
     private String nickname;
     private LocalDate birth;

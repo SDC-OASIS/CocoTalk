@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class SignupOutput {
     private Long id;
     private String cid; // 코코톡 아이디
-    private String name;
+    private String userName;
     private String nickname;
     private String email;
     private String phone;
