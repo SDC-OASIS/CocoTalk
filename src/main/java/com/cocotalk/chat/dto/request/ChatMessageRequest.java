@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDateTime;
-
 @Getter
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

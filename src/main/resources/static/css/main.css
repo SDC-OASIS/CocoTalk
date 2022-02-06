@@ -161,7 +161,7 @@ button.accent {
 }
 
 /*얘가 문제임*/
-#chat-page #messageForm #inviteForm {
+#chat-page #messageForm #inviteForm #awakeForm #leaveForm {
     padding: 20px;
 }
 
@@ -229,6 +229,11 @@ button.accent {
     width: calc(100% - 85px);
 }
 
+#awakeForm .input-group input {
+    float: left;
+    width: calc(100% - 85px);
+}
+
 #messageForm .input-group button {
     float: left;
     width: 80px;
@@ -237,6 +242,13 @@ button.accent {
 }
 
 #inviteForm .input-group button {
+    float: left;
+    width: 80px;
+    height: 38px;
+    margin-left: 5px;
+}
+
+#awakeForm .input-group button {
     float: left;
     width: 80px;
     height: 38px;
@@ -309,6 +321,14 @@ button.accent {
     }
 
     #inviteForm .input-group input {
+        width: calc(100% - 70px);
+    }
+
+    #awakeForm .input-group button {
+        width: 65px;
+    }
+
+    #awakeForm .input-group input {
         width: calc(100% - 70px);
     }
 
