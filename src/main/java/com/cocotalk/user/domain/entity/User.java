@@ -65,7 +65,7 @@ public class User extends BaseTime {
     private LocalDateTime loggedinAt; // 최종 접속 기록
 
     public void modify(UserModifyRequest request) {
-        this.userName = request.getName();
+        this.userName = request.getUserName();
         this.nickname = request.getNickname();
         this.birth = request.getBirth();
         this.phone = request.getPhone();

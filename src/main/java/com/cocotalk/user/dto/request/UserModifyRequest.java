@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Getter
 public class UserModifyRequest {
-    private String name;
+    private String userName;
     private String nickname;
     private String email;
     private String phone;
