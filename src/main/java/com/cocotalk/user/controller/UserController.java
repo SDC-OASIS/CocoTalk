@@ -90,13 +90,13 @@ public class UserController {
     /**
      * 유저 email로 조회 API [GET] /user?email=
      *
-     * @param email 유저 email
+     * @param address 유저 email
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 email로 조회")
-    @GetMapping("/email/{email}")
-    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@RequestParam String email) {
-        UserVo data = userService.findByEmail(email);
+    @GetMapping("/email/{address}")
+    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@PathVariable String address) {
+        UserVo data = userService.findByEmail(address);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
