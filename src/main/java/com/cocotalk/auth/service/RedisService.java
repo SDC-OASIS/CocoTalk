@@ -32,9 +32,7 @@ public class RedisService {
     }
 
     public void setRefreshToken(ClientType clientType, long userId, String refreshToken){
-        log.info(clientType.toString());
         String key =  "RT/"+clientType.toString()+"/"+userId;
-        log.info("key:"+key+"/"+refreshToken);
         setDataExpire(key,refreshToken,refreshTokenExp);
     }
 

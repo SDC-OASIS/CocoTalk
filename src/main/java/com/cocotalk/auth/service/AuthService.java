@@ -51,6 +51,7 @@ public class AuthService {
     long mailCodeExp;
     public ResponseEntity<Response<TokenDto>> signin(ClientType clientType, SigninInput signinInput) {
         // 1. user 정보 가져오기
+        log.info("[signin/ClientType] : "+ clientType);
         User user;
         try {
             user = userRepository.findByCid(signinInput.getCid()).orElse(null);
@@ -74,7 +75,7 @@ public class AuthService {
         String accessToken;
         String refreshToken;
         String fcmToken = device.getToken();
-        log.info("fcm token : "+fcmToken);
+        log.info("[signin/fcmToken] : "+fcmToken);
 
         try {
             accessToken = JwtUtils.createAccessToken(userId, fcmToken);
@@ -96,7 +97,7 @@ public class AuthService {
 
     @Transactional
     public ResponseEntity<Response<SignupOutput>> signup(SignupInput signupInput) {
-        log.info("signupInput:"+signupInput);
+        log.info("[signup/signupInput] : "+signupInput);
         // 2. 유저 생성
         User user;
         try {
@@ -112,11 +113,10 @@ public class AuthService {
             user.setPassword(SHA256Utils.getEncrypt(signupInput.getPassword()));
             user.setProvider(Provider.local);
             user.setProviderId(user.getCid());
-            log.info("user:"+user);
             user = userRepository.save(user);
 
         } catch (Exception e) {
-            log.error("[auth/signup/post] database error", e);
+            log.error("[signup/post] database error", e);
             return ResponseEntity.status(HttpStatus.OK).body(new Response<>(DATABASE_ERROR));
         }
         // 3. 결과 return
@@ -143,7 +143,7 @@ public class AuthService {
     public ResponseEntity<Response<TokenDto>> reissue(ClientType clientType) {
         String refreshToken = JwtUtils.getRefreshToken();
         if(refreshToken==null) {
-            log.error("X-REFRESH-TOKEN is null");
+            log.error("[reissue] X-REFRESH-TOKEN is null");
             return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.UNAUTHORIZED));
         }
         try{
@@ -151,7 +151,7 @@ public class AuthService {
             Long userId = JwtUtils.getPayload(refreshToken).getUserId();
             String storeRefreshToken = redisService.getRefreshToken(clientType, userId);
             if(!refreshToken.equals(storeRefreshToken)) {
-                log.error("refreshToken is not equals as storeRefreshToken");
+                log.error("[reissue] refreshToken is not equals as storeRefreshToken");
                 return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.UNAUTHORIZED));
             }
             // 2. 해당 user의 device 정보 가져오기
@@ -254,7 +254,7 @@ public class AuthService {
                     .retrieve()
                     .bodyToFlux(DeviceDto.class)
                     .blockFirst();
-            log.info("device Dto :" + device);
+            log.info("[getFcmToken/deviceDto] :" + device);
             return device;
         }catch (Exception e){
             throw new AuthException(SERVER_ERROR,e);

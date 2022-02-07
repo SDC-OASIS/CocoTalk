@@ -19,9 +19,6 @@ public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        log.info("ClientArgumentResolver");
-        log.info("has ClientIp : "+parameter.getParameterType().equals(ClientType.class));
-
         return parameter.getParameterType().equals(ClientType.class);
 
     }
@@ -35,12 +32,13 @@ public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
     ){
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         String agent = req.getHeader("user-agent");
+        log.info("[resolveArgument/agent] : "+agent);
         return parseClientType(agent);
     }
 
     private ClientType parseClientType(String userAgent){
         if(userAgent.contains("Mozilla"))
-            return ClientType.MOBILE;
-        return ClientType.WEB;
+            return ClientType.WEB;
+        return ClientType.MOBILE;
     }
 }
