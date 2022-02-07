@@ -304,6 +304,17 @@ public class RoomService {
         return roomMapper.toVo(roomRepository.save(newRoom));
     }
 
+    public void saveEnteredAt(ObjectId roomId, Long userId) {
+        RoomVo roomVo = this.findById(roomId);
+        RoomMember me = this.findMember(roomVo, userId);
+        List<RoomMember> members = roomVo.getMembers();
+
+        members.remove(me);
+        me.setEnteredAt(LocalDateTime.now());
+        members.add(me);
+        this.save(roomVo);
+    }
+
     public void saveAwayAt(ObjectId roomId, Long userId) {
         RoomVo roomVo = this.findById(roomId);
         RoomMember me = this.findMember(roomVo, userId);

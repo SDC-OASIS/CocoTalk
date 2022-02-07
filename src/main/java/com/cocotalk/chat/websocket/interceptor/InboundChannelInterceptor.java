@@ -33,10 +33,11 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
             if (sessionAttributes != null && view != null) {
                 sessionAttributes.put("view", view);
                 if (view.equals("chatRoom")) { // 두 세션 ID 다르다는 것을 전제로
-                    String roomId = accessor.getFirstNativeHeader("roomId");
-                    String userId = accessor.getFirstNativeHeader("userId");
-                    if (roomId != null) sessionAttributes.put("roomId", roomId);
-                    if (userId != null) sessionAttributes.put("userId", userId);
+                    Long userId = Long.parseLong(accessor.getFirstNativeHeader("userId"));
+                    ObjectId roomId = new ObjectId(accessor.getFirstNativeHeader("roomId"));
+                    sessionAttributes.put("userId", userId);
+                    sessionAttributes.put("roomId", roomId);
+                    roomService.saveEnteredAt(roomId, userId);
                 } else if (view.equals("chatList")) {
                     String userId = accessor.getFirstNativeHeader("userId");
                     if (userId != null) sessionAttributes.put("userId", userId);
