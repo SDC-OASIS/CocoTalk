@@ -234,6 +234,9 @@ const chat = {
 		SET_CONNECTION(state, payload) {
 			state.socket.client = payload;
 		},
+		UPDATE_MESSAGE_BUNDLE_ID(state, payload) {
+			state.socket.recentMessageBundleId = payload.nextMessageBundleId;
+		},
 	},
 	actions: {
 		changePage: function (context, payload) {
@@ -383,6 +386,9 @@ const chat = {
 				// });
 				// context.commit("SET_CHATLIST", res.data.data);
 			});
+		},
+		updateMessageBundleId(context, payload) {
+			context.commit("UPDATE_MESSAGE_BUNDLE_ID", payload);
 		},
 	},
 	modules: {},

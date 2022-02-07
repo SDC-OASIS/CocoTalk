@@ -177,7 +177,7 @@ export default {
 						const payload = {
 							nextMessageBundleId: receivedMessage.messageBundleId,
 						};
-						this.$store.dispatch("chat/getChat", payload, { root: true });
+						this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
 					});
 					// 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
 					// const msg = {
