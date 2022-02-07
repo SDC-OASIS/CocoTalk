@@ -1,4 +1,4 @@
-package com.cocotalk.push.dto.push;
+package com.cocotalk.push.dto.kafka;
 
 import lombok.*;
 

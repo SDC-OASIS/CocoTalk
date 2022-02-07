@@ -1,4 +1,4 @@
-package com.cocotalk.push.dto.push;
+package com.cocotalk.push.dto.fcm;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

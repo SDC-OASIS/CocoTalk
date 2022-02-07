@@ -1,14 +1,11 @@
 package com.cocotalk.push.service;
 
-import com.cocotalk.push.dto.push.FCMMessage;
+import com.cocotalk.push.dto.fcm.FCMMessage;
 import com.cocotalk.push.support.PushException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.common.net.HttpHeaders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
