@@ -15,9 +15,15 @@ import java.util.Objects;
 public class RoomMember {
     private Long userId; // MySQL userId
 
+    private String userName;
+
+    private String profile;
+
     private boolean joining;
 
-    private LocalDateTime joinedAt;
+    private LocalDateTime joinedAt; // 처음 들어온 시간
+
+    private LocalDateTime enteredAt; // 소켓 연결된 시간
 
     private LocalDateTime awayAt; // 소켓 끊어진 시간
 
@@ -37,6 +43,10 @@ public class RoomMember {
 
     public void setJoinedAt(LocalDateTime joinedAt) {
         this.joinedAt = joinedAt;
+    }
+
+    public void setEnteredAt(LocalDateTime enteredAt) {
+        this.enteredAt = enteredAt;
     }
 
     public void setAwayAt(LocalDateTime awayAt) {

@@ -35,14 +35,13 @@ public class ChatController {
 
     @MessageMapping("/{roomId}/message/invite")
     public void invite(@DestinationVariable ObjectId roomId,
-                                  @Payload InviteMessageRequest inviteMessageRequest,
-                                  SimpMessageHeaderAccessor headerAccessor) {
+                                  @Payload InviteMessageRequest inviteMessageRequest) {
         MessageWithRoomVo<InviteMessageVo> messageWithRoomVo = roomService.saveInviteMessage(roomId, inviteMessageRequest);
 
         MessageVo<InviteMessageVo> inviteMessageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
-
-        inviteMessageVo.getMessage().getInviteeIds().forEach(userId -> headerAccessor.getSessionAttributes().put("userId", userId));
+        // 메시지 보내는 사람이랑 초대된 사람이랑 다름
+        // inviteMessageVo.getMessage().getInvitees().forEach(member -> headerAccessor.getSessionAttributes().put("userId", member.));
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", inviteMessageVo);
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomVo);
     }

@@ -7,6 +7,7 @@ import com.cocotalk.chat.domain.entity.room.RoomType;
 import com.cocotalk.chat.domain.vo.*;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
 import com.cocotalk.chat.dto.request.InviteMessageRequest;
+import com.cocotalk.chat.dto.request.RoomMemberRequest;
 import com.cocotalk.chat.dto.request.RoomRequest;
 import com.cocotalk.chat.exception.CustomError;
 import com.cocotalk.chat.exception.CustomException;
@@ -63,17 +64,20 @@ public class RoomService {
     public RoomVo create(RoomRequest request) { // C
         LocalDateTime now = LocalDateTime.now();
 
-        List<Long> memberIds = request.getMemberIds().stream().distinct().collect(Collectors.toList()); // 중복 제거
+        List<RoomMemberRequest> members = request.getMembers().stream().distinct().collect(Collectors.toList()); // 중복 제거
 
-        if (memberIds.size() >= 2) {
-            List<RoomMember> roomMembers = request.getMemberIds().stream()
-                    .map(userId -> RoomMember.builder()
-                            .userId(userId)
-                            .joinedAt(now)
-                            .joining(true)
-                            .awayAt(now)
-                            .leftAt(now)
-                            .build())
+        if (members.size() >= 2) {
+            List<RoomMember> roomMembers = request.getMembers().stream()
+                    .map(member -> RoomMember.builder()
+                                .userId(member.getUserId())
+                                .userName(member.getUserName())
+                                .profile(member.getProfile())
+                                .joinedAt(now)
+                                .enteredAt(now)
+                                .joining(true)
+                                .awayAt(now)
+                                .leftAt(now)
+                                .build())
                     .collect(Collectors.toList());
 
             Room createdRoom = roomRepository.save(Room.builder()
@@ -124,19 +128,22 @@ public class RoomService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        List<RoomMember> invitees = messageVo.getMessage().getInviteeIds().stream()
+        List<RoomMember> invitees = messageVo.getMessage().getInvitees().stream()
                 .distinct() // 중복 입력 제거
-                .map(id -> RoomMember.builder()
-                        .userId(id)
+                .map(member -> RoomMember.builder()
+                        .userId(member.getUserId())
+                        .userName(member.getUserName())
+                        .profile(member.getProfile())
                         .joining(true)
                         .joinedAt(now)
+                        .enteredAt(now)
                         .awayAt(now)
                         .leftAt(now)
                         .build())
                 .filter(invitee -> !members.contains(invitee)) // 기존 멤버와 중복 제거
                 .collect(Collectors.toList());
         
-        int estimateSize = members.size() + request.getInviteeIds().size();
+        int estimateSize = members.size() + request.getInvitees().size();
         int amountSize = members.size() + invitees.size();
         if(estimateSize != amountSize) {
             if(estimateSize > amountSize) {
@@ -188,12 +195,16 @@ public class RoomService {
     }
 
     public MessageWithRoomVo<ChatMessageVo> saveAwakeMessage(ObjectId roomId, ChatMessageRequest request) {
+        LocalDateTime now = LocalDateTime.now();
+
         log.info("awakeMessageRequest : {}", request.toString());
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
         Room room = this.find(roomId);
         room.setMembers(room.getMembers().stream()
                 .map(roomMember -> {
+                    roomMember.setJoinedAt(now);
+                    roomMember.setEnteredAt(now);
                     roomMember.setJoining(true);
                     return roomMember;
                 })

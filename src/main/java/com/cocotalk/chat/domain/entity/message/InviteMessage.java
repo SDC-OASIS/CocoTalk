@@ -1,5 +1,6 @@
 package com.cocotalk.chat.domain.entity.message;
 
+import com.cocotalk.chat.dto.request.RoomMemberRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "messages")
 public class InviteMessage extends ChatMessage {
-    List<Long> inviteeIds;
+    List<RoomMemberRequest> invitees;
 }
