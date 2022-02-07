@@ -74,7 +74,6 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
     //swagger
-//    implementation 'io.springfox:springfox-boot-starter:3.0.0' //기존 swagger
     implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.3' //통합 Springdoc
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 

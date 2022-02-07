@@ -53,16 +53,6 @@ public class RedisService {
         setDataExpire(key,code,mailCodeExp);
     }
 
-//    public String getBlackList(String refreshToken){
-//        String key =  "BL/"+refreshToken;
-//        return getData(key);
-//    }
-
-//    public void setBlackList(String refreshToken, ClientType clientType, long userId){
-//        String key =  "BL/"+refreshToken;
-//        setDataExpire(key,clientType.toString()+"/"+userId,accessTokenExp);
-//    }
-
     public String getData(String key){
         try {
             ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();

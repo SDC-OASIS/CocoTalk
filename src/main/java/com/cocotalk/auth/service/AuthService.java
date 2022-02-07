@@ -96,11 +96,7 @@ public class AuthService {
 
     @Transactional
     public ResponseEntity<Response<SignupOutput>> signup(SignupInput signupInput) {
-
-        // 1. Enum 타입 맞는지 검증
-        if(!EnumUtils.isValidEnumIgnoreCase(Provider.class, signupInput.getProvider()))
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(BAD_REQUEST));
-
+        log.info("signupInput:"+signupInput);
         // 2. 유저 생성
         User user;
         try {
@@ -113,8 +109,10 @@ public class AuthService {
             }
 
             user = userMapper.toEntity(signupInput);
-//            user.setPassword(passwordEncoder.encode(signupInput.getPassword()));
             user.setPassword(SHA256Utils.getEncrypt(signupInput.getPassword()));
+            user.setProvider(Provider.local);
+            user.setProviderId(user.getCid());
+            log.info("user:"+user);
             user = userRepository.save(user);
 
         } catch (Exception e) {
@@ -124,7 +122,6 @@ public class AuthService {
         // 3. 결과 return
         SignupOutput signupOutput = userMapper.toDto(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(signupOutput, CREATED));
-
     }
 
     public ResponseEntity<Response<Object>> signout(ClientType clientType) {
@@ -205,7 +202,6 @@ public class AuthService {
             message.setText(msgg, "utf-8", "html");
 
             LocalDateTime expirationDate = LocalDateTime.now().plusSeconds(mailCodeExp);
-//            Date expirationDate = new Date(new Date().getTime() + mailCodeExp * 1000);
             emailOutput = IssueOutput.builder().expirationDate(expirationDate).build();
             mailSender.send(message);
 
