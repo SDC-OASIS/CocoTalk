@@ -345,6 +345,18 @@ https://stackoverflow.com/questions/55670250/how-to-fix-cannot-create-property-d
 
 
 
+### vuex -actions 에서 state 호출하는 문법
+
+[참고] https://stackoverflow.com/questions/41366388/vuex-access-state-from-another-module
+
+```javascript
+getChat(context, payload) {
+			if (context.state.roomStatus.mainPage == "friends") {
+		},
+```
+
+
+
 ## 5. CSS
 
 ### 배경 등록
@@ -903,6 +915,29 @@ export default {
 };
 </script>
 ```
+
+
+
+### 3. 채팅방에서 메세지 수령시 최신메세지로 스크롤 이동
+
+[참고] https://stove99.github.io/javascript/2021/04/11/scroll-to-bottom-in-vue/
+
+* 채팅복록인 chatMessages가 변경되면 scroll이 최하단으로 이동하도록 설계
+
+```vue
+<div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages">
+...
+<script>
+chatMessages() {
+			this.$nextTick(() => {
+				let chatMessages = this.$refs.chatMessages;
+				chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+			});
+		},  
+</script>
+```
+
+
 
 
 
