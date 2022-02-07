@@ -20,5 +20,5 @@ public class RoomRequest {
 
     private Short type;
 
-    private List<Long> memberIds;
+    private List<RoomMemberRequest> members;
 }

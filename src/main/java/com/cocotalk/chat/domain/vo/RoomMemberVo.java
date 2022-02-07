@@ -14,9 +14,15 @@ import java.time.LocalDateTime;
 public class RoomMemberVo {
     private Long userId;
 
+    private String userName;
+
+    private String profile;
+
     private boolean joining;
 
     private LocalDateTime joinedAt;
+
+    private LocalDateTime enteredAt;
 
     private LocalDateTime awayAt;
 

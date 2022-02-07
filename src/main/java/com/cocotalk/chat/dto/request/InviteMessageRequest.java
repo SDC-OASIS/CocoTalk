@@ -14,5 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviteMessageRequest extends ChatMessageRequest {
-    List<Long> inviteeIds;
+    List<RoomMemberRequest> invitees;
 }

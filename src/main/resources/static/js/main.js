@@ -30,7 +30,9 @@ let chatRoomSocket = null;
 
 let headers = null;
 
-const domain = "http://localhost:8080";
+const domain = "http://localhost:8080"
+// const domain = "http://138.2.93.111:8080"
+// const domain = "http://138.2.88.163/chat"
 
 const colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -69,7 +71,7 @@ function enter(event) {
                     console.log("messageBundleIds = " + messageBundleIds);
                     nextMessageBundleId = messageBundleIds[messageBundleIds.length - 1];
 
-                    chatRoomSocket = new SockJS('/stomp');
+                    chatRoomSocket = new SockJS(domain + '/stomp');
                     // chatListSocket = new SockJS('/stomp');
 
                     chatRoomClient = Stomp.over(chatRoomSocket);
@@ -102,7 +104,15 @@ function createRoomAndConnectAndSend(event){
         roomName: "RoomName",
         img: "img",
         type: 0,
-        memberIds: [userId, friendId],
+        members: [ {
+            userId: userId,
+            userName: "유저" + userId,
+            profile: "profile"
+        }, {
+            userId: friendId,
+            userName: "유저" + friendId,
+            profile: "profile"
+        }],
     }, {headers}).then(res => {
         console.log(res);
         roomId = res.data.data.id;
@@ -113,7 +123,7 @@ function createRoomAndConnectAndSend(event){
         console.log("messageBundleIds = " + messageBundleIds);
         nextMessageBundleId = messageBundleIds[messageBundleIds.length - 1];
 
-        chatRoomSocket = new SockJS('/stomp');
+        chatRoomSocket = new SockJS(domain + '/stomp');
         // chatListSocket = new SockJS('/stomp');
 
         chatRoomClient = Stomp.over(chatRoomSocket);
@@ -200,16 +210,24 @@ function sendMessage(event) {
 
 function invite (event) {
     const inviteeIds = document.querySelector('#inviteeId').value.split(",");
+    let invitees = [];
+    for(let i = 0; i < inviteeIds.length; ++i) {
+        console.log(inviteeIds[i]);
+        invitees.push({
+            userId: inviteeIds[i],
+            userName: "유저" + inviteeIds[i],
+            profile: "profile"
+        })
+    }
     if(inviteeIds && chatRoomClient) {
         let inviteMessage = { // 일종의 joinMessage
             roomId: roomId,
             userId: userId,
-            inviteeIds: inviteeIds,
+            invitees: invitees,
             messageBundleId: nextMessageBundleId,
             type: 3,
             content: userId + '가 입장했습니다.'
         }
-
         chatRoomClient.send("/simple/chatroom/" + roomId + "/message/invite", {}, JSON.stringify(inviteMessage));
         inviteInput.value = '';
     }
@@ -253,8 +271,8 @@ function leave(event) {
         action: 'leave'
     };
     if(chatRoomClient) {
-        chatRoomClient.unsubscribe('/topic/' + roomId + '/message');
-        chatRoomClient.unsubscribe('/topic/' + roomId + '/room');
+        chatRoomClient.unsubscribe(domain + '/topic/' + roomId + '/message');
+        chatRoomClient.unsubscribe(domain + '/topic/' + roomId + '/room');
 
         chatRoomClient.disconnect(() => {}, headers);
         // chatListClient.disconnect(() => {}, {});

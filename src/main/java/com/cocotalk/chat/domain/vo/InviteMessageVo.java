@@ -1,5 +1,6 @@
 package com.cocotalk.chat.domain.vo;
 
+import com.cocotalk.chat.dto.request.RoomMemberRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviteMessageVo extends ChatMessageVo {
-    private List<Long> inviteeIds;
+    private List<RoomMemberRequest> invitees;
 }

@@ -18,7 +18,8 @@ public class CustomRoomRepositoryImpl implements CustomRoomRepository {
     public Optional<Room> findPrivate(Long userId, Long friendId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("type").is(RoomType.PRIVATE.ordinal()));
-        query.addCriteria(Criteria.where("members").elemMatch(Criteria.where("userId").is(userId))
+        query.addCriteria(Criteria.where("members").size(2)
+                .elemMatch(Criteria.where("userId").is(userId))
                 .andOperator(Criteria.where("members").elemMatch(Criteria.where("userId").is(friendId))));
         return Optional.ofNullable(mongoTemplate.findOne(query, Room.class));
     }
