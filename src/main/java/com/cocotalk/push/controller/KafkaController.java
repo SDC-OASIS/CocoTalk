@@ -1,5 +1,6 @@
 package com.cocotalk.push.controller;
 
+import com.cocotalk.push.dto.push.PushInfoInput;
 import com.cocotalk.push.service.KafkaConsumer;
 import com.cocotalk.push.service.KafkaProducer;
 import lombok.RequiredArgsConstructor;
@@ -19,4 +20,11 @@ public class KafkaController {
         this.producer.sendMessage(message);
         return "success";
     }
+
+    @PostMapping("/test")
+    public String sendPushNoti(@RequestBody PushInfoInput pushInfo) {
+        this.producer.sendPush(pushInfo);
+        return "success";
+    }
+
 }

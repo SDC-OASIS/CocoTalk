@@ -28,7 +28,7 @@ public class FCMService {
 
     @Value("${fcm.api-url}")
     private String apiUrl;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper mapper;
     private final WebClient webClient;
 
 
@@ -47,7 +47,7 @@ public class FCMService {
                 )
                 .validate_only(false)
                 .build();
-        return objectMapper.writeValueAsString(fcmMessage);
+        return mapper.writeValueAsString(fcmMessage);
     }
 
     private FCMMessage makeMessage(String targetToken, String title, String body) {

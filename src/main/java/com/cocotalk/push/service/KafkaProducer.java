@@ -1,21 +1,34 @@
 package com.cocotalk.push.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cocotalk.push.dto.push.PushInfoInput;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class KafkaProducer {
-    private static final String TOPIC = "push";
+
+    @Value("${spring.kafka.topic}")
+    private String topic;
+
+    private final ObjectMapper mapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    @Autowired
-    public KafkaProducer(KafkaTemplate kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
+    public void sendMessage(String message) {
+        System.out.println(String.format("Produce message ("+topic+") : %s", message));
+        this.kafkaTemplate.send(topic, message);
     }
 
-    public void sendMessage(String message) {
-        System.out.println(String.format("Produce message : %s", message));
-        this.kafkaTemplate.send(TOPIC, message);
+    public void sendPush(PushInfoInput pushInfoInput) {
+        System.out.println(String.format("Produce message ("+topic+") : %s", pushInfoInput));
+        try {
+            kafkaTemplate.send(topic, mapper.writeValueAsString(pushInfoInput));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

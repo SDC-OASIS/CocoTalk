@@ -5,7 +5,6 @@ import com.cocotalk.push.dto.common.ClientType;
 import com.cocotalk.push.entity.Device;
 import com.cocotalk.push.repository.DeviceRepository;
 import com.cocotalk.push.support.PushException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ import static com.cocotalk.push.dto.common.response.ResponseStatus.*;
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
-    private final ObjectMapper mapper;
 
     public Mono<Device> find(long id) {
         return deviceRepository.findById(id);
@@ -31,12 +29,12 @@ public class DeviceService {
     public Flux<Device> findByOptions(SelectInput selectInput) {
         if(selectInput.getType()==null)
             return deviceRepository.findByUserId(selectInput.getUserId());
-        short type = (short)selectInput.getType().ordinal();
+        short type = (short) selectInput.getType().ordinal();
         return Flux.from(deviceRepository.findByUserIdAndType(selectInput.getUserId(), type));
     }
 
     public Mono<Device> create(ClientInfo clientInfo, CreateInput createInput) {
-        short clientType = parseClientType(clientInfo.getAgent());
+        short clientType = (short) parseClientType(clientInfo.getAgent()).ordinal();
 
         Mono<Device> output = deviceRepository.existsByUserIdAndType(createInput.getUserId(), clientType)
                 .flatMap(res -> {
@@ -57,7 +55,7 @@ public class DeviceService {
     }
 
     public Mono<Device> update(ClientInfo clientInfo, UpdateInput updateInput) {
-        short clientType = parseClientType(clientInfo.getAgent());
+        short clientType = (short) parseClientType(clientInfo.getAgent()).ordinal();
         Mono<Device> device = deviceRepository.findByUserIdAndType(updateInput.getUserId(), clientType)
                 .flatMap(target -> {
                     target.setIp(clientInfo.getIp());
@@ -71,7 +69,7 @@ public class DeviceService {
     }
 
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {
-        short clientType = parseClientType(clientInfo.getAgent());
+        short clientType = (short) parseClientType(clientInfo.getAgent()).ordinal();
         log.info("userId and type : "+deleteInput.getUserId()+","+clientType);
         deviceRepository.findByUserIdAndType(deleteInput.getUserId(), clientType)
                 .doOnNext(target -> {
@@ -81,10 +79,10 @@ public class DeviceService {
                 .subscribe();
     }
 
-    private short parseClientType(String userAgent){
+    private ClientType parseClientType(String userAgent){
         if(userAgent.contains("Mozilla"))
-            return (short) ClientType.MOBILE.ordinal();
-        return (short) ClientType.WEB.ordinal();
+            return ClientType.WEB;
+        return ClientType.MOBILE;
     }
 
 }
