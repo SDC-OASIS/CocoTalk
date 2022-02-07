@@ -53,6 +53,7 @@ export default {
 		if (this.roomStatus.mainPage == "" || this.roomStatus.mainPage == "error") {
 			this.nav = false;
 		} else {
+			console.log("!!");
 			this.nav = true;
 		}
 		// 채팅방 목록용 소켓

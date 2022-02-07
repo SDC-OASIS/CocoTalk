@@ -19,35 +19,38 @@
 			</div>
 		</div>
 		<!-- 채팅 대화 -->
-		<div class="chat-messages-container">
-			<div class="chat-messages" v-for="(chatting, idx) in chattings" :key="idx">
-				<!-- 상대가 한 말 -->
-				<div v-if="chatting.userInfo.userName != userInfo.userName" class="row">
-					<ProfileImg :imgUrl="chatting.userInfo.profile" width="40px" />
-					<div class="chat-message">
-						<div style="padding-bottom: 7px">{{ chatting.userInfo.userName }}</div>
-						<div class="row">
-							<div class="bubble box">{{ chatting.message }}</div>
-							<div style="position: relative; width: 70px">
-								<div class="sent-time">오후2:00</div>
+		<div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages">
+			<div class="chat-messages-container">
+				<div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
+					{{ chatMessage }}
+					<!-- 상대가 한 말 -->
+					<div v-if="chatMessage.userId != userInfo.id" class="row">
+						<!-- <ProfileImg :imgUrl="chatMessage.userInfo.profile" width="40px" /> -->
+						<div class="chat-message">
+							<!-- <div style="padding-bottom: 7px">{{ chatMessage.userInfo.userName }}</div> -->
+							<div class="row">
+								<div class="bubble box">{{ chatMessage.content }}</div>
+								<div style="position: relative; width: 70px">
+									<div class="sent-time">오후2:00</div>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<!-- 내가 한 말 -->
-				<div v-else class="row" style="justify-content: right">
-					<div class="chat-message">
-						<div class="row">
-							<div style="position: relative; width: 55px">
-								<div class="sent-time-me">오후2:00</div>
+					<!-- 내가 한 말 -->
+					<div v-else class="row" style="justify-content: right">
+						<div class="chat-message">
+							<div class="row">
+								<div style="position: relative; width: 55px">
+									<div class="sent-time-me">오후2:00</div>
+								</div>
+								<div class="bubble-me box">{{ chatMessage.content }}</div>
 							</div>
-							<div class="bubble-me box">{{ chatting.message }}</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<button @click="changeNow">kkk</button>
+		<!-- <button @click="changeNow">kkk</button> -->
 		{{ roomStatus }}
 		<div class="message-input-container row">
 			<textarea v-model="message"></textarea>
@@ -61,7 +64,7 @@
 
 <script>
 import { mapState } from "vuex";
-import ProfileImg from "../components/common/ProfileImg.vue";
+// import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
 import Sidebar from "../components/chat/Sidebar.vue";
 import Stomp from "webstomp-client";
@@ -78,7 +81,7 @@ export default {
 		};
 	},
 	components: {
-		ProfileImg,
+		// ProfileImg,
 		Button,
 		Sidebar,
 	},
@@ -87,18 +90,18 @@ export default {
 		this.$store.dispatch(
 			"chat/changePage",
 			{
-				chat: this.$route.params.chat,
+				mainPage: this.roomStatus.mainPage,
 				roomId: this.$route.params.roomId,
 			},
 			{ root: true },
 		);
 		this.startChatConnection();
+		this.getChat();
 	},
 	mounted() {
-		this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId, nextMessageBundleId: this.socket.recentMessageBundleId }, { root: true });
+		// this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId, nextMessageBundleId: this.socket.recentMessageBundleId }, { root: true });
 		console.log("채팅연결시작");
 		console.log(this.roomId);
-		// this.$store.dispatch("chat/startChatConnection", this.roomId);
 	},
 	computed: {
 		...mapState("chat", ["roomStatus", "friends", "chattings", "socket"]),
@@ -108,6 +111,7 @@ export default {
 		"$route.params.roomId": function () {
 			console.log("채팅을 시작합니다.");
 			// vuex에 마지막 페이지 방문 저장
+			this.stompClientChat.disconnect();
 			this.$store.dispatch(
 				"chat/changePage",
 				{
@@ -116,8 +120,18 @@ export default {
 				},
 				{ root: true },
 			);
+			this.chatMessages = [];
+			this.getChat();
+			this.startChatConnection();
 			// this.forceRerender();
 			// this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
+		},
+		// 스크롤 메세지리스트 최하단으로 이동
+		chatMessages() {
+			this.$nextTick(() => {
+				let chatMessages = this.$refs.chatMessages;
+				chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+			});
 		},
 	},
 	methods: {
@@ -132,41 +146,50 @@ export default {
 		},
 		exitChat() {
 			console.log("채팅방 나가기");
+			this.stompClientChat.disconnect();
 			this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
 		},
 		forceRerender() {
 			console.log("재로딩");
 			this.componentChat += 1;
 		},
+		getChat() {
+			console.log("페이지네이션 시작");
+		},
 		startChatConnection: function () {
-			const serverURL = "http://138.2.88.163:8000/chat/stomp";
+			const serverURL = "http://138.2.93.111:8080/stomp";
 			let socket = new SockJS(serverURL);
 			this.stompClientChat = Stomp.over(socket);
 			this.stompClientChat.connect(
-				{ view: "chatRoom", userId: this.userInfo.userId, roomId: this.roomStatus.roomId },
+				{ view: "chatRoom", userId: this.userInfo.id, roomId: this.roomStatus.roomId },
 				(frame) => {
 					// 소켓 연결 성공
 					this.connected = true;
 					console.log("소켓 연결 성공", frame);
 					// 서버의 메시지 전송 endpoint를 구독
-					// 이런형태를 pub sub 구조라고 함
 					this.stompClientChat.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
 						console.log("구독으로 받은 메시지 입니다.");
-						console.log(res);
+						console.log(JSON.parse(res.body).message);
 						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
-						// this.recvList.push(JSON.parse(res.body));
+						const receivedMessage = JSON.parse(res.body).message;
+						this.chatMessages.push(receivedMessage);
+						console.log(this.chatMessages);
+						const payload = {
+							nextMessageBundleId: receivedMessage.messageBundleId,
+						};
+						this.$store.dispatch("chat/getChat", payload, { root: true });
 					});
 					// 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
-					const msg = {
-						type: 3,
-						roomId: this.roomStatus.roomId,
-						userId: this.userInfo.id,
-						inviteIds: [10],
-						messageBundleId: this.socket.recentMessageBundleId,
-						content: "초대메세지",
-					};
-					console.log("초대");
-					this.stompClientChat.send(`/chat/${this.roomStatus.roomId}/message/invite`, JSON.stringify(msg), {});
+					// const msg = {
+					// 	type: 3,
+					// 	roomId: this.roomStatus.roomId,
+					// 	userId: this.userInfo.id,
+					// 	inviteIds: [10],
+					// 	messageBundleId: this.socket.recentMessageBundleId,
+					// 	content: "초대메세지",
+					// };
+					// console.log("초대");
+					// this.stompClientChat.send(`/simple/chatroom/${this.roomStatus.roomId}/message/invite`, JSON.stringify(msg), {});
 				},
 				(error) => {
 					// 소켓 연결 실패
@@ -186,10 +209,7 @@ export default {
 					messageBundleId: this.socket.recentMessageBundleId,
 					content: this.message,
 				};
-				// console.log(msg);
-				// JSON.stringify(msg)
-				this.stompClientChat.send(`/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg), (res) => {
-					console.log("ddddd");
+				this.stompClientChat.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg), (res) => {
 					console.log("메세지 보내기", res);
 				});
 			}
@@ -211,8 +231,28 @@ export default {
 .exit-chat {
 	cursor: pointer;
 }
+.chat-messages-outer-container {
+	padding: 0px 30px;
+	overflow: auto;
+}
 .chat-messages-container {
-	padding: 0px 50px;
+	height: 70vh;
+}
+.chat-messages-outer-container::-webkit-scrollbar {
+	position: absolute;
+	background-color: #d8eec0;
+	width: 18px;
+}
+.chat-messages-outer-container::-webkit-scrollbar-track {
+	background-color: #d8eec0;
+	width: 10px;
+}
+.chat-messages-outer-container::-webkit-scrollbar-thumb {
+	background-color: #b8c8ae;
+	border-radius: 10px;
+	width: 10px;
+	background-clip: padding-box;
+	border: 5px solid transparent;
 }
 .chat-messages {
 	text-align: left;

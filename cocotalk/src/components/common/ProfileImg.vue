@@ -10,7 +10,18 @@
 			</defs>
 			<image style="border: 10px solid #ffffff" id="profileImg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipSquircle)" :xlink:href="imgUrl" />
 		</svg>
-		<svg v-if="radius" :style="backStyle" width="78px" height="80px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg v-if="radius == 1" :style="backStyle" width="78px" height="80px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<image
+				id="profileImg"
+				width="100%"
+				height="100%"
+				preserveAspectRatio="xMidYMid slice"
+				clip-path="url(#clipSquircle)"
+				xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAA1BMVEX///+nxBvIAAAASElEQVR4nO3BgQAAAADDoPlTX+AIVQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwDcaiAAFXD1ujAAAAAElFTkSuQmCC"
+			/>
+		</svg>
+		<!-- 채팅방목록에서 멤버가 2명인경우 -->
+		<svg v-if="radius == 3" :style="backStyle" width="3px" height="41px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<image
 				id="profileImg"
 				width="100%"
