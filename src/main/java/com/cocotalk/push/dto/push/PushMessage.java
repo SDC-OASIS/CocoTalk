@@ -2,7 +2,6 @@ package com.cocotalk.push.dto.push;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PushInfoInput {
+public class PushMessage {
     @NotNull
     private List<String> tokenList;
     @NotNull

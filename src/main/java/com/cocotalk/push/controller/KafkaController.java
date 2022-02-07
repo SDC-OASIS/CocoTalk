@@ -1,14 +1,20 @@
 package com.cocotalk.push.controller;
 
-import com.cocotalk.push.dto.push.PushInfoInput;
-import com.cocotalk.push.service.KafkaConsumer;
+import com.cocotalk.push.dto.push.PushMessage;
 import com.cocotalk.push.service.KafkaProducer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import javax.validation.Valid;
 
+/*
+*
+* 
+* sendMessage 함수를 사용하기 위해 만든 테스트용 컨트롤러입니다.
+* 필요하신 부분에서 바로 sendMessage 함수를 사용해주세요.
+* 
+* 
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/kafka")
@@ -21,9 +27,9 @@ public class KafkaController {
         return "success";
     }
 
-    @PostMapping("/test")
-    public String sendPushNoti(@RequestBody PushInfoInput pushInfo) {
-        this.producer.sendPush(pushInfo);
+    @PostMapping("/object")
+    public String sendPushMessage(@RequestBody @Valid PushMessage pushMessage) {
+        this.producer.sendPushMessage(pushMessage);
         return "success";
     }
 

@@ -1,9 +1,8 @@
 package com.cocotalk.push.service;
 
-import com.cocotalk.push.dto.push.PushInfoInput;
+import com.cocotalk.push.dto.push.PushMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +12,15 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
+    private final FCMService fcmService;
     private final ObjectMapper mapper;
 
     @KafkaListener(topics = "${spring.kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void consume(String message) throws IOException {
-        PushInfoInput pushInfoInput = mapper.readValue(message, PushInfoInput.class);
-        System.out.println(String.format("Consumed message : %s", pushInfoInput));
+        System.out.println(String.format("Consumed message : %s", message));
+        PushMessage pushMessage = mapper.readValue(message, PushMessage.class);
+        fcmService.sendByTokenList(pushMessage.getTokenList(), pushMessage.getTitle(), pushMessage.getBody());
+        System.out.println(String.format("[Parse] Consumed message : %s", pushMessage));
     }
 
 }
