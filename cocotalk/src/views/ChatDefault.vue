@@ -45,6 +45,8 @@ export default {
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: center;
+	border-right: 2px solid #9eac95;
+	position: relative;
 }
 .chat-default-container > img {
 	padding-right: 50px;

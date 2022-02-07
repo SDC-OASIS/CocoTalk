@@ -13,8 +13,34 @@
 		</div>
 		<div class="chat-list-container">
 			<div class="chat-container row" v-for="(chat, idx) in chats" :key="idx">
-				<div>
+				<!-- <div>
 					<ProfileImg :imgUrl="chat.img" width="50px" />
+				</div> -->
+				<div style="dispaly: inline-block; text-align: center">
+					<div v-if="chat.members.length == 1">
+						<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 50px" />
+					</div>
+					<div v-if="chat.members.length == 2" style="width: 50px; height: 60px">
+						<div style="position: absolute">
+							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width="30px" />
+							<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="two-friends-second-img" :radius="3" />
+						</div>
+					</div>
+					<div v-if="chat.members.length == 3" style="width: 110px; height: 90px; padding-top: 50px">
+						<div style="position: absolute">
+							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
+							<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 70px" class="three-friends-second-img" :radius="1" />
+							<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 70px" class="three-friends-third-img" :radius="2" />
+						</div>
+					</div>
+					<div v-if="chat.members.length >= 4" style="width: 110px; height: 90px; padding-top: 50px">
+						<div style="position: absolute">
+							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 60px" />
+							<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 60px" class="four-friends-second-img" :radius="1" />
+							<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-third-img" :radius="2" />
+							<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-forth-img" :radius="2" />
+						</div>
+					</div>
 				</div>
 				<div class="chat-info-container row" @click="goChat(chat)">
 					<ChatListInfo :chatInfo="chat" />
@@ -73,7 +99,6 @@ export default {
 				recentMessageBundelCount: chat.recentMessageBundelCount,
 			};
 			this.$store.dispatch("chat/getChat", payload, { root: true });
-
 			// this.$router.push({ name: "chatsChat", params: { chat: "chat", roomId: chat.id } }).catch(() => {});
 		},
 	},
@@ -181,5 +206,43 @@ export default {
 		justify-content: space-between;
 		width: 75%;
 	}
+}
+.two-friends-second-img {
+	position: relative;
+	top: -20px;
+	left: -12px;
+}
+
+.three-friends-second-img {
+	position: relative;
+	top: -75px;
+	left: -10px;
+}
+.three-friends-third-img {
+	position: relative;
+	top: -135px;
+	left: -45px;
+}
+.four-friends-first-img {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	z-index: 3;
+}
+.four-friends-second-img {
+	position: relative;
+	top: -60px;
+	left: 10px;
+	z-index: 3;
+}
+.four-friends-third-img {
+	position: relative;
+	top: -125px;
+	left: -55px;
+}
+.four-friends-forth-img {
+	position: relative;
+	top: -125px;
+	left: 10px;
 }
 </style>

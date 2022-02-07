@@ -36,31 +36,11 @@ export default {
 </script>
 
 <style scoped>
-.reviews {
-	position: absolute;
-	top: 170px;
-	left: 220px;
-	width: 1100px;
-}
-.review-table {
-	margin-top: 80px;
-}
-.go {
-	text-align: center;
-	margin-top: 35px;
-}
-.title {
-	position: absolute;
-	font-size: 50px;
-	color: #064e1c;
-	bottom: 60vh;
-	left: 42vw;
-}
 .jump {
 	width: 201px;
 	height: 260px;
 	position: absolute;
-	bottom: 20vh;
+	bottom: 25vh;
 	left: 45vw;
 	animation: bounce 0.1s ease infinite alternate;
 }
@@ -107,7 +87,7 @@ export default {
 	}
 }
 .text-container {
-	padding-top: 30vh;
+	padding-top: 25vh;
 	-webkit-font-smoothing: antialiased;
 	display: flex;
 	justify-content: center;
@@ -119,6 +99,7 @@ export default {
 h1 span {
 	position: relative;
 	top: 20px;
+	padding: 0 20px;
 	display: inline-block;
 	animation: bounce 0.3s ease infinite alternate;
 	font-size: 100px;

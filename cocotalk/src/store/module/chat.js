@@ -208,7 +208,7 @@ const chat = {
 	},
 	mutations: {
 		CHANGE_PAGE(state, payload) {
-			console.log("1111");
+			console.log("페이지를 전환합니다.");
 			// roomId가 존재하지 않는 경우 == 채팅방이 닫혀있는 경우
 			if (!payload.roomId) {
 				state.roomStatus.roomId = "";
@@ -218,7 +218,7 @@ const chat = {
 			}
 			// roomId가 존재하는 경우 == 채팅방이 열려있는 경우
 			else {
-				state.roomStatus.chatPage = payload.chat;
+				// state.roomStatus.chatPage = payload.chat;
 				state.roomStatus.roomId = payload.roomId;
 			}
 		},
@@ -356,11 +356,17 @@ const chat = {
 			// 	console.log(res);
 			// });
 			context.commit("GET_CHAT", payload);
-			context.commit("CHANGE_PAGE", {
-				chat: "chat",
-				roomId: payload.roomId,
-			});
-			router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
+			// context.commit("CHANGE_PAGE", {
+			// 	roomId: payload.roomId,
+			// });
+			// console.log(context.state.roomStatus);
+			if (context.state.roomStatus.mainPage == "friends") {
+				router.push({ name: "friendsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
+			} else {
+				console.log("확인");
+				router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
+			}
+			// router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
 		},
 
 		createChat(context, payload) {
