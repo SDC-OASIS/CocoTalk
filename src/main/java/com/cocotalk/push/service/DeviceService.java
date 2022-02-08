@@ -58,7 +58,7 @@ public class DeviceService {
     }
 
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {
-        short clientType = (short) parseClientType(clientInfo.getAgent()).ordinal();
+        short clientType = parseClientType(clientInfo.getAgent());
         log.info("userId and type : "+deleteInput.getUserId()+","+clientType);
         deviceRepository.findByUserIdAndType(deleteInput.getUserId(), clientType)
                 .doOnNext(target -> {
@@ -68,10 +68,10 @@ public class DeviceService {
                 .subscribe();
     }
 
-    private ClientType parseClientType(String userAgent){
+    private short parseClientType(String userAgent){
         if(userAgent.contains("Mozilla"))
-            return ClientType.WEB;
-        return ClientType.MOBILE;
+            return (short) ClientType.WEB.ordinal();
+        return  (short) ClientType.MOBILE.ordinal();
     }
 
 }
