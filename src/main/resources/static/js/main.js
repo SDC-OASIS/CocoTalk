@@ -83,7 +83,6 @@ function enter(event) {
                     chatRoomClient = Stomp.over(chatRoomSocket);
 
                     console.log("enter connect");
-
                     chatRoomClient.connect({
                         view: "chatRoom",
                         userId: userId,
@@ -146,7 +145,8 @@ function onConnectedRoomSocket() {
     console.log("onConnectedRoomSocket 호출됨");
     console.log("sendMessage submit에 이벤트 리스너 등록됨");
     messageForm.addEventListener('submit', sendMessage, true);
-    chatRoomClient.subscribe('/topic/' + roomId + '/message', onMessageReceivedRoomSocket); // /chatroom/topic?
+    chatRoomClient.subscribe('/topic/' + roomId + '/message', onMessageReceivedRoomSocket);
+    chatRoomClient.subscribe('/topic/' + roomId + '/room', onRoomReceivedRoomSocket);
     connectingElement.classList.add('hidden');
 }
 
@@ -308,18 +308,22 @@ function onMessageReceivedRoomSocket(payload) { // subscribe시 이 함수로 �
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-// function onRoomReceivedRoomSocket(payload) {
-//     console.log('onRoomReceivedRoomSocket');
-// }
+function onRoomReceivedRoomSocket(payload) {
+    console.log('onRoomReceivedRoomSocket');
+    const body = JSON.stringify(payload.body);
+    console.log(body);
+}
 
 function onMessageReceivedListSocket(payload) {
     console.log('onMessageReceivedListSocket');
-    // console.log(payload);
+    const body = JSON.stringify(payload.body);
+    console.log(body);
 }
 
 function onRoomReceivedListSocket(payload) {
     console.log('onRoomReceivedListSocket');
-    // console.log(payload);
+    const body = JSON.stringify(payload.body);
+    console.log(body);
 }
 
 function onNewRoomReceivedListSocket(payload) {
