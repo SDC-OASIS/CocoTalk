@@ -103,34 +103,33 @@ function createRoomAndConnectAndSend(event){
 
     const messageContent = messageInput.value.trim();
 
-    if(messageContent) {
-        let messageWithRoomRequest = {
-            chatMessageRequest: {
-                userId: userId,
-                type: 0,
-                content: messageInput.value
-            },
-            roomRequest: {
-                roomName: "방 이름",
-                img: "이미지",
-                type: 0,
-                members: [
-                    {
-                        userId: userId,
-                        userName: "이희은",
-                        profile: { profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg", background : "https://ifh.cc/g/CgiChn.jpg", message : "화이팅화이팅" }
-                    },
-                    {
-                        userId: friendId,
-                        userName: "황종훈",
-                        profile: { profile:"https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg", background : "https://ifh.cc/g/CgiChn.jpg", message : "화이팅화이팅" }
-                    }
-                ]
-            }
-        };
-
-        chatListClient.send("/simple/chatroom/room", {}, JSON.stringify(messageWithRoomRequest));
-
+    if (messageContent) {
+        let roomRequest = {
+            roomName: "호로로로로롤ㄹㄹ로로로",
+            img: "이미지",
+            type: 0,
+            members: [
+                {
+                    userId: userId,
+                    userName: "황종훈",
+                    profile: JSON.stringify({
+                        profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+                        background: "https://ifh.cc/g/CgiChn.jpg",
+                        message: "화이팅화이팅"
+                    })
+                },
+                {
+                    userId: friendId,
+                    userName: "이희은",
+                    profile: JSON.stringify({
+                        profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+                        background: "https://ifh.cc/g/CgiChn.jpg",
+                        message: "화이팅화이팅"
+                    })
+                }
+            ]
+        }
+        chatListClient.send("/simple/chatroom/new", {}, JSON.stringify(roomRequest));
         event.preventDefault();
     }
 }
@@ -148,10 +147,6 @@ function onConnectedRoomSocket() {
     console.log("sendMessage submit에 이벤트 리스너 등록됨");
     messageForm.addEventListener('submit', sendMessage, true);
     chatRoomClient.subscribe('/topic/' + roomId + '/message', onMessageReceivedRoomSocket); // /chatroom/topic?
-    chatRoomClient.subscribe('/topic/' + roomId + '/room', onRoomReceivedRoomSocket); // /chatroom/topic?
-
-    onConnectedListSocket();
-
     connectingElement.classList.add('hidden');
 }
 
@@ -264,6 +259,8 @@ function leave(event) {
 
 function onMessageReceivedRoomSocket(payload) { // subscribe시 이 함수로 처리
     console.log('onMessageReceivedRoomSocket');
+    const body = JSON.parse(payload.body);
+
     console.log(payload);
 
     const message = body.message;
@@ -311,9 +308,9 @@ function onMessageReceivedRoomSocket(payload) { // subscribe시 이 함수로 �
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-function onRoomReceivedRoomSocket(payload) {
-    console.log('onRoomReceivedRoomSocket');
-}
+// function onRoomReceivedRoomSocket(payload) {
+//     console.log('onRoomReceivedRoomSocket');
+// }
 
 function onMessageReceivedListSocket(payload) {
     console.log('onMessageReceivedListSocket');
@@ -329,10 +326,11 @@ function onNewRoomReceivedListSocket(payload) {
     console.log('onRoomReceivedListSocket');
     console.log(payload);
 
-    roomId = payload.id;
+    const body = JSON.parse(payload.body);
+    roomId = body.id;
     console.log('채팅방 생성됨 roomId = ' + roomId);
 
-    messageBundleIds = payload.messageBundleIds
+    messageBundleIds = body.messageBundleIds
     messageBundleIds = messageBundleIds.substring(1, messageBundleIds.length - 1).split(", ");
     console.log("messageBundleIds = " + messageBundleIds);
     nextMessageBundleId = messageBundleIds[messageBundleIds.length - 1];
@@ -344,11 +342,34 @@ function onNewRoomReceivedListSocket(payload) {
         view : "chatRoom",
         userId : userId,
         roomId : roomId
-    }, onConnectedRoomSocket, onError);
+    }, onConnectAndSend, onError);
 
     console.log("createRoomAndConnectAndSend() submit에 이벤트 리스너 제거됨")
     messageForm.removeEventListener('submit', createRoomAndConnectAndSend, true)
 }
+
+function onConnectAndSend() {
+    const messageContent = messageInput.value.trim();
+
+    if(messageContent && chatRoomClient) {
+        let chatMessageRequest = {
+            roomId: roomId,
+            userId: userId,
+            messageBundleId: nextMessageBundleId,
+            type: 0,
+            content: messageInput.value
+        };
+
+        chatRoomClient.send("/simple/chatroom/" + roomId + "/message/send", {}, JSON.stringify(chatMessageRequest));
+        messageInput.value = '';
+    }
+
+    console.log("onConnectAndSend() 호출됨")
+    console.log("createRoomAndConnectAndSend() submit에 이벤트 리스너 제거됨")
+    messageForm.removeEventListener('submit', createRoomAndConnectAndSend, true)
+    onConnectedRoomSocket();
+}
+
 
 function getAvatarColor(messageSender) {
     let hash = 0;

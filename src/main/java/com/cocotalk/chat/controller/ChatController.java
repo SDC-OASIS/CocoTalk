@@ -36,20 +36,14 @@ public class ChatController {
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageVo);
     }
 
-    @MessageMapping("/room")
-    public void createRoom(@Payload MessageWithRoomRequest messageWithRoomRequest) {
-        MessageWithRoomVo<ChatMessageVo> messageWithRoomVo = roomService.create(messageWithRoomRequest);
-        RoomVo roomVo = messageWithRoomVo.getRoomVo();
-        MessageVo<ChatMessageVo> messageVo = messageWithRoomVo.getMessageVo();
-
+    @MessageMapping("/new")
+    public void createRoom(@Payload RoomRequest roomRequest) {
+        RoomVo roomVo = roomService.create(roomRequest);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
             long userId = roomVo.getMembers().get(i).getUserId();
             simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", roomVo);
-            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/message", messageVo);
         }
-
-        simpMessagingTemplate.convertAndSend("/topic/" + roomVo.getId() + "/message", messageVo);
     }
 
     @MessageMapping("/{roomId}/message/invite")
