@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class RoomMemberRequest {
     private Long userId;
 
-    private String userName;
+    private String username;
 
     private String profile;
 }

@@ -111,7 +111,7 @@ function createRoomAndConnectAndSend(event){
             members: [
                 {
                     userId: userId,
-                    userName: "황종훈",
+                    username: "황종훈",
                     profile: JSON.stringify({
                         profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
                         background: "https://ifh.cc/g/CgiChn.jpg",
@@ -120,7 +120,7 @@ function createRoomAndConnectAndSend(event){
                 },
                 {
                     userId: friendId,
-                    userName: "이희은",
+                    username: "이희은",
                     profile: JSON.stringify({
                         profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
                         background: "https://ifh.cc/g/CgiChn.jpg",
@@ -186,7 +186,7 @@ function invite (event) {
         console.log(inviteeIds[i]);
         invitees.push({
             userId: inviteeIds[i],
-            userName: "유저" + inviteeIds[i],
+            username: "유저" + inviteeIds[i],
             profile: "profile"
         })
     }

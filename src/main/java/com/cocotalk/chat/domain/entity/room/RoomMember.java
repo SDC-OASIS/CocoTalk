@@ -15,7 +15,7 @@ import java.util.Objects;
 public class RoomMember {
     private Long userId; // MySQL userId
 
-    private String userName;
+    private String username;
 
     private String profile;
 
