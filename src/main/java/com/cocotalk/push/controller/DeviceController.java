@@ -38,18 +38,11 @@ public class DeviceController {
         return deviceService.findByOptions(selectInput);
     }
 
-    @Operation(summary = "device 등록하기")
+    @Operation(summary = "device 갱신하기")
     @PostMapping
-    public Mono<Device> create(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid CreateInput createInput) {
-        log.info("[device/post] create device");
-        return deviceService.create(clientInfo, createInput);
-    }
-    
-    @Operation(summary = "device 수정하기")
-    @PutMapping
-    public Mono<Device> update(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid UpdateInput updateInput) {
-        log.info("[device/put] update device");
-        return deviceService.update(clientInfo, updateInput);
+    public Mono<Device> create(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid SaveInput saveInput) {
+        log.info("[device/post] save device");
+        return deviceService.save(clientInfo, saveInput);
     }
 
     @Operation(summary = "device 삭제하기")

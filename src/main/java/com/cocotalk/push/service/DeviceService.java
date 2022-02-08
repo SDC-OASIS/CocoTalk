@@ -35,39 +35,26 @@ public class DeviceService {
         return Flux.from(deviceRepository.findByUserIdAndType(selectInput.getUserId(), type));
     }
 
-    public Mono<Device> create(ClientInfo clientInfo, CreateInput createInput) {
+    public Mono<Device> save(ClientInfo clientInfo, SaveInput saveInput) {
+        log.info("[save/SaveInput] : " + saveInput);
         short clientType = parseClientType(clientInfo.getAgent());
-
-        Mono<Device> output = deviceRepository.existsByUserIdAndType(createInput.getUserId(), clientType)
-                .flatMap(res -> {
-                    if(res.booleanValue()==true)
-                        return Mono.error(new PushException(EXISTS_INFO));
-                    Device device = Device.builder()
-                            .userId(createInput.getUserId())
-                            .token(createInput.getFcmToken())
-                            .ip(clientInfo.getIp())
-                            .agent(clientInfo.getAgent())
-                            .type(clientType)
-                            .loggedinAt(LocalDateTime.now())
-                            .build();
-                    return deviceRepository.save(device)
-                            .doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
-                });
-        return output;
-    }
-
-    public Mono<Device> update(ClientInfo clientInfo, UpdateInput updateInput) {
-        short clientType = parseClientType(clientInfo.getAgent());
-        Mono<Device> device = deviceRepository.findByUserIdAndType(updateInput.getUserId(), clientType)
-                .flatMap(target -> {
+        return deviceRepository.findByUserIdAndType(saveInput.getUserId(), clientType)
+                .flatMap(target -> { // device 정보가 있는 경우
+                    target.setToken(saveInput.getFcmToken());
                     target.setIp(clientInfo.getIp());
                     target.setAgent(clientInfo.getAgent());
-                    target.setToken(updateInput.getFcmToken());
                     target.setLoggedinAt(LocalDateTime.now());
                     return deviceRepository.save(target);
-                })
-                .doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
-        return device;
+                }).switchIfEmpty( // device 정보가 없는 경우
+                        deviceRepository.save(Device.builder()
+                                .userId(saveInput.getUserId())
+                                .token(saveInput.getFcmToken())
+                                .ip(clientInfo.getIp())
+                                .agent(clientInfo.getAgent())
+                                .type(clientType)
+                                .loggedinAt(LocalDateTime.now())
+                                .build())
+                ).doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
     }
 
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {
