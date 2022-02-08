@@ -5,10 +5,7 @@ import com.cocotalk.chat.domain.entity.room.Room;
 import com.cocotalk.chat.domain.entity.room.RoomMember;
 import com.cocotalk.chat.domain.entity.room.RoomType;
 import com.cocotalk.chat.domain.vo.*;
-import com.cocotalk.chat.dto.request.ChatMessageRequest;
-import com.cocotalk.chat.dto.request.InviteMessageRequest;
-import com.cocotalk.chat.dto.request.RoomMemberRequest;
-import com.cocotalk.chat.dto.request.RoomRequest;
+import com.cocotalk.chat.dto.request.*;
 import com.cocotalk.chat.exception.CustomError;
 import com.cocotalk.chat.exception.CustomException;
 import com.cocotalk.chat.repository.RoomRepository;
@@ -43,8 +40,6 @@ public class RoomService {
     public static final ChatMessageVo emptyChatMessageVo = ChatMessageVo.builder()
             .content("채팅방에 메시지가 없습니다.")
             .build();
-    public static final List<ObjectId> emptyObjectIdList = new ArrayList<>();
-
 
     public static final CustomException INVALID_ROOM_ID =
             new CustomException(CustomError.BAD_REQUEST, "해당 roomId를 갖는 채팅방이 존재하지 않습니다.");
@@ -69,6 +64,45 @@ public class RoomService {
         if (members.size() >= 2) {
             List<RoomMember> roomMembers = request.getMembers().stream()
                     .map(member -> RoomMember.builder()
+                            .userId(member.getUserId())
+                            .userName(member.getUserName())
+                            .profile(member.getProfile())
+                            .joinedAt(now)
+                            .enteredAt(now)
+                            .joining(true)
+                            .awayAt(now)
+                            .leftAt(now)
+                            .build())
+                    .collect(Collectors.toList());
+
+            Room createdRoom = roomRepository.save(Room.builder()
+                    .roomName(request.getRoomName())
+                    .img(request.getImg())
+                    .type(request.getType())
+                    .members(roomMembers)
+                    .messageBundleIds(new ArrayList<>())
+                    .noticeIds(new ArrayList<>())
+                    .build());
+
+            MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
+            createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
+            return roomMapper.toVo(roomRepository.save(createdRoom));
+        } else {
+            throw WRONG_MEMBER_SIZE;
+        }
+    }
+
+    public MessageWithRoomVo<ChatMessageVo> create(MessageWithRoomRequest request) { // C
+        ChatMessageRequest chatMessageRequest = request.getChatMessageRequest();
+        RoomRequest roomRequest = request.getRoomRequest();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<RoomMemberRequest> members = roomRequest.getMembers().stream().distinct().collect(Collectors.toList()); // 중복 제거
+
+        if (members.size() >= 2) {
+            List<RoomMember> roomMembers = roomRequest.getMembers().stream()
+                    .map(member -> RoomMember.builder()
                                 .userId(member.getUserId())
                                 .userName(member.getUserName())
                                 .profile(member.getProfile())
@@ -81,17 +115,20 @@ public class RoomService {
                     .collect(Collectors.toList());
 
             Room createdRoom = roomRepository.save(Room.builder()
-                    .roomName(request.getRoomName())
-                    .img(request.getImg())
-                    .type(request.getType())
+                    .roomName(roomRequest.getRoomName())
+                    .img(roomRequest.getImg())
+                    .type(roomRequest.getType())
                     .members(roomMembers)
-                    .messageBundleIds(emptyObjectIdList)
-                    .noticeIds(emptyObjectIdList)
+                    .messageBundleIds(new ArrayList<>())
+                    .noticeIds(new ArrayList<>())
                     .build());
 
             MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
             createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
-            return roomMapper.toVo(roomRepository.save(createdRoom));
+
+            RoomVo roomVo = roomMapper.toVo(roomRepository.save(createdRoom));
+            MessageVo<ChatMessageVo> messageVo = saveChatMessage(roomVo.getId(), chatMessageRequest);
+            return new MessageWithRoomVo<>(messageVo, roomVo);
         } else {
             throw WRONG_MEMBER_SIZE;
         }
