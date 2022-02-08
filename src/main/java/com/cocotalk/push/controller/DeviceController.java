@@ -40,7 +40,7 @@ public class DeviceController {
 
     @Operation(summary = "device 갱신하기")
     @PostMapping
-    public Mono<Device> create(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid SaveInput saveInput) {
+    public Mono<Device> save(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid SaveInput saveInput) {
         log.info("[device/post] save device");
         return deviceService.save(clientInfo, saveInput);
     }
