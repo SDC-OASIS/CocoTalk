@@ -2,7 +2,6 @@
 	<div id="app">
 		<router-view name="login" />
 		<router-view name="error" />
-
 		<div>
 			<Navbar v-if="nav" />
 			<div class="content-container">
@@ -12,8 +11,8 @@
 		</div>
 		<Alert v-if="alert.status == 'open'" :text="alert.text" />
 		<AddFriendModal v-if="addFriendModal == 'open'" />
-		<MakeChatModal v-if="makeChatModal == 'open'" />
-		<RoomNameModal v-if="roomNameModal.status == 'open'" />
+		<ChatCreationModal v-if="ChatCreationModal == 'open'" />
+		<RoomNameEditModal v-if="roomNameEditModal.status == 'open'" />
 		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
 	</div>
 </template>
@@ -22,11 +21,10 @@
 import { mapState } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 import AddFriendModal from "@/components/modals/AddFriendModal.vue";
-import MakeChatModal from "@/components/modals/MakeChatModal.vue";
-import RoomNameModal from "@/components/modals/RoomNameModal.vue";
+import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
+import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
 import Alert from "@/components/modals/Alert.vue";
-// import	roomNameModal from "@/components/modals	roomNameModal.vue";
 
 export default {
 	name: "App",
@@ -38,8 +36,8 @@ export default {
 	components: {
 		Navbar,
 		AddFriendModal,
-		MakeChatModal,
-		RoomNameModal,
+		ChatCreationModal,
+		RoomNameEditModal,
 		ProfileModal,
 		Alert,
 	},
@@ -62,7 +60,7 @@ export default {
 	computed: {
 		...mapState("userStore", ["screenInfo"]),
 		...mapState("chat", ["friends", "roomStatus"]),
-		...mapState("modal", ["alert", "addFriendModal", "profileModal", "makeChatModal", "roomNameModal"]),
+		...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal"]),
 	},
 };
 </script>

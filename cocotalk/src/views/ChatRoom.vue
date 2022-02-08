@@ -99,7 +99,6 @@ export default {
 		this.getChat();
 	},
 	mounted() {
-		// this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId, nextMessageBundleId: this.socket.recentMessageBundleId }, { root: true });
 		console.log("채팅연결시작");
 		console.log(this.roomId);
 	},
@@ -145,7 +144,7 @@ export default {
 			sidebar.style.right = "0px";
 		},
 		exitChat() {
-			console.log("채팅방 나가기");
+			console.log("채팅방 닫기");
 			this.stompClientChat.disconnect();
 			this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
 		},
@@ -166,19 +165,37 @@ export default {
 					// 소켓 연결 성공
 					this.connected = true;
 					console.log("소켓 연결 성공", frame);
-					// 서버의 메시지 전송 endpoint를 구독
+					// 채팅 메세지 채널 subscribe
 					this.stompClientChat.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
 						console.log("구독으로 받은 메시지 입니다.");
 						console.log(JSON.parse(res.body).message);
 						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
 						const receivedMessage = JSON.parse(res.body).message;
 						this.chatMessages.push(receivedMessage);
+						console.log("채팅목록");
 						console.log(this.chatMessages);
+						// 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
 						const payload = {
 							nextMessageBundleId: receivedMessage.messageBundleId,
 						};
 						this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
 					});
+					// 채팅방 정보(참여중인 멤버 접속 정보 포함) 채널 subscribe
+					// this.stompClientChat.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
+					// 	console.log("구독으로 받은 룸정보입니다.");
+					// 	console.log(JSON.parse(res.body).message);
+					// 	// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
+					// 	// const receivedMessage = JSON.parse(res.body).message;
+					// 	// this.chatMessages.push(receivedMessage);
+					// 	// console.log("채팅목록");
+					// 	// console.log(this.chatMessages);
+					// 	// // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
+					// 	// const payload = {
+					// 	// 	nextMessageBundleId: receivedMessage.messageBundleId,
+					// 	// };
+					// 	// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
+					// });
+
 					// 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
 					// const msg = {
 					// 	type: 3,

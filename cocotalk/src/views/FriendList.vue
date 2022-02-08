@@ -1,5 +1,5 @@
 <template>
-	<div class="friends-container">
+	<div class="friend-list-outer-container">
 		<div class="header row">
 			<span>친구</span>
 			<div class="header-icon-container row">
@@ -19,8 +19,8 @@
 		</div>
 		<hr />
 		<div class="friend-list-container">
-			<div class="friend-cnt">친구 - 200</div>
-			<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
+			<div class="friend-cnt">친구 - {{ friendsCnt }}</div>
+			<div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
 				<div @click="openProfileModal(friend)">
 					<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
 				</div>
@@ -57,7 +57,7 @@ export default {
 		}
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
 		this.$store.dispatch("userStore/getUser");
-		// this.$store.dispatch("friend/getFriends");
+		this.$store.dispatch("friend/getFriends");
 	},
 	mounted() {
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
@@ -65,8 +65,10 @@ export default {
 	computed: {
 		...mapState("chat", ["roomStatus"]),
 		...mapState("friend", ["friends"]),
-		...mapState("userStore", ["userInfo"]),
-		...mapState("userStore", ["screenInfo"]),
+		...mapState("userStore", ["userInfo", "screenInfo"]),
+		friendsCnt() {
+			return this.friends.length;
+		},
 	},
 	methods: {
 		noImage(e) {
@@ -91,14 +93,10 @@ export default {
 		},
 	},
 };
-// var toolbar = document.getElementById("d");
-// 	toolbar.onclick = function (e) {
-// 		alert("Hello");
-// };
 </script>
 
 <style scoped>
-.friends-container {
+.friend-list-outer-container {
 	display: block;
 	padding-top: 20px;
 	background-color: #ffffff;
@@ -107,7 +105,7 @@ export default {
 	font-size: 15px;
 	overflow: auto;
 }
-.friends-container > hr {
+.friend-list-outer-container > hr {
 	border-bottom: 1px solid #9eac95;
 	width: 90%;
 }
@@ -142,7 +140,6 @@ export default {
 
 .myprofile {
 	padding: 10px 20px 10px 20px;
-	/* border-bottom: 2px solid #9eac95; */
 	align-items: center;
 	cursor: pointer;
 }
@@ -157,15 +154,15 @@ export default {
 .friend-list-container {
 	text-align: left;
 }
-.friends-container::-webkit-scrollbar {
+.friend-list-outer-container::-webkit-scrollbar {
 	background-color: #ffffff;
 	width: 18px;
 }
-.friends-container::-webkit-scrollbar-track {
+.friend-list-outer-container::-webkit-scrollbar-track {
 	background-color: #ffffff;
 	width: 10px;
 }
-.friends-container::-webkit-scrollbar-thumb {
+.friend-list-outer-container::-webkit-scrollbar-thumb {
 	background-color: #b8c8ae;
 	border-radius: 10px;
 	width: 10px;
@@ -178,16 +175,16 @@ export default {
 	font-size: 13px;
 	margin: 15px 0px 5px 20px;
 }
-.friend-container {
+.friend-list-item-container {
 	padding: 7px 0;
 	align-items: center;
 	cursor: pointer;
 	padding-left: 20px;
 }
-.friend-container:hover {
+.friend-list-item-container:hover {
 	background-color: #e7f7dd;
 }
-.friend-container img {
+.friend-list-item-container img {
 	width: 50px;
 	height: 50px;
 }

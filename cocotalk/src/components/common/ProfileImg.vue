@@ -31,6 +31,17 @@
 				xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAA1BMVEX///+nxBvIAAAASElEQVR4nO3BgQAAAADDoPlTX+AIVQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwDcaiAAFXD1ujAAAAAElFTkSuQmCC"
 			/>
 		</svg>
+		<!-- 채팅방목록에서 멤버가 3명인경우 -->
+		<svg v-if="radius == 4" :style="backStyle" width="3px" height="41px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<image
+				id="profileImg"
+				width="100%"
+				height="100%"
+				preserveAspectRatio="xMidYMid slice"
+				clip-path="url(#clipSquircle)"
+				xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAA1BMVEX///+nxBvIAAAASElEQVR4nO3BgQAAAADDoPlTX+AIVQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwDcaiAAFXD1ujAAAAAElFTkSuQmCC"
+			/>
+		</svg>
 	</div>
 </template>
 

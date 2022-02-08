@@ -9,8 +9,8 @@ const modal = {
 			text: "",
 		},
 		addFriendModal: "close",
-		makeChatModal: "close",
-		roomNameModal: {
+		ChatCreationModal: "close",
+		roomNameEditModal: {
 			status: "open",
 			selectedFriends: Object,
 		},
@@ -43,18 +43,18 @@ const modal = {
 		CLOSE_ADD_FRIEND_MODAL(state) {
 			state.addFriendModal = "close";
 		},
-		OPEN_MAKE_CHAT_MODAL(state, payload) {
-			state.makeChatModal = payload;
+		OPEN_CHAT_CREATION_MODAL(state, payload) {
+			state.ChatCreationModal = payload;
 		},
-		CLOSE_MAKE_CHAT_MODAL(state) {
-			state.makeChatModal = "close";
+		CLOSE_CHAT_CREATION_MODAL(state) {
+			state.ChatCreationModal = "close";
 		},
-		OPEN_ROOM_NAME_MODAL(state, payload) {
-			state.roomNameModal.status = "open";
-			state.roomNameModal.selectedFriends = payload;
+		OPEN_ROOM_NAME_EDIT_MODAL(state, payload) {
+			state.roomNameEditModal.status = "open";
+			state.roomNameEditModal.selectedFriends = payload;
 		},
-		CLOSE_ROOM_NAME_MODAL(state) {
-			state.roomNameModal.status = "close";
+		CLOSE_ROOM_NAME_EDIT_MODAL(state) {
+			state.roomNameEditModal.status = "close";
 		},
 	},
 	actions: {
@@ -79,19 +79,19 @@ const modal = {
 		closeAddFriendModal: function (context) {
 			context.commit("CLOSE_ADD_FRIEND_MODAL");
 		},
-		openMakeChatModal: function (context, payload) {
-			context.commit("OPEN_MAKE_CHAT_MODAL", payload);
+		openChatCreationModal: function (context, payload) {
+			context.commit("OPEN_CHAT_CREATION_MODAL", payload);
 		},
-		closeMakeChatModal: function (context) {
-			context.commit("CLOSE_MAKE_CHAT_MODAL");
+		closeChatCreationModal: function (context) {
+			context.commit("CLOSE_CHAT_CREATION_MODAL");
 		},
-		openroomNameModal: function (context, payload) {
+		openRoomNameEditModal: function (context, payload) {
 			console.log("채팅방 멤버 옮기기");
 			console.log(payload);
-			context.commit("OPEN_ROOM_NAME_MODAL", payload);
+			context.commit("OPEN_ROOM_NAME_EDIT_MODAL", payload);
 		},
-		closeroomNameModal: function (context) {
-			context.commit("CLOSE_ROOM_NAME_MODAL");
+		closeRoomNameEditModal: function (context) {
+			context.commit("CLOSE_ROOM_NAME_EDIT_MODAL");
 		},
 	},
 	modules: {},
