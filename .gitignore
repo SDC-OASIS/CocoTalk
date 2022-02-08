@@ -51,3 +51,5 @@ DerivedData/
 */.idea
 
 .DS_Store
+
+**/GoogleService-Info.plist
