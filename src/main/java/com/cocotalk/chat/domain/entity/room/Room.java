@@ -7,7 +7,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,7 +20,7 @@ public class Room {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
 
-    private String roomName;
+    private String roomname;
 
     private String img;
 

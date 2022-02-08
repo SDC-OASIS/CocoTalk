@@ -104,7 +104,7 @@ function createRoomAndConnectAndSend(event){
 
     if (messageContent) {
         let roomRequest = {
-            roomName: "호로로로로롤ㄹㄹ로로로",
+            roomname: "호로로로로롤ㄹㄹ로로로",
             img: "이미지",
             type: 0,
             members: [

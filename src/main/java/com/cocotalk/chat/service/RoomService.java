@@ -76,7 +76,7 @@ public class RoomService {
                     .collect(Collectors.toList());
 
             Room createdRoom = roomRepository.save(Room.builder()
-                    .roomName(request.getRoomName())
+                    .roomname(request.getRoomname())
                     .img(request.getImg())
                     .type(request.getType())
                     .members(roomMembers)
@@ -115,7 +115,7 @@ public class RoomService {
                     .collect(Collectors.toList());
 
             Room createdRoom = roomRepository.save(Room.builder()
-                    .roomName(roomRequest.getRoomName())
+                    .roomname(roomRequest.getRoomname())
                     .img(roomRequest.getImg())
                     .type(roomRequest.getType())
                     .members(roomMembers)
