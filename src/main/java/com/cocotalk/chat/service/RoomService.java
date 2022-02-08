@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class RoomService {
 
     @Value(value = "${cocotalk.message-bundle-limit}")
     private int messageBundleLimit;
+
+    @Value(value = "${cocotalk.message-paging-size}")
+    private int messagePagingSize;
 
     QRoom qRoom = QRoom.room;
 
@@ -262,13 +266,23 @@ public class RoomService {
         return roomMapper.toVo(room);
     }
 
+    public RoomWithMessageListVo<ChatMessageVo> findRoomAndMessage(ObjectId roomId,
+                                     @RequestParam int count) {
+        RoomVo roomVo = roomMapper.toVo(this.find(roomId));
+        List<ObjectId> messageBundleIds = roomVo.getMessageBundleIds();
+        List<ChatMessageVo> chatMessageVos = chatMessageService.findMessagePage(
+                roomId,
+                messageBundleIds.get(messageBundleIds.size() - 1),
+                count,
+                messagePagingSize);
+        return new RoomWithMessageListVo<>(roomVo, chatMessageVos);
+    }
+
     public List<RoomVo> findAllJoining(UserVo userVo) {
         return roomRepository.findJoiningRoom(userVo.getId()).stream()
                 .map(roomMapper::toVo)
                 .collect(Collectors.toList());
     }
-
-
 
     public List<RoomListVo> findRoomList(UserVo userVo) { // sort 타입 패러미터 추가 예정
         Comparator<RoomListVo> comparator = (o1, o2) ->
