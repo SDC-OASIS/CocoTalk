@@ -2,6 +2,8 @@ package com.cocotalk.auth.dto.common;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+
 
 @Builder
 @Getter

@@ -3,22 +3,25 @@ package com.cocotalk.auth.controller;
 import com.cocotalk.auth.dto.common.ClientType;
 import com.cocotalk.auth.dto.common.TokenDto;
 import com.cocotalk.auth.dto.email.issue.IssueInput;
+import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.service.AuthService;
 import com.cocotalk.auth.dto.email.issue.IssueOutput;
 import com.cocotalk.auth.dto.email.validation.ValidationInput;
 import com.cocotalk.auth.dto.common.ValidationDto;
 import com.cocotalk.auth.dto.signin.SigninInput;
-import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.dto.signup.SignupOutput;
 import com.cocotalk.auth.dto.common.response.Response;
+import com.cocotalk.auth.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Tag(name = "인증 API")
 @RestController
@@ -40,7 +43,7 @@ public class AuthController {
     }
 
     /**
-     * 로그아웃 API [POST] /api/auth/signout
+     * 로그아웃 API [POST] /signout
      *
      * @return ResponseEntity<Response<Object>>
      */
@@ -51,20 +54,21 @@ public class AuthController {
     }
 
     /**
-     * 회원가입 API [POST] /api/auth/signup
+     * 회원가입 API [POST] /signup
      *
      * @return ResponseEntity<Response<SignUpOutput>>
      */
     // Body
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<Response<SignupOutput>> signup(@RequestBody @Valid SignupInput signUpInput) {
+    public ResponseEntity<Response<SignupOutput>> signup(@Valid SignupInput signUpInput) {
         log.info("[POST] /api/users/signup");
         return authService.signup(signUpInput);
     }
 
+
     /**
-     * ACCESS TOKEN 재발급 API [POST] /api/auth/reissue
+     * ACCESS TOKEN 재발급 API [POST] /reissue
      *
      * @return ResponseEntity<Response<TokenDto>>
      */
@@ -77,7 +81,7 @@ public class AuthController {
     }
 
     /**
-     * 이메일 인증 코드 보내기 API [POST] /api/users/email
+     * 이메일 인증 코드 보내기 API [POST] /email
      *
      * @return ResponseEntity<Response<EmailOutput>>
      */
@@ -90,7 +94,7 @@ public class AuthController {
     }
 
     /**
-     * 이메일 인증 코드 확인 API [POST] /api/auth/email/validation
+     * 이메일 인증 코드 확인 API [POST] /email/validation
      *
      * @return ResponseEntity<Response<ValidationDto>>
      */
@@ -103,7 +107,7 @@ public class AuthController {
     }
 
     /**
-     * refresh token 유효성 검증 API [POST] /api/auth/token/validation
+     * refresh token 유효성 검증 API [POST] /token/validation
      * @return ResponseEntity<Response<ValidationDto>>
      */
     // Body

@@ -30,8 +30,8 @@ public class User extends BaseTime {
     private String password;
 
     @NotNull
-    @Column(name="user_name", length = 20)
-    private String userName;
+    @Column(length = 20)
+    private String username;
 
     @NotNull
     @Column(length = 20)
@@ -45,13 +45,6 @@ public class User extends BaseTime {
     private String phone;
 
     private String profile; // JSON 형태로 저장
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-
-    @NotNull
-    private String providerId;
 
     @NotNull
     private Short status; // 유저 상태

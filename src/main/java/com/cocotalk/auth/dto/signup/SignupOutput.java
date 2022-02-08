@@ -1,6 +1,5 @@
 package com.cocotalk.auth.dto.signup;
 
-import com.cocotalk.auth.entity.Provider;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -16,14 +15,11 @@ import java.time.LocalDate;
 public class SignupOutput {
     private Long id;
     private String cid; // 코코톡 아이디
-    private String userName;
+    private String username;
     private String nickname;
     private String email;
     private String phone;
     private String profile;
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-    private String providerId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate birth;
 }

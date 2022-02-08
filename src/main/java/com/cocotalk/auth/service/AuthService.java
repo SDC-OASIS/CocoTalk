@@ -2,15 +2,14 @@ package com.cocotalk.auth.service;
 
 import com.cocotalk.auth.application.AuthException;
 import com.cocotalk.auth.dto.common.*;
+import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.repository.UserRepository;
 import com.cocotalk.auth.dto.common.response.ResponseStatus;
 import com.cocotalk.auth.dto.email.issue.IssueInput;
 import com.cocotalk.auth.dto.email.issue.IssueOutput;
 import com.cocotalk.auth.dto.email.validation.ValidationInput;
 import com.cocotalk.auth.dto.signin.SigninInput;
-import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.dto.signup.SignupOutput;
-import com.cocotalk.auth.entity.Provider;
 import com.cocotalk.auth.entity.User;
 import com.cocotalk.auth.entity.mapper.UserMapper;
 import com.cocotalk.auth.dto.common.response.Response;
@@ -18,7 +17,6 @@ import com.cocotalk.auth.utils.JwtUtils;
 import com.cocotalk.auth.utils.SHA256Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -43,6 +41,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RedisService redisService;
     private final JavaMailSender mailSender;
+    private final S3Service s3Service;
 
     @Value("${api.push}")
     String pushApiUrl;
@@ -52,6 +51,7 @@ public class AuthService {
     public ResponseEntity<Response<TokenDto>> signin(ClientType clientType, SigninInput signinInput) {
         // 1. user 정보 가져오기
         log.info("[signin/ClientType] : "+ clientType);
+        log.info("[signin/SigninInput] : "+ signinInput);
         User user;
         try {
             user = userRepository.findByCid(signinInput.getCid()).orElse(null);
@@ -98,22 +98,29 @@ public class AuthService {
     @Transactional
     public ResponseEntity<Response<SignupOutput>> signup(SignupInput signupInput) {
         log.info("[signup/signupInput] : "+signupInput);
+        SignupInput.ProfileInfo profile = signupInput.getProfileInfo();
         // 2. 유저 생성
         User user;
         try {
             // 중복 제어
-            boolean exists = userRepository.existsByCid(signupInput.getCid())
-                    || userRepository.existsByPhone(signupInput.getPhone())
-                    || userRepository.existsByEmail(signupInput.getEmail());
+            boolean exists = userRepository.existsByCid(profile.getCid())
+                    || userRepository.existsByPhone(profile.getPhone())
+                    || userRepository.existsByEmail(profile.getEmail());
             if (exists) {
                 return ResponseEntity.status(HttpStatus.OK).body(new Response<>(EXISTS_INFO));
             }
 
-            user = userMapper.toEntity(signupInput);
-            user.setPassword(SHA256Utils.getEncrypt(signupInput.getPassword()));
-            user.setProvider(Provider.local);
-            user.setProviderId(user.getCid());
-            user = userRepository.save(user);
+            //pk 생성
+            User tmpUser = userMapper.toEntity(profile);
+            user = userRepository.save(tmpUser);
+
+            //s3에 이미지 저장
+            String imgUrl = s3Service.uploadProfileImage(signupInput.getProfileImg(), user.getId());
+            s3Service.uploadThumbnail(signupInput.getProfileImgThumb(), user.getId());
+
+            user.setPassword(SHA256Utils.getEncrypt(profile.getPassword()));
+            user.setProfile(imgUrl);
+            userRepository.save(user);
 
         } catch (Exception e) {
             log.error("[signup/post] database error", e);
@@ -179,7 +186,7 @@ public class AuthService {
     }
 
     public ResponseEntity<Response<IssueOutput>> sendMail(IssueInput issueInput) {
-
+        log.info("[sendMail/IssueInput] : "+issueInput);
         IssueOutput emailOutput;
         try {
             // 1. 인증 메일 전송
@@ -216,6 +223,7 @@ public class AuthService {
     }
 
     public ResponseEntity<Response<ValidationDto>> checkMail(ValidationInput validationInput) {
+        log.info("[checkMail/ValidationInput] : "+validationInput);
         String code = redisService.getEmailCode(validationInput.getEmail());
         Boolean res = code!=null && validationInput.getCode().equals(code);
         ValidationDto validationOutput = ValidationDto.builder().isValid(res).build();
@@ -242,6 +250,7 @@ public class AuthService {
     }
 
     private DeviceDto getFcmToken(long userId, ClientType clientType){
+        log.info("[getFcmToken/userId] : "+userId);
         WebClient webClient = WebClient.create(pushApiUrl);
         try{
             DeviceDto device = webClient
