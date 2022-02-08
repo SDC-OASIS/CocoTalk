@@ -3,9 +3,6 @@
 		<img src="../images/chat_default_mococo.png" alt="" />
 		<div class="break"></div>
 		<span style="">채팅을 시작해보세요.</span>
-		<!-- <button @click="changeNow">kkk</button>
-		{{ this.$route.params.roomId }}
-		{{ roomStatus }} -->
 	</div>
 </template>
 

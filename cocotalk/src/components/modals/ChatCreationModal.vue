@@ -1,7 +1,7 @@
 <template>
-	<div class="modal row" @click.self="closeMakeChatModal">
+	<div class="modal row" @click.self="closeChatCreationModal">
 		<div class="modal-container">
-			<div @click="closeMakeChatModal">
+			<div @click="closeChatCreationModal">
 				<span class="iconify exit" data-icon="bx:bx-x"></span>
 			</div>
 			<div class="modal-inner-container">
@@ -10,7 +10,9 @@
 						<span>대화상대 선택</span>
 						<span style="color: #aaaaaa; padding: 0 10px">{{ selectedFriendsCnt }}</span>
 					</div>
-					<Button text="확인" width="60px" height="30px" />
+					<div @click="openRoomNameEditModal">
+						<Button text="확인" width="60px" height="30px" />
+					</div>
 				</div>
 				<div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
 					<div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">
@@ -28,27 +30,15 @@
 					</div>
 					<div class="make-chat-modal-info row" style="justify-content: left">
 						<div class="friend-list-container" :style="{ height: height }">
-							<div class="friend-cnt">친구 - 200</div>
-							<div class="friend-container row" v-for="(friend, idx) in searchFriends" :key="idx" @click="selectFriend(friend, idx)">
-								<div>
-									<ProfileImg :imgUrl="friend.profile" width="50px" />
-								</div>
+							<div class="friend-cnt">친구 - {{ searchFriendsCnt }}</div>
+							<!-- {{ searchFriends }} -->
+							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
+								<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
 								<div class="friend-name">{{ friend.userName }}</div>
-								<div>
-									{{ friend.check }}
-									<span v-if="!friend.check">x</span>
-									<span v-if="friend.check">o</span>
-								</div>
-								<!-- <div class="checkbox">
-									<input :id="'check' + idx" v-model="selectedFriends" type="checkbox" :value="friend.userName" />
-									<label :for="'check' + idx"></label>
-								</div> -->
+								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend" />
+								<label :for="'checked' + idx"> </label>
 							</div>
 						</div>
-						<!-- <div style="dispaly: inline-block; text-align: center">
-							<div style="font-weight: bold">모코코</div>
-							<div>모코코는 행복해</div>
-						</div> -->
 					</div>
 				</div>
 			</div>
@@ -62,7 +52,7 @@ import ProfileImg from "../common/ProfileImg.vue";
 import Button from "../common/Button.vue";
 
 export default {
-	name: "MakeChatModal",
+	name: "ChatCreationModal",
 	components: {
 		Button,
 		ProfileImg,
@@ -76,11 +66,19 @@ export default {
 	},
 
 	computed: {
-		...mapState("chat", ["friends"]),
+		...mapState("friend", ["friends"]),
 		selectedFriendsCnt() {
-			// console.log(this.selectedFriends);
+			console.log(this.selectedFriends);
 			if (this.selectedFriends.length) {
 				return this.selectedFriends.length;
+			} else {
+				return "";
+			}
+		},
+		searchFriendsCnt() {
+			console.log(this.searchFriends);
+			if (this.searchFriends.length) {
+				return this.searchFriends.length;
 			} else {
 				return "";
 			}
@@ -95,79 +93,21 @@ export default {
 				return "300px";
 			}
 		},
-		// searchFriends() {
-		// 	if (this.searchName) {
-		// 		const arr = [];
-		// 		for (let friend in this.friends) {
-		// 			console.log(friend)
-		// 			if (friend.userName.includes(this.searchName)) {
-		// 				arr.push(friend);
-		// 			}
-		// 		}
-		// 		return arr;
-		// 	} else {
-		// 		return this.friends;
-		// 	}
-		// },
 	},
 	methods: {
-		closeMakeChatModal() {
-			this.$store.dispatch("modal/closeMakeChatModal");
+		closeChatCreationModal() {
+			this.$store.dispatch("modal/closeChatCreationModal");
 		},
 		deleteSelectedFriend(friend, idx) {
-			// console.log(friend, idx);
-			// let check = this.searchFriends.indexOf(friend);
-			// console.log(check);
-			this.searchFriends[friend.searchIdx] = 0;
-			// if (check != -1) {
-			// 	this.searchFriends[idx].check = false;
-			// 	this.selectedFriends.splice(check, 1);
-			// }
+			console.log(friend, idx);
 			this.selectedFriends.splice(idx, 1);
 		},
-		// filter() {
-		// 	if (this.searchName.length) {
-		// 		// let value = this.searchName.toUpperCase();
-		// 		// let arr = [];
-		// 		let value = { userName: this.searchName.toUpperCase() };
-		// 		console.log(value);
-
-		// 		this.friends.includes(value);
-		// 		// for (let friend in this.friends) {
-		// 		// 	console.log("friend", friend);
-		// 		// 	if (friend.userName.includes(value)) {
-		// 		// 		arr.push(friend);
-		// 		// 	}
-		// 		// }
-		// 		return (this.searchFriends = this.friends.includes(value));
-		// 	} else {
-		// 		return (this.searchFriends = this.friends);
-		// 	}
-		// },
-		selectFriend(friend, idx) {
-			// 선택한 목록에 있다면 선택취소
-			let check = this.selectedFriends.indexOf(friend.userName);
-			// console.log(check);
-			if (check != -1) {
-				this.searchFriends[idx].check = false;
-				this.selectedFriends.splice(check, 1);
-			}
-			// if (this.selectedFriends.find((element) => element === friend.userName)) {
-			// 	this.searchFriends[idx].check = false;
-			// 	this.selectedFriends.splice(element, 1);
-			// }
-			// 없으면 허용
-			else {
-				const data = { userName: friend.userName, searchIdx: idx };
-				this.selectedFriends.push(data);
-				this.searchFriends[idx].check = true;
-			}
+		openRoomNameEditModal() {
+			this.closeChatCreationModal();
+			console.log("채팅방 멤버 선택완료");
+			console.log(this.selectedFriends);
+			this.$store.dispatch("modal/openRoomNameEditModal", this.selectedFriends, { root: true });
 		},
-		// checkSelectedFriends(element, userName) {
-		// 	if (element.name === userName) {
-		// 		return true;
-		// 	}
-		// },
 	},
 
 	mounted() {
@@ -312,15 +252,45 @@ export default {
 	font-weight: bold;
 	padding-left: 15px;
 }
-/* 체크박스 */
-.checkbox input[type="checkbox"]:checked + label {
-	width: 40px;
-	height: 40px;
-	border: 2px solid #aaaaaa;
+
+.wrap input[type="checkbox"] {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
 }
-.checkbox input[type="checkbox"]:checked + label {
-	width: 40px;
-	height: 40px;
-	border: 2px solid #aaaaaa;
+.wrap input[type="checkbox"] + label {
+	display: inline-block;
+	position: relative;
+	padding-left: 26px;
+	cursor: pointer;
+}
+.wrap input[type="checkbox"] + label:before {
+	content: "";
+	position: absolute;
+	top: -15px;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	background: #fff;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	border-radius: 20px;
+} /* 보여질 부분의 스타일을 추가하면 된다. */
+.wrap input[type="checkbox"]:checked + label:after {
+	content: "✔";
+	text-align: center;
+	position: absolute;
+	top: -15px;
+	width: 30px;
+	height: 30px;
+	background-color: #fae64c;
+	border-radius: 20px;
+	color: #ffffff;
+	font-size: 20px;
 }
 </style>

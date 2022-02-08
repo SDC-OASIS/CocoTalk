@@ -1,12 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Login from "../views/Login.vue";
-import Friends from "../views/Friends.vue";
-import Chats from "../views/Chats.vue";
-import Chat from "../views/Chat.vue";
-import ChatDefault from "../views/ChatDefault.vue";
+import FriendList from "../views/FriendList.vue";
+import ChatRoomList from "../views/ChatRoomList.vue";
+import ChatRoom from "../views/ChatRoom.vue";
+import BeforeEnterChat from "../views/BeforeEnterChat.vue";
 import Setting from "../views/Setting.vue";
-import NoPage from "../views/NoPage.vue";
+import PageNotFound from "../views/PageNotFound.vue";
 import store from "../store";
 
 Vue.use(VueRouter);
@@ -23,8 +23,8 @@ const routes = [
 		path: "/friends",
 		name: "friends",
 		components: {
-			left: Friends,
-			right: ChatDefault,
+			left: FriendList,
+			right: BeforeEnterChat,
 		},
 		beforeEnter: (to, from, next) => {
 			store.dispatch("chat/changeMainPage", "friends", { root: true });
@@ -35,15 +35,15 @@ const routes = [
 		path: "/chats",
 		name: "chats",
 		components: {
-			left: Chats,
-			right: ChatDefault,
+			left: ChatRoomList,
+			right: BeforeEnterChat,
 		},
 	},
 	{
 		path: "/friends/setting",
 		name: "friendsSetting",
 		components: {
-			left: Friends,
+			left: FriendList,
 			right: Setting,
 		},
 	},
@@ -51,7 +51,7 @@ const routes = [
 		path: "/chats/setting",
 		name: "chatsSetting",
 		components: {
-			left: Chats,
+			left: ChatRoomList,
 			right: Setting,
 		},
 	},
@@ -59,23 +59,23 @@ const routes = [
 		path: "/friends/:chat/:roomId?",
 		name: "friendsChat",
 		components: {
-			left: Friends,
-			right: Chat,
+			left: FriendList,
+			right: ChatRoom,
 		},
 	},
 	{
 		path: "/chats/:chat/:roomId?",
 		name: "chatsChat",
 		components: {
-			left: Chats,
-			right: Chat,
+			left: ChatRoomList,
+			right: ChatRoom,
 		},
 	},
 	{
 		path: "/error",
 		name: "Error",
 		components: {
-			error: NoPage,
+			error: PageNotFound,
 		},
 		beforeEnter: (to, from, next) => {
 			store.dispatch("chat/changeMainPage", "error", { root: true });
@@ -86,8 +86,6 @@ const routes = [
 		path: "*",
 		redirect: "/error",
 	},
-
-	// },
 	// {
 	// 	path: "/friends/chat/:roomId?",
 	// 	name: "friendList",
