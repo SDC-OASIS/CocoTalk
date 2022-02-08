@@ -55,9 +55,10 @@ public enum ResponseStatus {
      */
     // 500 내부 서버 오류가 발생한 경우
     SERVER_ERROR(500, 4010, "서버와의 통신에 실패하였습니다."),
-    INTERNAL_SERVER_ERROR(500, 4011, "서버와의 통신에 실패하였습니다."),
+    INTERNAL_SERVER_ERROR(500, 4011, "서버 내부에서 에러가 발생하였습니다."),
     DATABASE_ERROR(500, 4012, "데이터베이스 연결에 실패하였습니다."),
-    SUBSCRIBE_ERROR(500, 4001, "구독 중 에러가 발생했습니다.");
+    SUBSCRIBE_ERROR(500, 4013, "구독 중 에러가 발생했습니다."),
+    PARSE_ERROR(500, 4014, "파싱 과정 중 에러가 발생했습니다.");
 
     private final int status;
     private final int code;

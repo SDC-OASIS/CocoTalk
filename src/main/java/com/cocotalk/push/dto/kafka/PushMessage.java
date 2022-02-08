@@ -1,19 +1,16 @@
-package com.cocotalk.push.dto.push;
+package com.cocotalk.push.dto.kafka;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@ToString
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PushInfoInput {
+public class PushMessage {
     @NotNull
     private List<String> tokenList;
     @NotNull

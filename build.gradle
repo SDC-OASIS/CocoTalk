@@ -12,7 +12,7 @@ repositories {
 	mavenCentral()
 }
 
-ext { // (1)
+ext {
 	set('springCloudVersion', "2021.0.0")
 }
 
@@ -43,11 +43,14 @@ dependencies {
 	//eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
-	dependencyManagement { // (3)
+	dependencyManagement {
 		imports {
 			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 		}
 	}
+
+	//kafka
+	implementation 'org.springframework.kafka:spring-kafka'
 
 }
 

@@ -31,7 +31,7 @@ public class DeviceService {
     public Flux<Device> findByOptions(SelectInput selectInput) {
         if(selectInput.getType()==null)
             return deviceRepository.findByUserId(selectInput.getUserId());
-        short type = (short)selectInput.getType().ordinal();
+        short type = (short) selectInput.getType().ordinal();
         return Flux.from(deviceRepository.findByUserIdAndType(selectInput.getUserId(), type));
     }
 
@@ -70,8 +70,8 @@ public class DeviceService {
 
     private short parseClientType(String userAgent){
         if(userAgent.contains("Mozilla"))
-            return (short) ClientType.MOBILE.ordinal();
-        return (short) ClientType.WEB.ordinal();
+            return (short) ClientType.WEB.ordinal();
+        return  (short) ClientType.MOBILE.ordinal();
     }
 
 }

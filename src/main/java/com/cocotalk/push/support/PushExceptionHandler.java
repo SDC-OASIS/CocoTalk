@@ -33,4 +33,17 @@ public class PushExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(NO_VALUES));
     }
 
+    @ExceptionHandler(NoSuchMethodError.class)
+    public ResponseEntity<Response<?>> noSuchException(NoSuchMethodError e) {
+        e.printStackTrace();
+        String parseMessage="DeserializationContext";
+        /*
+         * dto 입력 과정에서 잘못된 값이 들어온 경우
+         * ex) LocalDate birth에 빈문자열 ""를 넣은 경우
+         */
+        if(e.getMessage()!=null && e.getMessage().contains(parseMessage))
+            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.PARSE_ERROR));
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.INTERNAL_SERVER_ERROR));
+    }
+
 }

@@ -1,14 +1,11 @@
 package com.cocotalk.push.service;
 
-import com.cocotalk.push.dto.push.FCMMessage;
+import com.cocotalk.push.dto.fcm.FCMMessage;
 import com.cocotalk.push.support.PushException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.common.net.HttpHeaders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -28,27 +25,9 @@ public class FCMService {
 
     @Value("${fcm.api-url}")
     private String apiUrl;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper mapper;
     private final WebClient webClient;
 
-
-    // 파라미터를 FCM이 요구하는 body 형태로 만들어준다.
-    private String makeMessageStr(String targetToken, String title, String body) throws JsonProcessingException {
-        FCMMessage fcmMessage = FCMMessage.builder()
-                .message(FCMMessage.Message.builder()
-                        .token(targetToken)
-                        .notification(FCMMessage.Notification.builder()
-                                .title(title)
-                                .body(body)
-                                .image(null)
-                                .build()
-                        )
-                        .build()
-                )
-                .validate_only(false)
-                .build();
-        return objectMapper.writeValueAsString(fcmMessage);
-    }
 
     private FCMMessage makeMessage(String targetToken, String title, String body) {
         FCMMessage fcmMessage = FCMMessage.builder()
@@ -66,24 +45,6 @@ public class FCMService {
                 .build();
         return fcmMessage;
     }
-
-    public void sendByToken(String targetToken, String title, String body) throws IOException {
-        String message = makeMessageStr(targetToken, title, body);
-
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
-        Request request = new Request.Builder()
-                .url(apiUrl)
-                .post(requestBody)
-                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
-                .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
-                .build();
-
-        Response response = client.newCall(request).execute();
-
-        log.info(response.body().string());
-    }
-
 
     public void sendByTokenList(List<String> targetTokens, String title, String body) throws IOException {
         String authorization = "Bearer " + getAccessToken();
