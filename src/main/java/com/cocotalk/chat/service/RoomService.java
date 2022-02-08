@@ -76,7 +76,7 @@ public class RoomService {
                     .collect(Collectors.toList());
 
             Room createdRoom = roomRepository.save(Room.builder()
-                    .roomName(request.getRoomName())
+                    .roomname(request.getRoomname())
                     .img(request.getImg())
                     .type(request.getType())
                     .members(roomMembers)
@@ -115,7 +115,7 @@ public class RoomService {
                     .collect(Collectors.toList());
 
             Room createdRoom = roomRepository.save(Room.builder()
-                    .roomName(roomRequest.getRoomName())
+                    .roomname(roomRequest.getRoomname())
                     .img(roomRequest.getImg())
                     .type(roomRequest.getType())
                     .members(roomMembers)
@@ -341,7 +341,7 @@ public class RoomService {
         return roomMapper.toVo(roomRepository.save(newRoom));
     }
 
-    public void saveEnteredAt(ObjectId roomId, Long userId) {
+    public RoomVo saveEnteredAt(ObjectId roomId, Long userId) {
         RoomVo roomVo = this.findById(roomId);
         RoomMember me = this.findMember(roomVo, userId);
         List<RoomMember> members = roomVo.getMembers();
@@ -349,10 +349,10 @@ public class RoomService {
         members.remove(me);
         me.setEnteredAt(LocalDateTime.now());
         members.add(me);
-        this.save(roomVo);
+        return this.save(roomVo);
     }
 
-    public void saveAwayAt(ObjectId roomId, Long userId) {
+    public RoomVo saveAwayAt(ObjectId roomId, Long userId) {
         RoomVo roomVo = this.findById(roomId);
         RoomMember me = this.findMember(roomVo, userId);
         List<RoomMember> members = roomVo.getMembers();
@@ -360,10 +360,10 @@ public class RoomService {
         members.remove(me);
         me.setAwayAt(LocalDateTime.now());
         members.add(me);
-        this.save(roomVo);
+        return this.save(roomVo);
     }
 
-    public void saveLeftAt(ObjectId roomId, Long userId) {
+    public RoomVo saveLeftAt(ObjectId roomId, Long userId) {
         RoomVo roomVo = this.findById(roomId);
         RoomMember me = this.findMember(roomVo, userId);
         List<RoomMember> members = roomVo.getMembers();
@@ -377,10 +377,15 @@ public class RoomService {
             me.setAwayAt(now);
             me.setLeftAt(now);
             members.add(me);
-            this.save(roomVo);
+            return this.save(roomVo);
         } else {
-            if(members.size() == 0) delete(roomVo);
-            else this.save(roomVo);
+            if(members.size() == 0) {
+                delete(roomVo);
+                return roomMapper.toVo(emptyRoom);
+            }
+            else {
+                return this.save(roomVo);
+            }
         }
     }
 
