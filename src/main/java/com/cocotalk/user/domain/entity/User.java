@@ -35,7 +35,7 @@ public class User extends BaseTime {
 
     @NotNull
     @Column(length = 20)
-    private String userName;
+    private String username;
 
     @NotNull
     @Column(length = 20)
@@ -51,13 +51,6 @@ public class User extends BaseTime {
     private String profile; // JSON 형태로 저장
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-
-    @NotNull
-    private String providerId;
-
-    @NotNull
     private Short status; // 유저 상태
 
     private LocalDate birth;
@@ -65,7 +58,7 @@ public class User extends BaseTime {
     private LocalDateTime loggedinAt; // 최종 접속 기록
 
     public void modify(UserModifyRequest request) {
-        this.userName = request.getUserName();
+        this.username = request.getUsername();
         this.nickname = request.getNickname();
         this.birth = request.getBirth();
         this.phone = request.getPhone();

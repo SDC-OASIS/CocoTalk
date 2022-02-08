@@ -31,7 +31,7 @@ public class FriendService {
     public static final CustomException INVALID_USERID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
 
-    private static final Comparator<UserVo> orderByUserName = Comparator.comparing(UserVo::getUserName);
+    private static final Comparator<UserVo> orderByUserName = Comparator.comparing(UserVo::getUsername);
 
     @Transactional
     public FriendVo add(User fromUser, FriendAddRequest request){
