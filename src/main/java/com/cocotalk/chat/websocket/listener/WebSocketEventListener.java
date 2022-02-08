@@ -2,22 +2,30 @@ package com.cocotalk.chat.websocket.listener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.broker.BrokerAvailabilityEvent;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.messaging.SessionConnectEvent;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class WebSocketEventListener {
-//    private final SimpMessageSendingOperations messagingTemplate;
-//
-//    @EventListener
-//    public void handleBrokerAvailabilityListener(BrokerAvailabilityEvent event) {
-//        log.info("BrokerAvailabilityEvent - timestamp: " + event.getTimestamp());
-//        log.info("BrokerAvailabilityEvent - brokerAvailable: " + event.isBrokerAvailable());
-//        log.info("BrokerAvailabilityEvent - " + event.toString());
-//    }
-//
-//
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
+    @EventListener
+    public void handleBrokerAvailabilityListener(BrokerAvailabilityEvent event) {
+        log.info("BrokerAvailabilityEvent - timestamp: " + event.getTimestamp());
+        log.info("BrokerAvailabilityEvent - brokerAvailable: " + event.isBrokerAvailable());
+        log.info("BrokerAvailabilityEvent - " + event.toString());
+    }
+
 //    @EventListener
 //    public void handleWebSocketConnectListener(SessionConnectEvent event) {
 //        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());

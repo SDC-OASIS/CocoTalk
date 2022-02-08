@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
@@ -21,7 +22,6 @@ import java.util.Map;
 public class InboundChannelInterceptor implements ChannelInterceptor {
     private final RoomService roomService;
     private final ChannelLogger channelLogger;
-    // private final SimpMessageSendingOperations messagingTemplate;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -33,14 +33,19 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
             if (sessionAttributes != null && view != null) {
                 sessionAttributes.put("view", view);
                 if (view.equals("chatRoom")) { // 두 세션 ID 다르다는 것을 전제로
-                    Long userId = Long.parseLong(accessor.getFirstNativeHeader("userId"));
-                    ObjectId roomId = new ObjectId(accessor.getFirstNativeHeader("roomId"));
-                    sessionAttributes.put("userId", userId);
-                    sessionAttributes.put("roomId", roomId);
-                    roomService.saveEnteredAt(roomId, userId);
+                    if(accessor.getFirstNativeHeader("roomId") != null &&
+                            accessor.getFirstNativeHeader("userId") != null){
+                        ObjectId roomId = new ObjectId(accessor.getFirstNativeHeader("roomId"));
+                        Long userId = Long.parseLong(accessor.getFirstNativeHeader("userId"));
+                        sessionAttributes.put("roomId", roomId);
+                        sessionAttributes.put("userId", userId);
+                        roomService.saveEnteredAt(roomId, userId);
+                    }
                 } else if (view.equals("chatList")) {
-                    String userId = accessor.getFirstNativeHeader("userId");
-                    if (userId != null) sessionAttributes.put("userId", userId);
+                    if(accessor.getFirstNativeHeader("userId") != null) {
+                        Long userId = Long.parseLong(accessor.getFirstNativeHeader("userId"));
+                        sessionAttributes.put("userId", userId);
+                    }
                 }
             }
         } else if (command.equals(StompCommand.DISCONNECT)) {
@@ -52,8 +57,8 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
                     if (action != null) { // 채팅방에서 나가기 버튼 눌렀을 때, 첫번째 Disconnect 일때
                         sessionAttributes.put("action", action);
                     } else { // 두번째 Disconnect일 때
-                        Long userId = Long.parseLong(sessionAttributes.get("userId").toString());
-                        ObjectId roomId = new ObjectId(sessionAttributes.get("roomId").toString());
+                        Long userId = (Long) sessionAttributes.get("userId");
+                        ObjectId roomId = (ObjectId) sessionAttributes.get("roomId");
                         if (sessionAttributes.get("action") != null) {
                             if (sessionAttributes.get("action").equals("leave"))
                                 roomService.saveLeftAt(roomId, userId);

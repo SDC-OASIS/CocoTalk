@@ -21,7 +21,6 @@ public class MessageBundleService {
     private final MessageBundleMapper messageBundleMapper;
 
     public static final MessageBundle emptyMessageBundle = new MessageBundle();
-    public static final List<ObjectId> emptyObjectIdList = new ArrayList<>();
 
     public static final CustomException INVALID_MESSAGE_BUNDLE_ID =
             new CustomException(CustomError.BAD_REQUEST, "해당 messageBundleId를 갖는 메시지 번들이 존재하지 않습니다.");
@@ -30,7 +29,7 @@ public class MessageBundleService {
         MessageBundle messageBundle = MessageBundle.builder()
                 .roomId(roomId)
                 .count(0)
-                .messageIds(emptyObjectIdList)
+                .messageIds(new ArrayList<>())
                 .build();
         return messageBundleMapper.toVo(messageBundleRepository.save(messageBundle));
     }
