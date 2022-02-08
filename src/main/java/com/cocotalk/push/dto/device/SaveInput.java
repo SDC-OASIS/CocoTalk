@@ -1,15 +1,13 @@
 package com.cocotalk.push.dto.device;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdateInput {
+public class SaveInput {
     @NonNull
     private Long userId;
     @NonNull

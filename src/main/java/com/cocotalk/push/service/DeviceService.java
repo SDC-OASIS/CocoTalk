@@ -5,6 +5,7 @@ import com.cocotalk.push.dto.common.ClientType;
 import com.cocotalk.push.entity.Device;
 import com.cocotalk.push.repository.DeviceRepository;
 import com.cocotalk.push.support.PushException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import static com.cocotalk.push.dto.common.response.ResponseStatus.*;
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
+    private final ObjectMapper mapper;
 
     public Mono<Device> find(long id) {
         return deviceRepository.findById(id);
@@ -33,39 +35,26 @@ public class DeviceService {
         return Flux.from(deviceRepository.findByUserIdAndType(selectInput.getUserId(), type));
     }
 
-    public Mono<Device> create(ClientInfo clientInfo, CreateInput createInput) {
-        short clientType = (short) parseClientType(clientInfo.getAgent()).ordinal();
-
-        Mono<Device> output = deviceRepository.existsByUserIdAndType(createInput.getUserId(), clientType)
-                .flatMap(res -> {
-                    if(res.booleanValue()==true)
-                        return Mono.error(new PushException(EXISTS_INFO));
-                    Device device = Device.builder()
-                            .userId(createInput.getUserId())
-                            .token(createInput.getFcmToken())
-                            .ip(clientInfo.getIp())
-                            .agent(clientInfo.getAgent())
-                            .type(clientType)
-                            .loggedinAt(LocalDateTime.now())
-                            .build();
-                    return deviceRepository.save(device)
-                            .doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
-                });
-        return output;
-    }
-
-    public Mono<Device> update(ClientInfo clientInfo, UpdateInput updateInput) {
-        short clientType = (short) parseClientType(clientInfo.getAgent()).ordinal();
-        Mono<Device> device = deviceRepository.findByUserIdAndType(updateInput.getUserId(), clientType)
-                .flatMap(target -> {
+    public Mono<Device> save(ClientInfo clientInfo, SaveInput saveInput) {
+        log.info("[save/SaveInput] : " + saveInput);
+        short clientType = parseClientType(clientInfo.getAgent());
+        return deviceRepository.findByUserIdAndType(saveInput.getUserId(), clientType)
+                .flatMap(target -> { // device 정보가 있는 경우
+                    target.setToken(saveInput.getFcmToken());
                     target.setIp(clientInfo.getIp());
                     target.setAgent(clientInfo.getAgent());
-                    target.setToken(updateInput.getFcmToken());
                     target.setLoggedinAt(LocalDateTime.now());
                     return deviceRepository.save(target);
-                })
-                .doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
-        return device;
+                }).switchIfEmpty( // device 정보가 없는 경우
+                        deviceRepository.save(Device.builder()
+                                .userId(saveInput.getUserId())
+                                .token(saveInput.getFcmToken())
+                                .ip(clientInfo.getIp())
+                                .agent(clientInfo.getAgent())
+                                .type(clientType)
+                                .loggedinAt(LocalDateTime.now())
+                                .build())
+                ).doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
     }
 
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {

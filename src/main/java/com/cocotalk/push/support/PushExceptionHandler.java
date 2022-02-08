@@ -19,6 +19,7 @@ public class PushExceptionHandler {
     public ResponseEntity<Response<?>> serverException(PushException e) {
         ResponseStatus status = e.getStatus();
         log.error("PushException : " + status.getMessage());
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(status));
     }
 
