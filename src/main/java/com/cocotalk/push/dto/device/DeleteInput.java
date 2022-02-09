@@ -2,14 +2,15 @@ package com.cocotalk.push.dto.device;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class DeleteInput {
-    @NonNull
+    @NotNull
     private Long userId;
 }
