@@ -17,6 +17,17 @@ class AuthRepository {
     init() {
         provider = MoyaProvider<AuthAPI>()
     }
+
+    func reissueToken(_ token: String) -> Observable<APIResult_0<ModelSigninResponse>> {
+        return provider.rx.request(.reissueToken(token))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_0<ModelSigninResponse>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
     
     func verifyToken(_ token: String) -> Observable<APIResult_0<ModelEmailVerifyResponse>> {
         return provider.rx.request(.verifyToken(token))

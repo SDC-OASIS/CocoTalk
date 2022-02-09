@@ -27,7 +27,6 @@ class SigninViewController: UIViewController {
         $0.textColor = .secondaryLabel
         $0.numberOfLines = 0
         $0.textAlignment = .center
-        
     }
     
     /// 이메일 텍스트 필드
@@ -68,6 +67,7 @@ class SigninViewController: UIViewController {
         $0.setTitle("코코톡 계정 또는 비밀번호 찾기", for: .normal)
         $0.setTitleColor(.label, for: .normal)
         $0.backgroundColor = .clear
+        $0.isHidden = true
     }
     
     // MARK: - Properties

@@ -144,7 +144,7 @@ extension EmailAuthViewModel {
                     guard let result = response.result else {
                         return
                     }
-                    if let data = try? JSONEncoder().encode(result) {
+                    if let data = result.encode() {
                         UserDefaults.standard.set(data, forKey: UserDefaultsKey.myData.rawValue)
                     }
                     self.dependency.isSignupComplete.accept(true)

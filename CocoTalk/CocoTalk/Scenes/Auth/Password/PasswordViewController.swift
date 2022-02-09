@@ -97,7 +97,7 @@ class PasswordViewController: UIViewController {
         #warning("암호화 보안이 필요하다")
         #warning("UserDefault extension에 completion handler로 빼기")
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
-           let signupData = ModelSignupData.decode(savedData: savedData) {
+           let signupData = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
             self.signupData = signupData
             lblPhoneNumber.text = signupData.phone
         }

@@ -14,4 +14,11 @@ struct APIResult_1<T: Decodable>: Decodable {
     var message: String?
     var data: T?
     var timestamp: String?
+    var error: API_1_Error?
+}
+
+struct API_1_Error: Decodable {
+    var code: Int?
+    var desc: String?
+    var type: String?
 }

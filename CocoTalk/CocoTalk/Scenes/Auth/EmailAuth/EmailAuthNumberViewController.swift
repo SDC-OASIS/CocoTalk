@@ -65,7 +65,7 @@ class EmailAuthNumberViewController: UIViewController {
         view.backgroundColor = .white
         
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
-           let data = ModelSignupData.decode(savedData: savedData) {
+           let data = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
             self.signupData = data
             lblEmail.text = data.email
             self.viewModel.dependency.signupData = data

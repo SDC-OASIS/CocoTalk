@@ -96,7 +96,7 @@ class ProfileTableViewCell: UITableViewCell {
     }
     
     func setData(data: ModelProfile) {
-        if let _img = data.profileImageUrl,
+        if let _img = data.profileImageURL,
            !_img.isEmpty {
             let url = URL(string: _img)
             ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))
@@ -111,6 +111,6 @@ class ProfileTableViewCell: UITableViewCell {
             lblBio.isHidden = true
         }
         
-        lblName.text = data.name ?? ""
+        lblName.text = data.username ?? ""
     }
 }

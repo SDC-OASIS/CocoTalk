@@ -15,7 +15,7 @@ protocol BaseRepository {
     
     func initFetch() -> [ItemType]
     
-    func fetchFromServer() -> Observable<[ItemType]>
+    func fetchFromServer(with token: String) -> Observable<[ItemType]?>
     
     func insert(_ newItem: ItemType) -> Bool
 

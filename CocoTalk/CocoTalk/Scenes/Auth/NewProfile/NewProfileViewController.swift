@@ -170,7 +170,7 @@ class NewProfileViewController: UIViewController {
         
         
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
-           var signupData = ModelSignupData.decode(savedData: savedData) {
+           var signupData = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
             signupData.userName = username
             signupData.nickname = username
             signupData.profileImageUrl = profileImageUrl ?? ""

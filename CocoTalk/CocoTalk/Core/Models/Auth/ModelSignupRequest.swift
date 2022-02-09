@@ -7,12 +7,12 @@
 
 import Foundation
 
+#warning("회원가입 리퀘스트 데이터 수정 필요함")
 struct ModelSignupRequest: Codable {
     var cid: String = ""
     var password: String = ""
     var username: String = ""
     var nickname: String = ""
-//    var birth: String = "" // not required
     var phone: String = ""
     var email: String = ""
     var status: Int = 0

@@ -90,7 +90,7 @@ class MyProfileCell: UITableViewCell {
     
     func setData(data: ModelProfile) {
         #warning("이미지 적용")
-        if let _img = data.profileImageUrl {
+        if let _img = data.profileImageURL {
             ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
         } else {
             ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
@@ -103,6 +103,6 @@ class MyProfileCell: UITableViewCell {
             lblBio.isHidden = true
         }
         
-        lblName.text = data.name ?? ""
+        lblName.text = data.username ?? ""
     }
 }

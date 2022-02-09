@@ -70,7 +70,7 @@ class PhoneNumberViewController: UIViewController {
         }
     
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
-           var signupData = ModelSignupData.decode(savedData: savedData) {
+           var signupData = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
             signupData.phone = textFieldPhoneNumber.text ?? ""
             UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
         }

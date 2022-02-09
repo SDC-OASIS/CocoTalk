@@ -9,6 +9,7 @@ import Foundation
 import Moya
 
 enum AuthAPI {
+    case reissueToken(_ token: String)
     case verifyToken(_ token: String)
     case postFCMToken(_ data: ModelPostFCMTokenRequest)
     case signin(_ data: ModelSigninRequest)
@@ -27,6 +28,8 @@ extension AuthAPI: TargetType {
     
     var path: String {
         switch self {
+        case .reissueToken(_):
+            return "/auth/reissue"
         case .verifyToken(_):
             return "/auth/device"
         case .postFCMToken(_):
@@ -52,13 +55,15 @@ extension AuthAPI: TargetType {
         switch self {
         case .postFCMToken(_), .signin(_), .signup(_), .issueEmailCode(_),.verifyEmail(_):
             return .post
-        case .verifyToken(_), .isIdExist(_), .isEmailExist(_), .isPhoneExist(_):
+        case .reissueToken(_), .verifyToken(_), .isIdExist(_), .isEmailExist(_), .isPhoneExist(_):
             return .get
         }
     }
     
     var task: Task {
         switch self {
+        case .reissueToken(_):
+            return .requestPlain
         case .verifyToken(_):
             return .requestPlain
         case .postFCMToken(let data):
@@ -84,6 +89,8 @@ extension AuthAPI: TargetType {
         var parameters: [String : String] = ["Content-type": "application/json"]
         
         switch self {
+        case .reissueToken(let token):
+            parameters["X-REFRESH-TOKEN"] = token
         case .verifyToken(let token):
             parameters["X-ACCESS-TOKEN"] = token
         default: break

@@ -28,7 +28,6 @@
 		EA22D54F27967C1500E1F39A /* ChatRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D54E27967C1500E1F39A /* ChatRoomListViewController.swift */; };
 		EA22D55127967C2F00E1F39A /* ChatRoomListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55027967C2F00E1F39A /* ChatRoomListViewModel.swift */; };
 		EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55327967CED00E1F39A /* ChatRoomCell.swift */; };
-		EA22D5562796816D00E1F39A /* ModelChatRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D5552796816D00E1F39A /* ModelChatRoom.swift */; };
 		EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D558279797D000E1F39A /* ChatRoomViewController.swift */; };
 		EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55A279797DB00E1F39A /* ChatRoomViewModel.swift */; };
 		EA22D55D2797EA8000E1F39A /* ProfileCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA22D55C2797EA8000E1F39A /* ProfileCellDelegate.swift */; };
@@ -43,7 +42,6 @@
 		EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */; };
 		EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E427AA6B3200324476 /* MessageRepository.swift */; };
 		EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E627AB6CE300324476 /* UserRepository.swift */; };
-		EA2913E927AB6D4000324476 /* ModelUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E827AB6D4000324476 /* ModelUser.swift */; };
 		EA2913F427AC0B1E00324476 /* SmsAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913F327AC0B1E00324476 /* SmsAuthViewModel.swift */; };
 		EA2913F627AC0F5900324476 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913F527AC0F5900324476 /* String+Ext.swift */; };
 		EA2913FA27AC4D7000324476 /* ModelSignupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913F927AC4D6F00324476 /* ModelSignupData.swift */; };
@@ -76,6 +74,14 @@
 		EA29143727B2290C00324476 /* APIResult_Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143627B2290C00324476 /* APIResult_Device.swift */; };
 		EA29143927B2942900324476 /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143827B2942800324476 /* SplashViewModel.swift */; };
 		EA29143C27B339D700324476 /* SigninViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143B27B339D700324476 /* SigninViewModel.swift */; };
+		EA29143E27B37C4800324476 /* WebSocketHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143D27B37C4700324476 /* WebSocketHelper.swift */; };
+		EA29144027B37C5A00324476 /* ContactHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143F27B37C5A00324476 /* ContactHelper.swift */; };
+		EA29144927B3A6B600324476 /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29144827B3A6B600324476 /* UserAPI.swift */; };
+		EA29144D27B3C23A00324476 /* Encodable+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29144C27B3C23A00324476 /* Encodable+Ext.swift */; };
+		EA29145227B3D49800324476 /* ModelRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145127B3D49800324476 /* ModelRoom.swift */; };
+		EA29145427B3D4A000324476 /* ModelRoomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145327B3D4A000324476 /* ModelRoomList.swift */; };
+		EA29145627B3D75400324476 /* RoomAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145527B3D75400324476 /* RoomAPI.swift */; };
+		EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145727B3DE1500324476 /* ModelChatMessage.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -125,7 +131,6 @@
 		EA22D54E27967C1500E1F39A /* ChatRoomListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomListViewController.swift; sourceTree = "<group>"; };
 		EA22D55027967C2F00E1F39A /* ChatRoomListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomListViewModel.swift; sourceTree = "<group>"; };
 		EA22D55327967CED00E1F39A /* ChatRoomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomCell.swift; sourceTree = "<group>"; };
-		EA22D5552796816D00E1F39A /* ModelChatRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelChatRoom.swift; sourceTree = "<group>"; };
 		EA22D558279797D000E1F39A /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 		EA22D55A279797DB00E1F39A /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
 		EA22D55C2797EA8000E1F39A /* ProfileCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellDelegate.swift; sourceTree = "<group>"; };
@@ -137,7 +142,6 @@
 		EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomRepository.swift; sourceTree = "<group>"; };
 		EA2913E427AA6B3200324476 /* MessageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRepository.swift; sourceTree = "<group>"; };
 		EA2913E627AB6CE300324476 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
-		EA2913E827AB6D4000324476 /* ModelUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUser.swift; sourceTree = "<group>"; };
 		EA2913F327AC0B1E00324476 /* SmsAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsAuthViewModel.swift; sourceTree = "<group>"; };
 		EA2913F527AC0F5900324476 /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
 		EA2913F927AC4D6F00324476 /* ModelSignupData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSignupData.swift; sourceTree = "<group>"; };
@@ -167,6 +171,14 @@
 		EA29143627B2290C00324476 /* APIResult_Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult_Device.swift; sourceTree = "<group>"; };
 		EA29143827B2942800324476 /* SplashViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
 		EA29143B27B339D700324476 /* SigninViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewModel.swift; sourceTree = "<group>"; };
+		EA29143D27B37C4700324476 /* WebSocketHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketHelper.swift; sourceTree = "<group>"; };
+		EA29143F27B37C5A00324476 /* ContactHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHelper.swift; sourceTree = "<group>"; };
+		EA29144827B3A6B600324476 /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
+		EA29144C27B3C23A00324476 /* Encodable+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Encodable+Ext.swift"; sourceTree = "<group>"; };
+		EA29145127B3D49800324476 /* ModelRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRoom.swift; sourceTree = "<group>"; };
+		EA29145327B3D4A000324476 /* ModelRoomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRoomList.swift; sourceTree = "<group>"; };
+		EA29145527B3D75400324476 /* RoomAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomAPI.swift; sourceTree = "<group>"; };
+		EA29145727B3DE1500324476 /* ModelChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelChatMessage.swift; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
@@ -293,8 +305,8 @@
 		EA14D50A2786C44800EDC892 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				EA29143A27B2975C00324476 /* API */,
 				EA29143527B228F800324476 /* APIResult */,
+				EA29143A27B2975C00324476 /* API */,
 				EA2913DE27AA43D800324476 /* APIError.swift */,
 			);
 			path = Networking;
@@ -311,6 +323,7 @@
 				EA2913FD27AF6A4E00324476 /* UserDefaults+Ext.swift */,
 				EA29140C27B0B16F00324476 /* URL+Ext.swift */,
 				EA29142727B1612700324476 /* KeyChainWrapper+Ext.swift */,
+				EA29144C27B3C23A00324476 /* Encodable+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -318,11 +331,11 @@
 		EA14D50C2786C4AA00EDC892 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				EA2913E827AB6D4000324476 /* ModelUser.swift */,
-				EA22D541279544E100E1F39A /* ModelProfile.swift */,
-				EA22D5552796816D00E1F39A /* ModelChatRoom.swift */,
 				EAE555A9279A986C00777EBF /* ModelMessage.swift */,
+				EA29145027B3D25A00324476 /* ChatRoom */,
+				EA29144127B37D8200324476 /* Friend */,
 				EA29140727B0B12900324476 /* Auth */,
+				EA29145727B3DE1500324476 /* ModelChatMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -449,8 +462,27 @@
 			isa = PBXGroup;
 			children = (
 				EA29140527B0B04F00324476 /* AuthAPI.swift */,
+				EA29144827B3A6B600324476 /* UserAPI.swift */,
+				EA29145527B3D75400324476 /* RoomAPI.swift */,
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		EA29144127B37D8200324476 /* Friend */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D541279544E100E1F39A /* ModelProfile.swift */,
+			);
+			path = Friend;
+			sourceTree = "<group>";
+		};
+		EA29145027B3D25A00324476 /* ChatRoom */ = {
+			isa = PBXGroup;
+			children = (
+				EA29145127B3D49800324476 /* ModelRoom.swift */,
+				EA29145327B3D4A000324476 /* ModelRoomList.swift */,
+			);
+			path = ChatRoom;
 			sourceTree = "<group>";
 		};
 		EA3F375A278BD068007957EB /* Splash */ = {
@@ -492,6 +524,8 @@
 		EAA6A3D02787E0D6001A7E46 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				EA29143D27B37C4700324476 /* WebSocketHelper.swift */,
+				EA29143F27B37C5A00324476 /* ContactHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -725,10 +759,10 @@
 				EA22D53B2794F7CF00E1F39A /* FriendListViewController.swift in Sources */,
 				EA29140227B0A65300324476 /* EmailAuthViewModel.swift in Sources */,
 				EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */,
-				EA2913E927AB6D4000324476 /* ModelUser.swift in Sources */,
 				EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */,
 				EA29142827B1612700324476 /* KeyChainWrapper+Ext.swift in Sources */,
 				EAE7F3BC278D0B16002EB808 /* ConfirmModalView.swift in Sources */,
+				EA29144027B37C5A00324476 /* ContactHelper.swift in Sources */,
 				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
 				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
 				EA2913F427AC0B1E00324476 /* SmsAuthViewModel.swift in Sources */,
@@ -740,6 +774,7 @@
 				EA29141927B1096C00324476 /* EmailRegisterViewModel.swift in Sources */,
 				EA2913FC27AF5F4500324476 /* UserDefaultsKeyEnum.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
+				EA29145627B3D75400324476 /* RoomAPI.swift in Sources */,
 				EA2913FE27AF6A4E00324476 /* UserDefaults+Ext.swift in Sources */,
 				EA29143C27B339D700324476 /* SigninViewModel.swift in Sources */,
 				EA29141527B0DA5300324476 /* ModelUserResponse.swift in Sources */,
@@ -750,6 +785,7 @@
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EA29140427B0AB0C00324476 /* AuthRepository.swift in Sources */,
 				EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */,
+				EA29144927B3A6B600324476 /* UserAPI.swift in Sources */,
 				EA22D5382794E76E00E1F39A /* ProfileImageView.swift in Sources */,
 				EA22D54F27967C1500E1F39A /* ChatRoomListViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
@@ -761,6 +797,7 @@
 				EA29143427B2289C00324476 /* ModelPostFCMTokenRequest.swift in Sources */,
 				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
 				EA29143727B2290C00324476 /* APIResult_Device.swift in Sources */,
+				EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */,
 				EA29140927B0B13E00324476 /* ModelSignupResponse.swift in Sources */,
 				EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */,
 				EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */,
@@ -776,6 +813,8 @@
 				EA2913FA27AC4D7000324476 /* ModelSignupData.swift in Sources */,
 				EA29141D27B10C2E00324476 /* ModelIssueEmailCodeResponse.swift in Sources */,
 				EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */,
+				EA29145427B3D4A000324476 /* ModelRoomList.swift in Sources */,
+				EA29145227B3D49800324476 /* ModelRoom.swift in Sources */,
 				EA29141F27B1375300324476 /* ModelSignupRequest.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,
@@ -783,6 +822,7 @@
 				EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */,
 				EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */,
 				EA29140B27B0B14E00324476 /* ModelEmailVerifyResponse.swift in Sources */,
+				EA29143E27B37C4800324476 /* WebSocketHelper.swift in Sources */,
 				EA29141B27B10C0100324476 /* ModelIssueEmailCodeRequest.swift in Sources */,
 				EA29140D27B0B16F00324476 /* URL+Ext.swift in Sources */,
 				EA29142127B1514200324476 /* ModelSigninRequest.swift in Sources */,
@@ -792,8 +832,8 @@
 				EA22D55F2797FB6900E1F39A /* UILabel+Ext.swift in Sources */,
 				EAE555FD279E21E800777EBF /* PaddingLabel.swift in Sources */,
 				EA22D55D2797EA8000E1F39A /* ProfileCellDelegate.swift in Sources */,
-				EA22D5562796816D00E1F39A /* ModelChatRoom.swift in Sources */,
 				EA29140F27B0B36400324476 /* ModelEmailVerifyRequest.swift in Sources */,
+				EA29144D27B3C23A00324476 /* Encodable+Ext.swift in Sources */,
 				EA22D55127967C2F00E1F39A /* ChatRoomListViewModel.swift in Sources */,
 				EA29142327B1518200324476 /* ModelSigninResponse.swift in Sources */,
 				EA29140027AF9C0000324476 /* PasswordViewModel.swift in Sources */,

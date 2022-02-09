@@ -30,7 +30,15 @@ class FriendListViewController: UIViewController {
         bindRx()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetch()
+    }
+    
     // MARK: - Helper
+    private func fetch() {
+        viewModel.fetch()
+    }
 }
 
 // MARK: - BaseViewController
@@ -56,12 +64,31 @@ extension FriendListViewController {
 
 // MARK: - Bindable
 extension FriendListViewController {
-    func bindRx() {}
+    func bindRx() {
+        bindViewModel()
+    }
+    
+    func bindViewModel() {
+        viewModel.output.friends
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.tableView.reloadData()
+            }).disposed(by: bag)
+        
+        viewModel.output.myProfile
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.tableView.reloadData()
+            }).disposed(by: bag)
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDatasource
 extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -73,7 +100,7 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
         case 1:
             return viewModel.dependency.favoriteProfile.count
         default:
-            return viewModel.input.profileList.count
+            return viewModel.output.friends.value.count
         }
     }
     
@@ -82,14 +109,14 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: MyProfileCell.identifier, for: indexPath) as! MyProfileCell
-            cell.setData(data: viewModel.dependency.myProfile)
+            cell.setData(data: viewModel.output.myProfile.value)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier, for: indexPath) as! ProfileTableViewCell
             cell.setData(data: viewModel.dependency.favoriteProfile[indexPath.row])
             return cell
         default:
-            let profile = self.viewModel.input.profileList[indexPath.row]
+            let profile = viewModel.output.friends.value[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier, for: indexPath) as! ProfileTableViewCell
             cell.setData(data: profile)
             return cell
@@ -106,7 +133,12 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
     
     #warning("각 섹션별 대응 코드 작성")
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let profile = viewModel.input.profileList[indexPath.row]
+        let profile: ModelProfile
+        if indexPath.section == 0 {
+            profile = viewModel.output.myProfile.value
+        } else {
+            profile = viewModel.output.friends.value[indexPath.row]
+        }
         let profileVC = ProfileModalViewController(profile: profile)
         profileVC.modalPresentationStyle = .overFullScreen
         profileVC.modalTransitionStyle = .coverVertical
