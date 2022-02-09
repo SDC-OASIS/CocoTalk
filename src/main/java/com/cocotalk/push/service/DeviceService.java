@@ -37,6 +37,7 @@ public class DeviceService {
 
     public Mono<Device> save(ClientInfo clientInfo, SaveInput saveInput) {
         log.info("[save/SaveInput] : " + saveInput);
+        log.info("[save/clientInfo] : " + clientInfo);
         short clientType = parseClientType(clientInfo.getAgent());
         return deviceRepository.findByUserIdAndType(saveInput.getUserId(), clientType)
                 .flatMap(target -> { // device 정보가 있는 경우

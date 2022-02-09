@@ -1,6 +1,6 @@
 package com.cocotalk.push.config;
 
-import com.cocotalk.push.ClientIpArgumentResolver;
+import com.cocotalk.push.ClientArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.ResourceHandlerRegistry;
@@ -12,7 +12,7 @@ public class WebConfig implements WebFluxConfigurer {
 
     @Override
     public void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
-        configurer.addCustomResolver(new ClientIpArgumentResolver());
+        configurer.addCustomResolver(new ClientArgumentResolver());
         WebFluxConfigurer.super.configureArgumentResolvers(configurer);
     }
 
