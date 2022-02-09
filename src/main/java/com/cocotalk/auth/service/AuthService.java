@@ -1,6 +1,6 @@
 package com.cocotalk.auth.service;
 
-import com.cocotalk.auth.application.AuthException;
+import com.cocotalk.auth.exception.CustomException;
 import com.cocotalk.auth.dto.common.*;
 import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.repository.UserRepository;
@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.mail.Message;
@@ -61,7 +62,7 @@ public class AuthService {
             }
             user.setLoggedinAt(LocalDateTime.now());
         } catch (Exception e){
-            throw new AuthException(DATABASE_ERROR);
+            throw new CustomException(DATABASE_ERROR);
         }
 
         Long userId = user.getId();
@@ -98,33 +99,28 @@ public class AuthService {
     @Transactional
     public ResponseEntity<Response<SignupOutput>> signup(SignupInput signupInput) {
         log.info("[signup/signupInput] : "+signupInput);
-        SignupInput.ProfileInfo profile = signupInput.getProfileInfo();
         // 2. 유저 생성
         User user;
         try {
             // 중복 제어
-            boolean exists = userRepository.existsByCid(profile.getCid())
-                    || userRepository.existsByPhone(profile.getPhone())
-                    || userRepository.existsByEmail(profile.getEmail());
+            boolean exists = userRepository.existsByCid(signupInput.getCid())
+                    || userRepository.existsByPhone(signupInput.getPhone())
+                    || userRepository.existsByEmail(signupInput.getEmail());
             if (exists) {
                 return ResponseEntity.status(HttpStatus.OK).body(new Response<>(EXISTS_INFO));
             }
 
             //pk 생성
-            User tmpUser = userMapper.toEntity(profile);
+            User tmpUser = userMapper.toEntity(signupInput);
             user = userRepository.save(tmpUser);
-
-            //s3에 이미지 저장
-            String imgUrl = s3Service.uploadProfileImage(signupInput.getProfileImg(), user.getId());
-            s3Service.uploadThumbnail(signupInput.getProfileImgThumb(), user.getId());
-
-            user.setPassword(SHA256Utils.getEncrypt(profile.getPassword()));
-            user.setProfile(imgUrl);
+            log.info("[signup/signupInput] : "+signupInput.getProfileImg() +","+ signupInput.getProfileImgThumb());
+            setProfileImg(user, signupInput.getProfileImg(), signupInput.getProfileImgThumb());
+            user.setPassword(SHA256Utils.getEncrypt(signupInput.getPassword()));
             userRepository.save(user);
 
         } catch (Exception e) {
             log.error("[signup/post] database error", e);
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(DATABASE_ERROR));
+            throw new CustomException(DATABASE_ERROR);
         }
         // 3. 결과 return
         SignupOutput signupOutput = userMapper.toDto(user);
@@ -145,6 +141,7 @@ public class AuthService {
 
     /**
      * 해당 refresh token이 redis의 값과 일치한 경우 token 재발급
+     *
      * @return ResponseEntity<Response<TokenDto>>
      */
     public ResponseEntity<Response<TokenDto>> reissue(ClientType clientType) {
@@ -266,7 +263,24 @@ public class AuthService {
             log.info("[getFcmToken/deviceDto] :" + device);
             return device;
         }catch (Exception e){
-            throw new AuthException(SERVER_ERROR,e);
+            throw new CustomException(SERVER_ERROR,e);
         }
+    }
+
+    private void setProfileImg(User user, MultipartFile img, MultipartFile imgThumb){
+        //s3에 이미지 저장
+        String imgUrl = s3Service.uploadProfileImg(img, imgThumb, user.getId());
+        /*
+        profile json 생성
+         */
+        //json -> object
+        log.info("[setProfileImg/user] : "+user);
+        ProfilePayload profilePayload = ProfilePayload.builder().profile(imgUrl).build();
+
+        // objcet -> json
+        String profile =  ProfilePayload.toJSON(profilePayload);
+
+        //user에 적용
+        user.setProfile(profile);
     }
 }

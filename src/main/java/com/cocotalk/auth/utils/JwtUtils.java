@@ -1,6 +1,6 @@
 package com.cocotalk.auth.utils;
 
-import com.cocotalk.auth.application.AuthException;
+import com.cocotalk.auth.exception.CustomException;
 import com.cocotalk.auth.dto.common.TokenPayload;
 import com.cocotalk.auth.dto.common.response.ResponseStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -114,7 +113,7 @@ public class JwtUtils {
             TokenPayload payload = objectMapper.readValue(claims.getSubject(), TokenPayload.class);
             return payload;
         } catch (JacksonException e) {
-            throw new AuthException(ResponseStatus.UNAUTHORIZED, e);
+            throw new CustomException(ResponseStatus.UNAUTHORIZED, e);
         }
     }
 

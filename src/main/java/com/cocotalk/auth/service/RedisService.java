@@ -2,7 +2,7 @@ package com.cocotalk.auth.service;
 
 import com.cocotalk.auth.dto.common.ClientType;
 import com.cocotalk.auth.dto.common.response.ResponseStatus;
-import com.cocotalk.auth.application.AuthException;
+import com.cocotalk.auth.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +56,7 @@ public class RedisService {
             ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
             return valueOperations.get(key);
         }catch (Exception e){
-            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+            throw new CustomException(ResponseStatus.DATABASE_ERROR);
         }
     }
 
@@ -65,7 +65,7 @@ public class RedisService {
             ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
             valueOperations.set(key,value);
         }catch (Exception e){
-            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+            throw new CustomException(ResponseStatus.DATABASE_ERROR);
         }
     }
 
@@ -75,7 +75,7 @@ public class RedisService {
             Duration expireDuration = Duration.ofSeconds(duration);
             valueOperations.set(key,value,expireDuration);
         }catch (Exception e){
-            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+            throw new CustomException(ResponseStatus.DATABASE_ERROR);
         }
     }
 
@@ -83,7 +83,7 @@ public class RedisService {
         try {
             stringRedisTemplate.delete(key);
         }catch (Exception e){
-            throw new AuthException(ResponseStatus.DATABASE_ERROR);
+            throw new CustomException(ResponseStatus.DATABASE_ERROR);
         }
     }
 }

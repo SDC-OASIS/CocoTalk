@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-    User toEntity(SignupInput.ProfileInfo profileInfo);
+    User toEntity(SignupInput signupInput);
     SignupOutput toDto(User user);
 
 }

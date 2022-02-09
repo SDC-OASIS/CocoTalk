@@ -15,35 +15,22 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class SignupInput {
+    @NotBlank
+    private String cid; // 코코톡 아이디
+    @NotBlank
+    private String password;
+    @NotBlank
+    private String nickname;
+    @NotBlank
+    private String username;
+    private LocalDate birth;
+    @NotBlank
+    private String phone;
+    @NotBlank
+    private String email;
     @NotNull
-    @Valid
-    private ProfileInfo profileInfo;
-    @NotNull
+    private Short status; // 유저 상태
     private MultipartFile profileImg;
-    @NotNull
     private MultipartFile profileImgThumb;
-
-    @ToString
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ProfileInfo{
-        @NotBlank
-        private String cid; // 코코톡 아이디
-        @NotBlank
-        private String password;
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String nickname;
-        private LocalDate birth;
-        @NotBlank
-        private String phone;
-        @NotBlank
-        private String email;
-        @NotNull
-        private Short status; // 유저 상태
-    }
 }
 

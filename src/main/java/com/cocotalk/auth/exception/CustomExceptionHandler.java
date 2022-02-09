@@ -1,4 +1,4 @@
-package com.cocotalk.auth.application;
+package com.cocotalk.auth.exception;
 
 import com.cocotalk.auth.dto.common.response.Response;
 import com.cocotalk.auth.dto.common.response.ResponseStatus;
@@ -7,16 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class AuthExceptionHandler {
+public class CustomExceptionHandler {
 
-    @ExceptionHandler(AuthException.class)
-    public ResponseEntity<Response<?>> serverException(AuthException e) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<Response<?>> serverException(CustomException e) {
         ResponseStatus status = e.getStatus();
         log.error("AuthException : " + status.getMessage());
         e.printStackTrace();
