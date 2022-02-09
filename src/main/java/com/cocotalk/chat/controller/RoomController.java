@@ -1,8 +1,6 @@
 package com.cocotalk.chat.controller;
 
-import com.cocotalk.chat.domain.vo.RoomListVo;
-import com.cocotalk.chat.domain.vo.RoomVo;
-import com.cocotalk.chat.domain.vo.UserVo;
+import com.cocotalk.chat.domain.vo.*;
 import com.cocotalk.chat.dto.request.RoomRequest;
 import com.cocotalk.chat.dto.response.CustomResponse;
 import com.cocotalk.chat.service.RoomService;
@@ -62,6 +60,13 @@ public class RoomController {
         return new ResponseEntity<>(new CustomResponse(data), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/tail")
+    @Operation(summary = "채팅방 id로 채팅방과 첫 메시지 페이지 조회")
+    public ResponseEntity<CustomResponse<?>> findRoomAndMessages(@PathVariable ObjectId id,
+                                                                 @RequestParam int count) {
+        RoomWithMessageListVo<ChatMessageVo> data = roomService.findRoomAndMessage(id, count);
+        return new ResponseEntity<>(new CustomResponse(data), HttpStatus.OK);
+    }
 
     @GetMapping("/private/{userId}")
     @Operation(summary = "내 정보와 다른 userId로 개인 채팅방 조회")

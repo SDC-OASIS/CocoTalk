@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,14 +27,16 @@ import java.util.List;
 public class MessageController {
     private final ChatMessageService chatMessageService;
 
+    @Value(value = "${cocotalk.message-paging-size}")
+    private int messagePagingSize;
+
     @GetMapping
     @Operation(summary = "채팅방 메시지 페이징")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<List<ChatMessageVo>>> findRoomList(@RequestParam ObjectId roomid,
                                                                             @RequestParam ObjectId bundleid,
-                                                                            @RequestParam int count,
-                                                                            @RequestParam int size){ // 페이징 단위 - bundle-limit 보다 작거나 같아야함
-        List<ChatMessageVo> data = chatMessageService.findMessagePage(roomid, bundleid, count, size);
+                                                                            @RequestParam int count){
+        List<ChatMessageVo> data = chatMessageService.findMessagePage(roomid, bundleid, count, messagePagingSize);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 }
