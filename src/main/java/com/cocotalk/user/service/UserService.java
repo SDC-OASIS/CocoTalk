@@ -1,22 +1,27 @@
 package com.cocotalk.user.service;
 
 import com.cocotalk.user.domain.entity.User;
+import com.cocotalk.user.domain.vo.ProfilePayload;
 import com.cocotalk.user.domain.vo.UserVo;
-import com.cocotalk.user.dto.request.ProfileUpdateRequest;
+import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
+import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.repository.UserCustomRepositoryImpl;
 import com.cocotalk.user.repository.UserRepository;
 import com.cocotalk.user.utils.mapper.UserMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -24,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserCustomRepositoryImpl userCustomRepository;
     private final S3Service s3Service;
+    private final ObjectMapper mapper;
 
     public static final CustomException INVALID_USERID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
@@ -87,10 +93,68 @@ public class UserService {
     }
 
     @Transactional
-    public UserVo updateProfile(User user, ProfileUpdateRequest profileUpdateRequest) {
-        String fileUrl = s3Service.uploadProfileImage(profileUpdateRequest.getProfileImg(), user.getId());
-        s3Service.uploadProfileThumb(profileUpdateRequest.getProfileImgThumb(), user.getId());
-        user.setProfile(fileUrl);
+    public UserVo updateProfileImg(User user, ImgUpdateRequest request) {
+        log.info("[updateProfile/request] : " + request);
+
+        s3Service.deleteProfileImg(user.getId());
+
+        String fileUrl;
+        // 이미지가 있으면 S3에 업로드
+        if(request != null
+                && request.getProfileImg() != null
+                && request.getProfileImgThumb() != null
+                && !request.getProfileImg().isEmpty()
+                && !request.getProfileImgThumb().isEmpty()) {
+            fileUrl = s3Service.uploadProfileImg(request.getProfileImg(), request.getProfileImgThumb(), user.getId());
+        } else {
+            fileUrl = null;
+        }
+
+        //json -> object
+        ProfilePayload profilePayload = ProfilePayload.toObject(user.getProfile());
+        profilePayload.setProfile(fileUrl);
+
+        // objcet -> json
+        String profile =  ProfilePayload.toJSON(profilePayload);
+
+        user.setProfile(profile);
+        userRepository.save(user);
+        return userMapper.toVo(user);
+    }
+
+    @Transactional
+    public UserVo updateProfileBg(User user, MultipartFile bgImg) {
+        log.info("[updateProfileBg/bgImg] : " + bgImg);
+
+        String fileUrl = null;
+        s3Service.deleteProfileBg(user.getId());
+        if(bgImg != null && !bgImg.isEmpty())
+            fileUrl = s3Service.uploadProfileBg(bgImg, user.getId());
+
+
+        //json -> object
+        ProfilePayload profilePayload = ProfilePayload.toObject(user.getProfile());
+        profilePayload.setBackground(fileUrl);
+
+        // objcet -> json
+        String profile =  ProfilePayload.toJSON(profilePayload);
+        user.setProfile(profile);
+
+        userRepository.save(user);
+        return userMapper.toVo(user);
+    }
+
+    @Transactional
+    public UserVo updateProfileMsg(User user, MessageUpdateRequest request) {
+
+        //json -> object
+        ProfilePayload profilePayload = ProfilePayload.toObject(user.getProfile());
+        profilePayload.setMessage(request.getMessage());
+
+        // objcet -> json
+        String profile =  ProfilePayload.toJSON(profilePayload);
+        user.setProfile(profile);
+
         userRepository.save(user);
         return userMapper.toVo(user);
     }

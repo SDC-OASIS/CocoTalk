@@ -62,6 +62,5 @@ public class User extends BaseTime {
         this.phone = request.getPhone();
         this.email = request.getEmail();
         this.status = request.getStatus();
-        this.profile = request.getProfile();
     }
 }

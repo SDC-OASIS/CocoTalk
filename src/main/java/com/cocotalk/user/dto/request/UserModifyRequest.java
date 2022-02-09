@@ -10,7 +10,6 @@ public class UserModifyRequest {
     private String nickname;
     private String email;
     private String phone;
-    private String profile;
     private LocalDate birth;
     private Short status;
 }

@@ -3,8 +3,9 @@ package com.cocotalk.user.controller;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.UserVo;
-import com.cocotalk.user.dto.request.ProfileUpdateRequest;
+import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
 import com.cocotalk.user.dto.request.UserModifyRequest;
+import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
 import com.cocotalk.user.dto.response.CustomResponse;
 import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.service.UserService;
@@ -13,9 +14,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.List;
  * @see com.cocotalk.user.utils.mapper.UserMapper
  */
 
+@Slf4j
 @RestController
 @Tag(name = "유저 API")
 @RequiredArgsConstructor
@@ -143,15 +147,43 @@ public class UserController {
     }
 
     /**
-     * 유저 프로필 수정 API [PUT] /user/profile
+     * 유저 프로필 사진 수정 API [PUT] /user/profile/img
      * @author 김민정
-     * @param request 수정할 프로필 프로필 이미지와 이미지 썸네일을 담은 요청 모델
+     * @param request 수정할 프로필 사진과 썸네일을 담은 요청 모델
      * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
      */
-    @Operation(summary = "유저 프로필 수정")
-    @PutMapping(value = "/profile", consumes = {"multipart/form-data"})
-    public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, @Valid ProfileUpdateRequest request) {
-        UserVo data = userService.updateProfile(user, request);
+    @Operation(summary = "유저 프로필 사진 수정")
+//    @PutMapping(value = "/profile/img", consumes = {"multipart/form-data"})
+    @PutMapping(value = "/profile/img")
+    public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, ImgUpdateRequest request) {
+        log.info("[PUT][/profile/img] updateProfile request:"+request);
+        UserVo data = userService.updateProfileImg(user, request);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 프로필 배경 사진 수정 API [PUT] /user/profile/bg
+     * @author 김민정
+     * @param request 수정할 프로필 백그라운드 이미지
+     * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
+     */
+    @Operation(summary = "유저 백그라운드 사진 수정")
+    @PutMapping(value = "/profile/bg", consumes = {"multipart/form-data"})
+    public ResponseEntity<CustomResponse<UserVo>> updateBackground(@Parameter(hidden = true) User user, MultipartFile request) {
+        UserVo data = userService.updateProfileBg(user, request);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 프로필 메시지 수정 API [PUT] /user/profile/message
+     * @author 김민정
+     * @param request 수정할 프로필 메시지
+     * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
+     */
+    @Operation(summary = "유저 프로필 메시지 수정")
+    @PutMapping(value = "/profile/message")
+    public ResponseEntity<CustomResponse<UserVo>> updateProfileMsg(@Parameter(hidden = true) User user, @RequestBody MessageUpdateRequest request) {
+        UserVo data = userService.updateProfileMsg(user, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 

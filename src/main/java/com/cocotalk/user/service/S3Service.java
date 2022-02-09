@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -27,22 +28,34 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadProfileImage(MultipartFile file, Long userId) {
-        String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-        return uploadImage(file, String.format("img/profile/%d_%s.%s", userId, LocalDateTime.now(), extension));
+    public String uploadProfileImg(MultipartFile img, MultipartFile imgThumb, Long userId) {
+        //썸네일 업로드
+        String extensionThumb = StringUtils.getFilenameExtension(imgThumb.getOriginalFilename());
+        String imgThumbPath = "user_profile/" + userId + "/profile/" + LocalDateTime.now() + "_th."+ extensionThumb;
+        uploadFile(imgThumb, imgThumbPath);
+        //프로필 업로드
+        String extension = StringUtils.getFilenameExtension(img.getOriginalFilename());
+        String imgPath = "user_profile/" + userId + "/profile/" + LocalDateTime.now() + "."+ extension;
+        return uploadFile(img,imgPath);
     }
 
-    public String uploadProfileThumb(MultipartFile file, Long userId) {
-        String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-        return uploadImage(file, String.format("img/profile/%d_%s_th.%s", userId, LocalDateTime.now(), extension));
+    public String uploadProfileBg(MultipartFile img, Long userId) {
+        String extension = StringUtils.getFilenameExtension(img.getOriginalFilename());
+        String filePath = "user_profile/" + userId + "/bg/" + LocalDateTime.now() + "."+ extension;
+        return uploadFile(img, filePath);
     }
 
-    public String uploadProfileBgImage(MultipartFile file, Long userId) {
-        String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-        return uploadImage(file, String.format("img/bg/%d_%s.%s", userId, LocalDateTime.now(), extension));
+    public void deleteProfileImg(Long userId) {
+        String dirPath = "user_profile/" + userId +"/profile/";
+        deleteFile(dirPath);
     }
 
-    private String uploadImage(MultipartFile file, String filePath) {
+    public void deleteProfileBg(Long userId) {
+        String dirPath = "user_profile/" + userId +"/bg/";
+        deleteFile(dirPath);
+    }
+
+    private String uploadFile(MultipartFile file, String filePath) {
         try {
             amazonS3.putObject(new PutObjectRequest(bucket, filePath, file.getInputStream(), null)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
@@ -52,4 +65,20 @@ public class S3Service {
             throw new CustomException(CustomError.UNKNOWN);
         }
     }
+
+    private void deleteFile(String filePath) {
+        log.info("[deleteFile/filePath] : "+filePath);
+        ObjectListing objectList = amazonS3.listObjects(bucket, filePath);
+        List<S3ObjectSummary> objectSummeryList = objectList.getObjectSummaries();
+        log.info("[deleteFile/objectSummeryList] : "+objectSummeryList);
+        String[] keysList = new String[objectSummeryList.size()];
+        int count = 0;
+        for (S3ObjectSummary summery : objectSummeryList) {
+            keysList[count++] = summery.getKey();
+        }
+        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(keysList);
+        amazonS3.deleteObjects(deleteObjectsRequest);
+        log.info("[deleteFile/filePath]" + filePath + "is removed");
+    }
+
 }

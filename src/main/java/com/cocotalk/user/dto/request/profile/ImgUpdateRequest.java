@@ -1,17 +1,14 @@
-package com.cocotalk.user.dto.request;
+package com.cocotalk.user.dto.request.profile;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-
+@ToString
 @Getter
 @Setter
-public class ProfileUpdateRequest {
-    @NotNull
+public class ImgUpdateRequest {
     private MultipartFile profileImg;
-    @NotNull
     private MultipartFile profileImgThumb;
 }
