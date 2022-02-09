@@ -17,7 +17,6 @@ public class WebSocketConfig {
     public WebSocketUtils websocketClient() throws Exception{
         URI uri = new URI(PRESENCE_SERVICE_WEBSOCKET_URL);
         WebSocketUtils webSocketUtils = new WebSocketUtils(uri, new Draft_6455());
-
         //웹소켓 커넥팅
         webSocketUtils.connectBlocking();
 
