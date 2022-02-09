@@ -27,13 +27,6 @@ public class ChatController {
         return "index";
     }
 
-    @MessageMapping("/{roomId}/message/send")
-    public void send(@DestinationVariable ObjectId roomId,
-                            @Payload ChatMessageRequest chatMessageRequest) {
-        MessageVo<ChatMessageVo> messageVo = roomService.saveChatMessage(roomId, chatMessageRequest);
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageVo);
-    }
-
     @MessageMapping("/new")
     public void createRoom(@Payload RoomRequest roomRequest) {
         RoomVo roomVo = roomService.create(roomRequest);
@@ -42,6 +35,13 @@ public class ChatController {
             long userId = roomVo.getMembers().get(i).getUserId();
             simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", roomVo);
         }
+    }
+
+    @MessageMapping("/{roomId}/message/send")
+    public void send(@DestinationVariable ObjectId roomId,
+                            @Payload ChatMessageRequest chatMessageRequest) {
+        MessageVo<ChatMessageVo> messageVo = roomService.saveChatMessage(roomId, chatMessageRequest);
+        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageVo);
     }
 
     @MessageMapping("/{roomId}/message/invite")
