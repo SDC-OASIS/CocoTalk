@@ -5,6 +5,7 @@ import com.cocotalk.user.domain.vo.FriendVo;
 import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.FriendAddRequest;
 import com.cocotalk.user.dto.request.FriendHideRequest;
+import com.cocotalk.user.dto.request.FriendsAddRequest;
 import com.cocotalk.user.dto.response.CustomResponse;
 import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.service.FriendService;
@@ -52,6 +53,23 @@ public class FriendController {
             @Parameter(hidden = true) User fromUser,
             @RequestBody @Valid FriendAddRequest friendAddRequest) {
         FriendVo data = friendService.add(fromUser, friendAddRequest);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 친구 리스트 추가 API [POST] /friends
+     * @param fromUser 친구 추가를 요청하는 유저
+     * @param friendsAddRequest 친구로 추가되는 유저 id를 포함한 요청 모델
+     * @return ResponseEntity<CustomResponse<FriendResponse>> 추가된 친구 정보가 데이터에 포함됩니다.
+     * @exception CustomException 해당 id를 가진 친구가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다.
+     */
+    @Operation(summary = "친구 리스트로 추가")
+    @PostMapping("/list")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<List<FriendVo>>> addList(
+            @Parameter(hidden = true) User fromUser,
+            @RequestBody @Valid FriendsAddRequest friendsAddRequest) {
+        List<FriendVo> data = friendService.addList(fromUser, friendsAddRequest);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
