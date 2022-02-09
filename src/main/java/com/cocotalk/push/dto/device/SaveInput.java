@@ -1,6 +1,8 @@
 package com.cocotalk.push.dto.device;
 
 import lombok.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 @ToString
@@ -8,8 +10,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class SaveInput {
-    @NonNull
+    @NotNull
     private Long userId;
-    @NonNull
+    @NotBlank
     private String fcmToken;
 }
