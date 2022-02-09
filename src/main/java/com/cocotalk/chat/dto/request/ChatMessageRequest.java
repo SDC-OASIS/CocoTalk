@@ -9,6 +9,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 
+import java.util.List;
+
 @Getter
 @ToString
 @SuperBuilder
@@ -22,6 +24,8 @@ public class ChatMessageRequest {
     private ObjectId messageBundleId;
 
     private Long userId;
+
+    private List<Long> receiverIds;
 
     private String content;
 
