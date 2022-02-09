@@ -14,9 +14,9 @@ import RxCocoa
 class CheckBoxCell: UITableViewCell {
     
     // MARK: - UI Properties
-    #warning("동의 여부 바인딩하기")
     let ivCheckBox = UIImageView().then {
         $0.image = UIImage(systemName: "checkmark.circle")!
+        $0.tintColor = .systemGray
     }
     
     let lblContent = UILabel().then {
@@ -101,9 +101,11 @@ class CheckBoxCell: UITableViewCell {
         lblContent.text = data.title
         
         if data.isAgreed {
-            ivCheckBox.image = UIImage(systemName: "checkmark.circle.fill")!
+            ivCheckBox.image = UIImage(systemName: "checkmark.circle.fill")
+            ivCheckBox.tintColor = .systemGreen
         } else {
             ivCheckBox.image = UIImage(systemName: "checkmark.circle")!
+            ivCheckBox.tintColor = .systemGray
         }
         
         if let description = data.description {

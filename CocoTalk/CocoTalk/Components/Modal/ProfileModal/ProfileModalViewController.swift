@@ -28,7 +28,7 @@ class ProfileModalViewController: UIViewController {
     }
     
     /// 프로필 이미지
-    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumnail_01")!).then {
+    private let ivProfile = ProfileImageView(image: UIImage(named: "profile_noimg_thumbnail_01")!).then {
         $0.setShadow()
     }
     
@@ -95,7 +95,7 @@ class ProfileModalViewController: UIViewController {
         if let profileImgUrl = profile.profileImageUrl,
            !profileImgUrl.isEmpty {
             let url = URL(string: profileImgUrl)
-            ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumnail_01"))
+            ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))
         }
         
         super.init(nibName: nil, bundle: nil)

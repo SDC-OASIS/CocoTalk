@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ModelMessage {
+struct ModelMessage: Codable {
     /// 메시지 id
     var id: Int?
     

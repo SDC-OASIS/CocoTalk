@@ -18,7 +18,7 @@ class TermViewController: UIViewController {
     
     private let btnAgree = UIButton().then {
         $0.setTitle("동의하고 계속 진행합니다", for: .normal)
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = .systemGray
     }
     
     // MARK: - Properties
@@ -29,7 +29,11 @@ class TermViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.hidesBackButton = true
+        
         title = "이용약관에 동의해 주세요"
+        
+        UserDefaults.resetSignupData()
         
         configureView()
         configureSubviews()
@@ -37,6 +41,12 @@ class TermViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func pushPhoneVC() {
+        let signupData = ModelSignupData(terms: true)
+        UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
+        let vc = PhoneNumberViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 // MARK: - BaseViewController
@@ -77,6 +87,34 @@ extension TermViewController {
     }
     
     func bindTableView() {
+        viewModel.dependency.terms
+            .subscribe(onNext: { [weak self] terms in
+                guard let self = self else {
+                    return
+                }
+                
+                var isAgreed = true
+                for i in 1..<terms.count {
+                    if terms[i].isRequired, !terms[i].isAgreed{
+                        isAgreed = false
+                        break
+                    }
+                }
+                self.viewModel.dependency.isAgreed.accept(isAgreed)
+            }).disposed(by: bag)
+        
+        viewModel.dependency.isAgreed
+            .subscribe(onNext: { [weak self] isAgreed in
+                guard let self = self else {
+                    return
+                }
+                
+                if isAgreed {
+                    self.btnAgree.backgroundColor = .systemGreen
+                } else {
+                    self.btnAgree.backgroundColor = .systemGray
+                }
+            }).disposed(by: bag)
     }
     
     func bindButton() {
@@ -85,8 +123,12 @@ extension TermViewController {
                 guard let self = self else {
                     return
                 }
-                let vc = PhoneNumberViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
+                
+                guard self.viewModel.dependency.isAgreed.value else {
+                    return
+                }
+                
+                self.pushPhoneVC()
             })
             .disposed(by: bag)
     }
@@ -95,7 +137,7 @@ extension TermViewController {
 // MARK: - UITableViewDelegate
 extension TermViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.itemList.count
+        return viewModel.dependency.terms.value.count
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -106,7 +148,7 @@ extension TermViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CheckBoxCell.identifier, for: indexPath) as? CheckBoxCell else { return UITableViewCell() }
         
         let idx = indexPath.row
-        cell.setData(data: self.viewModel.itemList[idx])
+        cell.setData(data: self.viewModel.dependency.terms.value[idx])
         cell.selectionStyle = .none
         
         cell.ivCheckBox
@@ -117,20 +159,36 @@ extension TermViewController: UITableViewDelegate, UITableViewDataSource {
                 guard let self = self else {
                     return
                 }
-                self.viewModel.itemList[idx].isAgreed.toggle()
+                
+                var terms = self.viewModel.dependency.terms.value
+                terms[idx].isAgreed.toggle()
+                
+                if idx == 0 {
+                    for i in 1..<terms.count {
+                        terms[i].isAgreed = terms[idx].isAgreed
+                    }
+                } else {
+                    var count = 0
+                    let termCount = terms.count - 1
+                    
+                    for i in 1...termCount {
+                        if terms[i].isAgreed != true {
+                            terms[0].isAgreed = false
+                            break
+                        }
+                        count += 1
+                    }
+                    
+                    if count == termCount {
+                        terms[0].isAgreed = true
+                    }
+                }
+                
+                self.viewModel.dependency.terms.accept(terms)
                 self.tableView.reloadData()
             })
             .disposed(by: cell.bag)
         return cell
         
     }
-}
-
-
-// MARK: - TermTableItem
-struct TermTableItem {
-    var title: String
-    var description: String?
-    var destination: String?
-    var isAgreed: Bool
 }

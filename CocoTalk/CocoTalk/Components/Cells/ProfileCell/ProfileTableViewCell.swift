@@ -66,7 +66,7 @@ class ProfileTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")
+        ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")
     }
 
     // MARK: - Helper
@@ -99,9 +99,9 @@ class ProfileTableViewCell: UITableViewCell {
         if let _img = data.profileImageUrl,
            !_img.isEmpty {
             let url = URL(string: _img)
-            ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumnail_01"))
+            ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))
         } else {
-            ivProfile.image = UIImage(named: "profile_noimg_thumnail_01")!
+            ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
         }
         
         if let _bio = data.bio {

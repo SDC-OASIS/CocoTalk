@@ -21,7 +21,6 @@ class SmsAuthViewController: UIViewController {
     }
     
     /// 인증번호 텍스트 필드
-    #warning("4자리 제한")
     private let textFieldAuthNumber = UITextField().then {
         $0.placeholder = "인증번호 4자리"
         $0.textAlignment = .center
@@ -32,10 +31,9 @@ class SmsAuthViewController: UIViewController {
     
     /// 인증번호 만료 시간
     private let lblAuthExpireTime = UILabel().then {
-        $0.text = "인증번호는 180초 내에 도착합니다."
         $0.font = .systemFont(ofSize: 14)
     }
-
+    
     /// 확인 버튼
     private let btnConfirm = UIButton().then {
         $0.setTitle("확인", for: .normal)
@@ -49,34 +47,70 @@ class SmsAuthViewController: UIViewController {
         $0.backgroundColor = .clear
     }
     
+    #warning("재요청 보내기 버튼 생성")
+    
     // MARK: - Properties
     let bag = DisposeBag()
+    let viewModel = SmsAuthViewModel()
+    let phoenNumber: String
     
     // MARK: - Life cycle
+    init(phoneNumber: String) {
+        self.phoenNumber = phoneNumber
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.hidesBackButton = true
         
         title = "문자 인증"
+        
+        lblPhoneNumber.text = phoenNumber.pretty()
+        viewModel.dependency.phoneNumber = phoenNumber
         
         configureView()
         configureSubviews()
         bindRx()
+        startTimer()
     }
     
     // MARK: - Helper
-    func authenticationFailAlert() {
-        let alert = UIAlertController(title: "인증 실패", message: "문자인증에 실패했습니다.", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "확인", style: .cancel) { [weak self] _ in
-            guard let self = self,
-                  let navigationController = self.navigationController  else {
-                      return
-                  }
-            let vc = PasswordViewController()
-            navigationController.pushViewController(vc, animated: true)
+    private func startTimer() {
+        viewModel.dependency.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateCounter() {
+        var count = viewModel.dependency.countDown.value
+        if count > 0 {
+            lblAuthExpireTime.text = "인증번호는 \(count)초 이후에 다시 요청할 수 있습니다."
+            lblAuthExpireTime.textColor = .red
+            count -= 1
+            viewModel.dependency.countDown.accept(count)
+        } else {
+            authenticationFailAlert(title: "인증 오류", message: "문자인증에 실패했습니다.")
+        }
+    }
+    
+    private func authenticationFailAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .cancel) { _ in
+            self.viewModel.dependency.timer?.invalidate()
+            self.navigationController?.popViewController(animated: true)
         }
         alert.addAction(okAction)
         present(alert, animated: true)
+    }
+    
+    private func pushPasswordVC() {
+        let vc = PasswordViewController()
+        viewModel.dependency.timer?.invalidate()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -107,7 +141,7 @@ extension SmsAuthViewController {
         }
         
         btnConfirm.snp.makeConstraints {
-            $0.top.equalTo(lblAuthExpireTime.snp.bottom).offset(30)
+            $0.top.equalTo(textFieldAuthNumber.snp.bottom).offset(40)
             $0.leading.trailing.equalTo(textFieldAuthNumber)
             $0.height.equalTo(44)
         }
@@ -123,13 +157,32 @@ extension SmsAuthViewController {
 extension SmsAuthViewController {
     func bindRx() {
         bindButton()
+        bindTextField()
+        bindViewModel()
     }
     
     func bindButton() {
         btnConfirm.rx.tap
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.authenticationFailAlert()
+                guard let self = self,
+                      let isLoading = self.viewModel.dependency.isLoading.value  else {
+                    return
+                }
+                #warning("viewmodel 인증 시작")
+                #warning("SMS 인증하기")
+                /*
+                 
+                 1) sms 코드 인증
+                 2) 인증 완료
+                 3) 서버에 전화번호가 있는지 확인
+                 4-1) 없으면 push
+                 4-2) 있으면 pop
+                 
+                 */
+                if !isLoading,
+                   self.textFieldAuthNumber.text?.count == 4 {
+                    self.viewModel.checkPhoneExist()
+                }
             }).disposed(by: bag)
         
         btnChangePhoneNumber.rx.tap
@@ -139,6 +192,53 @@ extension SmsAuthViewController {
                           return
                       }
                 navigationController.popViewController(animated: true)
+            }).disposed(by: bag)
+    }
+    
+    func bindTextField() {
+        textFieldAuthNumber.rx.text
+            .orEmpty
+            .scan("") { [weak self] oldValue, newValue in
+                guard let self = self else {
+                    return oldValue
+                }
+                
+                var result: String
+                if newValue.isNumber() && newValue.count < 5 {
+                    if newValue.count == 4 {
+                        self.btnConfirm.backgroundColor = .systemGreen
+                    } else {
+                        self.btnConfirm.backgroundColor = .systemGray
+                    }
+                    result = newValue
+                } else {
+                    if oldValue.count == 4 {
+                        self.btnConfirm.backgroundColor = .systemGreen
+                    } else {
+                        self.btnConfirm.backgroundColor = .systemGray
+                    }
+                    result = oldValue
+                }
+                
+                self.viewModel.input.smsAuthCode.accept(result)
+                return result
+            }.bind(to: textFieldAuthNumber.rx.text)
+            .disposed(by: bag)
+    }
+    
+    private func bindViewModel() {
+        viewModel.dependency.isPhoneExist
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self,
+                      let result = result else {
+                    return
+                }
+                
+                if !result {
+                    self.pushPasswordVC()
+                } else {
+                    self.authenticationFailAlert(title: "중복된 전화번호", message: "이미 ID가 존재하는 전화번호입니다.")
+                }
             }).disposed(by: bag)
     }
 }

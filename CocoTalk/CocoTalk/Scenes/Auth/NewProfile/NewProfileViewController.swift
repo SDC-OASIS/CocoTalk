@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import RxGesture
+import PhotosUI
 
 class NewProfileViewController: UIViewController {
     
@@ -29,6 +31,7 @@ class NewProfileViewController: UIViewController {
     /// 주소록 친구 자동 추가 체크 박스
     private let ivCheckBox = UIImageView().then {
         $0.image = UIImage.init(systemName: "checkmark.circle")!
+        $0.tintColor = .systemGreen
     }
     
     /// 주소록 친구 자동 추가 라벨
@@ -41,24 +44,145 @@ class NewProfileViewController: UIViewController {
     /// 확인 버튼
     private let btnConfirm = UIButton().then {
         $0.setTitle("확인", for: .normal)
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = .systemGreen
     }
     
     
     // MARK: - Properties
     let bag = DisposeBag()
+    var isImageSelected = false
+    var addFriendAutomatillcaly = false
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.hidesBackButton = true
         
         configureView()
         configureSubviews()
         bindRx()
     }
-
+    
     // MARK: - Helper
+    private func showNameAlert() {
+        let alert = UIAlertController(title: "이름 오류", message: "이름을 입력해주세요", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func showPhotoAlert() {
+        let alert = UIAlertController(title: "프로필 사진 설정", message: nil, preferredStyle: .actionSheet)
+        let pickFromAlbum = UIAlertAction(title: "앨범에서 사진 선택", style: .default) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.checkPermission()
+        }
+        let defaultImage = UIAlertAction(title: "기본 이미지로 변경", style: .default) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
+            self.isImageSelected = true
+        }
+        let cancle = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(pickFromAlbum)
+        alert.addAction(defaultImage)
+        alert.addAction(cancle)
+        present(alert, animated: true)
+    }
+    
+    private func checkPermission() {
+        switch PHPhotoLibrary.authorizationStatus() {
+        case .denied, .restricted:
+            showPermissionAlert()
+        case .authorized, .limited:
+            presentPHPicker()
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { [weak self] status in
+                guard let self = self else {
+                    return
+                }
+                if status == .authorized {
+                    DispatchQueue.main.async {
+                        self.presentPHPicker()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.showPermissionAlert()
+                    }
+                }
+            }
+        default:
+            showPermissionAlert()
+        }
+    }
+    
+    private func showPermissionAlert() {
+        let alert = UIAlertController(title: "사진첩 권한 요청", message: "프로필 수정을 위해 사진첩 권한을 허용해야합니다.", preferredStyle: .alert)
+        let disagree = UIAlertAction(title: "허용 안함", style: .default)
+        let agree = UIAlertAction(title: "허용", style: .default) { alert in
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl)
+            }
+        }
+        alert.addAction(disagree)
+        alert.addAction(agree)
+        present(alert, animated: true)
+    }
+    
+    private func presentPHPicker() {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        let phpicker = PHPickerViewController(configuration: configuration)
+        phpicker.modalPresentationStyle = .overFullScreen
+        phpicker.delegate = self
+        self.present(phpicker, animated: true)
+    }
+    
+    #warning("회원가입 api 호출 후 회원가입 완료하면 이메일 인증 화면으로 넘기기")
+    private func pushEmailRegisterVC() {
+        guard let username = self.textFieldUsername.text,
+              !username.isEmpty  else {
+                  showNameAlert()
+                  return
+              }
+        
+        if !isImageSelected {
+            ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
+        }
+
+        var profileImageUrl: String?
+        if let data = ivProfile.image?.pngData() {
+            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let url = documents.appendingPathComponent("profile.png")
+            do {
+                try data.write(to: url)
+                profileImageUrl = url.absoluteString
+            } catch {
+                print("Unable to Write Data to Disk (\(error))")
+            }
+        }
+        
+        
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
+           var signupData = ModelSignupData.decode(savedData: savedData) {
+            signupData.userName = username
+            signupData.nickname = username
+            signupData.profileImageUrl = profileImageUrl ?? ""
+            UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
+        }
+        
+        #warning("서버에 저장할 필요가 있다.")
+        UserDefaults.standard.set(addFriendAutomatillcaly, forKey: UserDefaultsKey.autoFriendAdding.rawValue)
+        
+        let vc = EmailRegisterViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 // MARK: - BaseViewController
@@ -113,13 +237,55 @@ extension NewProfileViewController {
     func bindButton() {
         btnConfirm.rx.tap
             .subscribe(onNext:{ [weak self] _ in
-                guard let self = self,
-                      let navigationController = self.navigationController else {
-                          return
-                      }
-                
-                let vc = EmailRegisterViewController()
-                navigationController.pushViewController(vc, animated: true)
+                guard let self = self else {
+                    return
+                }
+                self.pushEmailRegisterVC()
+            }).disposed(by: bag)
+        
+        ivProfile.rx.tapGesture()
+            .when(.recognized)
+            .asDriver { _ in .never() }
+            .drive(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.showPhotoAlert()
+            }).disposed(by: bag)
+        
+        ivCheckBox.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.addFriendAutomatillcaly.toggle()
+                if self.addFriendAutomatillcaly {
+                    self.ivCheckBox.image = UIImage(systemName: "checkmark.circle.fill")!
+                } else {
+                    self.ivCheckBox.image = UIImage(systemName: "checkmark.circle")!
+                }
             }).disposed(by: bag)
     }
+}
+
+
+// MARK: - PHPickerViewControllerDelegate
+extension NewProfileViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider,
+           itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                DispatchQueue.main.async {
+                    self.ivProfile.image = image as? UIImage
+                    self.isImageSelected = true
+                }
+            }
+        }
+    }
+    
 }

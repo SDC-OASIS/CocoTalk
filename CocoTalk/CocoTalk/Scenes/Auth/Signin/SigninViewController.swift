@@ -32,7 +32,7 @@ class SigninViewController: UIViewController {
     
     /// 이메일 텍스트 필드
     private let textFieldEmail = UITextField().then {
-        $0.placeholder = "이메일 또는 전화번호"
+        $0.placeholder = "코코톡 아이디"
         $0.autocorrectionType = .no
         $0.autocapitalizationType = .none
         $0.spellCheckingType = .no
@@ -53,7 +53,7 @@ class SigninViewController: UIViewController {
     /// 로그인 버튼
     private let btnSignin = UIButton().then {
         $0.setTitle("코코톡 로그인", for: .normal)
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = .systemGreen
     }
     
     /// 가입 버튼
@@ -71,6 +71,7 @@ class SigninViewController: UIViewController {
     }
     
     // MARK: - Properties
+    let viewModel = SigninViewModel()
     let bag = DisposeBag()
     
     // MARK: - Life cycles
@@ -83,6 +84,12 @@ class SigninViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func move2Home() {
+        let root = RootTabBarController()
+        setNeedsStatusBarAppearanceUpdate()
+        view.window?.rootViewController = root
+        view.window?.makeKeyAndVisible()
+    }
 }
 
 // MARK: - BaseViewController
@@ -138,9 +145,18 @@ extension SigninViewController {
 extension SigninViewController {
     func bindRx() {
         bindButton()
+        bindTextField()
+        bindViewModel()
     }
     
     private func bindButton() {
+        btnSignin.rx.tap.bind { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.viewModel.signin()
+        }.disposed(by: bag)
+        
         btnSignup.rx.tap.bind { [weak self] in
             guard let self = self else { return }
             let vc = TermViewController()
@@ -149,5 +165,40 @@ extension SigninViewController {
             }
         }
         .disposed(by: bag)
+    }
+
+    private func bindTextField() {
+        textFieldEmail.rx.text
+            .orEmpty
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else {
+                    return
+                }
+                self.viewModel.input.cid.accept(text)
+            }).disposed(by: bag)
+        
+        textFieldPassword.rx.text
+            .orEmpty
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else {
+                    return
+                }
+                self.viewModel.input.password.accept(text)
+            }).disposed(by: bag)
+    }
+    
+    private func bindViewModel() {
+        viewModel.dependency.isSigninComplete
+            .subscribe(onNext: { [weak self] isCompleted in
+                guard let self = self else {
+                    return
+                }
+                
+                if isCompleted {
+                    self.move2Home()
+                } else {
+                    #warning("알림 처리")
+                }
+            }).disposed(by: bag)
     }
 }

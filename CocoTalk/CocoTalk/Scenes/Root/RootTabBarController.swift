@@ -52,13 +52,9 @@ extension RootTabBarController {
                         title: "채팅",
                         inactivatedImage: UIImage(systemName: "message"),
                         activatedImage: UIImage(systemName: "message.fill")),
-            createVC(for: SigninViewController(),
-                        title: "로그인",
-                        inactivatedImage: UIImage(systemName: "lock"),
-                        activatedImage: UIImage(systemName: "lock.fill"))
         ]
         
-        selectedIndex = 1
+        selectedIndex = 0
     }
     
     func configureSubviews() {

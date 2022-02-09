@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import RxCocoa
 
 class EmailRegisterViewController: UIViewController {
     
@@ -32,6 +33,7 @@ class EmailRegisterViewController: UIViewController {
     /// 개인정보 체크 박스
     private let ivCheckBox = UIImageView().then {
         $0.image = UIImage.init(systemName: "checkmark.circle")!
+        $0.tintColor = .systemGreen
     }
     
     /// 개인정보 라벨
@@ -50,24 +52,19 @@ class EmailRegisterViewController: UIViewController {
     /// 인증메일 발송 버튼
     private let btnSendAuthMail = UIButton().then {
         $0.setTitle("인증메일 발송", for: .normal)
-        $0.backgroundColor = .systemBlue
-    }
-    
-    /// 나중에 하기 버튼
-    private let btnLater = UIButton().then {
-        $0.setTitle("나중에 하기", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .clear
+        $0.backgroundColor = .systemGreen
     }
     
     // MARK: - Properties
+    var viewModel = EmailRegisterViewModel()
     let bag = DisposeBag()
+    var isChecked = false
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
+        navigationItem.hidesBackButton = true
         
         configureView()
         configureSubviews()
@@ -75,12 +72,41 @@ class EmailRegisterViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func showEmailAlert() {
+        let alert = UIAlertController(title: "이메일 오류", message: "이메일을 입력해주세요", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func showDuplicatedEmailAlert() {
+        let alert = UIAlertController(title: "이메일 오류", message: "이미 사용중인 이메일 입니다.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .cancel)
+        alert.addAction(okAction)
+        present(alert, animated: true)
+    }
+    
+    private func pushEmailAuthVC() {
+        guard let email = textFieldEmail.text,
+              !email.isEmpty  else {
+                  showEmailAlert()
+                  return
+              }
+        
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
+           var signupData = ModelSignupData.decode(savedData: savedData) {
+            signupData.email = email
+            UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
+        }
+        
+        let vc = EmailAuthNumberViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 // MARK: - BaseViewController
 extension EmailRegisterViewController {
     func configureView() {
-        [lblTitle, textFieldEmail, ivCheckBox, lblPrivacy, lblNotice, btnSendAuthMail, btnLater].forEach {
+        [lblTitle, textFieldEmail, ivCheckBox, lblPrivacy, lblNotice, btnSendAuthMail].forEach {
             view.addSubview($0)
         }
     }
@@ -120,11 +146,6 @@ extension EmailRegisterViewController {
             $0.leading.trailing.equalTo(textFieldEmail)
             $0.height.equalTo(44)
         }
-        
-        btnLater.snp.makeConstraints {
-            $0.top.equalTo(btnSendAuthMail.snp.bottom).offset(10)
-            $0.leading.trailing.height.equalTo(btnSendAuthMail)
-        }
     }
 }
 
@@ -132,20 +153,70 @@ extension EmailRegisterViewController {
 extension EmailRegisterViewController {
     func bindRx() {
         bindButton()
+        bindTextField()
+        bindViewModel()
     }
     
     func bindButton() {
         btnSendAuthMail.rx.tap
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self,
-                      let nav = self.navigationController else {
+                guard let self = self else {
                           return
                       }
-                #warning("이메일 인증 API 호출")
-                let vc = EmailAuthNumberViewController()
-                nav.pushViewController(vc, animated: true)
+                if !self.viewModel.dependency.isLoadingCheckEmail.value,
+                   !self.viewModel.dependency.isLoadingRequestCode.value {
+                    self.viewModel.checkEmailDuplicated()
+                }
             }).disposed(by: bag)
         
+        ivCheckBox.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.isChecked.toggle()
+                DispatchQueue.main.async {
+                    if self.isChecked {
+                        self.ivCheckBox.image = UIImage(systemName: "checkmark.circle.fill")!
+                    } else {
+                        self.ivCheckBox.image = UIImage(systemName: "checkmark.circle")!
+                    }
+                }
+            }).disposed(by: bag)
+    }
+    
+    func bindTextField() {
+        textFieldEmail.rx.text
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else {
+                    return
+                }
+                self.viewModel.input.email.accept(text ?? "")
+            }).disposed(by: bag)
+    }
+    
+    func bindViewModel() {
+        viewModel.dependency.validEmail
+            .subscribe(onNext: { [weak self] isValid in
+                guard let self = self,
+                      let isValid = isValid else {
+                          return
+                      }
+                if isValid {
+                    self.viewModel.requestEmailAuthenticationCode()
+                } else  {
+                    self.showDuplicatedEmailAlert()
+                }
+            }).disposed(by: bag)
         
+        viewModel.dependency.requestSuccess
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self,
+                      let _ = result else {
+                          return
+                      }
+                self.pushEmailAuthVC()
+            }).disposed(by: bag)
     }
 }
