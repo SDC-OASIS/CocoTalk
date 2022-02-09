@@ -81,8 +81,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     //s3
-//    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
-//    implementation 'com.amazonaws:aws-java-sdk-s3'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
 
 }

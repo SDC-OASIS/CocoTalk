@@ -47,25 +47,4 @@ public class S3Service {
         log.info("[S3Service/uploadImage] : " + filePath + " is uploaded");
         return cloudFrontDomain+"/"+filePath;
     }
-
-//    public void deleteMedia(Long userId, Long mediaId, MediaType mediaType) {
-//        String filePath = "";
-//        if(mediaType == MediaType.Video) {
-//            filePath = "video/" + userId + "/" + mediaId.toString() + "/";
-//        } else if (mediaType == MediaType.Sound) {
-//            filePath = "sound/" + userId + "/" + mediaId.toString() + "/";
-//        }
-//
-//        ObjectListing objectList = s3Client.listObjects(bucket, filePath);
-//        List<S3ObjectSummary> objectSummeryList = objectList.getObjectSummaries();
-//        String[] keysList = new String[objectSummeryList.size()];
-//        int count = 0;
-//        for (S3ObjectSummary summery : objectSummeryList) {
-//            keysList[count++] = summery.getKey();
-//        }
-//        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(keysList);
-//        s3Client.deleteObjects(deleteObjectsRequest);
-//        log.info(filePath + " removed");
-//    }
-
 }

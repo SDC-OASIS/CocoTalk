@@ -26,6 +26,7 @@ public class SignupInput {
     @ToString
     @Getter
     @Setter
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class ProfileInfo{
         @NotBlank
