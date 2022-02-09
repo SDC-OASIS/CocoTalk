@@ -37,7 +37,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.3'
 
-    //WebSocket + STOMP
+    // WebSocket
+    implementation 'org.java-websocket:Java-WebSocket:1.5.2'
+    // STOMP
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     //Message Broker

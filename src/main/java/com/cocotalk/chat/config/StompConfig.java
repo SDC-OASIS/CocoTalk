@@ -13,7 +13,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
-public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class StompConfig implements WebSocketMessageBrokerConfigurer {
     // private final AuthenticationChannelInterceptor authenticationChannelInterceptor;
     private final InboundChannelInterceptor inboundChannelInterceptor;
     private final OutboundChannelInterceptor outboundChannelInterceptor;
