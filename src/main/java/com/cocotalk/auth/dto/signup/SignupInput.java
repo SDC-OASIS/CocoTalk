@@ -20,9 +20,9 @@ public class SignupInput {
     @NotBlank
     private String password;
     @NotBlank
-    private String nickname;
-    @NotBlank
     private String username;
+    @NotBlank
+    private String nickname;
     private LocalDate birth;
     @NotBlank
     private String phone;

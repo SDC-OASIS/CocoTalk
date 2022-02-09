@@ -110,11 +110,17 @@ public class AuthService {
                 return ResponseEntity.status(HttpStatus.OK).body(new Response<>(EXISTS_INFO));
             }
 
-            //pk 생성
-            User tmpUser = userMapper.toEntity(signupInput);
-            user = userRepository.save(tmpUser);
-            log.info("[signup/signupInput] : "+signupInput.getProfileImg() +","+ signupInput.getProfileImgThumb());
-            setProfileImg(user, signupInput.getProfileImg(), signupInput.getProfileImgThumb());
+            // pk 생성
+            user = userRepository.save(userMapper.toEntity(signupInput));
+
+            String imgUrl = null;
+            // 프로필 이미지가 있을경우 s3에 저장
+            if(signupInput.getProfileImg()!=null && signupInput.getProfileImgThumb()!=null)
+                 imgUrl = s3Service.uploadProfileImg(signupInput.getProfileImg(), signupInput.getProfileImgThumb(), user.getId());
+
+            // user에 적용
+            ProfilePayload profile = ProfilePayload.builder().profile(imgUrl).build();
+            user.setProfile(ProfilePayload.toJSON(profile)); // object -> json
             user.setPassword(SHA256Utils.getEncrypt(signupInput.getPassword()));
             userRepository.save(user);
 
@@ -268,19 +274,6 @@ public class AuthService {
     }
 
     private void setProfileImg(User user, MultipartFile img, MultipartFile imgThumb){
-        //s3에 이미지 저장
-        String imgUrl = s3Service.uploadProfileImg(img, imgThumb, user.getId());
-        /*
-        profile json 생성
-         */
-        //json -> object
-        log.info("[setProfileImg/user] : "+user);
-        ProfilePayload profilePayload = ProfilePayload.builder().profile(imgUrl).build();
 
-        // objcet -> json
-        String profile =  ProfilePayload.toJSON(profilePayload);
-
-        //user에 적용
-        user.setProfile(profile);
     }
 }
