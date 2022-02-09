@@ -17,7 +17,7 @@
 				<div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
 					<div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">
 						<div class="box">
-							{{ selectedFriend.userName }}
+							{{ selectedFriend.username }}
 						</div>
 						<i class="delete-selected-friend fas fa-times" @click="deleteSelectedFriend(selectedFriend, idx)"></i>
 					</div>
@@ -34,7 +34,7 @@
 							<!-- {{ searchFriends }} -->
 							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
 								<profile-img :imgUrl="friend.profile.profile" width="50px" />
-								<div class="friend-name">{{ friend.userName }}</div>
+								<div class="friend-name">{{ friend.username }}</div>
 								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend" />
 								<label :for="'checked' + idx"> </label>
 							</div>

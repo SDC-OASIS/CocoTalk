@@ -98,7 +98,7 @@ export default {
 			console.log(this.roomNameEditModal);
 			let selectedNames = "";
 			this.roomNameEditModal.selectedFriends.forEach((e) => {
-				selectedNames += e.userName + ", ";
+				selectedNames += e.username + ", ";
 			});
 			this.roomName = selectedNames;
 		},

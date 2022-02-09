@@ -4,9 +4,9 @@ import createPersistedState from "vuex-persistedstate";
 // import axios from "../../utils/axios";
 // import router from "../../router";
 
-const chat = {
-	namespaced: true,
+const socket = {
 	plugins: [createPersistedState()],
+	namespaced: true,
 	state: {
 		stompChatListClient: null,
 		stompChatRoomClient: null,
@@ -28,8 +28,8 @@ const chat = {
 		setStompChatRoomClient(state, stompChatRoomClient) {
 			state.stompChatRoomClient = stompChatRoomClient;
 		},
-		setStompChatListConnected(state, stompChatListConnected) {
-			state.stompChatListConnected = stompChatListConnected;
+		setStompChatListConnected(state) {
+			state.stompChatListConnected = true;
 		},
 		setStompChatRoomConnected(state, stompChatRoomConnected) {
 			state.stompChatRoomConnected = stompChatRoomConnected;
@@ -39,4 +39,4 @@ const chat = {
 	modules: {},
 };
 
-export default chat;
+export default socket;

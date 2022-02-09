@@ -24,7 +24,6 @@ const routes = [
 		path: "/",
 		name: "MainPage",
 		component: MainPage,
-		meta: { auth: true },
 		children: [
 			{
 				path: "/friends",

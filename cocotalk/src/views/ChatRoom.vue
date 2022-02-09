@@ -95,7 +95,7 @@ export default {
 			},
 			{ root: true },
 		);
-		this.startChatConnection();
+		this.chatRoomConnect();
 		this.getChat();
 	},
 	mounted() {
@@ -105,6 +105,7 @@ export default {
 	computed: {
 		...mapState("chat", ["roomStatus", "friends", "chattings", "socket"]),
 		...mapState("userStore", ["userInfo"]),
+		...mapState("socket", ["stompChatRoomClient", "stompChatRoomConnected"]),
 	},
 	watch: {
 		"$route.params.roomId": function () {
@@ -134,7 +135,7 @@ export default {
 		},
 	},
 	methods: {
-		...mapMutations("socket", ["setStompChatListClient", "setStompChatRoomClient", "setStompChatLsitConnected", "setStompChatRoomConnected"]),
+		...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected"]),
 
 		changeNow() {
 			this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" }, { root: true });
@@ -147,7 +148,7 @@ export default {
 		},
 		exitChat() {
 			console.log("채팅방 닫기");
-			this.stompClientChat.disconnect();
+			this.stompChatRoomClient.disconnect();
 			this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
 		},
 		forceRerender() {
@@ -157,18 +158,18 @@ export default {
 		getChat() {
 			console.log("페이지네이션 시작");
 		},
-		startChatConnection: function () {
+		chatRoomConnect: function () {
 			const serverURL = "http://138.2.93.111:8080/stomp";
 			let socket = new SockJS(serverURL);
-			this.stompClientChat = Stomp.over(socket);
-			this.stompClientChat.connect(
+			this.setStompChatRoomClient(Stomp.over(socket));
+			this.stompChatRoomClient.connect(
 				{ view: "chatRoom", userId: this.userInfo.id, roomId: this.roomStatus.roomId },
 				(frame) => {
 					// 소켓 연결 성공
 					this.connected = true;
 					console.log("소켓 연결 성공", frame);
 					// 채팅 메세지 채널 subscribe
-					this.stompClientChat.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
+					this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
 						console.log("구독으로 받은 메시지 입니다.");
 						console.log(JSON.parse(res.body).message);
 						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
@@ -182,22 +183,11 @@ export default {
 						};
 						this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
 					});
-					// 채팅방 정보(참여중인 멤버 접속 정보 포함) 채널 subscribe
-					// this.stompClientChat.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
-					// 	console.log("구독으로 받은 룸정보입니다.");
-					// 	console.log(JSON.parse(res.body).message);
-					// 	// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
-					// 	// const receivedMessage = JSON.parse(res.body).message;
-					// 	// this.chatMessages.push(receivedMessage);
-					// 	// console.log("채팅목록");
-					// 	// console.log(this.chatMessages);
-					// 	// // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
-					// 	// const payload = {
-					// 	// 	nextMessageBundleId: receivedMessage.messageBundleId,
-					// 	// };
-					// 	// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
-					// });
-
+					// 채팅 메세지 룸정보 업데이트 채널 subscribe
+					this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/room`, (res) => {
+						console.log("구독으로 받은 채팅방 정보입니다.");
+						console.log(res);
+					});
 					// 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
 					// const msg = {
 					// 	type: 3,
@@ -208,7 +198,7 @@ export default {
 					// 	content: "초대메세지",
 					// };
 					// console.log("초대");
-					// this.stompClientChat.send(`/simple/chatroom/${this.roomStatus.roomId}/message/invite`, JSON.stringify(msg), {});
+					// this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/invite`, JSON.stringify(msg), {});
 				},
 				(error) => {
 					// 소켓 연결 실패
@@ -220,7 +210,7 @@ export default {
 		},
 		send() {
 			console.log("Send message");
-			if (this.stompClientChat && this.stompClientChat.connected) {
+			if (this.stompChatRoomClient && this.stompChatRoomClient.connected) {
 				const msg = {
 					type: 0,
 					roomId: this.roomStatus.roomId,
@@ -228,7 +218,7 @@ export default {
 					messageBundleId: this.socket.recentMessageBundleId,
 					content: this.message,
 				};
-				this.stompClientChat.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg), (res) => {
+				this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg), (res) => {
 					console.log("메세지 보내기", res);
 				});
 			}

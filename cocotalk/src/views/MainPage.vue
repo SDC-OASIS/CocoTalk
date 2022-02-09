@@ -70,7 +70,6 @@ export default {
 	methods: {
 		...mapMutations("socket", ["setStompChatListClient", "setStompChatRoomClient", "setStompChatLsitConnected", "setStompChatRoomConnected"]),
 		chatListConnect: function () {
-			console.log("tlwkr");
 			const serverURL = "http://138.2.93.111:8080/stomp";
 			let socket = new SockJS(serverURL);
 			this.setStompChatListClient(Stomp.over(socket));
@@ -78,8 +77,8 @@ export default {
 				{ view: "chatList", userId: this.userInfo.id },
 				(frame) => {
 					// 소켓 연결 성공
-					this.setStompChatLsitConnected(true, { root: true });
-					// this.connected = true;
+					this.connected = true;
+					// this.setStompChatLsitConnected(); 왜 안되는거지???
 					console.log("소켓 연결 성공", frame);
 					// 채팅목록 메세지 채널 subscribe
 					this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/message`, (res) => {
@@ -98,7 +97,7 @@ export default {
 						// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
 					});
 					// 채팅목록 채팅방정보 채널 subscribe
-					this.stompClientChat.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
+					this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
 						console.log("구독으로 받은 업데이트된 룸정보입니다.");
 						console.log(res);
 
@@ -115,7 +114,7 @@ export default {
 						// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
 					});
 					// 채팅목록 새로 생섣된 채팅방정보 채널 subscribe
-					this.stompClientChat.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
+					this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
 						console.log("구독으로 받은 룸정보입니다.");
 						console.log(res);
 
