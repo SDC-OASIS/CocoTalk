@@ -71,13 +71,13 @@ class SplashViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.dependency.isValidToken
-            .subscribe(onNext: { [weak self] isValidToken in
+        viewModel.dependency.shouldSignout
+            .subscribe(onNext: { [weak self] shouldSignout in
                 guard let self = self,
-                      let isValidToken = isValidToken else {
+                      let shouldSignout = shouldSignout else {
                           return
                       }
-                if isValidToken {
+                if !shouldSignout {
                     self.move2Home()
                 } else {
                     self.move2signInVC()
