@@ -3,10 +3,7 @@ package com.cocotalk.user.domain.entity;
 import com.cocotalk.user.domain.BaseTime;
 import com.cocotalk.user.domain.Provider;
 import com.cocotalk.user.dto.request.UserModifyRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -48,6 +45,7 @@ public class User extends BaseTime {
     @Column(length = 20, unique = true)
     private String phone;
 
+    @Setter
     private String profile; // JSON 형태로 저장
 
     @NotNull

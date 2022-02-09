@@ -3,6 +3,7 @@ package com.cocotalk.user.controller;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.UserVo;
+import com.cocotalk.user.dto.request.ProfileUpdateRequest;
 import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.response.CustomResponse;
 import com.cocotalk.user.exception.CustomException;
@@ -77,7 +78,7 @@ public class UserController {
     /**
      * 유저 코코톡 id로 조회 API [GET] /user?cid=
      *
-     * @param cid 코코톡 id
+     * @param cocotalkId 코코톡 id
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 cid로 조회")
@@ -115,7 +116,7 @@ public class UserController {
 
 
     /**
-     * 유저 정보 수정 API [PUT] /user/{id}
+     * 유저 정보 수정 API [PUT] /user
      *
      * @param request 수정할 내용을 담은 요청 모델
      * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
@@ -140,4 +141,18 @@ public class UserController {
         String result = userService.delete(user);
         return new ResponseEntity<>(new CustomResponse<>(result), HttpStatus.OK);
     }
+
+    /**
+     * 유저 프로필 수정 API [PUT] /user/profile
+     * @author 김민정
+     * @param request 수정할 프로필 프로필 이미지와 이미지 썸네일을 담은 요청 모델
+     * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
+     */
+    @Operation(summary = "유저 프로필 수정")
+    @PutMapping(value = "/profile", consumes = {"multipart/form-data"})
+    public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, @Valid ProfileUpdateRequest request) {
+        UserVo data = userService.updateProfile(user, request);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
+    }
+
 }

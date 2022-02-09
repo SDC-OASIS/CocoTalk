@@ -2,6 +2,7 @@ package com.cocotalk.user.service;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.UserVo;
+import com.cocotalk.user.dto.request.ProfileUpdateRequest;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.dto.request.UserModifyRequest;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final UserCustomRepositoryImpl userCustomRepository;
+    private final S3Service s3Service;
 
     public static final CustomException INVALID_USERID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
@@ -81,5 +84,14 @@ public class UserService {
         String message = String.format("유저 %s이 삭제되었습니다.", user.getCid());
         userRepository.delete(user);
         return message;
+    }
+
+    @Transactional
+    public UserVo updateProfile(User user, ProfileUpdateRequest profileUpdateRequest) {
+        String fileUrl = s3Service.uploadProfileImage(profileUpdateRequest.getProfileImg(), user.getId());
+        s3Service.uploadProfileThumb(profileUpdateRequest.getProfileImgThumb(), user.getId());
+        user.setProfile(fileUrl);
+        userRepository.save(user);
+        return userMapper.toVo(user);
     }
 }
