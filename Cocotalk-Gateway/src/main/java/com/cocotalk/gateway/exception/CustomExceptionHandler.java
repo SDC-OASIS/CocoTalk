@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse<?>> handle(CustomException e) {
+        e.printStackTrace();
         CustomError error = e.getError();
         ErrorDetails details = new ErrorDetails(e);
 
@@ -21,6 +22,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse<?>> handleUnknown(Exception e) {
+        e.printStackTrace();
         String stackTrace = e.getStackTrace()[0].toString();
         ErrorDetails details = new ErrorDetails(CustomError.UNKNOWN, stackTrace);
 

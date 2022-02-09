@@ -51,11 +51,11 @@ public class JwtUtils {
     }
 
     public static class JwtWebExceptionHandler implements ErrorWebExceptionHandler {
-        private String serializeError(CustomError error, String message) {
+        private String serializeError(CustomError error, String message, Throwable ex) {
             CustomException exception = new CustomException(error, message);
             ErrorDetails details = new ErrorDetails(exception);
 
-            log.error("GlobalException : " + exception.getMessage());
+            log.error("CustomException : " + exception.getMessage());
 
             ErrorResponse response = new ErrorResponse(details);
             try {
@@ -83,7 +83,11 @@ public class JwtUtils {
                 message = "헤더에 토큰이 포함되지 않았습니다.";
             }
 
-            byte[] bytes = serializeError(CustomError.JWT_AUTHENTICATION, message).getBytes(StandardCharsets.UTF_8);
+            log.error(ex.getMessage());
+            log.error(ex.getCause().getMessage());
+            ex.printStackTrace();
+
+            byte[] bytes = serializeError(CustomError.JWT_AUTHENTICATION, message, ex).getBytes(StandardCharsets.UTF_8);
             ServerHttpResponse response = exchange.getResponse();
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
             DataBuffer buffer = response.bufferFactory().wrap(bytes);
