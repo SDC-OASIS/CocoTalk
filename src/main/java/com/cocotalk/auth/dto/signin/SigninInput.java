@@ -14,4 +14,6 @@ public class SigninInput {
     private String cid;
     @NotBlank
     private String password;
+    @NotBlank
+    private String fcmToken;
 }

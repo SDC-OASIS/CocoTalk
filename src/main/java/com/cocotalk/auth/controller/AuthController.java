@@ -1,6 +1,6 @@
 package com.cocotalk.auth.controller;
 
-import com.cocotalk.auth.dto.common.ClientType;
+import com.cocotalk.auth.dto.common.ClientInfo;
 import com.cocotalk.auth.dto.common.TokenDto;
 import com.cocotalk.auth.dto.email.issue.IssueInput;
 import com.cocotalk.auth.dto.signup.SignupInput;
@@ -13,6 +13,7 @@ import com.cocotalk.auth.dto.signup.SignupOutput;
 import com.cocotalk.auth.dto.common.response.Response;
 import com.cocotalk.auth.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +30,7 @@ import java.io.IOException;
 
 /**
  * 인증에 필요한 API
- * clientType은 ClientArgumentResolver를 통해 자동으로 들어옴
+ * clientInfo ClientArgumentResolver를 통해 자동으로 들어옴
  */
 @Tag(name = "인증 API")
 @RestController
@@ -46,8 +47,8 @@ public class AuthController {
      */
     @Operation(summary  = "로그인")
     @PostMapping("/signin")
-    public ResponseEntity<Response<TokenDto>> signin(ClientType clientType, @RequestBody @Valid SigninInput signinInput) {
-        return authService.signin(clientType, signinInput);
+    public ResponseEntity<Response<TokenDto>> signin(@Parameter(hidden = true) ClientInfo clientInfo, @RequestBody @Valid SigninInput signinInput) {
+        return authService.signin(clientInfo, signinInput);
     }
 
     /**
@@ -57,8 +58,8 @@ public class AuthController {
      */
     @Operation(summary = "로그아웃")
     @GetMapping("/signout")
-    public ResponseEntity<Response<Object>> signout(ClientType clientType) {
-        return authService.signout(clientType);
+    public ResponseEntity<Response<Object>> signout(ClientInfo clientInfo) {
+        return authService.signout(clientInfo);
     }
 
     /**
@@ -81,9 +82,9 @@ public class AuthController {
      */
     @Operation(summary = "ACCESS TOKEN 재발급")
     @GetMapping("/reissue")
-    public ResponseEntity<Response<TokenDto>> reissue(ClientType clientType) {
+    public ResponseEntity<Response<TokenDto>> reissue(ClientInfo clientInfo) {
         log.info("[POST] /api/users/reissue");
-        return authService.reissue(clientType);
+        return authService.reissue(clientInfo);
     }
 
     /**
@@ -118,9 +119,9 @@ public class AuthController {
      */
     @Operation(summary = "마지막으로 로그인한 기기가 맞는지 체크")
     @GetMapping("/device")
-    public ResponseEntity<Response<ValidationDto>>checkLastly(ClientType clientType) {
+    public ResponseEntity<Response<ValidationDto>>checkLastly(ClientInfo clientInfo) {
         log.info("[POST] /device");
-        return authService.checkLastly(clientType);
+        return authService.checkLastly(clientInfo);
     }
 
 }
