@@ -26,7 +26,7 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link to="/">
+					<router-link to="/login">
 						<span @click="logout">
 							<span class="iconify" data-icon="fe:logout"></span>
 						</span>

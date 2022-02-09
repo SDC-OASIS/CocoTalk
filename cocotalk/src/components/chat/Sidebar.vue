@@ -35,7 +35,7 @@
 						</div>
 						<div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
 							<div @click="openProfileModal(friend)">
-								<ProfileImg :imgUrl="friend.profile" width="50px" />
+								<profile-img :imgUrl="friend.profile" width="50px" />
 							</div>
 							<div class="friend-name" :id="'check' + idx">{{ friend.userName }}</div>
 						</div>

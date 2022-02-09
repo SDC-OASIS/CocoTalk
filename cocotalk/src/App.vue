@@ -1,30 +1,28 @@
 <template>
 	<div id="app">
 		<router-view name="login" />
+
+		<router-view></router-view>
+
+		<!-- <router-view name="login" />
 		<router-view name="error" />
 		<div>
-			<Navbar v-if="nav" />
+			<navbar v-if="nav" />
 			<div class="content-container">
 				<router-view name="left" class="left-container" />
 				<router-view name="right" class="right-container" />
 			</div>
 		</div>
-		<Alert v-if="alert.status == 'open'" :text="alert.text" />
-		<AddFriendModal v-if="addFriendModal == 'open'" />
-		<ChatCreationModal v-if="ChatCreationModal == 'open'" />
-		<RoomNameEditModal v-if="roomNameEditModal.status == 'open'" />
-		<ProfileModal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
+		<alert v-if="alert.status == 'open'" :text="alert.text" />
+		<add-friend-modal v-if="addFriendModal == 'open'" />
+		<chat-creation-modal v-if="ChatCreationModal == 'open'" />
+		<room-name-edit-modal v-if="roomNameEditModal.status == 'open'" />
+		<profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" /> -->
 	</div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Navbar from "@/components/Navbar.vue";
-import AddFriendModal from "@/components/modals/AddFriendModal.vue";
-import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
-import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
-import ProfileModal from "@/components/modals/ProfileModal.vue";
-import Alert from "@/components/modals/Alert.vue";
 
 export default {
 	name: "App",
@@ -33,14 +31,7 @@ export default {
 			nav: true,
 		};
 	},
-	components: {
-		Navbar,
-		AddFriendModal,
-		ChatCreationModal,
-		RoomNameEditModal,
-		ProfileModal,
-		Alert,
-	},
+
 	created() {
 		const width = screen.width;
 		this.$store.dispatch("userStore/getScreen", { width: width });
@@ -56,11 +47,11 @@ export default {
 		}
 		// 채팅방 목록용 소켓
 		// this.$store.dispatch("chat/startConnection");
+		// this.chatListConnect();
 	},
 	computed: {
-		...mapState("userStore", ["screenInfo"]),
-		...mapState("chat", ["friends", "roomStatus"]),
-		...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal"]),
+		...mapState("chat", ["roomStatus"]),
+		// ...mapGetters("socket", ["getStompChatListClent", "getUserId", "getAccessToken"]),
 	},
 };
 </script>

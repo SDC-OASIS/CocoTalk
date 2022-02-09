@@ -7,7 +7,7 @@
 			<div class="modal-bottom-container">
 				<div class="profile-modal-info" @click.self="openFullImg(userProfileInfo.profile.background)">
 					<div style="cursor: pointer; display: inline-block" @click="openFullImg(userProfileInfo.profile.profile)">
-						<ProfileImg :imgUrl="userProfileInfo.profile.profile" width="70px" />
+						<profile-img :imgUrl="userProfileInfo.profile.profile" width="70px" />
 					</div>
 					<br />
 					<span>{{ userProfileInfo.userName }}</span>
