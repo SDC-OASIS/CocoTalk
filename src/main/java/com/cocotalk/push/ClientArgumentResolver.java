@@ -27,12 +27,15 @@ public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
             ServerWebExchange exchange
     ) {
         String agent = exchange.getRequest().getHeaders().getFirst("User-Agent");
-        String clientIp = exchange.getRequest().getHeaders().getFirst("X-Forwarded-For");
-        if (StringUtils.isEmpty(clientIp) || "unknown".equalsIgnoreCase(clientIp)) {
+        String clientIp;
+        String xForwarded = exchange.getRequest().getHeaders().getFirst("X-Forwarded-For");
+        if (StringUtils.isEmpty(xForwarded) || "unknown".equalsIgnoreCase(xForwarded)) {
             InetSocketAddress remoteAddress = exchange.getRequest().getRemoteAddress();
             if(remoteAddress==null)
                 return Mono.empty();
             clientIp = remoteAddress.getAddress().getHostAddress();
+        } else{
+            clientIp = xForwarded.split(",")[0];
         }
         ClientType clientType = parseClientType(agent);
         log.info("[resolveArgument/agent] : " + agent);
