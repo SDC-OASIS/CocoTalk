@@ -20,7 +20,7 @@
 					<div class="add-friend-modal-info row" style="justify-content: center">
 						<div style="dispaly: inline-block; text-align: center">
 							<div>
-								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
+								<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
 							</div>
 							<div style="font-weight: bold">모코코</div>
 							<div>모코코는 행복해</div>

@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 // import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
 import Sidebar from "../components/chat/Sidebar.vue";
@@ -134,6 +134,8 @@ export default {
 		},
 	},
 	methods: {
+		...mapMutations("socket", ["setStompChatListClient", "setStompChatRoomClient", "setStompChatLsitConnected", "setStompChatRoomConnected"]),
+
 		changeNow() {
 			this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" }, { root: true });
 		},

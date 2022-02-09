@@ -11,27 +11,27 @@
 				<div class="roomname-modal-info row" style="justify-content: center">
 					<div style="dispaly: inline-block; text-align: center">
 						<div v-if="roomNameEditModal.selectedFriends.length == 1">
-							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
+							<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
 						</div>
 						<div v-if="roomNameEditModal.selectedFriends.length == 2" style="width: 110px; height: 120px">
 							<div style="position: absolute">
-								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
-								<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 70px" class="two-friends-second-img" :radius="1" />
+								<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
+								<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 70px" class="two-friends-second-img" :radius="1" />
 							</div>
 						</div>
 						<div v-if="roomNameEditModal.selectedFriends.length == 3" style="width: 110px; height: 90px; padding-top: 50px">
 							<div style="position: absolute">
-								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
-								<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 70px" class="three-friends-second-img" :radius="1" />
-								<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 70px" class="three-friends-third-img" :radius="2" />
+								<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 70px" />
+								<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 70px" class="three-friends-second-img" :radius="1" />
+								<profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 70px" class="three-friends-third-img" :radius="2" />
 							</div>
 						</div>
 						<div v-if="roomNameEditModal.selectedFriends.length >= 4" style="width: 110px; height: 90px; padding-top: 50px">
 							<div style="position: absolute">
-								<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 60px" />
-								<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 60px" class="four-friends-second-img" :radius="1" />
-								<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-third-img" :radius="2" />
-								<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-forth-img" :radius="2" />
+								<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 60px" />
+								<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 60px" class="four-friends-second-img" :radius="1" />
+								<profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-third-img" :radius="2" />
+								<profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 60px" class="four-friends-forth-img" :radius="2" />
 							</div>
 						</div>
 					</div>

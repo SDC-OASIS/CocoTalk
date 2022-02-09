@@ -11,7 +11,7 @@ const modal = {
 		addFriendModal: "close",
 		ChatCreationModal: "close",
 		roomNameEditModal: {
-			status: "open",
+			status: "close",
 			selectedFriends: Object,
 		},
 		profileModal: {

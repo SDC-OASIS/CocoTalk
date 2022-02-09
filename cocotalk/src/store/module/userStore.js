@@ -13,9 +13,9 @@ const userStore = {
 		accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ7XCJ1c2VySWRcIjogMTB9IiwiaWF0IjoxNTE2MjM5MDIyfQ.nsVZnx3lFAA52CdJmH5qei0D830M3FUmoUjFBbLrZUM",
 		refreshToken: "",
 		userInfo: {
-			userName: "권희은",
-			statusMessage: "오늘도 좋은 하루",
-			profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
+			// userName: "권희은",
+			// statusMessage: "오늘도 좋은 하루",
+			// profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
 		},
 	},
 	getters: {
@@ -30,12 +30,12 @@ const userStore = {
 		GET_SCREEN(state, payload) {
 			state.screenInfo.width = payload.width;
 		},
-		SET_ACCESS_TOKEN(state, payload) {
+		async SET_ACCESS_TOKEN(state, payload) {
 			state.accessToken = payload;
 			console.log("accessToken 저장");
-			store.dispatch("friend/getFriends");
-			store.dispatch("userStore/getUser");
-			router.push({ name: "friends" }).catch(() => {});
+			// await store.dispatch("friend/getFriends");
+			// await store.dispatch("userStore/getUser");
+			await router.push({ name: "friends" }).catch(() => {});
 		},
 		SET_REFRESH_TOKEN(state, payload) {
 			state.refreshToken = payload;
@@ -51,11 +51,11 @@ const userStore = {
 		SET_USER(state, payload) {
 			state.userInfo = payload;
 		},
-		TEST() {
-			store.dispatch("friend/getFriends");
-			store.dispatch("userStore/getUser");
-			router.push({ name: "friends" }).catch(() => {});
-		},
+		// TEST() {
+		// 	store.dispatch("friend/getFriends");
+		// 	store.dispatch("userStore/getUser");
+		// 	router.push({ name: "friends" }).catch(() => {});
+		// },
 	},
 	actions: {
 		getScreen: function (context, payload) {
@@ -64,7 +64,7 @@ const userStore = {
 		login: function (context, payload) {
 			const userInfo = payload;
 			axios
-				.post("http://138.2.88.163:8000/auth/signin", userInfo)
+				.post("http://138.2.88.163/auth/signin", userInfo)
 				.then((res) => {
 					console.log("로그인 요청");
 					context.commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
@@ -87,11 +87,13 @@ const userStore = {
 			context.commit("CLEAR_REFRESH_TOKEN");
 		},
 		getUser: function (context) {
-			axios.get("http://138.2.88.163:8000/user/token").then((res) => {
+			axios.get("http://138.2.88.163/user/token").then((res) => {
 				console.log("유저정보 가져오기");
+				console.log(res);
 				let userInfo = res.data.data;
 				userInfo.profile = JSON.parse(userInfo.profile);
-				context.commit("SET_USER", res.data.data);
+				context.commit("SET_USER", userInfo);
+				console.log(userInfo);
 			});
 		},
 	},

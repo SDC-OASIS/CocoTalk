@@ -18,32 +18,38 @@
 				</div> -->
 				<div style="dispaly: inline-block; text-align: center">
 					<div v-if="chat.members.length == 1">
-						<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 50px" />
+						<div>ddddd</div>
+						<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 50px" />
 					</div>
 					<div v-if="chat.members.length == 2" style="width: 50px; height: 60px">
 						<div style="position: absolute">
-							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width="30px" />
-							<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="two-friends-second-img" :radius="3" />
+							<div v-if="!chat.img">
+								<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width="30px" :radius="3" />
+								<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="two-friends-second-img" :radius="3" />
+							</div>
+							<div v-else>
+								<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" />
+							</div>
 						</div>
 					</div>
 					<div v-if="chat.members.length == 3" style="width: 50px; height: 50px; padding-left: 7px">
 						<div style="position: absolute">
-							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 30px" />
-							<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="three-friends-second-img" :radius="4" />
-							<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 30px" class="three-friends-third-img" :radius="4" />
+							<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 30px" />
+							<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="three-friends-second-img" :radius="4" />
+							<profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 30px" class="three-friends-third-img" :radius="4" />
 						</div>
 					</div>
 					<div v-if="chat.members.length >= 4" style="width: 50px; height: 50px; padding-top: 7px">
 						<div style="position: absolute">
-							<ProfileImg :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 25px" />
-							<ProfileImg :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 25px" class="four-friends-second-img" :radius="5" />
-							<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 25px" class="four-friends-third-img" :radius="5" />
-							<ProfileImg :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 25px" class="four-friends-forth-img" :radius="5" />
+							<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 25px" />
+							<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 25px" class="four-friends-second-img" :radius="5" />
+							<profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 25px" class="four-friends-third-img" :radius="5" />
+							<profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 25px" class="four-friends-forth-img" :radius="5" />
 						</div>
 					</div>
 				</div>
 				<div class="chat-info-container row" @click="goChat(chat)">
-					<ChatListInfo :chatInfo="chat" />
+					<chat-list-info :chatInfo="chat" />
 					<div class="box row chat-detail-info">
 						<div class="received-time">오후3:00</div>
 						<div class="message-cnt box">{{ chat.cnt }}</div>

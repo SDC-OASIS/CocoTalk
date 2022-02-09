@@ -1,10 +1,6 @@
 <template>
 	<div id="app">
 		<router-view name="login" />
-
-		<router-view></router-view>
-
-		<!-- <router-view name="login" />
 		<router-view name="error" />
 		<div>
 			<navbar v-if="nav" />
@@ -17,35 +13,35 @@
 		<add-friend-modal v-if="addFriendModal == 'open'" />
 		<chat-creation-modal v-if="ChatCreationModal == 'open'" />
 		<room-name-edit-modal v-if="roomNameEditModal.status == 'open'" />
-		<profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" /> -->
+		<profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
 	</div>
 </template>
 
 <script>
 import { mapMutations, mapState } from "vuex";
-// import Navbar from "@/components/Navbar.vue";
-// import AddFriendModal from "@/components/modals/AddFriendModal.vue";
-// import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
-// import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
-// import ProfileModal from "@/components/modals/ProfileModal.vue";
-// import Alert from "@/components/modals/Alert.vue";
+import Navbar from "@/components/Navbar.vue";
+import AddFriendModal from "@/components/modals/AddFriendModal.vue";
+import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
+import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
+import ProfileModal from "@/components/modals/ProfileModal.vue";
+import Alert from "@/components/modals/Alert.vue";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 
 export default {
-	name: "App",
-	data() {
-		return {
-			nav: true,
-		};
-	},
+	name: "MainPage",
+	// data() {
+	// 	return {
+	// 		nav: true,
+	// 	};
+	// },
 	components: {
-		// Navbar,
-		// AddFriendModal,
-		// ChatCreationModal,
-		// RoomNameEditModal,
-		// ProfileModal,
-		// Alert,
+		Navbar,
+		AddFriendModal,
+		ChatCreationModal,
+		RoomNameEditModal,
+		ProfileModal,
+		Alert,
 	},
 	created() {
 		const width = screen.width;
@@ -62,10 +58,10 @@ export default {
 		}
 		// 채팅방 목록용 소켓
 		// this.$store.dispatch("chat/startConnection");
-		// this.chatListConnect();
+		this.chatListConnect();
 	},
 	computed: {
-		...mapState("userStore", ["screenInfo"]),
+		...mapState("userStore", ["screenInfo", "userInfo"]),
 		...mapState("chat", ["friends", "roomStatus"]),
 		...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal"]),
 		...mapState("socket", ["stompChatListClient", "stompChatListConnected"]),
@@ -74,17 +70,19 @@ export default {
 	methods: {
 		...mapMutations("socket", ["setStompChatListClient", "setStompChatRoomClient", "setStompChatLsitConnected", "setStompChatRoomConnected"]),
 		chatListConnect: function () {
+			console.log("tlwkr");
 			const serverURL = "http://138.2.93.111:8080/stomp";
 			let socket = new SockJS(serverURL);
 			this.setStompChatListClient(Stomp.over(socket));
 			this.stompChatListClient.connect(
-				{ view: "chatList", userId: this.userInfo.userId },
+				{ view: "chatList", userId: this.userInfo.id },
 				(frame) => {
 					// 소켓 연결 성공
-					this.connected = true;
+					this.setStompChatLsitConnected(true, { root: true });
+					// this.connected = true;
 					console.log("소켓 연결 성공", frame);
 					// 채팅목록 메세지 채널 subscribe
-					this.stompClientChat.subscribe(`/topic/${this.userInfo.userId}/message`, (res) => {
+					this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/message`, (res) => {
 						console.log("구독으로 받은 메시지목록의 마지막 메세지 정보 입니다.");
 						console.log(res);
 						// console.log(JSON.parse(res.body).message);
@@ -99,21 +97,40 @@ export default {
 						// };
 						// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
 					});
-					// 채팅방 정보(참여중인 멤버 접속 정보 포함) 채널 subscribe
-					// this.stompClientChat.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
-					// 	console.log("구독으로 받은 룸정보입니다.");
-					// 	console.log(JSON.parse(res.body).message);
-					// 	// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
-					// 	// const receivedMessage = JSON.parse(res.body).message;
-					// 	// this.chatMessages.push(receivedMessage);
-					// 	// console.log("채팅목록");
-					// 	// console.log(this.chatMessages);
-					// 	// // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
-					// 	// const payload = {
-					// 	// 	nextMessageBundleId: receivedMessage.messageBundleId,
-					// 	// };
-					// 	// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
-					// });
+					// 채팅목록 채팅방정보 채널 subscribe
+					this.stompClientChat.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
+						console.log("구독으로 받은 업데이트된 룸정보입니다.");
+						console.log(res);
+
+						// console.log(JSON.parse(res.body).message);
+						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
+						// const receivedMessage = JSON.parse(res.body).message;
+						// this.chatMessages.push(receivedMessage);
+						// console.log("채팅목록");
+						// console.log(this.chatMessages);
+						// // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
+						// const payload = {
+						// 	nextMessageBundleId: receivedMessage.messageBundleId,
+						// };
+						// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
+					});
+					// 채팅목록 새로 생섣된 채팅방정보 채널 subscribe
+					this.stompClientChat.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
+						console.log("구독으로 받은 룸정보입니다.");
+						console.log(res);
+
+						// console.log(JSON.parse(res.body).message);
+						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
+						// const receivedMessage = JSON.parse(res.body).message;
+						// this.chatMessages.push(receivedMessage);
+						// console.log("채팅목록");
+						// console.log(this.chatMessages);
+						// // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
+						// const payload = {
+						// 	nextMessageBundleId: receivedMessage.messageBundleId,
+						// };
+						// this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
+					});
 
 					// 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
 					// const msg = {
@@ -139,17 +156,4 @@ export default {
 };
 </script>
 
-<style>
-@import "./css/common.css";
-#app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #000000;
-	background-color: #fffacd;
-	width: 100vw;
-	height: 100vh;
-	margin: 0;
-}
-</style>
+<style></style>

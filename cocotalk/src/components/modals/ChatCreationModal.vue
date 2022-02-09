@@ -33,7 +33,7 @@
 							<div class="friend-cnt">친구 - {{ searchFriendsCnt }}</div>
 							<!-- {{ searchFriends }} -->
 							<div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
-								<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
+								<profile-img :imgUrl="friend.profile.profile" width="50px" />
 								<div class="friend-name">{{ friend.userName }}</div>
 								<input :id="'checked' + idx" v-model="selectedFriends" type="checkbox" :value="friend" />
 								<label :for="'checked' + idx"> </label>

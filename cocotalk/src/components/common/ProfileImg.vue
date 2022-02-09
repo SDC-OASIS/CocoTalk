@@ -8,7 +8,7 @@
 					<use xlink:href="#shapeSquircle" />
 				</clipPath>
 			</defs>
-			<image style="border: 10px solid #ffffff" id="profileImg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipSquircle)" :xlink:href="imgUrl" />
+			<image style="border: 10px solid #ffffff" id="profileImg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipSquircle)" :xlink:href="imgCheck" />
 		</svg>
 		<svg v-if="radius == 1" :style="backStyle" width="78px" height="80px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<image
@@ -67,6 +67,14 @@ export default {
 		radius: {
 			type: Number,
 			default: 0,
+		},
+	},
+	computed: {
+		imgCheck() {
+			if (this.imgUrl == null) {
+				return "https://ifh.cc/g/pLtMj2.png";
+			}
+			return this.imgUrl;
 		},
 	},
 	methods: {

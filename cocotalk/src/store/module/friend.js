@@ -14,10 +14,9 @@ const friend = {
 	},
 	actions: {
 		getFriends: function (context) {
-			axios.get("http://138.2.88.163:8000/user/friends").then((res) => {
+			axios.get("http://138.2.88.163/user/friends").then((res) => {
 				console.log("친구목록 가져오기");
 				let friends = res.data.data;
-				console.log(friends);
 				// 친구가 1명이라도 존재하는 경우 STRING jSON 파싱
 				if (friends.length) {
 					friends.forEach((e) => {
@@ -26,6 +25,7 @@ const friend = {
 					});
 				}
 				context.commit("GET_FRIENDS", friends);
+				console.log(friends);
 			});
 		},
 	},

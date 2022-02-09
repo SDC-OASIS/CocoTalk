@@ -13,19 +13,19 @@
 		</div>
 		<div class="myprofile row">
 			<div @click="openProfileModal(userInfo)">
-				<ProfileImg :imgUrl="userInfo.profile.profile" :width="width" />
+				<profile-img :imgUrl="userInfo.profile.profile" :width="width" />
 			</div>
-			<FriendListUserInfo :userInfo="userInfo" />
+			<friend-list-user-info :userInfo="userInfo" />
 		</div>
 		<hr />
 		<div class="friend-list-container">
 			<div class="friend-cnt">친구 - {{ friendsCnt }}</div>
 			<div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
 				<div @click="openProfileModal(friend)">
-					<ProfileImg :imgUrl="friend.profile.profile" width="50px" />
+					<profile-img :imgUrl="friend.profile.profile" width="50px" />
 				</div>
 				<!-- {{ friend }} -->
-				<FriendListUserInfo :userInfo="friend" />
+				<friend-list-user-info :userInfo="friend" />
 			</div>
 		</div>
 		{{ roomStatus }}
@@ -35,7 +35,7 @@
 
 <script>
 import axios from "../utils/axios";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import FriendListUserInfo from "../components/friends/FriendListUserInfo.vue";
 
@@ -48,16 +48,9 @@ export default {
 	data() {
 		return {
 			width: "60px",
+			// userInfo: {},
+			// friends,
 		};
-	},
-	created() {
-		console.log("친구목록입니다.");
-		if (screen.width <= 1600) {
-			this.width = "60px";
-		}
-		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
-		this.$store.dispatch("userStore/getUser");
-		this.$store.dispatch("friend/getFriends");
 	},
 	mounted() {
 		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
@@ -66,11 +59,16 @@ export default {
 		...mapState("chat", ["roomStatus"]),
 		...mapState("friend", ["friends"]),
 		...mapState("userStore", ["userInfo", "screenInfo"]),
+
 		friendsCnt() {
 			return this.friends.length;
 		},
 	},
 	methods: {
+		...mapActions("userStore", ["getUser"]),
+		...mapActions("friend", ["getFriends"]),
+		// ...mapActions(["login"]),
+
 		noImage(e) {
 			e.targer.src = "@/assets/profile.jpg";
 		},
@@ -80,6 +78,16 @@ export default {
 		openAddFriendModal() {
 			this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
 		},
+		// getUser: function (context) {
+		// 	axios.get("http://138.2.88.163:8000/user/token").then((res) => {
+		// 		console.log("유저정보 가져오기");
+		// 		console.log(res);
+		// 		let userInfo = res.data.data;
+		// 		userInfo.profile = JSON.parse(userInfo.profile);
+		// 		context.commit("SET_USER", userInfo);
+		// 		console.log(userInfo);
+		// 	});
+		// },
 		test() {
 			axios
 				.get("http://146.56.43.7:8080/api/user/friend")
@@ -91,6 +99,17 @@ export default {
 					console.log(err);
 				});
 		},
+	},
+	created() {
+		console.log("친구목록입니다.");
+		if (screen.width <= 1600) {
+			this.width = "60px";
+		}
+		this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
+		this.getUser();
+		this.getFriends();
+		// this.$store.dispatch("userStore/getUser");
+		// this.$store.dispatch("friend/getFriends");
 	},
 };
 </script>
