@@ -22,21 +22,19 @@ class EmailAuthNumberViewController: UIViewController {
         $0.numberOfLines = 0
         $0.textAlignment = .center
     }
-
+    
     /// 이메일 라벨
     private let lblEmail = UILabel().then {
-        $0.text = "email@cocotalk.com"
         $0.font = .systemFont(ofSize: 18, weight: .semibold)
         $0.textAlignment = .center
     }
     
     /// 인증번호 텍스트 필드
     private let textFieldAuthNumber = UITextField().then {
-        $0.placeholder = "인증번호"
+        $0.placeholder = "인증코드"
         $0.textAlignment = .center
         $0.font = .systemFont(ofSize: 24)
         $0.textContentType = .oneTimeCode
-        $0.keyboardType = .numberPad
     }
     
     /// 인증메일을 받지 못하셨나요? 라벨
@@ -52,16 +50,26 @@ class EmailAuthNumberViewController: UIViewController {
     /// 확인 버튼
     private let btnConfirm = UIButton().then {
         $0.setTitle("확인", for: .normal)
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = .systemGreen
     }
     
     
     // MARK: - Properties
+    let bag = DisposeBag()
+    let viewModel = EmailAuthViewModel()
+    var signupData: ModelSignupData?
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
+           let data = ModelSignupData.decode(savedData: savedData) {
+            self.signupData = data
+            lblEmail.text = data.email
+            self.viewModel.dependency.signupData = data
+        }
         
         configureView()
         configureSubviews()
@@ -69,6 +77,20 @@ class EmailAuthNumberViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func showAlert() {
+        let alert = UIAlertController(title: "이메일 인증 오류", message: "올바르지 않은 인증번호 입니다.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default){ _ in
+            self.navigationController?.popViewController(animated: true)
+        })
+        present(alert, animated: true)
+    }
+    
+    private func move2Home() {
+        let root = RootTabBarController()
+        setNeedsStatusBarAppearanceUpdate()
+        view.window?.rootViewController = root
+        view.window?.makeKeyAndVisible()
+    }
 }
 
 // MARK: - BaseViewController
@@ -111,5 +133,49 @@ extension EmailAuthNumberViewController {
 
 // MARK: - Bindable
 extension EmailAuthNumberViewController {
-    func bindRx() {}
+    func bindRx() {
+        bindButton()
+        bindTextField()
+        bindViewModel()
+    }
+    
+    func bindButton() {
+        btnConfirm.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self,
+                      let data = self.signupData,
+                      !self.viewModel.dependency.isLoading else {
+                          return
+                      }
+                self.viewModel.verifyEmail(with: data.email)
+            }).disposed(by: bag)
+    }
+    
+    func bindTextField() {
+        textFieldAuthNumber.rx.text
+            .orEmpty
+            .bind(to: viewModel.input.code)
+            .disposed(by: bag)
+    }
+    
+    func bindViewModel() {
+        viewModel.dependency.isSigninComplete
+            .subscribe(onNext: { [weak self] isCompleted in
+                guard let self = self,
+                      isCompleted,
+                      !self.viewModel.dependency.isLoading else {
+                          return
+                      }
+                self.move2Home()
+            }).disposed(by: bag)
+        
+        viewModel.dependency.error
+            .subscribe(onNext: { [weak self] error in
+                guard let self = self,
+                      let _ = error else {
+                          return
+                      }
+                self.showAlert()
+            }).disposed(by: bag)
+    }
 }

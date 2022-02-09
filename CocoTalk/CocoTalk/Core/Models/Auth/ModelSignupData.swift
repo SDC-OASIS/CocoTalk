@@ -8,15 +8,19 @@
 import Foundation
 
 struct ModelSignupData: Codable {
-    var name: String = ""
+    var userName: String = ""
     var profileImageUrl: String = ""
     var email: String = ""
-    var phoneNumber: String = ""
-    var cocotalkId: String = ""
-    var birth: String = ""
+    var phone: String = ""
+    var cid: String = ""
+    var birth: String = "" // not required
     var nickname: String = ""
     var terms: Bool = false
     var password: String = ""
+    var provider: String = "local"
+    var providerId: String = ""
+    var profile: String = "" // not required
+    var status: Int = 0
 }
 
 extension ModelSignupData {    

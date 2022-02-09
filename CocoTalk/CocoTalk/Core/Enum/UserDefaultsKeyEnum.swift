@@ -11,4 +11,5 @@ import Foundation
 enum UserDefaultsKey: String {
     case autoFriendAdding = "Auto_Friend_Adding"
     case signupData = "Signup_Data"
+    case myData = "My_Data"
 }

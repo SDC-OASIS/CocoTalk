@@ -33,7 +33,7 @@ class TermViewController: UIViewController {
         
         title = "이용약관에 동의해 주세요"
         
-        UserDefaults.standard.set(nil, forKey: UserDefaultsKey.signupData.rawValue)
+        UserDefaults.resetSignupData()
         
         configureView()
         configureSubviews()
@@ -41,7 +41,7 @@ class TermViewController: UIViewController {
     }
     
     // MARK: - Helper
-    func pushPhoneVC() {
+    private func pushPhoneVC() {
         let signupData = ModelSignupData(terms: true)
         UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
         let vc = PhoneNumberViewController()
