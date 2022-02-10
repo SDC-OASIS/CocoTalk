@@ -81,7 +81,7 @@ export default {
 			this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
 		},
 		// getUser: function (context) {
-		// 	axios.get("http://138.2.88.163:8000/user/token").then((res) => {
+		// 	axios.get("user/token").then((res) => {
 		// 		console.log("유저정보 가져오기");
 		// 		console.log(res);
 		// 		let userInfo = res.data.data;

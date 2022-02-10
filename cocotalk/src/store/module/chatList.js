@@ -35,7 +35,7 @@ const chatList = {
 			}
 		},
 		GET_CHAT(state, payload) {
-			state.socket.recentMessageBundleId = payload.nextMessageBundleId;
+			state.socket.nextMessageBundleId = payload.nextMessageBundleId;
 		},
 		CHANGE_MAIN_PAGE(state, payload) {
 			state.roomStatus.mainPage = payload;
@@ -47,7 +47,7 @@ const chatList = {
 			state.socket.client = payload;
 		},
 		UPDATE_MESSAGE_BUNDLE_ID(state, payload) {
-			state.socket.recentMessageBundleId = payload.nextMessageBundleId;
+			state.socket.nextMessageBundleId = payload.nextMessageBundleId;
 		},
 	},
 	actions: {
@@ -58,7 +58,7 @@ const chatList = {
 			context.commit("CHANGE_MAIN_PAGE", payload);
 		},
 		getChatList: function (context) {
-			axios.get("http://138.2.88.163:8000/chat/rooms").then((res) => {
+			axios.get("chat/rooms").then((res) => {
 				// axios.get("http://138.2.68.7:8080/rooms/list").then((res) => {
 				console.log("채팅방목록 가져오기");
 				let chatList = res.data.data;
@@ -75,7 +75,7 @@ const chatList = {
 			// .catch((err) => console.log(err));
 		},
 		startConnection: function (context) {
-			const serverURL = "http://138.2.88.163:8000/chat/stomp";
+			const serverURL = "chat/stomp";
 			let socket = new SockJS(serverURL);
 			this.stompClient = Stomp.over(socket);
 			this.stompClient.connect(
@@ -108,7 +108,7 @@ const chatList = {
 			console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
 		},
 		startChatConnection: function (context, payload) {
-			const serverURL = "http://138.2.88.163:8000/chat/stomp";
+			const serverURL = "chat/stomp";
 			let socket = new SockJS(serverURL);
 			let stompClientChat = Stomp.over(socket);
 			stompClientChat.connect(
@@ -166,7 +166,7 @@ const chatList = {
 		getChat(context, payload) {
 			console.log("chat");
 			console.log(payload);
-			// const url = `http://138.2.88.163:8000/chat/messages?roomid=${payload.roomId}&bundleid=${payload.nextMessageBundleId}&count=0&size=10`;
+			// const url = `chat/messages?roomid=${payload.roomId}&bundleid=${payload.nextMessageBundleId}&count=0&size=10`;
 			// axios.get(url).then((res) => {
 			// 	console.log(res);
 			// });
@@ -187,7 +187,7 @@ const chatList = {
 		createChat(context, payload) {
 			console.log("chatCreate");
 			console.log(payload);
-			axios.post("http://138.2.88.163:8000/chat/rooms", payload).then((res) => {
+			axios.post("chat/rooms", payload).then((res) => {
 				console.log("채팅방생성!!!!");
 				console.log(res);
 				// let chatList = res.data.data;

@@ -7,6 +7,11 @@ const friend = {
 	state: {
 		friends: [],
 	},
+	getters: {
+		friends: (state) => {
+			state.friends;
+		},
+	},
 	mutations: {
 		GET_FRIENDS(state, payload) {
 			state.friends = payload;
@@ -17,7 +22,7 @@ const friend = {
 	},
 	actions: {
 		getFriends: function (context) {
-			axios.get("http://138.2.88.163:8000/user/friends").then((res) => {
+			axios.get("user/friends").then((res) => {
 				console.log("친구목록 가져오기");
 				let friends = res.data.data;
 				// 친구가 1명이라도 존재하는 경우 STRING jSON 파싱
@@ -33,7 +38,7 @@ const friend = {
 		},
 		addFriend: function (context, payload) {
 			console.log(payload);
-			// axios.post(`http://138.2.88.163:8000/user/friends/${this.friendInfo.id}`).then((res) => {
+			// axios.post(`user/friends/${this.friendInfo.id}`).then((res) => {
 			// 	console.log("친구추가하기");
 			// 	console.log(res);
 			// 	// let friendInfo = res.data.data;

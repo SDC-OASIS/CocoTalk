@@ -17,11 +17,10 @@
 					<ProfileImg :imgUrl="chat.img" width="50px" />
 				</div> -->
 				<div style="dispaly: inline-block; text-align: center">
-					<div v-if="chat.members.length == 1">
-						<div>ddddd</div>
+					<div v-if="chat.room.members.length == 1">
 						<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 50px" />
 					</div>
-					<div v-if="chat.members.length == 2" style="width: 50px; height: 60px">
+					<div v-if="chat.room.members.length == 2" style="width: 50px; height: 60px">
 						<div style="position: absolute">
 							<div v-if="!chat.img">
 								<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width="30px" :radius="3" />
@@ -32,14 +31,14 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="chat.members.length == 3" style="width: 50px; height: 50px; padding-left: 7px">
+					<div v-if="chat.room.members.length == 3" style="width: 50px; height: 50px; padding-left: 7px">
 						<div style="position: absolute">
 							<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 30px" />
 							<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="three-friends-second-img" :radius="4" />
 							<profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 30px" class="three-friends-third-img" :radius="4" />
 						</div>
 					</div>
-					<div v-if="chat.members.length >= 4" style="width: 50px; height: 50px; padding-top: 7px">
+					<div v-if="chat.room.members.length >= 4" style="width: 50px; height: 50px; padding-top: 7px">
 						<div style="position: absolute">
 							<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 25px" />
 							<profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 25px" class="four-friends-second-img" :radius="5" />
@@ -51,8 +50,8 @@
 				<div class="chat-info-container row" @click="goChat(chat)">
 					<chat-list-info :chatInfo="chat" />
 					<div class="box row chat-detail-info">
-						<div class="received-time">오후3:00</div>
-						<div class="message-cnt box">{{ chat.cnt }}</div>
+						<div class="received-time">{{ messageSentTime(chat.recentChatMessage.sentAt) }}</div>
+						<div class="message-cnt box">{{ chat.unreadNumber }}</div>
 					</div>
 				</div>
 			</div>
@@ -88,11 +87,14 @@ export default {
 		},
 		goChat(chat) {
 			let payload = {
-				roomId: chat.id,
-				nextMessageBundleId: chat.messageBundleIds[chat.messageBundleIds.length - 1],
-				recentMessageBundelCount: chat.recentMessageBundelCount,
+				roomId: chat.room.id,
+				nextMessageBundleId: chat.room.messageBundleIds[chat.room.messageBundleIds.length - 1],
+				recentMessageBundleCount: chat.recentMessageBundleCount,
 			};
-			this.$store.dispatch("chat/getChat", payload, { root: true });
+			this.$store.dispatch("chat/goChat", payload, { root: true });
+		},
+		messageSentTime(time) {
+			return this.$moment(time).format("LT");
 		},
 	},
 };

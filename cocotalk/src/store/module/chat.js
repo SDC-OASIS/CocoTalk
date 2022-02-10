@@ -8,19 +8,15 @@ const chat = {
 	namespaced: true,
 	plugins: [createPersistedState()],
 	state: {
-		socket: {
-			client: Object,
-			recentMessageBundleId: "",
-		},
 		roomStatus: {
 			mainPage: "",
 			chatPage: "chat",
-			roomId: "",
+			roomId: "111",
 		},
 		chats: [],
 		chatInfo: {
 			nextMessageBundleId: "",
-			recentMessageBundelCount: 0,
+			recentMessageBundleCount: 0,
 		},
 	},
 	mutations: {
@@ -39,8 +35,9 @@ const chat = {
 				state.roomStatus.roomId = payload.roomId;
 			}
 		},
-		GET_CHAT(state, payload) {
-			state.socket.recentMessageBundleId = payload.nextMessageBundleId;
+		GO_CHAT(state, payload) {
+			state.chatInfo.recentMessageBundleCount = payload.recentMessageBundleCount;
+			state.chatInfo.nextMessageBundleId = payload.nextMessageBundleId;
 		},
 		CHANGE_MAIN_PAGE(state, payload) {
 			state.roomStatus.mainPage = payload;
@@ -52,7 +49,7 @@ const chat = {
 			state.socket.client = payload;
 		},
 		UPDATE_MESSAGE_BUNDLE_ID(state, payload) {
-			state.socket.recentMessageBundleId = payload.nextMessageBundleId;
+			state.chatInfo.nextMessageBundleId = payload.nextMessageBundleId;
 		},
 	},
 	actions: {
@@ -65,39 +62,43 @@ const chat = {
 		},
 		// 채팅방 목록
 		getChatList: async function (context) {
-			const res = await axios.get("http://138.2.88.163:8000/chat/rooms");
-			console.log("채팅방목록 가져오기");
-			let chatList = res.data.data;
-			chatList.forEach(async (e) => {
-				if (e.img == "string" || e.img == "img" || e.img == "" || e.img == null) {
-					await delete e["img"];
+			axios.get("chat/rooms/list").then((res) => {
+				console.log("채팅방목록 가져오기");
+				const chatList = res.data.data;
+				console.log(chatList);
+				if (chatList) {
+					chatList.forEach(async (e) => {
+						// if (e.img == "string" || e.img == "img" || e.img == "" || e.img == null) {
+						// 	await delete e["img"];
+						// }
+						e.room.messageBundleIds = e.room.messageBundleIds.slice(1, -1).split(", ");
+						e.room.members.forEach(async (e) => {
+							// if (e.profile == "string" || e.profile == "profile" || e.profile == "" || e.profile == null) {
+							// 	return await (e.profile = []);
+							// }
+							if (e.profile) {
+								return await (e.profile = JSON.parse(e.profile));
+							}
+						});
+					});
 				}
-				e.messageBundleIds = e.messageBundleIds.slice(1, -1).split(", ");
-				e.members.forEach(async (e) => {
-					if (e.profile == "string" || e.profile == "profile" || e.profile == "" || e.profile == null) {
-						return await (e.profile = []);
-					}
-					if (e.profile) {
-						return await (e.profile = JSON.parse(e.profile));
-					}
-				});
+				context.commit("SET_CHATLIST", res.data.data);
+				console.log(chatList);
 			});
-			context.commit("SET_CHATLIST", res.data.data);
-			console.log(chatList);
 		},
 		// 채팅방 내부
-		getChat(context, payload) {
+		async goChat(context, payload) {
 			console.log("chat");
 			console.log(payload);
-			context.commit("GET_CHAT", payload);
+			await context.commit("GO_CHAT", payload);
 			if (context.state.roomStatus.mainPage == "friends") {
-				router.push({ name: "friendsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
+				await router.push({ name: "friendsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
 			} else {
-				router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
+				await router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
 			}
 		},
 		createChat(context, payload) {
-			axios.post("http://138.2.88.163:8000/chat/rooms", payload).then((res) => {
+			axios.post("chat/rooms", payload).then((res) => {
 				console.log("채팅방생성");
 				console.log(res);
 			});
