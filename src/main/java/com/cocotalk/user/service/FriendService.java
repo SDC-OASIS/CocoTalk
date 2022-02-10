@@ -5,6 +5,7 @@ import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.FriendVo;
 import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.FriendHideRequest;
+import com.cocotalk.user.dto.request.FriendsAddRequest;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.dto.request.FriendAddRequest;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +45,25 @@ public class FriendService {
                 .build());
         return friendMapper.toVo(friend);
     }
+
+    @Transactional
+    public List<FriendVo> addList(User fromUser, FriendsAddRequest request){
+        List<User> toUserList = userRepository.findAllById(request.getToUidList());
+        List<Friend> friendList = toUserList.stream()
+                .map(toUser -> Friend.builder()
+                        .fromUser(fromUser)
+                        .toUser(toUser)
+                        .hidden(false)
+                        .build())
+                .collect(Collectors.toList());
+
+        friendRepository.saveAll(friendList);
+
+        return friendList.stream()
+                .map(friendMapper::toVo)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional(readOnly = true)
     public List<UserVo> find(User fromUser) {
