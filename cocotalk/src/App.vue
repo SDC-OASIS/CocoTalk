@@ -1,8 +1,8 @@
 <template>
 	<div id="app">
 		<router-view name="login" />
-
 		<router-view></router-view>
+		<alert v-if="alert.status == 'open'" :text="alert.text" />
 
 		<!-- <router-view name="login" />
 		<router-view name="error" />
@@ -13,7 +13,6 @@
 				<router-view name="right" class="right-container" />
 			</div>
 		</div>
-		<alert v-if="alert.status == 'open'" :text="alert.text" />
 		<add-friend-modal v-if="addFriendModal == 'open'" />
 		<chat-creation-modal v-if="ChatCreationModal == 'open'" />
 		<room-name-edit-modal v-if="roomNameEditModal.status == 'open'" />
@@ -23,6 +22,7 @@
 
 <script>
 import { mapState } from "vuex";
+import Alert from "@/components/modals/Alert.vue";
 
 export default {
 	name: "App",
@@ -31,7 +31,9 @@ export default {
 			nav: true,
 		};
 	},
-
+	components: {
+		Alert,
+	},
 	created() {
 		const width = screen.width;
 		this.$store.dispatch("userStore/getScreen", { width: width });
@@ -51,6 +53,8 @@ export default {
 	},
 	computed: {
 		...mapState("chat", ["roomStatus"]),
+		...mapState("modal", ["alert"]),
+
 		// ...mapGetters("socket", ["getStompChatListClent", "getUserId", "getAccessToken"]),
 	},
 };
