@@ -76,7 +76,7 @@ const userStore = {
 		login: async function (context, payload) {
 			const userInfo = payload;
 			console.log(userInfo);
-			await axios.post("http://138.2.88.163:8000/auth/signin", userInfo).then((res) => {
+			await axios.post("auth/signin", userInfo).then((res) => {
 				console.log(res.data);
 				if (res.data.isSuccess) {
 					console.log("로그인 요청");
@@ -103,7 +103,7 @@ const userStore = {
 			context.commit("GO_LOGINPAGE");
 		},
 		getUser: function (context) {
-			axios.get("http://138.2.88.163:8000/user/token").then((res) => {
+			axios.get("user/token").then((res) => {
 				console.log("유저정보 가져오기");
 				console.log(res);
 				let userInfo = res.data.data;

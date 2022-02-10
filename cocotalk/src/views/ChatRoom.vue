@@ -69,6 +69,7 @@ import Button from "../components/common/Button.vue";
 import Sidebar from "../components/chat/Sidebar.vue";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
+import axios from "@/utils/axios";
 
 export default {
 	data() {
@@ -76,7 +77,9 @@ export default {
 			componentChat: 0,
 			roomId: this.$route.params.roomId,
 			chatMessages: [],
+			roomInfo: {},
 			message: "",
+			roomMemberIds: [],
 			// stompClientChat: Object,
 		};
 	},
@@ -103,7 +106,7 @@ export default {
 		console.log(this.roomId);
 	},
 	computed: {
-		...mapState("chat", ["roomStatus", "friends", "chattings", "socket"]),
+		...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo"]),
 		...mapState("userStore", ["userInfo"]),
 		...mapState("socket", ["stompChatRoomClient", "stompChatRoomConnected"]),
 	},
@@ -111,7 +114,7 @@ export default {
 		"$route.params.roomId": function () {
 			console.log("채팅을 시작합니다.");
 			// vuex에 마지막 페이지 방문 저장
-			this.stompClientChat.disconnect();
+			this.stompChatRoomClient.disconnect();
 			this.$store.dispatch(
 				"chat/changePage",
 				{
@@ -122,7 +125,7 @@ export default {
 			);
 			this.chatMessages = [];
 			this.getChat();
-			this.startChatConnection();
+			this.chatRoomConnect();
 			// this.forceRerender();
 			// this.$store.dispatch("chat/getChat", { roomId: this.roomStatus.roomId }, { root: true });
 		},
@@ -156,7 +159,29 @@ export default {
 			this.componentChat += 1;
 		},
 		getChat() {
-			console.log("페이지네이션 시작");
+			console.log("채팅 불러오기");
+			axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
+				// axios.get("http://138.2.68.7:8080/rooms/list").then((res) => {
+				console.log("채팅내역 가져오기");
+				let chatData = res.data.data;
+				console.log(chatData);
+				this.chatMessages = chatData.messageList;
+				this.roomInfo = chatData.room;
+				let members = chatData.room.members;
+				members.forEach((e) => {
+					this.roomMemberIds.push(e.userId);
+				});
+				console.table(this.roomMemberIds);
+				// receiverIds
+				// chatList.forEach((e) => {
+				// 	if (e.img == "string" || e.img == "img" || e.img == "" || e.img == null) {
+				// 		delete e["img"];
+				// 	}
+				// 	e.roomname = e.name;
+				// 	e.messageBundleIds = e.messageBundleIds.slice(1, -1).split(", ");
+				// });
+				// context.commit("SET_CHATLIST", res.data.data);
+			});
 		},
 		chatRoomConnect: function () {
 			const serverURL = "http://138.2.93.111:8080/stomp";
@@ -171,15 +196,16 @@ export default {
 					// 채팅 메세지 채널 subscribe
 					this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
 						console.log("구독으로 받은 메시지 입니다.");
-						console.log(JSON.parse(res.body).message);
+						console.log(res);
+						console.log(JSON.parse(res.body));
 						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
-						const receivedMessage = JSON.parse(res.body).message;
-						this.chatMessages.push(receivedMessage);
-						console.log("채팅목록");
-						console.log(this.chatMessages);
+						const receivedMessage = JSON.parse(res.body);
+						this.chatMessages.push(receivedMessage.message);
+						// console.log("채팅목록");
+						console.log(receivedMessage);
 						// 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
 						const payload = {
-							nextMessageBundleId: receivedMessage.messageBundleId,
+							nextMessageBundleId: receivedMessage.bundleInfo.nextMessageBundleId,
 						};
 						this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
 					});
@@ -215,8 +241,9 @@ export default {
 					type: 0,
 					roomId: this.roomStatus.roomId,
 					userId: this.userInfo.id,
-					messageBundleId: this.socket.recentMessageBundleId,
+					messageBundleId: this.chatInfo.nextMessageBundleId,
 					content: this.message,
+					receiverIds: this.roomMemberIds,
 				};
 				this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg), (res) => {
 					console.log("메세지 보내기", res);

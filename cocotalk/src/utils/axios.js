@@ -2,8 +2,8 @@ import VueAxios from "axios";
 import store from "@/store";
 
 const axios = VueAxios.create({
-	// MSA 구조로 요청 주소가 각기 달라 향후 통합가능한 부분이 있으면 수정 예정
-	// baseURL: 'http://....',
+	// API GateWay 주소로 기본 설정
+	baseURL: "http://138.2.88.163:8000/",
 	headers: {
 		"Content-type": "application/json",
 	},

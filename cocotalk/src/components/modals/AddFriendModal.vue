@@ -78,7 +78,7 @@ export default {
 		},
 		getFriendInfo() {
 			if (this.friendId) {
-				axios.get(`http://138.2.88.163:8000/user/cid/${this.friendId}`).then((res) => {
+				axios.get(`user/cid/${this.friendId}`).then((res) => {
 					console.log("친구정보 가져오기");
 					let friendInfo = res.data.data;
 					friendInfo.profile = JSON.parse(friendInfo.profile);
