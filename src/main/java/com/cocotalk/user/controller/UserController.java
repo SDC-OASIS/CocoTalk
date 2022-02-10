@@ -3,6 +3,7 @@ package com.cocotalk.user.controller;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.UserVo;
+import com.cocotalk.user.dto.request.profile.BgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
 import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
@@ -153,8 +154,7 @@ public class UserController {
      * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 프로필 사진 수정")
-//    @PutMapping(value = "/profile/img", consumes = {"multipart/form-data"})
-    @PutMapping(value = "/profile/img")
+    @PutMapping(value = "/profile/img", consumes = {"multipart/form-data"})
     public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, ImgUpdateRequest request) {
         log.info("[PUT][/profile/img] updateProfile request:"+request);
         UserVo data = userService.updateProfileImg(user, request);
@@ -169,7 +169,8 @@ public class UserController {
      */
     @Operation(summary = "유저 백그라운드 사진 수정")
     @PutMapping(value = "/profile/bg", consumes = {"multipart/form-data"})
-    public ResponseEntity<CustomResponse<UserVo>> updateBackground(@Parameter(hidden = true) User user, MultipartFile request) {
+    public ResponseEntity<CustomResponse<UserVo>> updateBackground(@Parameter(hidden = true) User user, @Valid BgUpdateRequest request) {
+        log.info("[PUT][/profile/bg] updateBackground request:"+request);
         UserVo data = userService.updateProfileBg(user, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }

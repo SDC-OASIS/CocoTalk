@@ -67,10 +67,11 @@ public class S3Service {
     }
 
     private void deleteFile(String filePath) {
-        log.info("[deleteFile/filePath] : "+filePath);
         ObjectListing objectList = amazonS3.listObjects(bucket, filePath);
         List<S3ObjectSummary> objectSummeryList = objectList.getObjectSummaries();
-        log.info("[deleteFile/objectSummeryList] : "+objectSummeryList);
+
+        if(objectSummeryList.size()==0) return;
+
         String[] keysList = new String[objectSummeryList.size()];
         int count = 0;
         for (S3ObjectSummary summery : objectSummeryList) {

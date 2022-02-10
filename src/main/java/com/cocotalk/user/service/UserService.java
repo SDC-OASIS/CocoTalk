@@ -3,6 +3,7 @@ package com.cocotalk.user.service;
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.ProfilePayload;
 import com.cocotalk.user.domain.vo.UserVo;
+import com.cocotalk.user.dto.request.profile.BgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
 import com.cocotalk.user.exception.CustomError;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -94,7 +96,6 @@ public class UserService {
 
     @Transactional
     public UserVo updateProfileImg(User user, ImgUpdateRequest request) {
-        log.info("[updateProfile/request] : " + request);
 
         s3Service.deleteProfileImg(user.getId());
 
@@ -123,14 +124,14 @@ public class UserService {
     }
 
     @Transactional
-    public UserVo updateProfileBg(User user, MultipartFile bgImg) {
-        log.info("[updateProfileBg/bgImg] : " + bgImg);
+    public UserVo updateProfileBg(User user, BgUpdateRequest request) {
+
+        s3Service.deleteProfileBg(user.getId());
 
         String fileUrl = null;
-        s3Service.deleteProfileBg(user.getId());
-        if(bgImg != null && !bgImg.isEmpty())
-            fileUrl = s3Service.uploadProfileBg(bgImg, user.getId());
-
+        // 이미지가 있으면 S3에 업로드
+        if(request != null && request.getBgImg() != null && !request.getBgImg().isEmpty())
+            fileUrl = s3Service.uploadProfileBg(request.getBgImg(), user.getId());
 
         //json -> object
         ProfilePayload profilePayload = ProfilePayload.toObject(user.getProfile());
@@ -147,6 +148,7 @@ public class UserService {
     @Transactional
     public UserVo updateProfileMsg(User user, MessageUpdateRequest request) {
 
+        log.info("[updateProfileMsg/request] : " + request);
         //json -> object
         ProfilePayload profilePayload = ProfilePayload.toObject(user.getProfile());
         profilePayload.setMessage(request.getMessage());

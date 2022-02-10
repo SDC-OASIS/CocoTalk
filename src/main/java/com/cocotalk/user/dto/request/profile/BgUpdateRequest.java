@@ -8,6 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @ToString
 @Getter
 @Setter
-public class MessageUpdateRequest {
-    private String message;
+public class BgUpdateRequest {
+    private MultipartFile bgImg;
 }
