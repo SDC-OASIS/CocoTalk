@@ -76,13 +76,12 @@ extension SplashViewModel {
                 }
                 
                 self.dependency.isValidToken.accept(result.isValid)
-                self.dependency.shouldSignout.accept(false)
+                self.dependency.shouldSignout.accept(!result.isValid)
             }).disposed(by: bag)
     }
     
     private func reissueToken() {
         let token: String? = KeychainWrapper.standard[.refreshToken]
-        print(token)
         guard let token = token else {
             return
         }

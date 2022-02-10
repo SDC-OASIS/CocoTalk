@@ -90,6 +90,17 @@ class SigninViewController: UIViewController {
         view.window?.rootViewController = root
         view.window?.makeKeyAndVisible()
     }
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "로그인 오류", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default){ [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.viewModel.dependency.error.accept(false)
+        })
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - BaseViewController
@@ -196,9 +207,17 @@ extension SigninViewController {
                 
                 if isCompleted {
                     self.move2Home()
-                } else {
-                    #warning("알림 처리")
                 }
+            }).disposed(by: bag)
+        
+        viewModel.dependency.error
+            .subscribe(onNext: { [weak self] error in
+                guard let self = self,
+                      let error = error,
+                      error else {
+                          return
+                      }
+                self.showAlert()
             }).disposed(by: bag)
     }
 }

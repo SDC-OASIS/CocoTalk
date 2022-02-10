@@ -10,4 +10,5 @@ import Foundation
 struct ModelSigninRequest: Codable {
     var cid: String
     var password: String
+    var fcmToken: String
 }

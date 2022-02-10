@@ -18,7 +18,6 @@ extension KeychainWrapper.Key {
 
 extension KeychainWrapper {
     static func resetKeys() {
-        self.standard.remove(forKey: .fcmToken)
         self.standard.remove(forKey: .accessToken)
         self.standard.remove(forKey: .refreshToken)
     }

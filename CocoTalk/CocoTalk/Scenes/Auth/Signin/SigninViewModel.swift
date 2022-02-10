@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 import RxRelay
 import SwiftKeychainWrapper
+import FirebaseMessaging
 
 protocol SigninInput {
     var cid: BehaviorRelay<String> { get }
@@ -16,8 +17,10 @@ protocol SigninInput {
 }
 
 protocol SigninDependency {
+    var error: BehaviorRelay<Bool?> { get }
     var isLoadingSignin: BehaviorRelay<Bool> { get }
     var isSigninComplete: BehaviorRelay<Bool> { get }
+    var fcmToken: String? { get set }
 }
 
 protocol SigninOutput {
@@ -26,6 +29,7 @@ protocol SigninOutput {
 
 class SigninViewModel {
     
+    var userRepository = UserRepository()
     var authRepository = AuthRepository()
     var bag = DisposeBag()
     var input = Input()
@@ -38,8 +42,10 @@ class SigninViewModel {
     }
     
     struct Dependency: SigninDependency {
+        var error = BehaviorRelay<Bool?>(value: nil)
         var isLoadingSignin = BehaviorRelay<Bool>(value: false)
         var isSigninComplete = BehaviorRelay<Bool>(value: false)
+        var fcmToken: String? = nil
     }
     
     struct Output: SigninOutput {
@@ -47,23 +53,63 @@ class SigninViewModel {
 }
 
 extension SigninViewModel {
-    #warning("로그인 에러 알리기")
+#warning("로그인 에러 알리기")
     func signin() {
+        let token: String? = KeychainWrapper.standard[.fcmToken]
+        if token == nil {
+            Messaging.messaging().token { [weak self] token, error in
+                if let error = error {
+                    print("Error fetching FCM registration token: \(error)")
+                } else if let token = token {
+                    KeychainWrapper.standard[.fcmToken] = token
+                    self?.dependency.fcmToken = token
+                }
+            }
+        } else {
+            dependency.fcmToken = token
+        }
+        
+        guard let fcmToken = dependency.fcmToken else {
+            dependency.error.accept(true)
+            return
+        }
+        
         dependency.isLoadingSignin.accept(true)
         dependency.isSigninComplete.accept(false)
-        authRepository.signin(cid: input.cid.value, password: input.password.value)
+        authRepository.signin(cid: input.cid.value, password: input.password.value, fcmToken: fcmToken)
             .subscribe(onNext: { [weak self] result in
-                self?.dependency.isLoadingSignin.accept(false)
-                guard let self = self,
-                      let response = result.result else {
+                guard let self = self else {
                           return
                       }
-                guard let accessToken = response.accessToken,
+                
+                guard let response = result.result,
+                      let accessToken = response.accessToken,
                       let refreshToken = response.refreshToken else {
+                          self.dependency.isSigninComplete.accept(false)
+                          self.dependency.error.accept(true)
                           return
                       }
                 KeychainWrapper.standard[.accessToken] = accessToken
                 KeychainWrapper.standard[.refreshToken] = refreshToken
+                self.getProfile()
+            }).disposed(by: bag)
+    }
+    
+    private func getProfile() {
+        let token: String? = KeychainWrapper.standard[.accessToken]
+        guard let token = token else {
+            return
+        }
+        userRepository.fetchMyProfileFromServer(with: token)
+            .subscribe(onNext: { [weak self] response in
+                self?.dependency.isLoadingSignin.accept(false)
+                guard let self = self,
+                      let myProfile = response else {
+                          self?.dependency.isSigninComplete.accept(false)
+                          return
+                      }
+                print(myProfile)
+                UserDefaults.standard.set(myProfile.encode() ?? nil, forKey: UserDefaultsKey.myData.rawValue)
                 self.dependency.isSigninComplete.accept(true)
             }).disposed(by: bag)
     }

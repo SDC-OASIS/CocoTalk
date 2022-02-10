@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 enum UserAPI {
-    case fetchMyProfile(_ token: String, id: Int)
+    case fetchMyProfile(_ token: String)
     case fetchFriends(_ token: String)
 }
 
@@ -20,8 +20,8 @@ extension UserAPI: TargetType {
     
     var path: String {
         switch self {
-        case .fetchMyProfile(_, let id):
-            return "/user/\(id)"
+        case .fetchMyProfile(_):
+            return "/user/token"
         case .fetchFriends(_):
             return "/user/friends"
         }
@@ -29,7 +29,7 @@ extension UserAPI: TargetType {
     
     var method: Moya.Method {
         switch self {
-        case .fetchMyProfile(_, _):
+        case .fetchMyProfile(_):
             return .get
         case .fetchFriends(_):
             return .get
@@ -38,7 +38,7 @@ extension UserAPI: TargetType {
     
     var task: Task {
         switch self {
-        case .fetchMyProfile(_, _):
+        case .fetchMyProfile(_):
             return .requestPlain
         case .fetchFriends(_):
             return .requestPlain
@@ -49,7 +49,7 @@ extension UserAPI: TargetType {
         var parameters: [String : String] = ["Content-type": "application/json"]
         
         switch self {
-        case .fetchMyProfile(let token,_), .fetchFriends(let token):
+        case .fetchMyProfile(let token), .fetchFriends(let token):
             parameters["X-ACCESS-TOKEN"] = token
         }
         

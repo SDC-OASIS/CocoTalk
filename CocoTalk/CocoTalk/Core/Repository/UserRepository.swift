@@ -11,6 +11,7 @@ import RxRelay
 import CoreData
 import Moya
 import RxMoya
+import SwiftKeychainWrapper
 
 class UserRepository: BaseRepository {
     typealias ItemType = ModelProfile
@@ -33,12 +34,7 @@ class UserRepository: BaseRepository {
     }
     
     func fetchMyProfileFromServer(with token: String) ->  Observable<ItemType?> {
-        guard let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
-              let profileData = try? JSONDecoder().decode(ModelProfile.self, from: savedData),
-              let id = profileData.id else {
-                  return Observable.error(Error.self as! Error)
-              }
-        return provider.rx.request(.fetchMyProfile(token, id: id))
+        return provider.rx.request(.fetchMyProfile(token))
             .retry(3)
             .asObservable()
             .map { try JSONDecoder().decode(APIResult_1<ModelProfile>.self, from: $0.data) }
