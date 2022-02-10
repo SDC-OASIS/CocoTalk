@@ -13,38 +13,28 @@ public class ErrorDetails {
     private int code;
     private String desc;
     private String type;
-    private String stackTrace; // debug용
 
-    public ErrorDetails(CustomException e) {
-        this.code = e.getError().getCode();
-        this.desc = e.getMessage();
-        this.type = e.getError().getType();
-        this.stackTrace = e.getStackTrace()[0].toString();
+    public ErrorDetails(CustomException ce) {
+        this.code = ce.getError().getCode();
+        this.desc = ce.getMessage();
+        this.type = ce.getError().getType();
     }
 
-    public ErrorDetails(CustomError e, String stackTrace) {
+    public ErrorDetails(CustomError ce, Exception e) {
+        this.code = ce.getCode();
+        this.desc = e.getMessage();
+        this.type = ce.toString();
+    }
+
+    public ErrorDetails(CustomError e) {
         this.code = e.getCode();
         this.desc = e.getDesc();
         this.type = e.toString();
-        this.stackTrace = stackTrace;
     }
 
-    public ErrorDetails(CustomError e, String desc, String stackTrace) {
-        this.code = e.getCode();
+    public ErrorDetails(CustomError ce, String desc) {
+        this.code = ce.getCode();
         this.desc = desc;
-        this.type = e.toString();
-        this.stackTrace = stackTrace;
+        this.type = ce.toString();
     }
-
-//    public ErrorDetails(int errorCode, String desc) {
-//        this.errorCode = errorCode;
-//        this.desc = desc;
-//        this.type = "UnknownException";
-//    }
-//
-//    public ErrorDetails(int errorCode, String desc, String type) {
-//        this.errorCode = errorCode;
-//        this.desc = desc;
-//        this.type = type;
-//    }
 }

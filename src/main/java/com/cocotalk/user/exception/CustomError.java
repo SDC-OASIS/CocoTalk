@@ -10,7 +10,8 @@ public enum CustomError {
     JSON_PARSE(2003, "JSON 파싱 중 문제가 발생했습니다"),
     BAD_REQUEST(2004, "잘못된 요청입니다."),
     NOT_LOGIN(2005, "로그인 하지 않은 사용자입니다."),
-    NOT_PERMITTED(2006, "권한이 없는 유저 입니다.");
+    NOT_PERMITTED(2006, "권한이 없는 유저 입니다."),
+    BAD_SQL(2007, "SQL 실행 중 문제가 발생했습니다.");
 
     private final int code;
     private final String desc;

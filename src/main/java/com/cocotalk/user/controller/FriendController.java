@@ -83,7 +83,7 @@ public class FriendController {
     @GetMapping
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<List<UserVo>>> find(@Parameter(hidden = true) User fromUser) {
-        List<UserVo> data = friendService.find(fromUser);
+        List<UserVo> data = friendService.findAll(fromUser);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 

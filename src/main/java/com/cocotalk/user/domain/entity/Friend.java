@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -40,5 +41,13 @@ public class Friend {
 
     public void setHidden(boolean hide) {
         this.hidden = hide;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        else if (!(obj instanceof Friend)) return false;
+        Friend friend = (Friend) obj;
+        return Objects.equals(friend.toUser.getId(), toUser.getId());
     }
 }

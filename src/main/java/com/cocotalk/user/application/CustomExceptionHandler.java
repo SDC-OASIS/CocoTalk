@@ -13,7 +13,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
+
 import static com.cocotalk.user.exception.CustomError.BAD_REQUEST;
+import static com.cocotalk.user.exception.CustomError.BAD_SQL;
 
 @Slf4j
 @RestControllerAdvice
@@ -32,26 +35,25 @@ public class CustomExceptionHandler {
         BindingResult bindingResult = e.getBindingResult();
         CustomError error = BAD_REQUEST;
         String desc = error.getDesc() + " : " + bindingResult.getAllErrors().get(0).getDefaultMessage();
-        String stackTrace = e.getStackTrace()[0].toString();
-        ErrorDetails details = new ErrorDetails(error, desc, stackTrace);
+        ErrorDetails details = new ErrorDetails(error, desc);
 
         log.error("MethodArgumentNotValidException : " + desc);
         return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponse<>(details));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse<?>> unknownException(Exception e) {
-        String stackTrace = e.getStackTrace()[0].toString();
-        ErrorDetails details = new ErrorDetails(CustomError.UNKNOWN, stackTrace);
-
-        log.error("UnknownException : " + e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse<>(details));
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<ErrorResponse<?>> sqlException(SQLException e) {
+        e.printStackTrace();
+        CustomError error = BAD_SQL;
+        ErrorDetails details = new ErrorDetails(error, e);
+        log.error("SQLException : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponse<>(details));
     }
 
     @ExceptionHandler(FileUploadException.class)
     public ResponseEntity<ErrorResponse<?>> fileUploadException(FileUploadException e) {
-        String stackTrace = e.getStackTrace()[0].toString();
-        ErrorDetails details = new ErrorDetails(CustomError.BAD_REQUEST, stackTrace);
+        e.printStackTrace();
+        ErrorDetails details = new ErrorDetails(CustomError.BAD_REQUEST, e);
         log.error("FileUploadException : " + e.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponse<>(details));
     }
