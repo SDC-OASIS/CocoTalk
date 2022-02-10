@@ -147,7 +147,6 @@ public class UserService {
 
     @Transactional
     public UserVo updateProfileMsg(User user, MessageUpdateRequest request) {
-
         log.info("[updateProfileMsg/request] : " + request);
         //json -> object
         ProfilePayload profilePayload = ProfilePayload.toObject(user.getProfile());
