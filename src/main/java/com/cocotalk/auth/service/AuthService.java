@@ -108,7 +108,7 @@ public class AuthService {
                     || userRepository.existsByPhone(signupInput.getPhone())
                     || userRepository.existsByEmail(signupInput.getEmail());
             if (exists) {
-                throw new CustomException(EXISTS_INFO);
+                return ResponseEntity.status(HttpStatus.OK).body(new Response<>(EXISTS_INFO));
             }
 
             // pk 생성
@@ -156,7 +156,7 @@ public class AuthService {
         String refreshToken = JwtUtils.getRefreshToken();
         if(refreshToken==null) {
             log.error("[reissue] X-REFRESH-TOKEN is null");
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(UNAUTHORIZED));
         }
         try{
             // 1. refresh token이 서버와 일치하는지 확인
@@ -164,7 +164,7 @@ public class AuthService {
             String storeRefreshToken = redisService.getRefreshToken(clientType, userId);
             if(!refreshToken.equals(storeRefreshToken)) {
                 log.error("[reissue] refreshToken is not equals as storeRefreshToken");
-                return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.UNAUTHORIZED));
+                return ResponseEntity.status(HttpStatus.OK).body(new Response<>(UNAUTHORIZED));
             }
 
             // 2. token 생성
