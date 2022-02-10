@@ -156,7 +156,7 @@ public class UserController {
     @Operation(summary = "유저 프로필 사진 수정")
     @PutMapping(value = "/profile/img", consumes = {"multipart/form-data"})
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, ImgUpdateRequest request) {
+    public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, @Valid ImgUpdateRequest request) {
         log.info("[PUT][/profile/img] updateProfile request:"+request);
         UserVo data = userService.updateProfileImg(user, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
