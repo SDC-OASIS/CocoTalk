@@ -58,6 +58,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.11.2'
+
+    //s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
 }
 
 dependencyManagement {
