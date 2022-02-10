@@ -19,6 +19,11 @@ const routes = [
 		components: {
 			login: Login,
 		},
+		// beforeEnter: (to, from, next) => {
+		// 	if (store.state.userStore.isLogin) {
+		// 		next("/friends");
+		// 	}
+		// },
 	},
 	{
 		path: "/",
@@ -32,11 +37,11 @@ const routes = [
 					left: FriendList,
 					right: BeforeEnterChat,
 				},
-				beforeEnter: (to, from, next) => {
-					store.dispatch("chat/changeMainPage", "friends", { root: true });
-					store.dispatch("friend/getFriends", "friends", { root: true });
-					return next();
-				},
+				// beforeEnter: (to, from, next) => {
+				// 	store.dispatch("chat/changeMainPage", "friends", { root: true });
+				// 	store.dispatch("friend/getFriends", "friends", { root: true });
+				// 	return next();
+				// },
 			},
 			{
 				path: "/chats",
@@ -84,27 +89,31 @@ const routes = [
 				components: {
 					error: PageNotFound,
 				},
-				beforeEnter: (to, from, next) => {
-					store.dispatch("chat/changeMainPage", "error", { root: true });
-					return next();
-				},
+				// beforeEnter: (to, from, next) => {
+				// 	store.dispatch("chat/changeMainPage", "error", { root: true });
+				// 	return next();
+				// },
 			},
 		],
+		beforeEnter: (to, from, next) => {
+			// 로그인하지 않은 경우 로그인 페이지로 이동
+			if (!store.state.userStore.isLogin) {
+				next("/login");
+			}
+			// 로그인한 경우 기본 url 진입하는 경우 메인페이지로 이동
+			else if (to.fullPath == "/" || to.fullPath == "/login") {
+				next("/friends");
+			}
+			// 로그인하고 이외 url로 진입하는 경우
+			else {
+				next();
+			}
+		},
 	},
 	{
 		path: "*",
 		redirect: "/error",
 	},
-	// {
-	// 	path: "/friends/chat/:roomId?",
-	// 	name: "friendList",
-	// 	component: FriendList,
-	// },
-	// {
-	// 	path: "/chatlist/chat/:roomId?",
-	// 	name: "chatList",
-	// 	component: ChatList,
-	// },
 ];
 
 const router = new VueRouter({

@@ -30,11 +30,11 @@ import SockJS from "sockjs-client";
 
 export default {
 	name: "MainPage",
-	// data() {
-	// 	return {
-	// 		nav: true,
-	// 	};
-	// },
+	data() {
+		return {
+			nav: true,
+		};
+	},
 	components: {
 		Navbar,
 		AddFriendModal,
@@ -43,19 +43,22 @@ export default {
 		ProfileModal,
 		Alert,
 	},
+
 	created() {
 		const width = screen.width;
 		this.$store.dispatch("userStore/getScreen", { width: width });
-		// 로그인 페이지에서는 navbar 안보이게 만들기
-		// if (window.location.pathname == "/") {
-		// 	this.nav = false;
-		// }
-		if (this.roomStatus.mainPage == "" || this.roomStatus.mainPage == "error") {
+		// 에러페이지에서는 navbar 안보이게 만들기
+		console.log("nav");
+		console.log(window.location.pathname);
+		if (window.location.pathname == "/error") {
 			this.nav = false;
-		} else {
-			console.log("!!");
-			this.nav = true;
 		}
+		// if (this.roomStatus.mainPage == "" || this.roomStatus.mainPage == "error") {
+		// 	this.nav = false;
+		// } else {
+		// 	console.log("!!");
+		// 	this.nav = true;
+		// }
 		// 채팅방 목록용 소켓
 		// this.$store.dispatch("chat/startConnection");
 		this.chatListConnect();

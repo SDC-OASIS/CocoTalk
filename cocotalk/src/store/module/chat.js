@@ -15,7 +15,7 @@ const chat = {
 		roomStatus: {
 			mainPage: "",
 			chatPage: "chat",
-			roomId: "111",
+			roomId: "",
 		},
 		chats: [],
 		chatInfo: {
