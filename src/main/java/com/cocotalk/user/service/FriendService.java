@@ -2,6 +2,7 @@ package com.cocotalk.user.service;
 
 import com.cocotalk.user.domain.entity.Friend;
 import com.cocotalk.user.domain.entity.User;
+import com.cocotalk.user.domain.vo.FriendListVo;
 import com.cocotalk.user.domain.vo.FriendVo;
 import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.FriendAddRequest;
@@ -38,7 +39,8 @@ public class FriendService {
     public static final CustomException INVALID_TO_UID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 친구가 존재하지 않습니다.");
 
-    private static final Comparator<UserVo> orderByUserName = Comparator.comparing(UserVo::getUsername);
+    Comparator<FriendListVo> orderByUserName = (o1, o2) ->
+            o1.getFriend().getUsername().compareTo(o2.getFriend().getUsername());
 
     @Transactional
     public FriendVo add(User fromUser, FriendAddRequest request){
@@ -77,12 +79,30 @@ public class FriendService {
 
 
     @Transactional(readOnly = true)
-    public List<UserVo> findAll(User fromUser) {
-        List<Friend> friends = friendRepository.findByFromUserIdAndHiddenIsFalse(fromUser.getId());
-        return friends.stream()
+    public List<FriendListVo> findAll(User fromUser) {
+        // 내가 친구 추가한 사람들
+        List<FriendListVo> myFriends = friendRepository.findByFromUserIdAndHiddenIsFalse(fromUser.getId()).stream()
                 .map(friend -> userMapper.toVo(friend.getToUser()))
-                .sorted(orderByUserName)
+                .map(userVo -> FriendListVo.builder()
+                        .friend(userVo)
+                        .status(0)
+                        .build())
                 .collect(Collectors.toList());
+
+        // 나를 친구 추가한 사람들
+        List<FriendListVo> addedMe = friendRepository.findByToUserId(fromUser.getId()).stream() //
+                .map(friend -> userMapper.toVo(friend.getFromUser()))
+                .map(userVo -> FriendListVo.builder()
+                        .friend(userVo)
+                        .status(1)
+                        .build())
+                .collect(Collectors.toList());
+
+        addedMe.removeAll(myFriends);
+        myFriends.addAll(addedMe);
+        myFriends.sort(orderByUserName);
+
+        return myFriends;
     }
 
     @Transactional(readOnly = true)
@@ -91,7 +111,7 @@ public class FriendService {
         return hiddenFriends.stream()
                 .map(Friend::getToUser)
                 .map(userMapper::toVo)
-                .sorted(orderByUserName)
+                .sorted(Comparator.comparing(UserVo::getUsername))
                 .collect(Collectors.toList());
     }
 

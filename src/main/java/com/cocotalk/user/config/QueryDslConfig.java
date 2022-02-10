@@ -14,7 +14,6 @@ public class QueryDslConfig {
 
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
-        // JPAQueryFactory를 Bean으로 등록하여 프로젝트 전역에서 QueryDSL을 작성할 수 있도록 합니다.
         return new JPAQueryFactory(entityManager);
     }
 }

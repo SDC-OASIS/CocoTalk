@@ -3,9 +3,9 @@ package com.cocotalk.user.controller;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.UserVo;
+import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.request.profile.BgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
-import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
 import com.cocotalk.user.dto.response.CustomResponse;
 import com.cocotalk.user.exception.CustomException;
@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
 /**
  * 유저 관련 API 요청을 받는 컨트롤러
  *
- * @author ybell1028
+ * @author 황종훈
  * @version 1.0, 최초 작성
  * @see com.cocotalk.user.service.UserService
  * @see com.cocotalk.user.utils.mapper.UserMapper
