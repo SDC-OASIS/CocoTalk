@@ -73,7 +73,7 @@ public class UserController {
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      * @exception CustomException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
-    @Operation(summary = "유저 accessToken으로 조회")
+    @Operation(summary = "유저 id로 조회")
     @GetMapping("/{id}")
     public ResponseEntity<CustomResponse<UserVo>> findById(@PathVariable Long id) {
         UserVo data = userService.findById(id);
@@ -155,6 +155,7 @@ public class UserController {
      */
     @Operation(summary = "유저 프로필 사진 수정")
     @PutMapping(value = "/profile/img", consumes = {"multipart/form-data"})
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, ImgUpdateRequest request) {
         log.info("[PUT][/profile/img] updateProfile request:"+request);
         UserVo data = userService.updateProfileImg(user, request);
@@ -169,6 +170,7 @@ public class UserController {
      */
     @Operation(summary = "유저 백그라운드 사진 수정")
     @PutMapping(value = "/profile/bg", consumes = {"multipart/form-data"})
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<UserVo>> updateBackground(@Parameter(hidden = true) User user, @Valid BgUpdateRequest request) {
         log.info("[PUT][/profile/bg] updateBackground request:"+request);
         UserVo data = userService.updateProfileBg(user, request);
@@ -183,6 +185,7 @@ public class UserController {
      */
     @Operation(summary = "유저 프로필 메시지 수정")
     @PutMapping(value = "/profile/message")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<UserVo>> updateProfileMsg(@Parameter(hidden = true) User user, @RequestBody MessageUpdateRequest request) {
         UserVo data = userService.updateProfileMsg(user, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
