@@ -25,9 +25,9 @@
 						<span class="iconify" data-icon="uil:setting"></span>
 					</router-link>
 				</li>
-				<li>
+				<li @click="logout">
 					<router-link to="/login">
-						<span @click="logout">
+						<span>
 							<span class="iconify" data-icon="fe:logout"></span>
 						</span>
 					</router-link>

@@ -11,25 +11,27 @@
 				</div>
 			</div>
 		</div>
-		<div class="myprofile row">
-			<div @click="openProfileModal(userInfo)">
-				<profile-img :imgUrl="userInfo.profile.profile" :width="width" />
-			</div>
-			<friend-list-user-info :userInfo="userInfo" />
-		</div>
-		<hr />
-		<div class="friend-list-container">
-			<div class="friend-cnt">친구 - {{ friendsCnt }}</div>
-			<div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
-				<div @click="openProfileModal(friend)">
-					<profile-img :imgUrl="friend.profile.profile" width="50px" />
+		<div class="friend-list-inner-container">
+			<div class="myprofile row">
+				<div @click="openProfileModal(userInfo)">
+					<profile-img :imgUrl="userInfo.profile.profile" :width="width" />
 				</div>
-				<!-- {{ friend }} -->
-				<friend-list-user-info :userInfo="friend" />
+				<friend-list-user-info :userInfo="userInfo" />
 			</div>
+			<hr />
+			<div class="friend-list-container">
+				<div class="friend-cnt">친구 - {{ friendsCnt }}</div>
+				<div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
+					<div @click="openProfileModal(friend)">
+						<profile-img :imgUrl="friend.profile.profile" width="50px" />
+					</div>
+					<!-- {{ friend }} -->
+					<friend-list-user-info :userInfo="friend" />
+				</div>
+			</div>
+			{{ roomStatus }}
+			<button @click="test">리프레시테스트</button>
 		</div>
-		{{ roomStatus }}
-		<button @click="test">리프레시테스트</button>
 	</div>
 </template>
 
@@ -122,7 +124,6 @@ export default {
 	border-left: 2px solid #9eac95;
 	border-right: 2px solid #9eac95;
 	font-size: 15px;
-	overflow: auto;
 }
 .friend-list-outer-container > hr {
 	border-bottom: 1px solid #9eac95;
@@ -173,15 +174,20 @@ export default {
 .friend-list-container {
 	text-align: left;
 }
-.friend-list-outer-container::-webkit-scrollbar {
+.friend-list-inner-container {
+	overflow: auto;
+	display: block;
+	height: 85vh;
+}
+.friend-list-inner-container::-webkit-scrollbar {
 	background-color: #ffffff;
 	width: 18px;
 }
-.friend-list-outer-container::-webkit-scrollbar-track {
+.friend-list-inner-container::-webkit-scrollbar-track {
 	background-color: #ffffff;
 	width: 10px;
 }
-.friend-list-outer-container::-webkit-scrollbar-thumb {
+.friend-list-inner-container::-webkit-scrollbar-thumb {
 	background-color: #b8c8ae;
 	border-radius: 10px;
 	width: 10px;
