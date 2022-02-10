@@ -13,5 +13,13 @@ extension KeychainWrapper.Key {
     static let accessToken: KeychainWrapper.Key = "accessToken"
     static let refreshToken: KeychainWrapper.Key = "refreshToken"
     static let fcmToken: KeychainWrapper.Key = "fcmToken"
-    
+
+}
+
+extension KeychainWrapper {
+    static func resetKeys() {
+        self.standard.remove(forKey: .fcmToken)
+        self.standard.remove(forKey: .accessToken)
+        self.standard.remove(forKey: .refreshToken)
+    }
 }
