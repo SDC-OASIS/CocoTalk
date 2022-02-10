@@ -13,16 +13,12 @@ import java.net.*;
 
 @Slf4j
 public class WebSocketUtils extends WebSocketClient {
-    private static final RestTemplate restTemplate = new RestTemplate();
-
     public WebSocketUtils(URI serverUri, Draft protocolDraft) {
         super(serverUri, protocolDraft);
     }
 
     @Override
-    public void onOpen(ServerHandshake handshake) {
-        log.info("Opened connection to presence service");
-    }
+    public void onOpen(ServerHandshake handshake) { log.info("Opened connection to presence service"); }
 
     @Override
     public void onMessage(String message) {
@@ -30,16 +26,10 @@ public class WebSocketUtils extends WebSocketClient {
     }
 
     @Override
-    public void onClose(int code, String reason, boolean remote) {
-        log.info("Closed connection to presence service");
-    }
+    public void onClose(int code, String reason, boolean remote) { log.info("Closed connection to presence service"); }
 
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
-    }
-
-    public void registerURL(String url){
-        this.send(url);
     }
 }
