@@ -16,7 +16,7 @@
 - Spring Cloud Eureka Client
 - JPA
 - Redis
-- MySql
+- MySQL
 - Amazon S3
 
 ---
