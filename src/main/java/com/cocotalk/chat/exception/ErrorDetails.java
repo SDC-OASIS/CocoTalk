@@ -14,10 +14,16 @@ public class ErrorDetails {
     private String desc;
     private String type;
 
-    public ErrorDetails(CustomException e) {
-        this.code = e.getError().getCode();
+    public ErrorDetails(CustomException ce) {
+        this.code = ce.getError().getCode();
+        this.desc = ce.getMessage();
+        this.type = ce.getError().getType();
+    }
+
+    public ErrorDetails(CustomError ce, Exception e) {
+        this.code = ce.getCode();
         this.desc = e.getMessage();
-        this.type = e.getError().getType();
+        this.type = ce.toString();
     }
 
     public ErrorDetails(CustomError e) {
@@ -26,10 +32,10 @@ public class ErrorDetails {
         this.type = e.toString();
     }
 
-    public ErrorDetails(CustomError e, String desc) {
-        this.code = e.getCode();
+    public ErrorDetails(CustomError ce, String desc) {
+        this.code = ce.getCode();
         this.desc = desc;
-        this.type = e.toString();
+        this.type = ce.toString();
     }
 
 //    public ErrorDetails(int errorCode, String desc) {

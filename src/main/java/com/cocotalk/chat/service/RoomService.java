@@ -43,6 +43,7 @@ public class RoomService {
     public static final Room emptyRoom = new Room();
     public static final ChatMessageVo emptyChatMessageVo = ChatMessageVo.builder()
             .content("채팅방에 메시지가 없습니다.")
+            .sentAt(LocalDateTime.now()) // 임시 방편
             .build();
 
     public static final CustomException INVALID_ROOM_ID =
@@ -288,7 +289,7 @@ public class RoomService {
         Comparator<RoomListVo> comparator = (o1, o2) ->
                 o2.getRecentChatMessage().getSentAt().compareTo(o1.getRecentChatMessage().getSentAt());
 
-        // (1) 내가 참가중인 모든 방 조회
+        // (1) 내가 참가중인 모든 방 리스트, 수신한 최근 메시지, 읽지 않은 메시지 수 조회
         return this.findAllJoining(userVo).stream()
                 .map(roomVo -> {
                     RoomMember me = this.findMember(roomVo, userVo.getId()); // (2) 방 내부 내 정보 조회
@@ -299,19 +300,23 @@ public class RoomService {
                     int mbIdx = messageBundleIds.size() - 1; // (4) messageBundleId는 room 생성시 자동 생성되기 때문에 무조건 하나는 있음
                     MessageBundleVo messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx)); // (5) 가장 최신 메시지 번들
                     int recentMessageBundleCount = messageBundleVo.getCount();
-                    if(messageBundleVo.getCount() == 0) {
+                    if(mbIdx > 0 && recentMessageBundleCount == 0) { // (6) 가장 마지막 메시지 번들이 비어 있을때 바로 전 메시지 번들을 사용
                         mbIdx -= 1;
                         messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx));
                     }
 
                     List<ObjectId> messageIds = messageBundleVo.getMessageIds();
 
-                    ChatMessageVo recentChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1));
+                    ChatMessageVo recentChatMessageVo;
+                    if(messageIds.size() > 0) recentChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1));
+                    // (7) 모든 채팅방은 첫 메시지건, 초대 메시지건 무조건 메시지를 하나 가지고 있어 구조상 불가능한 케이스지만 에러 방지를 위한 코드
+                    else recentChatMessageVo = emptyChatMessageVo;
+
 
                     // Pagination을 제한적으로 사용하기 때문에 (전부 읽었을 수도 있고, 일정 갯수 넘어가면 탈출) 따로 limit 쿼리를 쓸 필요는 없어 보인다.
                     while(amountUnread < messageBundleLimit && mbIdx >= 0) {
                         // 현재 메시지 번들에서 읽지 않은 메시지 수 계산
-                        long partUnread = messageBundleVo.getMessageIds().stream() // parallel?
+                        long partUnread = messageBundleVo.getMessageIds().parallelStream()
                                 .map(chatMessageService::find)
                                 .filter(chatMessage -> chatMessage.getSentAt().isAfter(me.getAwayAt())) // 인자보다 미래시간일때 true 반환
                                 .count();
