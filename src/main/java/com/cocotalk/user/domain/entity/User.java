@@ -1,7 +1,6 @@
 package com.cocotalk.user.domain.entity;
 
 import com.cocotalk.user.domain.BaseTime;
-import com.cocotalk.user.domain.Provider;
 import com.cocotalk.user.dto.request.UserModifyRequest;
 import lombok.*;
 
@@ -9,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -62,5 +62,13 @@ public class User extends BaseTime {
         this.phone = request.getPhone();
         this.email = request.getEmail();
         this.status = request.getStatus();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        else if (!(obj instanceof User)) return false;
+        User user = (User) obj;
+        return Objects.equals(id, user.getId());
     }
 }
