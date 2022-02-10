@@ -299,12 +299,14 @@ public class RoomService {
                     int mbIdx = messageBundleIds.size() - 1; // (4) messageBundleId는 room 생성시 자동 생성되기 때문에 무조건 하나는 있음
                     MessageBundleVo messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx)); // (5) 가장 최신 메시지 번들
                     int recentMessageBundleCount = messageBundleVo.getCount();
+                    if(messageBundleVo.getCount() == 0) {
+                        mbIdx -= 1;
+                        messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx));
+                    }
 
-                    List<ObjectId> messageIds = messageBundleVo.getMessageIds(); // slicing 필요?
+                    List<ObjectId> messageIds = messageBundleVo.getMessageIds();
 
-                    ChatMessageVo recentChatMessageVo;
-                    if(messageIds.size() > 0) recentChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1));
-                    else recentChatMessageVo = emptyChatMessageVo;
+                    ChatMessageVo recentChatMessageVo = chatMessageService.find(messageIds.get(messageIds.size() - 1));
 
                     // Pagination을 제한적으로 사용하기 때문에 (전부 읽었을 수도 있고, 일정 갯수 넘어가면 탈출) 따로 limit 쿼리를 쓸 필요는 없어 보인다.
                     while(amountUnread < messageBundleLimit && mbIdx >= 0) {

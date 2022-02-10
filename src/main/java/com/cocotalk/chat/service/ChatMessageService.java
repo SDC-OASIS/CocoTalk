@@ -91,13 +91,15 @@ public class ChatMessageService {
             int start = count - size;
             messageIds.addAll(messageBundleService.findSlice(bundleId, start, size).getMessageIds()); ;
         } else {
-            int diff = size - count; // count = 4, size = 10면 diff = 6
-            int start = messageBundleLimit - diff; // 10 - 6 = 4
+            int diff = size - count; // diff = 10
+            int start = messageBundleLimit - diff; // start = 0
             MessageBundleVo beforeBundleVo = messageBundleService.findBeforeBundleAndSlice(roomId, bundleId, start, diff);
             if(beforeBundleVo.getMessageIds() != null) {
                 messageIds.addAll(beforeBundleVo.getMessageIds());
             }
-            messageIds.addAll(messageBundleService.findSlice(bundleId, 0, count).getMessageIds()); // 예외 처리 필요?
+            if (count != 0) {
+                messageIds.addAll(messageBundleService.findSlice(bundleId, 0, count).getMessageIds()); // 예외 처리 필요?
+            }
         }
         return messageIds.stream().map(this::find).collect(Collectors.toList());
     }
