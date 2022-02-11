@@ -47,7 +47,7 @@ public class ChatController {
         simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageVo);
         for(int i = 0; i < receivers.size(); ++i) {
             long userId = receivers.get(i);
-            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/messageVo", messageVo);
+            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/message", messageVo);
         }
     }
 
