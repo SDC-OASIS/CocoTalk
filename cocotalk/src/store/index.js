@@ -5,6 +5,6 @@ import modules from "./module";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
-	modules,
-	plugins: [createPersistedState()],
+  modules,
+  plugins: [createPersistedState()],
 });
