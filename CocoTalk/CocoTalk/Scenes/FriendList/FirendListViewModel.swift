@@ -67,21 +67,8 @@ class FriendListViewModel {
                 }
             }
             .filter{ $0.type == 0 }
-            .map { decodeProfile($0.friend!) }
-    }
-    
-    func decodeProfile(_ profile: ModelProfile) -> ModelProfile {
-        let decoder = JSONDecoder()
-        guard let jsonString = profile.profile else {
-            return profile
-        }
-        var profileData = profile
-        let jsonData = Data(jsonString.utf8)
-        let decoded = try? decoder.decode(ModelProfileData.self, from: jsonData)
-        profileData.profileImageURL = decoded?.profile
-        profileData.bgImageURL = decoded?.background
-        profileData.bio = decoded?.message
-        return profileData
+            .map { $0.friend!.decodeProfile() }
+            .sorted(by: { $0.username ?? "" < $1.username ?? "" })
     }
 }
 
@@ -104,7 +91,7 @@ extension FriendListViewModel {
                       let myProfile = response else {
                     return
                 }
-                self.output.myProfile.accept(self.decodeProfile(myProfile))
+                self.output.myProfile.accept(myProfile.decodeProfile())
             }).disposed(by: bag)
     }
     
@@ -116,7 +103,7 @@ extension FriendListViewModel {
         userRepsository.fetchFromServer(with: token)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self,
-                      var friends = response else {
+                      let friends = response else {
                     return
                 }
                 self.output.friends.accept(self.handleFriends(friends))

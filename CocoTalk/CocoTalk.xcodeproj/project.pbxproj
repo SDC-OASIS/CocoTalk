@@ -53,7 +53,6 @@
 		EA29140D27B0B16F00324476 /* URL+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29140C27B0B16F00324476 /* URL+Ext.swift */; };
 		EA29140F27B0B36400324476 /* ModelEmailVerifyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29140E27B0B36400324476 /* ModelEmailVerifyRequest.swift */; };
 		EA29141327B0B40800324476 /* APIResult_0.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141227B0B40800324476 /* APIResult_0.swift */; };
-		EA29141527B0DA5300324476 /* ModelUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141427B0DA5300324476 /* ModelUserResponse.swift */; };
 		EA29141727B0F35900324476 /* APIResult_1.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141627B0F35900324476 /* APIResult_1.swift */; };
 		EA29141927B1096C00324476 /* EmailRegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141827B1096C00324476 /* EmailRegisterViewModel.swift */; };
 		EA29141B27B10C0100324476 /* ModelIssueEmailCodeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141A27B10C0100324476 /* ModelIssueEmailCodeRequest.swift */; };
@@ -101,6 +100,12 @@
 		EAC6159627B6926000B213BC /* ProfileModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */; };
 		EAC6159727B6926000B213BC /* ProfileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159527B6926000B213BC /* ProfileModalViewController.swift */; };
 		EAC6159927B692F100B213BC /* GNBDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159827B692F100B213BC /* GNBDelegate.swift */; };
+		EAC6159E27B6B64900B213BC /* SelectProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159D27B6B64900B213BC /* SelectProfileViewController.swift */; };
+		EAC615A127B6B65F00B213BC /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A027B6B65F00B213BC /* AddFriendViewController.swift */; };
+		EAC615A327B6B67900B213BC /* AddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A227B6B67900B213BC /* AddFriendViewModel.swift */; };
+		EAC615A527B6C0C500B213BC /* AddFriendDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */; };
+		EAC615A727B6D43600B213BC /* ModelAddFriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */; };
+		EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */; };
 		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
 		EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A7279A981A00777EBF /* MessageEnum.swift */; };
 		EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A9279A986C00777EBF /* ModelMessage.swift */; };
@@ -157,7 +162,6 @@
 		EA29140C27B0B16F00324476 /* URL+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Ext.swift"; sourceTree = "<group>"; };
 		EA29140E27B0B36400324476 /* ModelEmailVerifyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelEmailVerifyRequest.swift; sourceTree = "<group>"; };
 		EA29141227B0B40800324476 /* APIResult_0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult_0.swift; sourceTree = "<group>"; };
-		EA29141427B0DA5300324476 /* ModelUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUserResponse.swift; sourceTree = "<group>"; };
 		EA29141627B0F35900324476 /* APIResult_1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult_1.swift; sourceTree = "<group>"; };
 		EA29141827B1096C00324476 /* EmailRegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewModel.swift; sourceTree = "<group>"; };
 		EA29141A27B10C0100324476 /* ModelIssueEmailCodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelIssueEmailCodeRequest.swift; sourceTree = "<group>"; };
@@ -196,6 +200,12 @@
 		EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewModel.swift; sourceTree = "<group>"; };
 		EAC6159527B6926000B213BC /* ProfileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewController.swift; sourceTree = "<group>"; };
 		EAC6159827B692F100B213BC /* GNBDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBDelegate.swift; sourceTree = "<group>"; };
+		EAC6159D27B6B64900B213BC /* SelectProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectProfileViewController.swift; sourceTree = "<group>"; };
+		EAC615A027B6B65F00B213BC /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
+		EAC615A227B6B67900B213BC /* AddFriendViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewModel.swift; sourceTree = "<group>"; };
+		EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendDelegate.swift; sourceTree = "<group>"; };
+		EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendRequest.swift; sourceTree = "<group>"; };
+		EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendResponse.swift; sourceTree = "<group>"; };
 		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		EAE555A7279A981A00777EBF /* MessageEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEnum.swift; sourceTree = "<group>"; };
 		EAE555A9279A986C00777EBF /* ModelMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelMessage.swift; sourceTree = "<group>"; };
@@ -267,6 +277,10 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				EAC6159F27B6B64E00B213BC /* AddFriend */,
+				EAC6159C27B6B62800B213BC /* SelectProfile */,
+				EAC6159B27B6B61F00B213BC /* Setting */,
+				EAC6159A27B6B61800B213BC /* Search */,
 				EA29146A27B5155B00324476 /* More */,
 				EA22D53C2794F7D400E1F39A /* Root */,
 				EA22D5392794F76D00E1F39A /* FriendList */,
@@ -441,7 +455,6 @@
 				EA29140827B0B13E00324476 /* ModelSignupResponse.swift */,
 				EA29140A27B0B14E00324476 /* ModelEmailVerifyResponse.swift */,
 				EA29140E27B0B36400324476 /* ModelEmailVerifyRequest.swift */,
-				EA29141427B0DA5300324476 /* ModelUserResponse.swift */,
 				EA29141A27B10C0100324476 /* ModelIssueEmailCodeRequest.swift */,
 				EA29141C27B10C2E00324476 /* ModelIssueEmailCodeResponse.swift */,
 			);
@@ -473,6 +486,8 @@
 			children = (
 				EA22D541279544E100E1F39A /* ModelProfile.swift */,
 				EAC6158F27B62E7C00B213BC /* ModelFriend.swift */,
+				EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */,
+				EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */,
 			);
 			path = Friend;
 			sourceTree = "<group>";
@@ -556,6 +571,38 @@
 				EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */,
 			);
 			path = ProfileModal;
+			sourceTree = "<group>";
+		};
+		EAC6159A27B6B61800B213BC /* Search */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		EAC6159B27B6B61F00B213BC /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		EAC6159C27B6B62800B213BC /* SelectProfile */ = {
+			isa = PBXGroup;
+			children = (
+				EAC6159D27B6B64900B213BC /* SelectProfileViewController.swift */,
+			);
+			path = SelectProfile;
+			sourceTree = "<group>";
+		};
+		EAC6159F27B6B64E00B213BC /* AddFriend */ = {
+			isa = PBXGroup;
+			children = (
+				EAC615A027B6B65F00B213BC /* AddFriendViewController.swift */,
+				EAC615A227B6B67900B213BC /* AddFriendViewModel.swift */,
+				EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */,
+			);
+			path = AddFriend;
 			sourceTree = "<group>";
 		};
 		EAE555A3279A700400777EBF /* MessageCell */ = {
@@ -775,12 +822,15 @@
 				EA29142827B1612700324476 /* KeyChainWrapper+Ext.swift in Sources */,
 				EA29144027B37C5A00324476 /* ContactHelper.swift in Sources */,
 				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
+				EAC615A127B6B65F00B213BC /* AddFriendViewController.swift in Sources */,
 				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
 				EA2913F427AC0B1E00324476 /* SmsAuthViewModel.swift in Sources */,
+				EAC6159E27B6B64900B213BC /* SelectProfileViewController.swift in Sources */,
 				EA2913DD27AA349D00324476 /* BaseRepository.swift in Sources */,
 				EA22D5612797FC2800E1F39A /* UIImageView+Ext.swift in Sources */,
 				EA2913DF27AA43D800324476 /* APIError.swift in Sources */,
 				EA29140627B0B04F00324476 /* AuthAPI.swift in Sources */,
+				EAC615A527B6C0C500B213BC /* AddFriendDelegate.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EAC6159627B6926000B213BC /* ProfileModalViewModel.swift in Sources */,
 				EA29141927B1096C00324476 /* EmailRegisterViewModel.swift in Sources */,
@@ -790,7 +840,6 @@
 				EA2913FE27AF6A4E00324476 /* UserDefaults+Ext.swift in Sources */,
 				EA29146927B4E19800324476 /* UIImage+Ext.swift in Sources */,
 				EA29143C27B339D700324476 /* SigninViewModel.swift in Sources */,
-				EA29141527B0DA5300324476 /* ModelUserResponse.swift in Sources */,
 				EA2913F627AC0F5900324476 /* String+Ext.swift in Sources */,
 				EA22D5362794E4FD00E1F39A /* ProfileTableViewCell.swift in Sources */,
 				EAE55602279FDE2300777EBF /* UICollectionView+Ext.swift in Sources */,
@@ -819,6 +868,7 @@
 				EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */,
 				EAE5560C27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift in Sources */,
 				EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */,
+				EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */,
 				EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */,
 				EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
@@ -834,6 +884,7 @@
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,
 				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
+				EAC615A727B6D43600B213BC /* ModelAddFriendRequest.swift in Sources */,
 				EA29145D27B3F77D00324476 /* CoreDataHelper.swift in Sources */,
 				EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */,
 				EA29140B27B0B14E00324476 /* ModelEmailVerifyResponse.swift in Sources */,
@@ -846,6 +897,7 @@
 				EA22D542279544E100E1F39A /* ModelProfile.swift in Sources */,
 				EAC6159927B692F100B213BC /* GNBDelegate.swift in Sources */,
 				EA22D55F2797FB6900E1F39A /* UILabel+Ext.swift in Sources */,
+				EAC615A327B6B67900B213BC /* AddFriendViewModel.swift in Sources */,
 				EAE555FD279E21E800777EBF /* PaddingLabel.swift in Sources */,
 				EA22D55D2797EA8000E1F39A /* ProfileCellDelegate.swift in Sources */,
 				EA29140F27B0B36400324476 /* ModelEmailVerifyRequest.swift in Sources */,

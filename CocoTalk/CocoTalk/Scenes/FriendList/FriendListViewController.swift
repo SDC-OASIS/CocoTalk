@@ -39,6 +39,10 @@ class FriendListViewController: UIViewController {
         fetch()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
     // MARK: - Helper
     private func fetch() {
         viewModel.fetch()
@@ -176,7 +180,11 @@ extension FriendListViewController: ProfileCellDelegate {
 // MARK: - GNBDelegate
 extension FriendListViewController: GNBDelegate {
     func tapAddFriend() {
-        print("friend")
+        let addFriendVC = AddFriendViewController()
+        addFriendVC.modalPresentationStyle = .overFullScreen
+        addFriendVC.modalTransitionStyle = .coverVertical
+        addFriendVC.delegate = self
+        self.present(addFriendVC, animated: true)
     }
     
     func tapSearch() {
@@ -185,5 +193,13 @@ extension FriendListViewController: GNBDelegate {
     
     func tapSetting() {
         print("setting")
+    }
+}
+
+
+extension FriendListViewController: AddFriendDelegate {
+    func didAddFriend() {
+        #warning("코어 데이터로 불러오기")
+        viewModel.getFriends()
     }
 }

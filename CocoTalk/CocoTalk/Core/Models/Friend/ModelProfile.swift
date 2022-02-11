@@ -30,13 +30,18 @@ struct ModelProfile: Codable {
     var isNewProfile: Bool?
 }
 
-
-#warning("주석 삭제")
-/*
-
- - 아이디로 친구 추가
- - 해당 친구의 전화번호는 알 수 없어야 맞다.
- - 우리 서비스는 전화번호 등록이 되기 때문에 전화번호가 리스폰스로 전달된다.
- - 연락처에 있는 사람이면 전화번호가 표시되고, 그렇지 않으면 전화번호는 표시되지 않는다.
- 
- */
+extension ModelProfile {
+    func decodeProfile() -> ModelProfile {
+        let decoder = JSONDecoder()
+        guard let jsonString = self.profile else {
+            return self
+        }
+        var profileData = self
+        let jsonData = Data(jsonString.utf8)
+        let decoded = try? decoder.decode(ModelProfileData.self, from: jsonData)
+        profileData.profileImageURL = decoded?.profile
+        profileData.bgImageURL = decoded?.background
+        profileData.bio = decoded?.message
+        return profileData
+    }
+}
