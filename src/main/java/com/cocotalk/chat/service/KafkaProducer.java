@@ -51,7 +51,7 @@ public class KafkaProducer {
         if(chatMessageRequest.getRoomType() == 0) {
             title = chatMessageRequest.getUsername();
         } else {
-            title = "["+chatMessageRequest.getRoomname()+"]\n" + chatMessageRequest.getUsername();
+            title = "["+chatMessageRequest.getRoomname()+"] " + chatMessageRequest.getUsername();
         }
         PushTopicDto pushTopicDto = PushTopicDto.builder()
                 .userIdList(chatMessageRequest.getReceiverIds())
