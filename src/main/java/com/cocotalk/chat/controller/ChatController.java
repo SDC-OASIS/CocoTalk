@@ -53,6 +53,7 @@ public class ChatController {
         log.info("[ChatController] 토픽 전송 : " + "/topic/" + roomId + "/message");
         // kafka에 메세지 전송
         kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
+        kafkaProducer.sendToPush(chatMessageRequest);
     }
 
     @MessageMapping("/{roomId}/message/invite")
