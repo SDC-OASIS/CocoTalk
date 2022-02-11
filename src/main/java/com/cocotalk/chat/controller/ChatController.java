@@ -68,14 +68,10 @@ public class ChatController {
                             @Payload ChatMessageRequest chatMessageRequest) {
         MessageVo<ChatMessageVo> messageVo = roomService.saveChatMessage(roomId, chatMessageRequest);
         List<Long> receiverIds = chatMessageRequest.getReceiverIds();
-        log.info("receiverIds : {}", receiverIds);
 
-        log.info("[ChatController] 토픽 전송 : " + "/topic/" + roomId + "/message");
         kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
 
-        int size = receiverIds.size();
         for (Long userId : receiverIds) {
-            log.info("receiver UserId : {}", userId);
             kafkaProducer.sendToChat("/topic/" + userId + "/message", messageVo);
         }
         kafkaProducer.sendToPush(chatMessageRequest);
