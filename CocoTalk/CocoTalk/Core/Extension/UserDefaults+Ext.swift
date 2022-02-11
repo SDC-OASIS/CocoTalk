@@ -9,6 +9,10 @@ import Foundation
 
 extension UserDefaults {
     
+    static func resetUserData() {
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.myData.rawValue)
+    }
+    
     static func resetSignupData() {
         // 회원가입 할 때 생기는 임시 프로필 이미지 삭제
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
