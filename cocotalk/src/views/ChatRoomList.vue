@@ -16,6 +16,8 @@
 				<!-- <div>
 					<ProfileImg :imgUrl="chat.img" width="50px" />
 				</div> -->
+				<button @click="deleteMessage(chat.room.id)">ddd</button>
+
 				<div style="dispaly: inline-block; text-align: center">
 					<div v-if="chat.room.members.length == 1">
 						<profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 50px" />
@@ -62,6 +64,7 @@
 
 <script>
 import { mapState } from "vuex";
+import axios from "@/utils/axios";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import ChatListInfo from "../components/chats/ChatListInfo.vue";
 
@@ -71,15 +74,24 @@ export default {
 		ProfileImg,
 		ChatListInfo,
 	},
+	data() {
+		return {
+			chats: [],
+		};
+	},
 	created() {
 		console.log("채팅목록입니다.");
 		console.log(this.$route.params);
 		this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
-		this.$store.dispatch("chat/getChatList");
+		// this.$store.dispatch("chat/getChatList");
+		this.getChatList();
+		this.chatListSubscribe();
 	},
+	mounted() {},
 	computed: {
+		...mapState("userStore", ["userInfo"]),
 		...mapState("chat", ["roomStatus"]),
-		...mapState("chat", ["chats"]),
+		...mapState("socket", ["stompChatListClient", "stompChatListConnected"]),
 	},
 	methods: {
 		openChatCreationModal() {
@@ -95,6 +107,50 @@ export default {
 		},
 		messageSentTime(time) {
 			return this.$moment(time).format("LT");
+		},
+		getChatList: function () {
+			axios.get("chat/rooms/list").then((res) => {
+				console.log("채팅방목록 가져오기");
+				const chatList = res.data.data;
+				console.log(chatList);
+				if (chatList) {
+					chatList.forEach((e) => {
+						e.room.messageBundleIds = e.room.messageBundleIds.slice(1, -1).split(", ");
+						e.room.members.forEach((e) => {
+							if (e.profile) {
+								e.profile = JSON.parse(e.profile);
+							}
+						});
+					});
+					this.chats = chatList;
+				}
+				console.log(chatList);
+			});
+		},
+		chatListSubscribe() {
+			this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/message`, (res) => {
+				console.log("구독으로 받은 메시지목록의 마지막 메세지 정보 입니다.");
+				console.log(res);
+			});
+			// 채팅목록 채팅방정보 채널 subscribe
+			this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
+				console.log("구독으로 받은 업데이트된 룸정보입니다.");
+				console.log(res);
+			});
+			// 채팅목록 새로 생섣된 채팅방정보 채널 subscribe
+			this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
+				console.log("구독으로 받은 룸정보입니다.");
+				console.log(res);
+			});
+		},
+		deleteMessage(id) {
+			console.log(id);
+			const idx = this.chats.findIndex(function (item) {
+				return item.room.id == id;
+			});
+			console.log(idx);
+			this.chats.splice(idx, 1);
+			console.log(this.chats);
 		},
 	},
 };
