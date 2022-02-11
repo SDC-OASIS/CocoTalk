@@ -10,9 +10,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PushMessage {
+public class PushTopicDto {
     @NotNull
-    private List<String> tokenList;
+    private List<Long> userIdList;
     @NotNull
     private String title;
     @NotNull
