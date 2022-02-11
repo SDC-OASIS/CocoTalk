@@ -17,6 +17,7 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
@@ -42,16 +43,18 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 
     @Override
     public GatewayFilter apply(Config config) {
-        return ((exchange, chain) -> {
+        return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            List<String> list = request.getHeaders().get("X-ACCESS-TOKEN");
+            List<String> list = request.getHeaders().get("X-ACCESS-TOKEN"); // (1) X-ACCESS-TOKEN 추출
             String token = Objects.requireNonNull(list).get(0);
+            Map<String, Object> payload = JwtUtils.getPayload(token, objectMapper); // (2) JWT Authenticaiton
 
-            Map<String, Object> payload = JwtUtils.getPayloadFromToken(token, objectMapper);
-
-            return chain.filter(exchange);
-        });
+            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                        log.info("userId inside X-ACCESS-TOKEN : {}", payload.get("userId"));
+                        log.info("fcmToken inside X-ACCESS-TOKEN : {}", payload.get("fcmToken"));
+                    }));
+        };
     }
 
     @Getter

@@ -23,6 +23,8 @@ import reactor.core.publisher.Mono;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -36,7 +38,7 @@ public class JwtUtils {
         this.jwtSecret = jwtSecret;
     }
 
-    public static Map<String, Object> getPayloadFromToken(String token, ObjectMapper objectMapper) {
+    public static Map<String, Object> getPayload(String token, ObjectMapper objectMapper) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecret))
                 .build()
@@ -51,7 +53,7 @@ public class JwtUtils {
     }
 
     public static class JwtWebExceptionHandler implements ErrorWebExceptionHandler {
-        private String serializeError(CustomError error, String message, Throwable ex) {
+        private String serializeError(CustomError error, String message) {
             CustomException exception = new CustomException(error, message);
             ErrorDetails details = new ErrorDetails(exception);
 
@@ -71,7 +73,7 @@ public class JwtUtils {
 
             String message = "";
             if (ex.getClass() == NullPointerException.class) {
-                message = "x-access-token 헤더가 설정되지 않았습니다.";
+                message = "X-ACCESS-TOKEN 헤더가 설정되지 않았습니다.";
             }
             else if (ex.getClass() == ExpiredJwtException.class) {
                 message = "만료된 토큰입니다.";
@@ -87,7 +89,7 @@ public class JwtUtils {
             log.error(ex.getCause().getMessage());
             ex.printStackTrace();
 
-            byte[] bytes = serializeError(CustomError.JWT_AUTHENTICATION, message, ex).getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = serializeError(CustomError.JWT_AUTHENTICATION, message).getBytes(StandardCharsets.UTF_8);
             ServerHttpResponse response = exchange.getResponse();
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
             DataBuffer buffer = response.bufferFactory().wrap(bytes);

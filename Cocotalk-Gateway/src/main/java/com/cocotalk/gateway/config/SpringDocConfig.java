@@ -13,7 +13,7 @@ public class SpringDocConfig {
     @Bean
     public CommandLineRunner openApiGroups(
             RouteDefinitionLocator locator,
-            SwaggerUiConfigParameters swaggerUiParameters) {
+            SwaggerUiConfigParameters swaggerUiParameters) { // springdoc open-api 라우터 설정
         return args -> locator
                 .getRouteDefinitions().collectList().block()
                 .stream()
