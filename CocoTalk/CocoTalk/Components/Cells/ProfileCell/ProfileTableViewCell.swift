@@ -66,11 +66,11 @@ class ProfileTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")
+        
     }
 
     // MARK: - Helper
     private func setUI() {
-        stackView.addArrangedSubview(lblName)
         uiView.addSubview(ivProfile)
         uiView.addSubview(stackView)
         contentView.addSubview(uiView)
@@ -103,6 +103,8 @@ class ProfileTableViewCell: UITableViewCell {
             ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
         }
         
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        stackView.addArrangedSubview(lblName)
         if let _bio = data.bio {
             lblBio.text = _bio
             stackView.addArrangedSubview(lblBio)
@@ -110,5 +112,6 @@ class ProfileTableViewCell: UITableViewCell {
             lblBio.isHidden = true
         }
         lblName.text = data.username ?? ""
+        uiView.setNeedsLayout()
     }
 }
