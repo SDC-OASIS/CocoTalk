@@ -28,7 +28,7 @@ const friend = {
 				// 친구가 1명이라도 존재하는 경우 STRING jSON 파싱
 				if (friends.length) {
 					friends.forEach((e) => {
-						e.profile = JSON.parse(e.profile);
+						e.friend.profile = JSON.parse(e.friend.profile);
 						console.log("친구프로필데이터 파싱완료");
 					});
 				}

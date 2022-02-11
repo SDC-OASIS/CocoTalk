@@ -22,11 +22,11 @@
 			<div class="friend-list-container">
 				<div class="friend-cnt">친구 - {{ friendsCnt }}</div>
 				<div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
-					<div @click="openProfileModal(friend)">
-						<profile-img :imgUrl="friend.profile.profile" width="50px" />
+					<div @click="openProfileModal(friend.friend)">
+						<profile-img :imgUrl="friend.friend.profile.profile" width="50px" />
 					</div>
 					<!-- {{ friend }} -->
-					<friend-list-user-info :userInfo="friend" />
+					<friend-list-user-info :userInfo="friend.friend" />
 				</div>
 			</div>
 			{{ roomStatus }}

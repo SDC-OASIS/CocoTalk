@@ -22,7 +22,7 @@
 		<div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages">
 			<div class="chat-messages-container">
 				<div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
-					{{ chatMessage }}
+					<!-- {{ chatMessage }} -->
 					<!-- 상대가 한 말 -->
 					<div v-if="chatMessage.userId != userInfo.id" class="row">
 						<!-- <ProfileImg :imgUrl="chatMessage.userInfo.profile" width="40px" /> -->
@@ -80,7 +80,6 @@ export default {
 			roomInfo: {},
 			message: "",
 			roomMemberIds: [],
-			// stompClientChat: Object,
 		};
 	},
 	components: {
@@ -113,8 +112,8 @@ export default {
 	watch: {
 		"$route.params.roomId": function () {
 			console.log("채팅을 시작합니다.");
-			// vuex에 마지막 페이지 방문 저장
 			this.stompChatRoomClient.disconnect();
+			// vuex에 마지막 페이지 방문 저장
 			this.$store.dispatch(
 				"chat/changePage",
 				{
@@ -159,28 +158,16 @@ export default {
 			this.componentChat += 1;
 		},
 		getChat() {
-			console.log("채팅 불러오기");
+			console.log("채팅내역 불러오기");
 			axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
-				// axios.get("http://138.2.68.7:8080/rooms/list").then((res) => {
 				console.log("채팅내역 가져오기");
 				let chatData = res.data.data;
-				console.log(chatData);
 				this.chatMessages = chatData.messageList;
 				this.roomInfo = chatData.room;
 				let members = chatData.room.members;
 				members.forEach((e) => {
 					this.roomMemberIds.push(e.userId);
 				});
-				console.table(this.roomMemberIds);
-				// receiverIds
-				// chatList.forEach((e) => {
-				// 	if (e.img == "string" || e.img == "img" || e.img == "" || e.img == null) {
-				// 		delete e["img"];
-				// 	}
-				// 	e.roomname = e.name;
-				// 	e.messageBundleIds = e.messageBundleIds.slice(1, -1).split(", ");
-				// });
-				// context.commit("SET_CHATLIST", res.data.data);
 			});
 		},
 		chatRoomConnect: function () {
@@ -196,12 +183,9 @@ export default {
 					// 채팅 메세지 채널 subscribe
 					this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
 						console.log("구독으로 받은 메시지 입니다.");
-						console.log(res);
-						console.log(JSON.parse(res.body));
 						// 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
 						const receivedMessage = JSON.parse(res.body);
 						this.chatMessages.push(receivedMessage.message);
-						// console.log("채팅목록");
 						console.log(receivedMessage);
 						// 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
 						const payload = {
@@ -212,7 +196,7 @@ export default {
 					// 채팅 메세지 룸정보 업데이트 채널 subscribe
 					this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/room`, (res) => {
 						console.log("구독으로 받은 채팅방 정보입니다.");
-						console.log(res);
+						this.roomInfo = JSON.parse(res.body);
 					});
 					// 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
 					// const msg = {
@@ -239,15 +223,16 @@ export default {
 			if (this.stompChatRoomClient && this.stompChatRoomClient.connected) {
 				const msg = {
 					type: 0,
-					roomId: this.roomStatus.roomId,
-					userId: this.userInfo.id,
-					messageBundleId: this.chatInfo.nextMessageBundleId,
 					content: this.message,
+					roomId: this.roomInfo.roomId,
+					roomType: this.roomInfo.type,
+					roomname: this.roomInfo.roomname,
+					userId: this.userInfo.id,
+					username: this.userInfo.username,
 					receiverIds: this.roomMemberIds,
+					messageBundleId: this.chatInfo.nextMessageBundleId,
 				};
-				this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg), (res) => {
-					console.log("메세지 보내기", res);
-				});
+				this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
 			}
 		},
 	},
