@@ -523,6 +523,18 @@ https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=taz0505&logN
 
 
 
+### 말줄임표
+
+https://nh0404.tistory.com/43
+
+### 시간표시 한국기준
+
+https://inma.tistory.com/113
+
+https://uxgjs.tistory.com/188
+
+https://momentjs.com/
+
 ## 6. Template
 
 ### 반복문
@@ -948,6 +960,16 @@ chatMessages() {
 https://www.youtube.com/watch?v=DHvZLI7Db8E
 
 
+
+### 2. 메세지 목록 자료형에 대한 고민
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Keyed_collections
+
+https://velog.io/@devmoonsh/JavaScript-%EB%B0%B0%EC%97%B4%EC%97%90-%EA%B0%92-%EC%B6%94%EC%B6%9C-%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0
+
+https://sansanji.tistory.com/entry/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%B0%B0%EC%97%B4-%ED%8A%B9%EC%A0%95-%EC%9A%94%EC%86%8C-%EC%82%AD%EC%A0%9C-javascript-array-delete-object
+
+https://dongyeopblog.wordpress.com/2020/12/08/javascript-%EA%B0%9D%EC%B2%B4%EB%A1%9C-%EA%B5%AC%EC%84%B1%EB%90%9C-%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0/
 
 
 

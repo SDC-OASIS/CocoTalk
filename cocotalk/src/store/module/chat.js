@@ -8,11 +8,7 @@ const chat = {
 	namespaced: true,
 	plugins: [createPersistedState()],
 	state: {
-		roomStatus: {
-			mainPage: "",
-			chatPage: "chat",
-			roomId: "111",
-		},
+		roomStatus: {},
 		chats: [],
 		chatInfo: {
 			nextMessageBundleId: "",
