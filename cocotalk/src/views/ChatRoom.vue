@@ -112,7 +112,13 @@ export default {
 	watch: {
 		"$route.params.roomId": function () {
 			console.log("채팅을 시작합니다.");
+			const headers = {
+				action: "leave",
+			};
 			this.stompChatRoomClient.disconnect();
+			this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/message`);
+			this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/room`);
+			this.stompChatRoomClient.disconnect(() => {}, headers);
 			// vuex에 마지막 페이지 방문 저장
 			this.$store.dispatch(
 				"chat/changePage",
@@ -150,7 +156,12 @@ export default {
 		},
 		exitChat() {
 			console.log("채팅방 닫기");
-			this.stompChatRoomClient.disconnect();
+			const headers = {
+				action: "leave",
+			};
+			this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/message`);
+			this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/room`);
+			this.stompChatRoomClient.disconnect(() => {}, headers);
 			this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
 		},
 		forceRerender() {
@@ -158,6 +169,7 @@ export default {
 			this.componentChat += 1;
 		},
 		getChat() {
+			this.roomMemberIds = [];
 			console.log("채팅내역 불러오기");
 			axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
 				console.log("채팅내역 가져오기");
@@ -224,7 +236,7 @@ export default {
 				const msg = {
 					type: 0,
 					content: this.message,
-					roomId: this.roomInfo.roomId,
+					roomId: this.roomStatus.id,
 					roomType: this.roomInfo.type,
 					roomname: this.roomInfo.roomname,
 					userId: this.userInfo.id,
