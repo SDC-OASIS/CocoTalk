@@ -46,7 +46,7 @@ public class UserController {
      */
     @Operation(summary = "유저 전체 조회")
     @GetMapping
-    public ResponseEntity<CustomResponse<List<UserVo>>> findAll() {
+    public ResponseEntity<CustomResponse<List<UserVo>>> findAll(@Parameter(hidden = true) User user) {
         List<UserVo> data = userService.findAll();
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -85,7 +85,7 @@ public class UserController {
      * @param cocotalkId 코코톡 id
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
-    @Operation(summary = "유저 코코톡 Id로 조회")
+    @Operation(summary = "유저 코코톡 Id(cid)로 조회")
     @GetMapping("/cid/{cocotalkId}")
     public ResponseEntity<CustomResponse<UserVo>> findByCid(@Parameter(hidden = true) User user, @PathVariable String cocotalkId) {
         UserVo data = userService.findByCid(cocotalkId);

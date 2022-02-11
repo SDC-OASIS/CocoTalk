@@ -63,7 +63,7 @@ public class FriendController {
      * @param friendsAddRequest 친구로 추가되는 유저 id를 포함한 요청 모델
      * @return ResponseEntity<CustomResponse<FriendVo>> 추가된 친구 정보가 데이터에 포함됩니다.
      */
-    @Operation(summary = "친구 여러명으로 추가")
+    @Operation(summary = "PK 리스트로 친구 여러명 추가")
     @PostMapping("/list")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<List<FriendVo>>> addList(
@@ -79,7 +79,7 @@ public class FriendController {
      * @param fromUser 친구 조회를 요청하는 유저
      * @return ResponseEntity<CustomResponse<List<FriendInfoVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다.
      */
-    @Operation(summary = "친구 조회")
+    @Operation(summary = "친구 전체 조회")
     @GetMapping
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<List<FriendInfoVo>>> find(@Parameter(hidden = true) User fromUser) {
@@ -93,7 +93,7 @@ public class FriendController {
      * @param fromUser 친구 조회를 요청하는 유저
      * @return ResponseEntity<CustomResponse<List<FriendInfoVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다.
      */
-    @Operation(summary = "친구 코코톡 Id로 조회")
+    @Operation(summary = "친구 코코톡 Id(cid)로 조회")
     @GetMapping("/cid/{cocotalkId}")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<FriendInfoVo>> findByCid(@Parameter(hidden = true) User fromUser,
