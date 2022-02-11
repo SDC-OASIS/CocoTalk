@@ -84,7 +84,8 @@ class AuthRepository {
                                       phone: signupData.phone,
                                       email: signupData.email,
                                       status: signupData.status,
-                                      profile: signupData.profile)
+                                      profile: signupData.profileImageUrl,
+                                      profileThumbnail: signupData.profileThumbnailUrl)
         return provider.rx.request(.signup(data))
             .retry(3)
             .asObservable()

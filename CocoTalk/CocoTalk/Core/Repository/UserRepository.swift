@@ -14,7 +14,8 @@ import RxMoya
 import SwiftKeychainWrapper
 
 class UserRepository: BaseRepository {
-    typealias ItemType = ModelProfile
+    /// ModelFriend
+    typealias ItemType = ModelFriend
     
     private let provider: MoyaProvider<UserAPI>
     
@@ -33,7 +34,7 @@ class UserRepository: BaseRepository {
         return ModelProfile(id: -1, username: "병학", bio: "안녕하세요 ✌️")
     }
     
-    func fetchMyProfileFromServer(with token: String) ->  Observable<ItemType?> {
+    func fetchMyProfileFromServer(with token: String) ->  Observable<ModelProfile?> {
         return provider.rx.request(.fetchMyProfile(token))
             .retry(3)
             .asObservable()
@@ -49,7 +50,7 @@ class UserRepository: BaseRepository {
         return provider.rx.request(.fetchFriends(token))
             .retry(3)
             .asObservable()
-            .map { try JSONDecoder().decode(APIResult_1<[ModelProfile]>.self, from: $0.data) }
+            .map { try JSONDecoder().decode(APIResult_1<[ModelFriend]>.self, from: $0.data) }
             .map { $0.data }
             .catch { error in
                 print(error)

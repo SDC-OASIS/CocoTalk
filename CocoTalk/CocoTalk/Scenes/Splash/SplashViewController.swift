@@ -58,12 +58,6 @@ class SplashViewController: UIViewController {
         switchRoot(to: root)
     }
     
-    private func switchRoot(to root: UIViewController) {
-        setNeedsStatusBarAppearanceUpdate()
-        view.window?.rootViewController = root
-        view.window?.makeKeyAndVisible()
-    }
-    
     private func bind() {
         viewModel.dependency.shouldSignout
             .subscribe(onNext: { [weak self] shouldSignout in

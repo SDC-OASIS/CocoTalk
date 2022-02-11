@@ -36,8 +36,7 @@ class FriendListViewModel {
         let myProfile = userRepsository.fetchMyProfile()
         output.myProfile.accept(myProfile)
         
-        var friends = userRepsository.initFetch()
-        friends = handleFriends(friends)
+        let friends = handleFriends(userRepsository.initFetch())
         output.friends.accept(friends)
     }
     
@@ -58,8 +57,17 @@ class FriendListViewModel {
     // MARK: - Helper
     /// handleFriends
     /// JSON string으로 전달된 profile을 디코딩한다.
-    func handleFriends(_ friends: [ModelProfile]) -> [ModelProfile] {
-        return friends.map { decodeProfile($0) }
+    func handleFriends(_ friends: [ModelFriend]) -> [ModelProfile] {
+        return friends
+            .filter {
+                if let _ = $0.friend {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            .filter{ $0.type == 0 }
+            .map { decodeProfile($0.friend!) }
     }
     
     func decodeProfile(_ profile: ModelProfile) -> ModelProfile {
@@ -111,8 +119,7 @@ extension FriendListViewModel {
                       var friends = response else {
                     return
                 }
-                friends = self.handleFriends(friends)
-                self.output.friends.accept(friends)
+                self.output.friends.accept(self.handleFriends(friends))
             }).disposed(by: bag)
         #warning("비교 후 업데이트된 프로필 표시하기")
     }

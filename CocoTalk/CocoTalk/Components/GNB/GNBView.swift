@@ -1,13 +1,12 @@
 //
-//  ContactHelper.swift
+//  GNBView.swift
 //  CocoTalk
 //
 //  Created by byunghak on 2022/02/09.
 //
 
-import Foundation
+import UIKit
 
-class ContactHelper {
-    
+class GNBView: UIView {
     
 }

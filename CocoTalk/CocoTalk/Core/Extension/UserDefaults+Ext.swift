@@ -21,6 +21,15 @@ extension UserDefaults {
                     print(e.localizedDescription)
                 }
             }
+            
+            if !signupData.profileThumbnailUrl.isEmpty {
+                let fileManager = FileManager.default
+                do {
+                    try fileManager.removeItem(at: URL(string: signupData.profileThumbnailUrl)!)
+                } catch let e {
+                    print(e.localizedDescription)
+                }
+            }
         }
         UserDefaults.standard.removeObject(forKey: UserDefaultsKey.signupData.rawValue)
     }

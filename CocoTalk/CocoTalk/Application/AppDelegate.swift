@@ -11,6 +11,7 @@ import Firebase
 import FirebaseMessaging
 import IQKeyboardManagerSwift
 import SwiftKeychainWrapper
+import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

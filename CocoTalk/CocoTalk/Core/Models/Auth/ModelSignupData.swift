@@ -10,6 +10,7 @@ import Foundation
 struct ModelSignupData: Codable {
     var userName: String = ""
     var profileImageUrl: String = ""
+    var profileThumbnailUrl: String = ""
     var email: String = ""
     var phone: String = ""
     var cid: String = ""

@@ -61,7 +61,6 @@ class ProfileTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-
     }
 
     override func prepareForReuse() {
@@ -110,7 +109,6 @@ class ProfileTableViewCell: UITableViewCell {
         } else {
             lblBio.isHidden = true
         }
-        
         lblName.text = data.username ?? ""
     }
 }

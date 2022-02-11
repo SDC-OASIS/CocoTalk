@@ -70,7 +70,6 @@
 		EA29142E27B20A1400324476 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = EA29142D27B20A1400324476 /* FirebaseAuth */; };
 		EA29143027B20A1400324476 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EA29142F27B20A1400324476 /* FirebaseMessaging */; };
 		EA29143227B20B6900324476 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA29143127B20B6900324476 /* GoogleService-Info.plist */; };
-		EA29143427B2289C00324476 /* ModelPostFCMTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143327B2289C00324476 /* ModelPostFCMTokenRequest.swift */; };
 		EA29143727B2290C00324476 /* APIResult_Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143627B2290C00324476 /* APIResult_Device.swift */; };
 		EA29143927B2942900324476 /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143827B2942800324476 /* SplashViewModel.swift */; };
 		EA29143C27B339D700324476 /* SigninViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29143B27B339D700324476 /* SigninViewModel.swift */; };
@@ -82,6 +81,11 @@
 		EA29145427B3D4A000324476 /* ModelRoomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145327B3D4A000324476 /* ModelRoomList.swift */; };
 		EA29145627B3D75400324476 /* RoomAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145527B3D75400324476 /* RoomAPI.swift */; };
 		EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145727B3DE1500324476 /* ModelChatMessage.swift */; };
+		EA29145B27B3E22A00324476 /* GNBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145A27B3E22A00324476 /* GNBView.swift */; };
+		EA29145D27B3F77D00324476 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145C27B3F77D00324476 /* CoreDataHelper.swift */; };
+		EA29146927B4E19800324476 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29146827B4E19800324476 /* UIImage+Ext.swift */; };
+		EA29146C27B5157A00324476 /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29146B27B5157A00324476 /* MoreViewController.swift */; };
+		EA29146E27B51A9A00324476 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29146D27B51A9A00324476 /* UIViewController+Ext.swift */; };
 		EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3751278BCCDE007957EB /* SigninViewController.swift */; };
 		EA3F3755278BD00D007957EB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3754278BD00D007957EB /* RxCocoa */; };
 		EA3F3757278BD00D007957EB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EA3F3756278BD00D007957EB /* RxRelay */; };
@@ -96,6 +100,7 @@
 		EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
+		EAC6159027B62E7C00B213BC /* ModelFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6158F27B62E7C00B213BC /* ModelFriend.swift */; };
 		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
 		EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A7279A981A00777EBF /* MessageEnum.swift */; };
 		EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A9279A986C00777EBF /* ModelMessage.swift */; };
@@ -167,7 +172,6 @@
 		EA29142727B1612700324476 /* KeyChainWrapper+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainWrapper+Ext.swift"; sourceTree = "<group>"; };
 		EA29142927B2076300324476 /* CocoTalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CocoTalk.entitlements; sourceTree = "<group>"; };
 		EA29143127B20B6900324476 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		EA29143327B2289C00324476 /* ModelPostFCMTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPostFCMTokenRequest.swift; sourceTree = "<group>"; };
 		EA29143627B2290C00324476 /* APIResult_Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult_Device.swift; sourceTree = "<group>"; };
 		EA29143827B2942800324476 /* SplashViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
 		EA29143B27B339D700324476 /* SigninViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewModel.swift; sourceTree = "<group>"; };
@@ -179,6 +183,11 @@
 		EA29145327B3D4A000324476 /* ModelRoomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRoomList.swift; sourceTree = "<group>"; };
 		EA29145527B3D75400324476 /* RoomAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomAPI.swift; sourceTree = "<group>"; };
 		EA29145727B3DE1500324476 /* ModelChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelChatMessage.swift; sourceTree = "<group>"; };
+		EA29145A27B3E22A00324476 /* GNBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBView.swift; sourceTree = "<group>"; };
+		EA29145C27B3F77D00324476 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		EA29146827B4E19800324476 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
+		EA29146B27B5157A00324476 /* MoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
+		EA29146D27B51A9A00324476 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 		EA3F3751278BCCDE007957EB /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		EA3F375D278BF472007957EB /* CheckBoxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxCell.swift; sourceTree = "<group>"; };
 		EA3F375F278BFCCD007957EB /* TermViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermViewController.swift; sourceTree = "<group>"; };
@@ -187,6 +196,7 @@
 		EA3F376E278C61E9007957EB /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		EA3F3771278C623F007957EB /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
 		EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
+		EAC6158F27B62E7C00B213BC /* ModelFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFriend.swift; sourceTree = "<group>"; };
 		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		EAE555A7279A981A00777EBF /* MessageEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEnum.swift; sourceTree = "<group>"; };
 		EAE555A9279A986C00777EBF /* ModelMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelMessage.swift; sourceTree = "<group>"; };
@@ -259,6 +269,7 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				EA29146A27B5155B00324476 /* More */,
 				EA22D53C2794F7D400E1F39A /* Root */,
 				EA22D5392794F76D00E1F39A /* FriendList */,
 				EA22D54D27967BF700E1F39A /* ChatRoomList */,
@@ -282,10 +293,10 @@
 		EA14D5082786BF4D00EDC892 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				EA29146727B3F8FC00324476 /* CoreData */,
 				EAE555A6279A980C00777EBF /* Enum */,
 				EAA6A3D02787E0D6001A7E46 /* Helpers */,
 				EA2913DB27AA305200324476 /* Repository */,
-				EAA6A3CF2787C3FB001A7E46 /* CoreData */,
 				EA14D50A2786C44800EDC892 /* Networking */,
 				EA14D50C2786C4AA00EDC892 /* Models */,
 				EA14D50B2786C45000EDC892 /* Extension */,
@@ -324,6 +335,8 @@
 				EA29140C27B0B16F00324476 /* URL+Ext.swift */,
 				EA29142727B1612700324476 /* KeyChainWrapper+Ext.swift */,
 				EA29144C27B3C23A00324476 /* Encodable+Ext.swift */,
+				EA29146827B4E19800324476 /* UIImage+Ext.swift */,
+				EA29146D27B51A9A00324476 /* UIViewController+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -343,12 +356,12 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EA29145927B3E21800324476 /* GNB */,
 				EAE555FB279E21C800777EBF /* PaddingLabel */,
 				EAE7F3BA278D0B0A002EB808 /* Modal */,
 				EAE575C4278BB5B600D959A0 /* Cells */,
 				EAE575C6278BB61F00D959A0 /* ChatRoomTextFieldView */,
 				EAE575C5278BB5F600D959A0 /* ProfileImageView */,
-				EAE575C2278BB46100D959A0 /* SquareButtonView */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -443,7 +456,6 @@
 				EA29141427B0DA5300324476 /* ModelUserResponse.swift */,
 				EA29141A27B10C0100324476 /* ModelIssueEmailCodeRequest.swift */,
 				EA29141C27B10C2E00324476 /* ModelIssueEmailCodeResponse.swift */,
-				EA29143327B2289C00324476 /* ModelPostFCMTokenRequest.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -472,6 +484,7 @@
 			isa = PBXGroup;
 			children = (
 				EA22D541279544E100E1F39A /* ModelProfile.swift */,
+				EAC6158F27B62E7C00B213BC /* ModelFriend.swift */,
 			);
 			path = Friend;
 			sourceTree = "<group>";
@@ -483,6 +496,30 @@
 				EA29145327B3D4A000324476 /* ModelRoomList.swift */,
 			);
 			path = ChatRoom;
+			sourceTree = "<group>";
+		};
+		EA29145927B3E21800324476 /* GNB */ = {
+			isa = PBXGroup;
+			children = (
+				EA29145A27B3E22A00324476 /* GNBView.swift */,
+			);
+			path = GNB;
+			sourceTree = "<group>";
+		};
+		EA29146727B3F8FC00324476 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				EA14D4F82786B16C00EDC892 /* CocoTalk.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		EA29146A27B5155B00324476 /* More */ = {
+			isa = PBXGroup;
+			children = (
+				EA29146B27B5157A00324476 /* MoreViewController.swift */,
+			);
+			path = More;
 			sourceTree = "<group>";
 		};
 		EA3F375A278BD068007957EB /* Splash */ = {
@@ -513,19 +550,12 @@
 			path = EmailAuth;
 			sourceTree = "<group>";
 		};
-		EAA6A3CF2787C3FB001A7E46 /* CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				EA14D4F82786B16C00EDC892 /* CocoTalk.xcdatamodeld */,
-			);
-			path = CoreData;
-			sourceTree = "<group>";
-		};
 		EAA6A3D02787E0D6001A7E46 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				EA29143D27B37C4700324476 /* WebSocketHelper.swift */,
 				EA29143F27B37C5A00324476 /* ContactHelper.swift */,
+				EA29145C27B3F77D00324476 /* CoreDataHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -566,13 +596,6 @@
 				EAE575C7278BB9E200D959A0 /* Signin */,
 			);
 			path = Auth;
-			sourceTree = "<group>";
-		};
-		EAE575C2278BB46100D959A0 /* SquareButtonView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SquareButtonView;
 			sourceTree = "<group>";
 		};
 		EAE575C3278BB49B00D959A0 /* CheckBoxCell */ = {
@@ -776,6 +799,7 @@
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
 				EA29145627B3D75400324476 /* RoomAPI.swift in Sources */,
 				EA2913FE27AF6A4E00324476 /* UserDefaults+Ext.swift in Sources */,
+				EA29146927B4E19800324476 /* UIImage+Ext.swift in Sources */,
 				EA29143C27B339D700324476 /* SigninViewModel.swift in Sources */,
 				EA29141527B0DA5300324476 /* ModelUserResponse.swift in Sources */,
 				EA2913F627AC0F5900324476 /* String+Ext.swift in Sources */,
@@ -794,12 +818,14 @@
 				EA29141727B0F35900324476 /* APIResult_1.swift in Sources */,
 				EA22D54C27963D0F00E1F39A /* ProfileModalViewModel.swift in Sources */,
 				EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */,
-				EA29143427B2289C00324476 /* ModelPostFCMTokenRequest.swift in Sources */,
+				EA29146C27B5157A00324476 /* MoreViewController.swift in Sources */,
 				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
 				EA29143727B2290C00324476 /* APIResult_Device.swift in Sources */,
 				EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */,
+				EA29146E27B51A9A00324476 /* UIViewController+Ext.swift in Sources */,
 				EA29140927B0B13E00324476 /* ModelSignupResponse.swift in Sources */,
 				EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */,
+				EAC6159027B62E7C00B213BC /* ModelFriend.swift in Sources */,
 				EA22D5492796388500E1F39A /* ProfileModalViewController.swift in Sources */,
 				EA29141327B0B40800324476 /* APIResult_0.swift in Sources */,
 				EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */,
@@ -816,10 +842,12 @@
 				EA29145427B3D4A000324476 /* ModelRoomList.swift in Sources */,
 				EA29145227B3D49800324476 /* ModelRoom.swift in Sources */,
 				EA29141F27B1375300324476 /* ModelSignupRequest.swift in Sources */,
+				EA29145B27B3E22A00324476 /* GNBView.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,
 				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
 				EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */,
+				EA29145D27B3F77D00324476 /* CoreDataHelper.swift in Sources */,
 				EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */,
 				EA29140B27B0B14E00324476 /* ModelEmailVerifyResponse.swift in Sources */,
 				EA29143E27B37C4800324476 /* WebSocketHelper.swift in Sources */,
@@ -981,6 +1009,9 @@
 				DEVELOPMENT_TEAM = 92NGUT4BRA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하도록 허용버튼을 눌러주세요";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진 앨범에 접근하도록 허용버튼을 눌러주세요.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 앨범에 접근하도록 허용버튼을 눌러주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -1011,6 +1042,9 @@
 				DEVELOPMENT_TEAM = 92NGUT4BRA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CocoTalk/Resources/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하도록 허용버튼을 눌러주세요";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진 앨범에 접근하도록 허용버튼을 눌러주세요.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 앨범에 접근하도록 허용버튼을 눌러주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

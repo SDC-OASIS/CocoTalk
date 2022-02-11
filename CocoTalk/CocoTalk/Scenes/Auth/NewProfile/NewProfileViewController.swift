@@ -144,7 +144,6 @@ class NewProfileViewController: UIViewController {
         self.present(phpicker, animated: true)
     }
     
-    #warning("회원가입 api 호출 후 회원가입 완료하면 이메일 인증 화면으로 넘기기")
     private func pushEmailRegisterVC() {
         guard let username = self.textFieldUsername.text,
               !username.isEmpty  else {
@@ -157,15 +156,13 @@ class NewProfileViewController: UIViewController {
         }
 
         var profileImageUrl: String?
-        if let data = ivProfile.image?.pngData() {
-            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let url = documents.appendingPathComponent("profile.png")
-            do {
-                try data.write(to: url)
-                profileImageUrl = url.absoluteString
-            } catch {
-                print("Unable to Write Data to Disk (\(error))")
-            }
+        if let resizedImage = ivProfile.image?.resized(to: 1024)?.resized() {
+            profileImageUrl = resizedImage.save(fileName: "coco_profileImage")
+        }
+        
+        var profileThumbnailUrl: String?
+        if let resizedImage = ivProfile.image?.resized(to: 512) {
+            profileThumbnailUrl = resizedImage.save(fileName: "coco_profileThumbnail")
         }
         
         
@@ -174,6 +171,7 @@ class NewProfileViewController: UIViewController {
             signupData.userName = username
             signupData.nickname = username
             signupData.profileImageUrl = profileImageUrl ?? ""
+            signupData.profileThumbnailUrl = profileThumbnailUrl ?? ""
             UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
         }
         

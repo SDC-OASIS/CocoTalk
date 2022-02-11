@@ -68,6 +68,8 @@ class PhoneNumberViewController: UIViewController {
         guard let phoneNumber = textFieldPhoneNumber.text else {
             return
         }
+        
+        #warning("SMS 인증 보내기")
     
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
            var signupData = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {

@@ -17,4 +17,5 @@ struct ModelSignupRequest: Codable {
     var email: String = ""
     var status: Int = 0
     var profile: String = "" // not required
+    var profileThumbnail: String = ""
 }

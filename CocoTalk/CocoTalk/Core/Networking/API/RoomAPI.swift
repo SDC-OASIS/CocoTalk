@@ -20,7 +20,7 @@ extension RoomAPI: TargetType {
     var path: String {
         switch self {
         case .fetchRooms(_):
-            return "/chat/rooms"
+            return "/chat/rooms/list"
         }
     }
     

@@ -14,8 +14,8 @@ struct ModelRoom: Codable {
     /// 0=갠톡, 1=단톡, 2=오픈톡
     var type: Int?
     var members: [RoomMember]?
-    var messageBundleIds: [String]?
-    var noticeIds: [String]?
+    var messageBundleIds: String?
+    var noticeIds: String?
     
     var isPinned: Bool?
     var isSilent: Bool?
@@ -23,7 +23,7 @@ struct ModelRoom: Codable {
 
 struct RoomMember: Codable {
     var userId: Int?
-    var userName: String?
+    var username: String?
     var profile: String?
     var joining: Bool?
     var joinedAt: String?
