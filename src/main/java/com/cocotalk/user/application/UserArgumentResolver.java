@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private final UserRepository userRepository;
 
-    public static final CustomException INVALID_USERID =
+    public static final CustomException INVALID_USER_ID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
 
     @Override
@@ -42,6 +42,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         if (!StringUtils.hasLength(token)) throw new CustomException(CustomError.NOT_LOGIN);
         TokenPayload payload = JwtUtils.getPayload();
         Long userId = payload.getUserId();
-        return userRepository.findById(userId).orElseThrow(() -> INVALID_USERID); // (2) JWT 인가
+        return userRepository.findById(userId).orElseThrow(() -> INVALID_USER_ID); // (2) JWT 인가
     }
 }

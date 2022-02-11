@@ -1,5 +1,6 @@
 package com.cocotalk.user.service;
 
+import com.cocotalk.user.domain.FriendType;
 import com.cocotalk.user.domain.entity.Friend;
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.FriendInfoVo;
@@ -47,8 +48,11 @@ public class FriendService {
 
     @Transactional
     public FriendVo add(User fromUser, FriendAddRequest request){
+        // (1) 친구 존재 확인
         if(!friendRepository.existsByFromUserIdAndToUserId(fromUser.getId(), request.getToUid())) {
+            // (2) 친구 유저 정보 조회
             User toUser = userRepository.findById(request.getToUid()).orElseThrow(() -> INVALID_USER_ID);
+            // (3) 친구 생성 후 저장
             Friend friend = friendRepository.save(Friend.builder()
                     .fromUser(fromUser)
                     .toUser(toUser)
@@ -56,18 +60,22 @@ public class FriendService {
                     .build());
             return friendMapper.toVo(friend);
         } else {
+            // (4) 친구 이미 존재한다면 예외 반환
             throw FRIEND_ALREADY_EXIST;
         }
     }
 
     @Transactional
     public List<FriendVo> addList(User fromUser, FriendsAddRequest request){
+        // (1) 추가하려는 친구들의 userId 추출
         List<Long> toUidList = request.getToUidList()
                 .stream()
-                .distinct() // 중복 입력 필터링
-                .filter(toUid -> !friendRepository.existsByFromUserIdAndToUserId(fromUser.getId(), toUid)) // 중복 삽입 방지
+                .distinct() // (2) 중복 입력 제거
+                .filter(toUid -> !friendRepository.existsByFromUserIdAndToUserId(fromUser.getId(), toUid)) // (3) 중복 삽입 방지
                 .collect(Collectors.toList());
+        // (4) 추가하려는 친구들의 유저 정보 조회 
         List<User> toUserList = userRepository.findAllById(toUidList);
+        // (5) 친구 리스트 생성 후 저장
         List<Friend> friendList = toUserList.stream()
                 .map(toUser -> Friend.builder()
                         .fromUser(fromUser)
@@ -82,16 +90,18 @@ public class FriendService {
 
     @Transactional(readOnly = true)
     public FriendInfoVo findByCid(User fromUser, String cid) {
+        // (1) 자신과 동일한 cid를 가지고 있는지 확인
         if(fromUser.getCid().equals(cid)) {
             UserVo userVo = userMapper.toVo(userRepository.findById(fromUser.getId()).orElse(EMPTY_USER));
-            return FriendInfoVo.builder().friend(userVo).status(3).build();
+            return FriendInfoVo.builder().friend(userVo).type(FriendType.YOURSELF.ordinal()).build();
         } else {
             User toUser = userRepository.findByCid(cid).orElse(EMPTY_USER);
             Friend friend = friendRepository.findByFromUserIdAndToUserId(fromUser.getId(), toUser.getId()).orElse(EMPTY_FRIEND);
+            // (2) 이미 존재하는 친구인지 확인
             if(friend.getId() == null) {
-                return FriendInfoVo.builder().friend(userMapper.toVo(toUser)).status(2).build();
+                return FriendInfoVo.builder().friend(userMapper.toVo(toUser)).type(FriendType.PASSIVE.ordinal()).build();
             } else {
-                return FriendInfoVo.builder().friend(userMapper.toVo(toUser)).status(0).build();
+                return FriendInfoVo.builder().friend(userMapper.toVo(toUser)).type(FriendType.ACTIVE.ordinal()).build();
             }
         }
     }
@@ -99,26 +109,29 @@ public class FriendService {
 
     @Transactional(readOnly = true)
     public List<FriendInfoVo> findAll(User fromUser) {
-        // 내가 친구 추가한 사람들
+        // (1) 내가 친구 추가한 사람들
         List<FriendInfoVo> myFriends = friendRepository.findByFromUserIdAndHiddenIsFalse(fromUser.getId()).stream()
                 .map(friend -> userMapper.toVo(friend.getToUser()))
                 .map(userVo -> FriendInfoVo.builder()
                         .friend(userVo)
-                        .status(0)
+                        .type(FriendType.ACTIVE.ordinal())
                         .build())
                 .collect(Collectors.toList());
 
-        // 나를 친구 추가한 사람들
+        // (2) 나를 친구 추가한 사람들
         List<FriendInfoVo> addedMe = friendRepository.findByToUserId(fromUser.getId()).stream() //
                 .map(friend -> userMapper.toVo(friend.getFromUser()))
                 .map(userVo -> FriendInfoVo.builder()
                         .friend(userVo)
-                        .status(1)
+                        .type(FriendType.PASSIVE.ordinal())
                         .build())
                 .collect(Collectors.toList());
 
+        // (3) 서로 같이 추가한 친구 제거 -> 친구 리스트 합치기
         addedMe.removeAll(myFriends);
         myFriends.addAll(addedMe);
+
+        // (5) 이름 별로 정렬
         myFriends.sort(orderByUserName);
 
         return myFriends;

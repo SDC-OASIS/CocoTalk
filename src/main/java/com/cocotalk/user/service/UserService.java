@@ -68,7 +68,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserVo> findByPhones(List<String> phones) {
         return phones.stream()
-                .map(phone -> userRepository.findByPhone(phone).orElse(EMPTY_USER))
+                .map(phone -> userRepository.findByPhone(phone).orElse(EMPTY_USER)) // 존재하지 않는 User일땐 빈 User 객체 삽입
                 .map(userMapper::toVo)
                 .collect(Collectors.toList());
     }

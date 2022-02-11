@@ -38,7 +38,7 @@ public class JwtUtils {
         return request.getHeader("X-REFRESH-TOKEN");
     }
 
-    public static TokenPayload getPayload() {
+    public static TokenPayload getPayload() { // JWT Parsing
         String accessToken = getAccessToken();
         try {
             Claims claims = Jwts.parserBuilder()

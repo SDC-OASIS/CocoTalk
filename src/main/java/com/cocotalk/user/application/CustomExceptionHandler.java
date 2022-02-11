@@ -22,7 +22,7 @@ import static com.cocotalk.user.exception.CustomError.BAD_SQL;
 @RestControllerAdvice
 public class CustomExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse<?>> ChatServerException(CustomException e) {
+    public ResponseEntity<ErrorResponse<?>> handle(CustomException e) {
         CustomError error = e.getError();
         ErrorDetails details = new ErrorDetails(e);
 
@@ -31,7 +31,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse<?>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         CustomError error = BAD_REQUEST;
         String desc = error.getDesc() + " : " + bindingResult.getAllErrors().get(0).getDefaultMessage();
@@ -42,7 +42,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(SQLException.class)
-    public ResponseEntity<ErrorResponse<?>> sqlException(SQLException e) {
+    public ResponseEntity<ErrorResponse<?>> handleSqlException(SQLException e) {
         e.printStackTrace();
         CustomError error = BAD_SQL;
         ErrorDetails details = new ErrorDetails(error, e);
@@ -51,7 +51,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<ErrorResponse<?>> fileUploadException(FileUploadException e) {
+    public ResponseEntity<ErrorResponse<?>> handleFileUploadException(FileUploadException e) {
         e.printStackTrace();
         ErrorDetails details = new ErrorDetails(CustomError.BAD_REQUEST, e);
         log.error("FileUploadException : " + e.getMessage());
