@@ -41,7 +41,7 @@ public class ChatController {
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
             long userId = roomVo.getMembers().get(i).getUserId();
-            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
 
@@ -50,17 +50,9 @@ public class ChatController {
                             @Payload ChatMessageRequest chatMessageRequest) {
 
         MessageVo<ChatMessageVo> messageVo = roomService.saveChatMessage(roomId, chatMessageRequest);
-        // simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageVo);
         log.info("[ChatController] 토픽 전송 : " + "/topic/" + roomId + "/message");
-
         // kafka에 메세지 전송
-        ChatTopicDto chatTopicDto = ChatTopicDto.builder()
-                .roomId(roomId.toString())
-                .messageVo(messageVo)
-                .build();
-        log.info("[ChatController] 변환 : " + chatTopicDto.getRoomId());
-
-        kafkaProducer.sendChat(chatTopicDto);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
     }
 
     @MessageMapping("/{roomId}/message/invite")
@@ -71,12 +63,12 @@ public class ChatController {
         MessageVo<InviteMessageVo> inviteMessageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
 
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", inviteMessageVo);
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomVo);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/message", inviteMessageVo);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
             long userId = roomVo.getMembers().get(i).getUserId();
-            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
 
@@ -88,12 +80,12 @@ public class ChatController {
         MessageVo<ChatMessageVo> messageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
 
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageVo);
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomVo);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
             long userId = roomVo.getMembers().get(i).getUserId();
-            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
 
@@ -104,12 +96,12 @@ public class ChatController {
         MessageVo<ChatMessageVo> messageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
 
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/message", messageVo);
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomVo);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
             long userId = roomVo.getMembers().get(i).getUserId();
-            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
 }

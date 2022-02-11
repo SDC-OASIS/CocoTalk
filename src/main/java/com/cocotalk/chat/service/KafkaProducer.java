@@ -1,6 +1,5 @@
 package com.cocotalk.chat.service;
 
-import com.cocotalk.chat.domain.vo.MessageVo;
 import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,12 +23,16 @@ public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper mapper;
 
-    public void sendChat(ChatTopicDto chatTopicDto) {
+
+    public void sendToChat(String send, Object payload) {
+        ChatTopicDto chatTopicDto = ChatTopicDto.builder()
+                .send(send)
+                .payload(payload)
+                .build();
         try {
             kafkaTemplate.send(chatTopic, mapper.writeValueAsString(chatTopicDto));
             log.info(String.format("Produce message ("+chatTopic+") : %s", mapper.writeValueAsString(chatTopicDto)));
         } catch (JsonProcessingException e) {
-
             log.error("[KafkaProducer] : json 변환 실패");
             e.printStackTrace();
         }

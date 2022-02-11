@@ -1,8 +1,6 @@
 package com.cocotalk.chat.dto.kafka;
 
-import com.cocotalk.chat.domain.vo.MessageVo;
 import lombok.*;
-import org.bson.types.ObjectId;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,9 +9,9 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatTopicDto {
+public class ChatTopicDto<T> {
     @NotNull
-    private String roomId;
+    private String send; // 웹소켓 pub 주소
     @NotNull
-    private MessageVo messageVo;
+    private T payload; // 보낼 내용
 }
