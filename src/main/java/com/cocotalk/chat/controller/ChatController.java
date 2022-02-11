@@ -52,7 +52,7 @@ public class ChatController {
         RoomVo roomVo = roomService.create(roomRequest); // (1) 메시지 수신 후 방 생성
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) { // (2) 방 생성 정보를 채팅방에 포함된 멤버들에게 pub
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
@@ -68,13 +68,14 @@ public class ChatController {
                             @Payload ChatMessageRequest chatMessageRequest) {
         MessageVo<ChatMessageVo> messageVo = roomService.saveChatMessage(roomId, chatMessageRequest);
         List<Long> receiverIds = chatMessageRequest.getReceiverIds();
+        log.info("receiverIds : {}", receiverIds);
 
         log.info("[ChatController] 토픽 전송 : " + "/topic/" + roomId + "/message");
         kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
 
         int size = receiverIds.size();
-        for(int i = 0; i < size; ++i) {
-            long userId = receiverIds.get(i);
+        for (Long userId : receiverIds) {
+            log.info("receiver UserId : {}", userId);
             kafkaProducer.sendToChat("/topic/" + userId + "/message", messageVo);
         }
         kafkaProducer.sendToPush(chatMessageRequest);
@@ -99,7 +100,7 @@ public class ChatController {
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
@@ -122,7 +123,7 @@ public class ChatController {
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
@@ -144,7 +145,7 @@ public class ChatController {
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
