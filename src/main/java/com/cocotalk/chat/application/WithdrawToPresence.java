@@ -24,7 +24,7 @@ public class WithdrawToPresence implements ApplicationListener<ContextClosedEven
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public void onApplicationEvent(ContextClosedEvent event) {
+    public void onApplicationEvent(ContextClosedEvent event) { // 서버 종료시 자신의 퍼블릭 IP:Port 번호를 프리젠스 서버에게 WebSocket으로 전송
         String publicIp = restTemplate.getForObject("http://checkip.amazonaws.com/", String.class); // public ip
         publicIp = publicIp.replaceAll("\n", "");
         String chatServerURL = publicIp + ":" + port + "/stomp";

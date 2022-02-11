@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class MessageVo<T> {
     private T message;
-    private BundleInfoVo bundleInfo;
+    private BundleInfoVo bundleInfo; // 메시지의 번들 정보
 }

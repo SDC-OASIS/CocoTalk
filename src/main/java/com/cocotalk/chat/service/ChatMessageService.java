@@ -35,19 +35,19 @@ public class ChatMessageService {
     }
 
     public MessageVo<ChatMessageVo> createChatMessage(ChatMessageRequest request) {
-        ChatMessage chatMessage = messageMapper.toEntity(request);
+        ChatMessage chatMessage = messageMapper.toEntity(request); // (1) 요청 모델 -> 엔티티로 매핑
         chatMessage.setSentAt(LocalDateTime.now());
 
         ChatMessageVo chatMessageVo = messageMapper.toVo(chatMessageRepository.save(chatMessage)); // (2) 메시지 저장
         MessageBundleVo oldMessageBundleVo = messageBundleService.find(request.getMessageBundleId()); // (3) 기존 메시지 번들 조회
         int count = messageBundleService.saveMessageId(oldMessageBundleVo, chatMessageVo).getCount(); // (4) 기존 메시지 번들에 메시지 Id 저장
         BundleInfoVo bundleInfoVo;
-        if (count >= messageBundleLimit) {
-            MessageBundleVo newMessageBundleVo = messageBundleService.create(request.getRoomId()); // (5) 카운트가 넘어갔다면 새로운 메시지 번들 생성
+        if (count >= messageBundleLimit) { // (5) 카운트가 넘어갔다면 새로운 메시지 번들 생성
+            MessageBundleVo newMessageBundleVo = messageBundleService.create(request.getRoomId());
             bundleInfoVo = BundleInfoVo.builder()
                     .currentMessageBundleCount(count)
                     .currentMessageBundleId(oldMessageBundleVo.getId())
-                    .nextMessageBundleId(newMessageBundleVo.getId())
+                    .nextMessageBundleId(newMessageBundleVo.getId()) // (6) 다음 메시지 저장에 사용될 메시지 번들 Id 담기
                     .build();
         } else {
             bundleInfoVo = BundleInfoVo.builder()
@@ -87,12 +87,12 @@ public class ChatMessageService {
 
     public List<ChatMessageVo> findMessagePage(ObjectId roomId, ObjectId bundleId, int count, int size) {
         List<ObjectId> messageIds = new ArrayList<>();
-        if(count >= size) {
-            int start = count - size;
-            messageIds.addAll(messageBundleService.findSlice(bundleId, start, size).getMessageIds()); ;
+        if(count >= size) { // (1) 메시지 번들 카운트가 페이징 사이즈보다 크다면
+            int start = count - size; // (2) bundleId 메시지 번들에서 start부터 start + size까지 slice
+            messageIds.addAll(messageBundleService.findSlice(bundleId, start, size).getMessageIds());
         } else {
-            int diff = size - count; // diff = 10
-            int start = messageBundleLimit - diff; // start = 0
+            int diff = size - count; // (3) 페이징 사이즈가 메시지 번들 카운트보다 크다면
+            int start = messageBundleLimit - diff; // (4) 그 직전 번들에서 차이만큼 더 가져온다
             MessageBundleVo beforeBundleVo = messageBundleService.findBeforeBundleAndSlice(roomId, bundleId, start, diff);
             if(beforeBundleVo.getMessageIds() != null) {
                 messageIds.addAll(beforeBundleVo.getMessageIds());

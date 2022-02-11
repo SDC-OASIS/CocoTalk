@@ -23,5 +23,5 @@ public class MessageBundleVo {
 
     private int count;
 
-    private List<ObjectId> messageIds;
+    private List<ObjectId> messageIds; // 이 메시지 번들이 가지고 있는 메시지들의 ObjectId
 }

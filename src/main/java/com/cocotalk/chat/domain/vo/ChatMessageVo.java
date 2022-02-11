@@ -22,7 +22,7 @@ public class ChatMessageVo {
     private ObjectId roomId;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId messageBundleId;
+    private ObjectId messageBundleId; // 이 메시지가 저장된 메시지 번들의 ObjectId
 
     private Long userId;
 

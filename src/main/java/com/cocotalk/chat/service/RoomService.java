@@ -64,8 +64,10 @@ public class RoomService {
     public RoomVo create(RoomRequest request) { // C
         LocalDateTime now = LocalDateTime.now();
 
-        List<RoomMemberRequest> members = request.getMembers().stream().distinct().collect(Collectors.toList()); // 중복 제거
+        // (1) 채팅방 멤버 중복 제거
+        List<RoomMemberRequest> members = request.getMembers().stream().distinct().collect(Collectors.toList());
 
+        // (2) 채팅방 생성시 멤버는 2명 이상이어야 함
         if (members.size() >= 2) {
             List<RoomMember> roomMembers = request.getMembers().stream()
                     .map(member -> RoomMember.builder()
@@ -89,6 +91,7 @@ public class RoomService {
                     .noticeIds(new ArrayList<>())
                     .build());
 
+            // (3) 방 생성시 메시지 번들도 함께 생성
             MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
             createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
             return roomMapper.toVo(roomRepository.save(createdRoom));
@@ -97,49 +100,7 @@ public class RoomService {
         }
     }
 
-    public MessageWithRoomVo<ChatMessageVo> create(MessageWithRoomRequest request) { // C
-        ChatMessageRequest chatMessageRequest = request.getChatMessageRequest();
-        RoomRequest roomRequest = request.getRoomRequest();
-
-        LocalDateTime now = LocalDateTime.now();
-
-        List<RoomMemberRequest> members = roomRequest.getMembers().stream().distinct().collect(Collectors.toList()); // 중복 제거
-
-        if (members.size() >= 2) {
-            List<RoomMember> roomMembers = roomRequest.getMembers().stream()
-                    .map(member -> RoomMember.builder()
-                                .userId(member.getUserId())
-                                .username(member.getUsername())
-                                .profile(member.getProfile())
-                                .joinedAt(now)
-                                .enteredAt(now)
-                                .joining(true)
-                                .awayAt(now)
-                                .leftAt(now)
-                                .build())
-                    .collect(Collectors.toList());
-
-            Room createdRoom = roomRepository.save(Room.builder()
-                    .roomname(roomRequest.getRoomname())
-                    .img(roomRequest.getImg())
-                    .type(roomRequest.getType())
-                    .members(roomMembers)
-                    .messageBundleIds(new ArrayList<>())
-                    .noticeIds(new ArrayList<>())
-                    .build());
-
-            MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
-            createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
-
-            RoomVo roomVo = roomMapper.toVo(roomRepository.save(createdRoom));
-            MessageVo<ChatMessageVo> messageVo = saveChatMessage(roomVo.getId(), chatMessageRequest);
-            return new MessageWithRoomVo<>(messageVo, roomVo);
-        } else {
-            throw WRONG_MEMBER_SIZE;
-        }
-    }
-
-    public RoomVo save(RoomVo roomVo){
+    public RoomVo save(RoomVo roomVo) {
         Room room = roomRepository.save(roomMapper.toEntity(roomVo));
         return roomMapper.toVo(room);
     }
@@ -147,9 +108,12 @@ public class RoomService {
     public MessageVo<ChatMessageVo> saveChatMessage(ObjectId roomId, ChatMessageRequest request) {
         log.info("chatMessageRequest : {}", request.toString());
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request); // (1) 메시지 저장
-        BundleInfoVo bundleInfoVo = messageVo.getBundleInfo(); // (6) 이 메시지가 저장된 번들 Id와 다음 메시지가 저장할 번들 Id가 들어있는 Vo
+        // (2) 윗라인에서 저장된 메시지의 Id가 들어있는 메시지 번들 Id와 다음 메시지가 저장될 번들 Id가 들어있는 Vo
+        BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
+        // (3) 새로운 메시지 번들이 생성되었을 때
         if(!bundleInfoVo.getCurrentMessageBundleId().equals(bundleInfoVo.getNextMessageBundleId())) {
             RoomVo roomVo = this.findById(roomId);
+            // (4) 채팅방에 메시지 번들 추가 후 저장
             roomVo.getMessageBundleIds().add(bundleInfoVo.getNextMessageBundleId());
             this.save(roomVo);
         }
@@ -158,7 +122,7 @@ public class RoomService {
 
     public MessageWithRoomVo<InviteMessageVo> saveInviteMessage(ObjectId roomId, InviteMessageRequest request) {
         log.info("inviteMessageRequest : {}", request.toString());
-        MessageVo<InviteMessageVo> messageVo = chatMessageService.createInviteMessage(request);
+        MessageVo<InviteMessageVo> messageVo = chatMessageService.createInviteMessage(request); // (1) 초대 메시지 저장
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
 
         RoomVo roomVo = this.findById(roomId);
@@ -170,8 +134,9 @@ public class RoomService {
 
         LocalDateTime now = LocalDateTime.now();
 
+        // (2) 초대 요청 모델로 채팅방 멤버 생성
         List<RoomMember> invitees = messageVo.getMessage().getInvitees().stream()
-                .distinct() // 중복 입력 제거
+                .distinct() // (3) 중복 입력 제거
                 .map(member -> RoomMember.builder()
                         .userId(member.getUserId())
                         .username(member.getUsername())
@@ -182,9 +147,10 @@ public class RoomService {
                         .awayAt(now)
                         .leftAt(now)
                         .build())
-                .filter(invitee -> !members.contains(invitee)) // 기존 멤버와 중복 제거
+                .filter(invitee -> !members.contains(invitee)) // (4) 기존 멤버와 중복 제거
                 .collect(Collectors.toList());
-        
+
+        // (5) 초대 전 후 멤버 수 확인 -> 불일치시 Exception
         int estimateSize = members.size() + request.getInvitees().size();
         int amountSize = members.size() + invitees.size();
         if(estimateSize != amountSize) {
@@ -194,7 +160,7 @@ public class RoomService {
                 throw EXCEEDED_ROOM_MEMBER;
             }
         }
-        
+
         members.addAll(invitees);
 
         roomVo = this.save(roomVo); // member 업데이트 때문에 필수
@@ -206,7 +172,7 @@ public class RoomService {
         log.info("leaveMessageRequest : {}", request.toString());
         boolean saveRoom = false;
 
-        MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
+        MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request); // (1) 나가기 메시지 저장
         ChatMessageVo leaveMessageVo = messageVo.getMessage();
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
 
@@ -217,17 +183,17 @@ public class RoomService {
             saveRoom = true;
         }
 
-        RoomMember leaver = this.findMember(roomVo, leaveMessageVo.getUserId());
+        RoomMember leaver = this.findMember(roomVo, leaveMessageVo.getUserId()); // (2) 나가는 채팅방 멤버 찾기
 
         List<RoomMember> members = roomVo.getMembers();
         members.remove(leaver);
 
-        if(roomVo.getType() == RoomType.PRIVATE.ordinal()) {
-            leaver.setJoining(false);
+        if(roomVo.getType() == RoomType.PRIVATE.ordinal()) { // 1:1 채팅방에서는 members에서 삭제하는 것이 아니라
+            leaver.setJoining(false); // joining flag를 바꿔줘서 리스트에 뜨지 않게만 한다.
             members.add(leaver);
             saveRoom = true;
-        } else {
-            if (members.size() == 0) this.deleteById(roomId);
+        } else { // 단체 채팅방에서는 members에서 삭제한다.
+            if (members.size() == 0) this.deleteById(roomId); // member 수가 0이된 단톡방은 삭제한다.
             else saveRoom = true;
         }
 
@@ -243,6 +209,7 @@ public class RoomService {
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
         Room room = this.find(roomId);
+        // (1) Awake 메시지는 1:1 채팅방에서 나간 사람이 있을 경우 joining flag를 true로 바꿔줍니다.
         room.setMembers(room.getMembers().stream()
                 .map(roomMember -> {
                     roomMember.setJoinedAt(now);
@@ -268,7 +235,7 @@ public class RoomService {
     }
 
     public RoomWithMessageListVo<ChatMessageVo> findRoomAndMessage(ObjectId roomId,
-                                     @RequestParam int count) {
+                                     @RequestParam int count) { // room 정보와 첫 메시지 페이지를 함께 찾아줍니다
         RoomVo roomVo = roomMapper.toVo(this.find(roomId));
         List<ObjectId> messageBundleIds = roomVo.getMessageBundleIds();
         List<ChatMessageVo> chatMessageVos = chatMessageService.findMessagePage(
@@ -279,7 +246,7 @@ public class RoomService {
         return new RoomWithMessageListVo<>(roomVo, chatMessageVos);
     }
 
-    public List<RoomVo> findAllJoining(UserVo userVo) {
+    public List<RoomVo> findAllJoining(UserVo userVo) { // 참가중인 모든 방 정보를 조회합니다.
         return roomRepository.findJoiningRoom(userVo.getId()).stream()
                 .map(roomMapper::toVo)
                 .collect(Collectors.toList());
@@ -315,7 +282,7 @@ public class RoomService {
 
                     // Pagination을 제한적으로 사용하기 때문에 (전부 읽었을 수도 있고, 일정 갯수 넘어가면 탈출) 따로 limit 쿼리를 쓸 필요는 없어 보인다.
                     while(amountUnread < messageBundleLimit && mbIdx >= 0) {
-                        // 현재 메시지 번들에서 읽지 않은 메시지 수 계산
+                        // (8) 현재 메시지 번들에서 읽지 않은 메시지 수 계산
                         long partUnread = messageBundleVo.getMessageIds().parallelStream()
                                 .map(chatMessageService::find)
                                 .filter(chatMessage -> chatMessage.getSentAt().isAfter(me.getAwayAt())) // 인자보다 미래시간일때 true 반환
@@ -324,9 +291,9 @@ public class RoomService {
                             break; // 더 이상 안 읽은 메시지가 없음
                         }
                         else {
-                            amountUnread += partUnread;
+                            amountUnread += partUnread; // (9)이 메시지 번들에서 읽지 않은 메시지 수 더하기
                             if(amountUnread >= messageBundleLimit) amountUnread = messageBundleLimit;
-                            messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx--)); // 이전 메시지 번들로 갱신
+                            messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx--)); // (10) 이전 메시지 번들로 변경
                         }
                     }
 
@@ -349,7 +316,7 @@ public class RoomService {
                 .orElseThrow(() -> INVALID_ROOM_MEMBER);
     } // Service 내부에서만 사용
 
-    public RoomVo findPrivate(UserVo userVo, Long userId) {
+    public RoomVo findPrivate(UserVo userVo, Long userId) { // 1:1 채팅방 조회
         if(userVo.getId().equals(userId)) throw TARGET_YOURSELF;
         Room room = roomRepository.findPrivate(userVo.getId(), userId).orElse(emptyRoom);
         return roomMapper.toVo(room);
@@ -362,7 +329,7 @@ public class RoomService {
         return roomMapper.toVo(roomRepository.save(newRoom));
     }
 
-    public RoomVo saveEnteredAt(ObjectId roomId, Long userId) {
+    public RoomVo saveEnteredAt(ObjectId roomId, Long userId) { // 유저가 채팅방 소켓에 Connect된 시간 업데이트
         RoomVo roomVo = this.findById(roomId);
         RoomMember me = this.findMember(roomVo, userId);
         List<RoomMember> members = roomVo.getMembers();
@@ -373,7 +340,7 @@ public class RoomService {
         return this.save(roomVo);
     }
 
-    public RoomVo saveAwayAt(ObjectId roomId, Long userId) {
+    public RoomVo saveAwayAt(ObjectId roomId, Long userId) { // 유저가 채팅방 소켓에 Disconnect된 시간 업데이트
         RoomVo roomVo = this.findById(roomId);
         RoomMember me = this.findMember(roomVo, userId);
         List<RoomMember> members = roomVo.getMembers();
@@ -384,7 +351,7 @@ public class RoomService {
         return this.save(roomVo);
     }
 
-    public RoomVo saveLeftAt(ObjectId roomId, Long userId) {
+    public RoomVo saveLeftAt(ObjectId roomId, Long userId) { // 유저가 채팅방에서 나간 시간 업데이트
         RoomVo roomVo = this.findById(roomId);
         RoomMember me = this.findMember(roomVo, userId);
         List<RoomMember> members = roomVo.getMembers();

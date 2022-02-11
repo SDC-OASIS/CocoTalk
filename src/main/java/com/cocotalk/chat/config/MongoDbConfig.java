@@ -56,15 +56,10 @@ public class MongoDbConfig extends AbstractMongoClientConfiguration {
         log.info("active profile for url : {}", profile);
 
         String userInfo = "";
-        // String conParam = "";
 
         if (profile.equals("dev") || profile.equals("prod")) {
-
             userInfo = getUsername()
                     .concat(":").concat(getPassword()).concat("@");
-
-            // conParam = "?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
-
         }
         String mongoUrl = String.format("mongodb://%s%s:%s/%s", userInfo, getHost(), getPort(), getDatabase());
 

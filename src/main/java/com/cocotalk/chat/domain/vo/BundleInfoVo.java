@@ -13,11 +13,11 @@ import org.bson.types.ObjectId;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BundleInfoVo {
-    private int currentMessageBundleCount;
+    private int currentMessageBundleCount; // 현재 메시지 번들에 쌓인 메시지 Id의 갯수
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId currentMessageBundleId;
+    private ObjectId currentMessageBundleId; // 현재 이 메시지가 저장된 메시지 번들의 Id
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId nextMessageBundleId;
+    private ObjectId nextMessageBundleId; // 다음 메시지가 저장될 메시지 번들의 Id
 }

@@ -20,18 +20,12 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // /example은 WebSocket 또는 SockJS Client가 웹 소켓 핸드셰이크 커넥션을 생성할 경로이다.
-
-        // endpoint를 /stomp로 하고, AllowedOrigins를 "*"로 하면
-        // 페이지에서 GET /info 404 에러가 발생한다. 그래서 아래와 같이 2개의 계층으로
-        // 분리하고 origins를 개발 도메인으로 변경하니 잘 동작하였다.
         registry.addEndpoint("/stomp")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
                 // .setHeartbeatTime(1000);
     }
 
-    /*어플리케이션 내부에서 사용할 path를 지정할 수 있음*/
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // STOMP 메시지의 "destination' 헤더는 @Controller 객체의 @MessageMapping 메서드로 라우팅 된다.

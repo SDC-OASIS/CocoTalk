@@ -3,7 +3,6 @@ package com.cocotalk.chat.controller;
 import com.cocotalk.chat.utils.WebSocketUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +19,4 @@ public class WebSocketController {
         //웹소켓 메세지 보내기
         websocketUtil.send(value);
     }
-
-//    @MessageMapping()
 }

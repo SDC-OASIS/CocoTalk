@@ -25,7 +25,7 @@ public class RegisterToPresence implements ApplicationRunner {
 
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(ApplicationArguments args) { // 서버 기동시 자신의 퍼블릭 IP:Port 번호를 프리젠스 서버에게 WebSocket으로 전송
         String publicIp = restTemplate.getForObject("http://checkip.amazonaws.com/", String.class); // public ip
         publicIp = publicIp.replaceAll("\n", "");
         String chatServerURL = publicIp + ":" + port + "/stomp";
