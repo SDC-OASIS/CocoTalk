@@ -4,7 +4,7 @@ import com.cocotalk.push.dto.device.*;
 import com.cocotalk.push.dto.common.ClientType;
 import com.cocotalk.push.entity.Device;
 import com.cocotalk.push.repository.DeviceRepository;
-import com.cocotalk.push.support.PushException;
+import com.cocotalk.push.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +55,7 @@ public class DeviceService {
                                 .type(clientType)
                                 .loggedinAt(LocalDateTime.now())
                                 .build())
-                ).doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);});
+                ).doOnError((e) -> {throw new CustomException(DATABASE_ERROR, e);});
     }
 
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {
@@ -65,7 +65,7 @@ public class DeviceService {
                 .doOnNext(target -> {
                     deviceRepository.delete(target).subscribe();
                 })
-                .doOnError((e) -> {throw new PushException(DATABASE_ERROR, e);})
+                .doOnError((e) -> {throw new CustomException(DATABASE_ERROR, e);})
                 .subscribe();
     }
 

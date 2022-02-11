@@ -2,7 +2,7 @@ package com.cocotalk.push.service;
 
 import com.cocotalk.push.dto.fcm.FCMMessage;
 import com.cocotalk.push.entity.Device;
-import com.cocotalk.push.support.PushException;
+import com.cocotalk.push.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class FCMService {
                 .map(target -> makeMessage(target.getToken(), title, body))
                 .doOnError((e) ->{
                     System.err.println("Error : " + e.getMessage());
-                    throw new PushException(BAD_REQUEST, e);
+                    throw new CustomException(BAD_REQUEST, e);
                 });
 
         fcmMessageFlux.subscribe(fcmTokenMessage -> webClient
@@ -69,8 +69,7 @@ public class FCMService {
                 .bodyToFlux(String.class)
                 .subscribe(
                         res -> log.info("{}", res),
-                        (e) -> {e.printStackTrace();}
-//                        (e) -> {throw new PushException(SUBSCRIBE_ERROR,e);}
+                        (e) -> {throw new CustomException(SUBSCRIBE_ERROR,e);}
                 )
         );
         log.info("end: " + (System.currentTimeMillis() - startTime) + "sec");
