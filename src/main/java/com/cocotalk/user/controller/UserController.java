@@ -74,7 +74,7 @@ public class UserController {
      */
     @Operation(summary = "유저 id로 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<UserVo>> findById(@PathVariable Long id) {
+    public ResponseEntity<CustomResponse<UserVo>> findById(@Parameter(hidden = true) User user, @PathVariable Long id) {
         UserVo data = userService.findById(id);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -85,9 +85,9 @@ public class UserController {
      * @param cocotalkId 코코톡 id
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
-    @Operation(summary = "유저 cid로 조회")
+    @Operation(summary = "유저 코코톡 Id로 조회")
     @GetMapping("/cid/{cocotalkId}")
-    public ResponseEntity<CustomResponse<UserVo>> findByCid(@PathVariable String cocotalkId) {
+    public ResponseEntity<CustomResponse<UserVo>> findByCid(@Parameter(hidden = true) User user, @PathVariable String cocotalkId) {
         UserVo data = userService.findByCid(cocotalkId);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -100,7 +100,7 @@ public class UserController {
      */
     @Operation(summary = "유저 email로 조회")
     @GetMapping("/email/{address}")
-    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@PathVariable String address) {
+    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@Parameter(hidden = true) User user, @PathVariable String address) {
         UserVo data = userService.findByEmail(address);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -113,7 +113,7 @@ public class UserController {
      */
     @Operation(summary = "유저 연락처로 조회")
     @GetMapping("/phone")
-    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(@RequestParam List<String> phones) {
+    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(@Parameter(hidden = true) User user, @RequestParam List<String> phones) {
         List<UserVo> data = userService.findByPhones(phones);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -189,5 +189,4 @@ public class UserController {
         UserVo data = userService.updateProfileMsg(user, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
-
 }

@@ -1,7 +1,7 @@
 package com.cocotalk.user.controller;
 
 import com.cocotalk.user.domain.entity.User;
-import com.cocotalk.user.domain.vo.FriendListVo;
+import com.cocotalk.user.domain.vo.FriendInfoVo;
 import com.cocotalk.user.domain.vo.FriendVo;
 import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.FriendAddRequest;
@@ -77,13 +77,28 @@ public class FriendController {
      * 친구 조회 API [GET] /friends
      *
      * @param fromUser 친구 조회를 요청하는 유저
-     * @return ResponseEntity<CustomResponse<List<FriendListVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다.
+     * @return ResponseEntity<CustomResponse<List<FriendInfoVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다.
      */
     @Operation(summary = "친구 조회")
     @GetMapping
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<List<FriendListVo>>> find(@Parameter(hidden = true) User fromUser) {
-        List<FriendListVo> data = friendService.findAll(fromUser);
+    public ResponseEntity<CustomResponse<List<FriendInfoVo>>> find(@Parameter(hidden = true) User fromUser) {
+        List<FriendInfoVo> data = friendService.findAll(fromUser);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
+    }
+
+    /**
+     * 친구 조회 API [GET] /friends/cid/{cocotalkId}
+     *
+     * @param fromUser 친구 조회를 요청하는 유저
+     * @return ResponseEntity<CustomResponse<List<FriendInfoVo>> 자신의 친구 정보 리스트 데이터에 포함됩니다.
+     */
+    @Operation(summary = "친구 코코톡 Id로 조회")
+    @GetMapping("/cid/{cocotalkId}")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<FriendInfoVo>> findByCid(@Parameter(hidden = true) User fromUser,
+                                                                  @PathVariable String cocotalkId) {
+        FriendInfoVo data = friendService.findByCid(fromUser, cocotalkId);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
