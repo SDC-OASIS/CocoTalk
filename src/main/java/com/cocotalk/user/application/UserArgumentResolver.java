@@ -38,10 +38,10 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
             WebDataBinderFactory binderFactory
     ){
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = req.getHeader("X-ACCESS-TOKEN");
+        String token = req.getHeader("X-ACCESS-TOKEN"); // (1) X-ACCESS-TOKEN 추출
         if (!StringUtils.hasLength(token)) throw new CustomException(CustomError.NOT_LOGIN);
         TokenPayload payload = JwtUtils.getPayload();
         Long userId = payload.getUserId();
-        return userRepository.findById(userId).orElseThrow(() -> INVALID_USERID);
+        return userRepository.findById(userId).orElseThrow(() -> INVALID_USERID); // (2) JWT 인가
     }
 }

@@ -29,12 +29,12 @@ public class Friend {
     @ManyToOne
     @JoinColumn(name = "from_uid")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User fromUser;
+    private User fromUser; // 친구 추가한 유저
 
     @ManyToOne
     @JoinColumn(name = "to_uid")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User toUser;
+    private User toUser; // 친구 추가된 유저
 
     @NotNull
     private boolean hidden;

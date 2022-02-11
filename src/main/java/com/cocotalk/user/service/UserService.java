@@ -3,22 +3,19 @@ package com.cocotalk.user.service;
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.ProfilePayload;
 import com.cocotalk.user.domain.vo.UserVo;
+import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.request.profile.BgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
-import com.cocotalk.user.dto.request.UserModifyRequest;
-import com.cocotalk.user.repository.UserCustomRepositoryImpl;
+import com.cocotalk.user.repository.FriendRepository;
 import com.cocotalk.user.repository.UserRepository;
 import com.cocotalk.user.utils.mapper.UserMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,11 +26,12 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-    private final UserCustomRepositoryImpl userCustomRepository;
+    private final FriendRepository friendRepository;
     private final S3Service s3Service;
-    private final ObjectMapper mapper;
 
-    public static final CustomException INVALID_USERID =
+    public static final CustomException INVALID_USER_ID =
+            new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
+    public static final CustomException CANNOT_FIND_SELF =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
 
     public static final User EMPTY_USER = new User();
@@ -51,7 +49,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserVo findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> INVALID_USERID);
+        User user = userRepository.findById(id).orElseThrow(() -> INVALID_USER_ID);
         return userMapper.toVo(user);
     }
 
@@ -65,11 +63,6 @@ public class UserService {
     public UserVo findByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(EMPTY_USER);
         return userMapper.toVo(user);
-    }
-
-    @Transactional(readOnly = true)
-    public UserVo find(String cid, String email, String phone) {
-        return userMapper.toVo(userCustomRepository.find(cid, email, phone).orElse(EMPTY_USER));
     }
 
     @Transactional(readOnly = true)

@@ -3,9 +3,9 @@ package com.cocotalk.user.controller;
 
 import com.cocotalk.user.domain.entity.User;
 import com.cocotalk.user.domain.vo.UserVo;
+import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.request.profile.BgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
-import com.cocotalk.user.dto.request.UserModifyRequest;
 import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
 import com.cocotalk.user.dto.response.CustomResponse;
 import com.cocotalk.user.exception.CustomException;
@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
 /**
  * 유저 관련 API 요청을 받는 컨트롤러
  *
- * @author ybell1028
+ * @author 황종훈
  * @version 1.0, 최초 작성
  * @see com.cocotalk.user.service.UserService
  * @see com.cocotalk.user.utils.mapper.UserMapper
@@ -47,7 +46,7 @@ public class UserController {
      */
     @Operation(summary = "유저 전체 조회")
     @GetMapping
-    public ResponseEntity<CustomResponse<List<UserVo>>> findAll() {
+    public ResponseEntity<CustomResponse<List<UserVo>>> findAll(@Parameter(hidden = true) User user) {
         List<UserVo> data = userService.findAll();
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -75,7 +74,7 @@ public class UserController {
      */
     @Operation(summary = "유저 id로 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse<UserVo>> findById(@PathVariable Long id) {
+    public ResponseEntity<CustomResponse<UserVo>> findById(@Parameter(hidden = true) User user, @PathVariable Long id) {
         UserVo data = userService.findById(id);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -86,9 +85,9 @@ public class UserController {
      * @param cocotalkId 코코톡 id
      * @return ResponseEntity<CustomResponse<UserVo>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
-    @Operation(summary = "유저 cid로 조회")
+    @Operation(summary = "유저 코코톡 Id(cid)로 조회")
     @GetMapping("/cid/{cocotalkId}")
-    public ResponseEntity<CustomResponse<UserVo>> findByCid(@PathVariable String cocotalkId) {
+    public ResponseEntity<CustomResponse<UserVo>> findByCid(@Parameter(hidden = true) User user, @PathVariable String cocotalkId) {
         UserVo data = userService.findByCid(cocotalkId);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -101,7 +100,7 @@ public class UserController {
      */
     @Operation(summary = "유저 email로 조회")
     @GetMapping("/email/{address}")
-    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@PathVariable String address) {
+    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@Parameter(hidden = true) User user, @PathVariable String address) {
         UserVo data = userService.findByEmail(address);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -114,7 +113,7 @@ public class UserController {
      */
     @Operation(summary = "유저 연락처로 조회")
     @GetMapping("/phone")
-    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(@RequestParam List<String> phones) {
+    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(@Parameter(hidden = true) User user, @RequestParam List<String> phones) {
         List<UserVo> data = userService.findByPhones(phones);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -190,5 +189,4 @@ public class UserController {
         UserVo data = userService.updateProfileMsg(user, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
-
 }

@@ -2,6 +2,7 @@ package com.cocotalk.user.service;
 
 import com.cocotalk.user.domain.entity.Friend;
 import com.cocotalk.user.domain.entity.User;
+import com.cocotalk.user.domain.vo.FriendInfoVo;
 import com.cocotalk.user.domain.vo.FriendVo;
 import com.cocotalk.user.domain.vo.UserVo;
 import com.cocotalk.user.dto.request.FriendAddRequest;
@@ -38,7 +39,11 @@ public class FriendService {
     public static final CustomException INVALID_TO_UID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 친구가 존재하지 않습니다.");
 
-    private static final Comparator<UserVo> orderByUserName = Comparator.comparing(UserVo::getUsername);
+    public static final User EMPTY_USER = new User();
+    public static final Friend EMPTY_FRIEND = new Friend();
+
+    Comparator<FriendInfoVo> orderByUserName = (o1, o2) ->
+            o1.getFriend().getUsername().compareTo(o2.getFriend().getUsername());
 
     @Transactional
     public FriendVo add(User fromUser, FriendAddRequest request){
@@ -75,14 +80,48 @@ public class FriendService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public FriendInfoVo findByCid(User fromUser, String cid) {
+        if(fromUser.getCid().equals(cid)) {
+            UserVo userVo = userMapper.toVo(userRepository.findById(fromUser.getId()).orElse(EMPTY_USER));
+            return FriendInfoVo.builder().friend(userVo).status(3).build();
+        } else {
+            User toUser = userRepository.findByCid(cid).orElse(EMPTY_USER);
+            Friend friend = friendRepository.findByFromUserIdAndToUserId(fromUser.getId(), toUser.getId()).orElse(EMPTY_FRIEND);
+            if(friend.getId() == null) {
+                return FriendInfoVo.builder().friend(userMapper.toVo(toUser)).status(2).build();
+            } else {
+                return FriendInfoVo.builder().friend(userMapper.toVo(toUser)).status(0).build();
+            }
+        }
+    }
+
 
     @Transactional(readOnly = true)
-    public List<UserVo> findAll(User fromUser) {
-        List<Friend> friends = friendRepository.findByFromUserIdAndHiddenIsFalse(fromUser.getId());
-        return friends.stream()
+    public List<FriendInfoVo> findAll(User fromUser) {
+        // 내가 친구 추가한 사람들
+        List<FriendInfoVo> myFriends = friendRepository.findByFromUserIdAndHiddenIsFalse(fromUser.getId()).stream()
                 .map(friend -> userMapper.toVo(friend.getToUser()))
-                .sorted(orderByUserName)
+                .map(userVo -> FriendInfoVo.builder()
+                        .friend(userVo)
+                        .status(0)
+                        .build())
                 .collect(Collectors.toList());
+
+        // 나를 친구 추가한 사람들
+        List<FriendInfoVo> addedMe = friendRepository.findByToUserId(fromUser.getId()).stream() //
+                .map(friend -> userMapper.toVo(friend.getFromUser()))
+                .map(userVo -> FriendInfoVo.builder()
+                        .friend(userVo)
+                        .status(1)
+                        .build())
+                .collect(Collectors.toList());
+
+        addedMe.removeAll(myFriends);
+        myFriends.addAll(addedMe);
+        myFriends.sort(orderByUserName);
+
+        return myFriends;
     }
 
     @Transactional(readOnly = true)
@@ -91,7 +130,7 @@ public class FriendService {
         return hiddenFriends.stream()
                 .map(Friend::getToUser)
                 .map(userMapper::toVo)
-                .sorted(orderByUserName)
+                .sorted(Comparator.comparing(UserVo::getUsername))
                 .collect(Collectors.toList());
     }
 
