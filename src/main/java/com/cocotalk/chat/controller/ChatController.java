@@ -1,7 +1,6 @@
 package com.cocotalk.chat.controller;
 
 import com.cocotalk.chat.domain.vo.*;
-import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
 import com.cocotalk.chat.dto.request.InviteMessageRequest;
 import com.cocotalk.chat.dto.request.RoomRequest;
@@ -17,6 +16,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 /**
  * STOMP 메시지를 받는 컨트롤러
@@ -65,11 +66,17 @@ public class ChatController {
     @MessageMapping("/{roomId}/message/send")
     public void send(@DestinationVariable ObjectId roomId,
                             @Payload ChatMessageRequest chatMessageRequest) {
-
         MessageVo<ChatMessageVo> messageVo = roomService.saveChatMessage(roomId, chatMessageRequest);
+        List<Long> receiverIds = chatMessageRequest.getReceiverIds();
+
         log.info("[ChatController] 토픽 전송 : " + "/topic/" + roomId + "/message");
-        // kafka에 메세지 전송
         kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
+
+        int size = receiverIds.size();
+        for(int i = 0; i < size; ++i) {
+            long userId = receiverIds.get(i);
+            kafkaProducer.sendToChat("/topic/" + userId + "/message", messageVo);
+        }
         kafkaProducer.sendToPush(chatMessageRequest);
     }
 
