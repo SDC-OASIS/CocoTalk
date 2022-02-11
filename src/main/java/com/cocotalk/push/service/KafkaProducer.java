@@ -1,6 +1,6 @@
 package com.cocotalk.push.service;
 
-import com.cocotalk.push.dto.kafka.PushMessage;
+import com.cocotalk.push.dto.kafka.PushTopicDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class KafkaProducer {
         this.kafkaTemplate.send(topic, message);
     }
 
-    public void sendPushMessage(PushMessage pushMessage) {
+    public void sendPushMessage(PushTopicDto pushMessage) {
         System.out.println(String.format("Produce message ("+topic+") : %s", pushMessage));
         try {
             kafkaTemplate.send(topic, mapper.writeValueAsString(pushMessage));

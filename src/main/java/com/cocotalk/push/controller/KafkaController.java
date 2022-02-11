@@ -1,6 +1,6 @@
 package com.cocotalk.push.controller;
 
-import com.cocotalk.push.dto.kafka.PushMessage;
+import com.cocotalk.push.dto.kafka.PushTopicDto;
 import com.cocotalk.push.service.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class KafkaController {
     }
 
     @PostMapping("/object")
-    public String sendPushMessage(@RequestBody @Valid PushMessage pushMessage) {
+    public String sendPushMessage(@RequestBody @Valid PushTopicDto pushMessage) {
         this.producer.sendPushMessage(pushMessage);
         return "success";
     }

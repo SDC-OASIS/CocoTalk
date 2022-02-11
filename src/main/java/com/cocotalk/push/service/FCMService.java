@@ -1,7 +1,8 @@
 package com.cocotalk.push.service;
 
 import com.cocotalk.push.dto.fcm.FCMMessage;
-import com.cocotalk.push.support.PushException;
+import com.cocotalk.push.entity.Device;
+import com.cocotalk.push.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
@@ -46,32 +47,31 @@ public class FCMService {
         return fcmMessage;
     }
 
-    public void sendByTokenList(List<String> targetTokens, String title, String body) throws IOException {
+    public void sendByDevices(Flux<Device> targets, String title, String body) throws IOException {
         String authorization = "Bearer " + getAccessToken();
         long startTime = System.currentTimeMillis();
 
-        Flux<FCMMessage> fcmMessageFlux = Flux.fromIterable(targetTokens)
-                .map(targetToken -> makeMessage(targetToken, title, body))
+        Flux<FCMMessage> fcmMessageFlux = targets
+                .map(target -> makeMessage(target.getToken(), title, body))
                 .doOnError((e) ->{
                     System.err.println("Error : " + e.getMessage());
-                    throw new PushException(BAD_REQUEST, e);
+                    throw new CustomException(BAD_REQUEST, e);
                 });
 
         fcmMessageFlux.subscribe(fcmTokenMessage -> webClient
-                        .post()
-                        .uri(apiUrl)
-                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
-                        .accept(org.springframework.http.MediaType.APPLICATION_JSON)
-                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, authorization)
-                        .bodyValue(fcmTokenMessage)
-                        .retrieve()
-                        .bodyToFlux(String.class)
-                        .subscribe(
-                                res -> log.info("{}", res),
-                                (e) -> {throw new PushException(SUBSCRIBE_ERROR,e);}
-                        )
+                .post()
+                .uri(apiUrl)
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                .header(org.springframework.http.HttpHeaders.AUTHORIZATION, authorization)
+                .bodyValue(fcmTokenMessage)
+                .retrieve()
+                .bodyToFlux(String.class)
+                .subscribe(
+                        res -> log.info("{}", res),
+                        (e) -> {throw new CustomException(SUBSCRIBE_ERROR,e);}
+                )
         );
-
         log.info("end: " + (System.currentTimeMillis() - startTime) + "sec");
     }
 

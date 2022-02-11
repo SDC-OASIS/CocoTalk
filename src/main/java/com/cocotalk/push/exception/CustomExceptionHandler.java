@@ -1,4 +1,4 @@
-package com.cocotalk.push.support;
+package com.cocotalk.push.exception;
 
 import com.cocotalk.push.dto.common.response.Response;
 import com.cocotalk.push.dto.common.response.ResponseStatus;
@@ -14,9 +14,9 @@ import static com.cocotalk.push.dto.common.response.ResponseStatus.NO_VALUES;
 
 @Slf4j
 @RestControllerAdvice
-public class PushExceptionHandler {
-    @ExceptionHandler(PushException.class)
-    public ResponseEntity<Response<?>> serverException(PushException e) {
+public class CustomExceptionHandler {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<Response<?>> serverException(CustomException e) {
         ResponseStatus status = e.getStatus();
         log.error("PushException : " + status.getMessage());
         e.printStackTrace();
