@@ -36,7 +36,6 @@
 		EA2913DA27AA2DAD00324476 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = EA2913D927AA2DAD00324476 /* RxMoya */; };
 		EA2913DD27AA349D00324476 /* BaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913DC27AA349D00324476 /* BaseRepository.swift */; };
 		EA2913DF27AA43D800324476 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913DE27AA43D800324476 /* APIError.swift */; };
-		EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E027AA520B00324476 /* ProfileRepository.swift */; };
 		EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */; };
 		EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E427AA6B3200324476 /* MessageRepository.swift */; };
 		EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E627AB6CE300324476 /* UserRepository.swift */; };
@@ -141,7 +140,6 @@
 		EA22D5602797FC2800E1F39A /* UIImageView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Ext.swift"; sourceTree = "<group>"; };
 		EA2913DC27AA349D00324476 /* BaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRepository.swift; sourceTree = "<group>"; };
 		EA2913DE27AA43D800324476 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
-		EA2913E027AA520B00324476 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
 		EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomRepository.swift; sourceTree = "<group>"; };
 		EA2913E427AA6B3200324476 /* MessageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRepository.swift; sourceTree = "<group>"; };
 		EA2913E627AB6CE300324476 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
@@ -425,7 +423,6 @@
 			isa = PBXGroup;
 			children = (
 				EA2913DC27AA349D00324476 /* BaseRepository.swift */,
-				EA2913E027AA520B00324476 /* ProfileRepository.swift */,
 				EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */,
 				EA2913E427AA6B3200324476 /* MessageRepository.swift */,
 				EA2913E627AB6CE300324476 /* UserRepository.swift */,
@@ -837,7 +834,6 @@
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,
 				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
-				EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */,
 				EA29145D27B3F77D00324476 /* CoreDataHelper.swift in Sources */,
 				EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */,
 				EA29140B27B0B14E00324476 /* ModelEmailVerifyResponse.swift in Sources */,
