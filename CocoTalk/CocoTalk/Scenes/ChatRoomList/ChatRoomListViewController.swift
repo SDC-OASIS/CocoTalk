@@ -29,7 +29,15 @@ class ChatRoomListViewController: UIViewController {
         bindRx()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetch()
+    }
+    
     // MARK: - Helper
+    private func fetch() {
+        viewModel.fetch()
+    }
 }
 
 // MARK: - BaseViewController
@@ -52,19 +60,27 @@ extension ChatRoomListViewController {
 
 // MARK: - Bindable
 extension ChatRoomListViewController {
-    func bindRx() {}
+    func bindRx() {
+        viewModel.output.rooms
+            .subscribe(onNext: { [weak self] rooms in
+                guard let self = self else {
+                    return
+                }
+                self.tableView.reloadData()
+            }).disposed(by: bag)
+    }
 }
 
 
 // MARK: - UITableViewDelegate, UITableViewDatasource
 extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.input.roomList.count
+        return viewModel.output.rooms.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ChatRoomCell.identifier, for: indexPath) as! ChatRoomCell
-        cell.setData(data: viewModel.input.roomList[indexPath.row])
+        cell.setData(data: viewModel.output.rooms.value[indexPath.row])
         return cell
     }
     

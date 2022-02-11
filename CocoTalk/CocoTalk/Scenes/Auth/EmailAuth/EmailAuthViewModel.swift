@@ -24,7 +24,7 @@ protocol EmailAuthDependency {
     var isLoadingVerify: BehaviorRelay<Bool> { get }
     var isSignupComplete: BehaviorRelay<Bool> { get }
     var isSigninComplete: BehaviorRelay<Bool> { get }
-    var isValidEmail: BehaviorRelay<Bool?> { get }
+    var isInvalidEmailError: BehaviorRelay<Bool?> { get }
     var isLoading: Bool { get }
     var FCMtoken: String { get set }
 }
@@ -65,7 +65,7 @@ class EmailAuthViewModel {
         var error = BehaviorRelay<EmailAuthError?>(value: nil)
         
         var isAuthenticated = BehaviorRelay<Bool>(value: false)
-        var isValidEmail = BehaviorRelay<Bool?>(value: nil)
+        var isInvalidEmailError = BehaviorRelay<Bool?>(value: nil)
         var isSignupComplete = BehaviorRelay<Bool>(value: false)
         var isSigninComplete = BehaviorRelay<Bool>(value: false)
         var isSignedIn: Bool {
@@ -94,10 +94,14 @@ class EmailAuthViewModel {
 
 
 extension EmailAuthViewModel {
-    func signin(data: ModelSignupData) {
+    func signin() {
+        guard let data = dependency.signupData else {
+            return
+        }
+        
         dependency.isLoadingSignin.accept(true)
         dependency.isSigninComplete.accept(false)
-        authRepository.signin(cid: data.cid, password: data.password)
+        authRepository.signin(cid: data.cid, password: data.password, fcmToken: dependency.FCMtoken)
             .subscribe(onNext: { [weak self] result in
                 self?.dependency.isLoadingSignin.accept(false)
                 guard let self = self,
@@ -114,23 +118,11 @@ extension EmailAuthViewModel {
             }).disposed(by: bag)
     }
     
-    func postFCMToken() {
-        guard let userId = output.signupResult?.id else {
-                  return
-              }
-        print("FCM: \(dependency.FCMtoken)")
-        print("USERID: \(userId)")
-        authRepository.postFCMToken(dependency.FCMtoken, userId: userId)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self,
-                      let data = self.dependency.signupData else {
-                          return
-                      }
-                self.signin(data: data)
-            }).disposed(by: bag)
-    }
-    
-    func signup(data: ModelSignupData) {
+    func signup() {
+        guard let data = dependency.signupData else {
+            return
+        }
+        
         dependency.isLoadingSignup.accept(true)
         dependency.isSignupComplete.accept(false)
         authRepository.signup(with: data)
@@ -144,12 +136,12 @@ extension EmailAuthViewModel {
                     guard let result = response.result else {
                         return
                     }
-                    if let data = try? JSONEncoder().encode(result) {
+                    if let data = result.encode() {
                         UserDefaults.standard.set(data, forKey: UserDefaultsKey.myData.rawValue)
                     }
                     self.dependency.isSignupComplete.accept(true)
                     self.output.signupResult = result
-                    self.postFCMToken()
+                    self.signin()
                 } else {
                     self.dependency.isSignupComplete.accept(false)
                 }
@@ -161,17 +153,17 @@ extension EmailAuthViewModel {
         authRepository.verifyEmail(email: email, code: input.code.value)
             .subscribe(onNext: { [weak self] result in
                 self?.dependency.isLoadingVerify.accept(false)
-                guard let self = self,
-                      let result = result.result else {
+                guard let self = self else {
+                    return
+                }
+                
+                guard let result = result.result,
+                      result.isValid else {
+                          #warning("중복 이메일 오류 알림")
+                          self.dependency.isInvalidEmailError.accept(true)
                           return
                       }
-                self.dependency.isValidEmail.accept(result.isValid)
-                if result.isValid {
-                    guard let data = self.dependency.signupData else {
-                        return
-                    }
-                    self.signup(data: data)
-                }
+                self.signup()
             }).disposed(by: bag)
     }
 }

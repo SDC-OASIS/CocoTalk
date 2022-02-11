@@ -10,6 +10,7 @@ import Foundation
 struct ModelSignupData: Codable {
     var userName: String = ""
     var profileImageUrl: String = ""
+    var profileThumbnailUrl: String = ""
     var email: String = ""
     var phone: String = ""
     var cid: String = ""
@@ -21,21 +22,4 @@ struct ModelSignupData: Codable {
     var providerId: String = ""
     var profile: String = "" // not required
     var status: Int = 0
-}
-
-extension ModelSignupData {    
-    
-    func encode() -> Data? {
-        if let encoded = try? JSONEncoder().encode(self) {
-            return encoded
-        }
-        return nil
-    }
-    
-    static func decode(savedData: Data) -> ModelSignupData? {
-        if let decoded = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
-            return decoded
-        }
-        return nil
-    }
 }

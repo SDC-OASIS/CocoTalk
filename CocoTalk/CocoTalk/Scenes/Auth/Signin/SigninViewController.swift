@@ -27,7 +27,6 @@ class SigninViewController: UIViewController {
         $0.textColor = .secondaryLabel
         $0.numberOfLines = 0
         $0.textAlignment = .center
-        
     }
     
     /// 이메일 텍스트 필드
@@ -68,6 +67,7 @@ class SigninViewController: UIViewController {
         $0.setTitle("코코톡 계정 또는 비밀번호 찾기", for: .normal)
         $0.setTitleColor(.label, for: .normal)
         $0.backgroundColor = .clear
+        $0.isHidden = true
     }
     
     // MARK: - Properties
@@ -89,6 +89,17 @@ class SigninViewController: UIViewController {
         setNeedsStatusBarAppearanceUpdate()
         view.window?.rootViewController = root
         view.window?.makeKeyAndVisible()
+    }
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "로그인 오류", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default){ [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.viewModel.dependency.error.accept(false)
+        })
+        present(alert, animated: true)
     }
 }
 
@@ -196,9 +207,17 @@ extension SigninViewController {
                 
                 if isCompleted {
                     self.move2Home()
-                } else {
-                    #warning("알림 처리")
                 }
+            }).disposed(by: bag)
+        
+        viewModel.dependency.error
+            .subscribe(onNext: { [weak self] error in
+                guard let self = self,
+                      let error = error,
+                      error else {
+                          return
+                      }
+                self.showAlert()
             }).disposed(by: bag)
     }
 }

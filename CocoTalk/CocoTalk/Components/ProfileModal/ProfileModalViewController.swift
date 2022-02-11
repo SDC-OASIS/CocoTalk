@@ -83,16 +83,16 @@ class ProfileModalViewController: UIViewController {
     // MARK: - Life cycle
     init(profile: ModelProfile) {
         self.profile = profile
-        lblName.text = profile.name ?? ""
+        lblName.text = profile.username ?? ""
         lblBio.text = profile.bio ?? ""
         
-        if let bgImgUrl = profile.bgImageUrl,
+        if let bgImgUrl = profile.bgImageURL,
            !bgImgUrl.isEmpty {
             let url = URL(string: bgImgUrl)
             ivBg.kf.setImage(with: url, placeholder: UIImage(named: "bg_noimage"))
         }
         
-        if let profileImgUrl = profile.profileImageUrl,
+        if let profileImgUrl = profile.profileImageURL,
            !profileImgUrl.isEmpty {
             let url = URL(string: profileImgUrl)
             ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))

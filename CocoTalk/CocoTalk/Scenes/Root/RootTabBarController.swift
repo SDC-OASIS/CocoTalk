@@ -52,6 +52,10 @@ extension RootTabBarController {
                         title: "채팅",
                         inactivatedImage: UIImage(systemName: "message"),
                         activatedImage: UIImage(systemName: "message.fill")),
+            createVC(for: MoreViewController(),
+                        title: "더보기",
+                        inactivatedImage: UIImage(systemName: "circle.grid.2x1"),
+                        activatedImage: UIImage(systemName: "circle.grid.2x1.fill"))
         ]
         
         selectedIndex = 0

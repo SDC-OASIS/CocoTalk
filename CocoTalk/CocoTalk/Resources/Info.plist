@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>카메라에 접근하도록 허용버튼을 눌러주세요</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>사진 앨범에 접근하도록 허용버튼을 눌러주세요.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>사진 앨범에 접근하도록 허용버튼을 눌러주세요.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -25,5 +19,9 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

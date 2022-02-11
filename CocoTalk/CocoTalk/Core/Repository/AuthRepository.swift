@@ -17,6 +17,17 @@ class AuthRepository {
     init() {
         provider = MoyaProvider<AuthAPI>()
     }
+
+    func reissueToken(_ token: String) -> Observable<APIResult_0<ModelSigninResponse>> {
+        return provider.rx.request(.reissueToken(token))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_0<ModelSigninResponse>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
     
     func verifyToken(_ token: String) -> Observable<APIResult_0<ModelEmailVerifyResponse>> {
         return provider.rx.request(.verifyToken(token))
@@ -29,20 +40,9 @@ class AuthRepository {
             }
     }
     
-    func postFCMToken(_ token: String, userId: Int) -> Observable<APIResult_Device> {
-        let data = ModelPostFCMTokenRequest(userId: userId, fcmToken: token)
-        return provider.rx.request(.postFCMToken(data))
-            .retry(3)
-            .asObservable()
-            .map { try JSONDecoder().decode(APIResult_Device.self, from: $0.data) }
-            .catch { error in
-                print(error)
-                return Observable.error(error)
-            }
-    }
-    
-    func signin(cid: String, password: String) -> Observable<APIResult_0<ModelSigninResponse>> {
-        let data = ModelSigninRequest(cid: cid, password: password)
+
+    func signin(cid: String, password: String, fcmToken: String) -> Observable<APIResult_0<ModelSigninResponse>> {
+        let data = ModelSigninRequest(cid: cid, password: password, fcmToken: fcmToken)
         return provider.rx.request(.signin(data))
             .retry(3)
             .asObservable()
@@ -84,7 +84,8 @@ class AuthRepository {
                                       phone: signupData.phone,
                                       email: signupData.email,
                                       status: signupData.status,
-                                      profile: signupData.profile)
+                                      profile: signupData.profileImageUrl,
+                                      profileThumbnail: signupData.profileThumbnailUrl)
         return provider.rx.request(.signup(data))
             .retry(3)
             .asObservable()

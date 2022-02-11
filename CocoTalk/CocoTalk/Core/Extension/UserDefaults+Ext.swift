@@ -12,11 +12,20 @@ extension UserDefaults {
     static func resetSignupData() {
         // 회원가입 할 때 생기는 임시 프로필 이미지 삭제
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
-           let signupData = ModelSignupData.decode(savedData: savedData) {
+           let signupData = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
             if !signupData.profileImageUrl.isEmpty {
                 let fileManager = FileManager.default
                 do {
                     try fileManager.removeItem(at: URL(string: signupData.profileImageUrl)!)
+                } catch let e {
+                    print(e.localizedDescription)
+                }
+            }
+            
+            if !signupData.profileThumbnailUrl.isEmpty {
+                let fileManager = FileManager.default
+                do {
+                    try fileManager.removeItem(at: URL(string: signupData.profileThumbnailUrl)!)
                 } catch let e {
                     print(e.localizedDescription)
                 }

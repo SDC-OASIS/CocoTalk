@@ -32,13 +32,13 @@ class ChatRoomViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 171/255, green: 194/255, blue: 209/255, alpha: 1)
         
+        #warning("타이틀 수정")
         title = "채팅방"
         
         configureView()
         configureSubviews()
         bind()
-        #warning("fetch로 수정")
-        viewModel.getMessages()
+        fetch()
         
         #warning("눈 내리기 이펙트")
         // http://minsone.github.io/mac/ios/falling-snow-with-spritekit-on-uiview-in-swift
@@ -73,6 +73,9 @@ class ChatRoomViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func fetch() {
+        viewModel.getMessages()
+    }
 }
 
 // MARK: - BaseViewController

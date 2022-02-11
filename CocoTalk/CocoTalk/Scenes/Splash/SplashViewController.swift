@@ -52,32 +52,20 @@ class SplashViewController: UIViewController {
     }
     
     private func move2signInVC() {
-        resetKeys()
+        KeychainWrapper.resetKeys()
         let signInVC = SigninViewController()
         let root = UINavigationController(rootViewController: signInVC)
         switchRoot(to: root)
     }
     
-    private func switchRoot(to root: UIViewController) {
-        setNeedsStatusBarAppearanceUpdate()
-        view.window?.rootViewController = root
-        view.window?.makeKeyAndVisible()
-    }
-    
-    private func resetKeys() {
-        KeychainWrapper.standard.remove(forKey: .fcmToken)
-        KeychainWrapper.standard.remove(forKey: .accessToken)
-        KeychainWrapper.standard.remove(forKey: .refreshToken)
-    }
-    
     private func bind() {
-        viewModel.dependency.isValidToken
-            .subscribe(onNext: { [weak self] isValidToken in
+        viewModel.dependency.shouldSignout
+            .subscribe(onNext: { [weak self] shouldSignout in
                 guard let self = self,
-                      let isValidToken = isValidToken else {
+                      let shouldSignout = shouldSignout else {
                           return
                       }
-                if isValidToken {
+                if !shouldSignout {
                     self.move2Home()
                 } else {
                     self.move2signInVC()

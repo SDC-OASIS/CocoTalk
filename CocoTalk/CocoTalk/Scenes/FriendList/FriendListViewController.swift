@@ -13,6 +13,9 @@ import RxSwift
 class FriendListViewController: UIViewController {
     
     // MARK: - UI Properties
+    /// 네비게이션 바
+    private let gnbView = GNBView()
+    
     /// 테이블 뷰
     private let tableView = UITableView()
     
@@ -24,13 +27,22 @@ class FriendListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationController?.isNavigationBarHidden = true
         
         configureView()
         configureSubviews()
         bindRx()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetch()
+    }
+    
     // MARK: - Helper
+    private func fetch() {
+        viewModel.fetch()
+    }
 }
 
 // MARK: - BaseViewController
@@ -45,23 +57,51 @@ extension FriendListViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 60
         view.addSubview(tableView)
+        
+        gnbView.delegate = self
+        view.addSubview(gnbView)
     }
     
     func configureSubviews() {
+        gnbView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(100)
+        }
+        
         tableView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(gnbView.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
 
 // MARK: - Bindable
 extension FriendListViewController {
-    func bindRx() {}
+    func bindRx() {
+        bindViewModel()
+    }
+    
+    func bindViewModel() {
+        viewModel.output.friends
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.tableView.reloadData()
+            }).disposed(by: bag)
+        
+        viewModel.output.myProfile
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.tableView.reloadData()
+            }).disposed(by: bag)
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDatasource
 extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -73,23 +113,22 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
         case 1:
             return viewModel.dependency.favoriteProfile.count
         default:
-            return viewModel.input.profileList.count
+            return viewModel.output.friends.value.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: MyProfileCell.identifier, for: indexPath) as! MyProfileCell
-            cell.setData(data: viewModel.dependency.myProfile)
+            cell.setData(data: viewModel.output.myProfile.value)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier, for: indexPath) as! ProfileTableViewCell
             cell.setData(data: viewModel.dependency.favoriteProfile[indexPath.row])
             return cell
         default:
-            let profile = self.viewModel.input.profileList[indexPath.row]
+            let profile = viewModel.output.friends.value[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier, for: indexPath) as! ProfileTableViewCell
             cell.setData(data: profile)
             return cell
@@ -106,7 +145,12 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
     
     #warning("각 섹션별 대응 코드 작성")
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let profile = viewModel.input.profileList[indexPath.row]
+        let profile: ModelProfile
+        if indexPath.section == 0 {
+            profile = viewModel.output.myProfile.value
+        } else {
+            profile = viewModel.output.friends.value[indexPath.row]
+        }
         let profileVC = ProfileModalViewController(profile: profile)
         profileVC.modalPresentationStyle = .overFullScreen
         profileVC.modalTransitionStyle = .coverVertical
@@ -125,5 +169,21 @@ extension FriendListViewController: ProfileCellDelegate {
         let vc = ChatRoomViewController()
         vc.hidesBottomBarWhenPushed = true
         chatRoomListVC.pushViewController(vc, animated: true)
+    }
+}
+
+
+// MARK: - GNBDelegate
+extension FriendListViewController: GNBDelegate {
+    func tapAddFriend() {
+        print("friend")
+    }
+    
+    func tapSearch() {
+        print("search")
+    }
+    
+    func tapSetting() {
+        print("setting")
     }
 }

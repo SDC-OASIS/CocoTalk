@@ -65,7 +65,7 @@ class EmailAuthNumberViewController: UIViewController {
         view.backgroundColor = .white
         
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
-           let data = ModelSignupData.decode(savedData: savedData) {
+           let data = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
             self.signupData = data
             lblEmail.text = data.email
             self.viewModel.dependency.signupData = data
@@ -77,8 +77,8 @@ class EmailAuthNumberViewController: UIViewController {
     }
     
     // MARK: - Helper
-    private func showAlert() {
-        let alert = UIAlertController(title: "이메일 인증 오류", message: "올바르지 않은 인증번호 입니다.", preferredStyle: .alert)
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .default){ _ in
             self.navigationController?.popViewController(animated: true)
         })
@@ -175,7 +175,16 @@ extension EmailAuthNumberViewController {
                       let _ = error else {
                           return
                       }
-                self.showAlert()
+                self.showAlert(title: "이메일 인증 오류", message: "올바르지 않은 인증번호 입니다.")
+            }).disposed(by: bag)
+        
+        viewModel.dependency.isInvalidEmailError
+            .subscribe(onNext: { [weak self] error in
+                guard let self = self,
+                      let _ = error else {
+                          return
+                      }
+                self.showAlert(title: "이메일 인증 오류", message: "이미 사용중인 이메일입니다.")
             }).disposed(by: bag)
     }
 }

@@ -19,7 +19,7 @@ class ProfileRepository: BaseRepository {
         return items
     }
     
-    func fetchFromServer() -> Observable<[ItemType]> {
+    func fetchFromServer(with token: String) -> Observable<[ItemType]?> {
         return Observable.create { _ in
             return Disposables.create()
         }

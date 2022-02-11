@@ -61,17 +61,16 @@ class ProfileTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")
+        
     }
 
     // MARK: - Helper
     private func setUI() {
-        stackView.addArrangedSubview(lblName)
         uiView.addSubview(ivProfile)
         uiView.addSubview(stackView)
         contentView.addSubview(uiView)
@@ -96,7 +95,7 @@ class ProfileTableViewCell: UITableViewCell {
     }
     
     func setData(data: ModelProfile) {
-        if let _img = data.profileImageUrl,
+        if let _img = data.profileImageURL,
            !_img.isEmpty {
             let url = URL(string: _img)
             ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))
@@ -104,13 +103,15 @@ class ProfileTableViewCell: UITableViewCell {
             ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
         }
         
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        stackView.addArrangedSubview(lblName)
         if let _bio = data.bio {
             lblBio.text = _bio
             stackView.addArrangedSubview(lblBio)
         } else {
             lblBio.isHidden = true
         }
-        
-        lblName.text = data.name ?? ""
+        lblName.text = data.username ?? ""
+        uiView.setNeedsLayout()
     }
 }

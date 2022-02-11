@@ -11,6 +11,7 @@ import Firebase
 import FirebaseMessaging
 import IQKeyboardManagerSwift
 import SwiftKeychainWrapper
+import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -48,6 +49,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return UIDevice.current.userInterfaceIdiom == .phone ? .portrait : .all
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        
     }
 
     // MARK: - Core Data stack

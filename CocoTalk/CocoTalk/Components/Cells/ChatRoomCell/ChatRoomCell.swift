@@ -194,22 +194,24 @@ class ChatRoomCell: UITableViewCell {
         }
     }
     
-    func setData(data: ModelChatRoom) {
-        #warning("이미지 적용")
-        if let _img = data.roomImageURL {
-            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
+    func setData(data: ModelRoomList) {
+        guard let img = data.room?.img else {
+            return
+        }
+        if let url = URL(string: img) {
+            ivRoomImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01")!)
         } else {
             ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_0\(Int.random(in: 1..<4))")!
         }
         
-        lblTitle.text = data.roomTitle ?? ""
-        lblMemeberNumber.text = data.roomMemberNumber?.description
-        ivPin.isHidden = !(data.isPinned ?? true)
-        ivSilent.isHidden = !(data.isSilent ?? true)
+        lblTitle.text = data.room?.roomname ?? ""
+        lblMemeberNumber.text = "\(data.room?.members?.count ?? -1)"
+        ivPin.isHidden = !(data.room?.isPinned ?? true)
+        ivSilent.isHidden = !(data.room?.isSilent ?? true)
         
-        lblLastMessage.text = data.lastMessage ?? ""
+        lblLastMessage.text = data.recentChatMessage?.content ?? ""
         
-        lblLastMsgTime.text = "오후 3:23"
-        lblUnreadMessageNumber.text = data.unreadMessageNumber?.description
+        lblLastMsgTime.text = data.recentChatMessage?.sentAt
+        lblUnreadMessageNumber.text = (data.recentMessageBundleCount ?? 0).description
     }
 }
