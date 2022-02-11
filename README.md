@@ -183,15 +183,15 @@ spring:
 - roomId로 채팅방 삭제 `[DELETE] /rooms/{id}`
 - 채팅 메시지 리스트 Pagination `[GET] /messages?roomid={}bundleid={}count={}`
 
-### 메시지 토픽
-**Publish**
+### STOMP WebSocket 메시징
+**Publish Destination**
 - 1:1, 그룹 채팅방 생성 `/chatroom/new`
 - 채팅 메시지 Publish `/chatroom/{roomId}/message/send`
 - 채팅방 초대 Publish `/chatroom/{roomId}/message/invite`
 - 채팅방 나가기 Publish `/chatroom/{roomId}/message/leave`
 - Awake 메시지 Publish `/chatroom/{roomId}/message/awake`
 
-**Subscribe**
+**Subscribe Topic**
 - **채팅방 리스트**
   - 메시지 토픽 `'/topic/' + userId + '/message'`
   - 방 정보 토픽`'/topic/' + userId + '/room'`
@@ -203,4 +203,4 @@ spring:
 ---
 
 ### DB ERD
-
+![cocotalk-chat-erd](https://user-images.githubusercontent.com/54519245/153525356-b96f2d95-1441-4c82-97d9-7db86d39a295.PNG)

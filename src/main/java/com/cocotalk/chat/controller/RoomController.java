@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequestMapping(value = "/rooms")
 public class RoomController {
     private final RoomService roomService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
     @Operation(summary = "채팅방 생성")
@@ -33,6 +35,11 @@ public class RoomController {
     public ResponseEntity<CustomResponse<?>> create(@Parameter(hidden = true) UserVo userVo,
                                                     @RequestBody @Valid RoomRequest request){
         RoomVo data = roomService.create(request);
+        int size = data.getMembers().size();
+        for(int i = 0; i < size; ++i) {
+            long userId = data.getMembers().get(i).getUserId();
+            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", data);
+        }
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.CREATED);
     }
 
