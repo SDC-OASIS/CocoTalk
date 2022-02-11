@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PushTopicDto {
     @NotNull
-    private List<String> tokenList;
+    private List<Long> userIdList;
     @NotNull
     private String title;
     @NotNull
