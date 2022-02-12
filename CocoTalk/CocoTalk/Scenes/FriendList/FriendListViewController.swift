@@ -27,7 +27,9 @@ class FriendListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
         navigationController?.isNavigationBarHidden = true
+        gnbView.setDelegate(delegate: self)
         
         configureView()
         configureSubviews()
@@ -61,8 +63,6 @@ extension FriendListViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 60
         view.addSubview(tableView)
-        
-        gnbView.delegate = self
         view.addSubview(gnbView)
     }
     
@@ -179,6 +179,10 @@ extension FriendListViewController: ProfileCellDelegate {
 
 // MARK: - GNBDelegate
 extension FriendListViewController: GNBDelegate {
+    func gnbTabType() -> TabEnum {
+        return .friend
+    }
+    
     func tapAddFriend() {
         let addFriendVC = AddFriendViewController()
         addFriendVC.modalPresentationStyle = .overFullScreen

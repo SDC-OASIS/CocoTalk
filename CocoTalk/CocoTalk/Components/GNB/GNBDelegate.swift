@@ -7,19 +7,30 @@
 
 import Foundation
 
-@objc protocol GNBDelegate: AnyObject {
+protocol GNBDelegate: AnyObject {
     /// 친구 추가 버튼 클릭할 때
-    @objc optional func tapAddFriend()
+    func tapAddFriend()
     
     /// 채팅 생성 버튼 클릭할 때
-    @objc optional func tapAddChat()
+    func tapAddChat()
     
     /// QR 버튼 클릭할 때
-    @objc optional func tapQR()
+    func tapQR()
+    
+    /// 탭 타입
+    func gnbTabType() -> TabEnum
     
     /// 검색 버튼 클릭할 때
     func tapSearch()
     
     /// 설정 버튼 클릭할 때
     func tapSetting()
+}
+
+extension GNBDelegate {
+    func tapAddFriend() {}
+    
+    func tapAddChat() {}
+    
+    func tapQR() {}
 }

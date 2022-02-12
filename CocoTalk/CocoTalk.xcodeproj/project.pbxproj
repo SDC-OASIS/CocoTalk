@@ -106,6 +106,7 @@
 		EAC615A527B6C0C500B213BC /* AddFriendDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */; };
 		EAC615A727B6D43600B213BC /* ModelAddFriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */; };
 		EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */; };
+		EAC615AB27B6E35F00B213BC /* TabEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AA27B6E35F00B213BC /* TabEnum.swift */; };
 		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
 		EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A7279A981A00777EBF /* MessageEnum.swift */; };
 		EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A9279A986C00777EBF /* ModelMessage.swift */; };
@@ -206,6 +207,7 @@
 		EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendDelegate.swift; sourceTree = "<group>"; };
 		EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendRequest.swift; sourceTree = "<group>"; };
 		EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendResponse.swift; sourceTree = "<group>"; };
+		EAC615AA27B6E35F00B213BC /* TabEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabEnum.swift; sourceTree = "<group>"; };
 		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		EAE555A7279A981A00777EBF /* MessageEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEnum.swift; sourceTree = "<group>"; };
 		EAE555A9279A986C00777EBF /* ModelMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelMessage.swift; sourceTree = "<group>"; };
@@ -618,6 +620,7 @@
 			children = (
 				EAE555A7279A981A00777EBF /* MessageEnum.swift */,
 				EA2913FB27AF5F4500324476 /* UserDefaultsKeyEnum.swift */,
+				EAC615AA27B6E35F00B213BC /* TabEnum.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -874,6 +877,7 @@
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
 				EAE555FA279E10DF00777EBF /* ChatRoomTextFieldView.swift in Sources */,
 				EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */,
+				EAC615AB27B6E35F00B213BC /* TabEnum.swift in Sources */,
 				EA2913FA27AC4D7000324476 /* ModelSignupData.swift in Sources */,
 				EA29141D27B10C2E00324476 /* ModelIssueEmailCodeResponse.swift in Sources */,
 				EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */,

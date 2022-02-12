@@ -14,6 +14,9 @@ import SwiftKeychainWrapper
 class MoreViewController: UIViewController {
     
     // MARK: - UI Properties
+    /// 네비게이션 바
+    private let gnbView = GNBView()
+    
     private let lblHello = UILabel().then {
         $0.text = "더보기"
     }
@@ -33,6 +36,9 @@ class MoreViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        navigationController?.isNavigationBarHidden = true
+        gnbView.setDelegate(delegate: self)
+        
         configureView()
         configureSubviews()
         bind()
@@ -50,10 +56,16 @@ class MoreViewController: UIViewController {
 // MARK: - BaseViewController
 extension MoreViewController {
     func configureView() {
+        view.addSubview(gnbView)
         view.addSubview(btnSignout)
     }
     
     func configureSubviews() {
+        gnbView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(100)
+        }
+        
         btnSignout.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
@@ -74,5 +86,24 @@ extension MoreViewController {
                 }
                 self.signout()
             }).disposed(by: bag)
+    }
+}
+
+// MARK: - GNBDelegate
+extension MoreViewController: GNBDelegate {
+    func gnbTabType() -> TabEnum {
+        return .more
+    }
+    
+    func tapQR() {
+        print("tap QR")
+    }
+    
+    func tapSearch() {
+        print("search")
+    }
+    
+    func tapSetting() {
+        print("setting")
     }
 }

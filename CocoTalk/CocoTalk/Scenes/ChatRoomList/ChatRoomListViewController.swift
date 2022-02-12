@@ -13,6 +13,9 @@ import RxSwift
 class ChatRoomListViewController: UIViewController {
     
     // MARK: - UI Properties
+    /// 네비게이션 바
+    private let gnbView = GNBView()
+    
     private let tableView = UITableView()
     
     // MARK: - Properties
@@ -23,6 +26,9 @@ class ChatRoomListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        navigationController?.isNavigationBarHidden = true
+        gnbView.setDelegate(delegate: self)
         
         configureView()
         configureSubviews()
@@ -49,11 +55,18 @@ extension ChatRoomListViewController {
         tableView.register(ChatRoomCell.self, forCellReuseIdentifier: ChatRoomCell.identifier)
         tableView.rowHeight = 76
         view.addSubview(tableView)
+        view.addSubview(gnbView)
     }
     
     func configureSubviews() {
+        gnbView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(100)
+        }
+        
         tableView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(gnbView.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
@@ -98,4 +111,22 @@ extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+}
+
+extension ChatRoomListViewController: GNBDelegate {
+    func gnbTabType() -> TabEnum {
+        return .chatRoom
+    }
+    
+    func tapAddChat() {
+        
+    }
+    
+    func tapSearch() {
+        
+    }
+    
+    func tapSetting() {
+        
+    }
 }
