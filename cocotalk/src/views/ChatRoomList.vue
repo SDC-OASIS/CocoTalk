@@ -94,7 +94,12 @@ export default {
     chatListSubscribe() {
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/message`, (res) => {
         console.log("구독으로 받은 메시지목록의 마지막 메세지 정보 입니다.");
-        console.log(res);
+        const data = JSON.parse(res.body);
+        let lastMessage = data.message;
+        // let nextMessageBundleId = data.bundleInfo.nextMessageBundleId;
+        // this.
+
+        console.log(lastMessage);
       });
       // 채팅목록 채팅방정보 채널 subscribe
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
@@ -111,6 +116,7 @@ export default {
       this.$store.dispatch("modal/openChatCreationModal", "open", { root: true });
     },
     goChat(chat) {
+      // 현재 swagger로 채팅방생성중이기때문에 nextMessageBundleId 업데이트. 이후에는 필요없음
       let payload = {
         roomId: chat.room.id,
         nextMessageBundleId: chat.room.messageBundleIds[chat.room.messageBundleIds.length - 1],

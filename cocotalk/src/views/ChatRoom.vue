@@ -172,7 +172,13 @@ export default {
         console.log("채팅내역 가져오기");
         let chatData = res.data.data;
         this.chatMessages = chatData.messageList;
+        chatData.room.messageBundleIds = chatData.room.messageBundleIds.slice(1, -1).split(", ");
         this.roomInfo = chatData.room;
+        // 새로 받은 최신 bundleId 업데이트
+        const payload = {
+          nextMessageBundleId: this.roomInfo.messageBundleIds[this.roomInfo.messageBundleIds.length - 1],
+        };
+        this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
         let members = chatData.room.members;
         members.forEach((e) => {
           this.roomMemberIds.push(e.userId);
@@ -196,7 +202,7 @@ export default {
             const receivedMessage = JSON.parse(res.body);
             this.chatMessages.push(receivedMessage.message);
             console.log(receivedMessage);
-            // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
+            // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId로 업데이트
             const payload = {
               nextMessageBundleId: receivedMessage.bundleInfo.nextMessageBundleId,
             };

@@ -1,6 +1,6 @@
-import router from "../../router";
-import store from "../../store";
-import axios from "../../utils/axios";
+import router from "@/router";
+import store from "@/store";
+import axios from "@/utils/axios";
 import createPersistedState from "vuex-persistedstate";
 
 const userStore = {
