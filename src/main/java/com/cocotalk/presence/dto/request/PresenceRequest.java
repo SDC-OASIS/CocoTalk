@@ -1,4 +1,4 @@
-package com.cocotalk.presence.dto;
+package com.cocotalk.presence.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

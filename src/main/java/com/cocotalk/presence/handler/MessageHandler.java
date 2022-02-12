@@ -1,7 +1,9 @@
 package com.cocotalk.presence.handler;
 
-import com.cocotalk.presence.dto.PresenceRequest;
-import com.cocotalk.presence.service.ChatConnectionService;
+import com.cocotalk.presence.dto.request.PresenceRequest;
+import com.cocotalk.presence.exception.CustomError;
+import com.cocotalk.presence.exception.CustomException;
+import com.cocotalk.presence.service.ChatConnectService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @RequiredArgsConstructor
 public class MessageHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
-    private final ChatConnectionService chatConnectionService;
+    private final ChatConnectService chatConnectService;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
@@ -25,11 +27,19 @@ public class MessageHandler extends TextWebSocketHandler {
             PresenceRequest request = objectMapper.readValue(message.getPayload(), PresenceRequest.class);
             switch (request.getAction()) {
                 case "register" : {
-                    chatConnectionService.registerConnectionUrl(request.getServerUrl());
+                    chatConnectService.registerConnectionUrl(request.getServerUrl());
                     break;
                 }
                 case "withdraw" : {
-                    chatConnectionService.withdrawConnectionUrl(request.getServerUrl());
+                    chatConnectService.withdrawConnectionUrl(request.getServerUrl());
+                    break;
+                }
+                case "connect" : {
+                    chatConnectService.connectChatServer(request.getServerUrl());
+                    break;
+                }
+                case "disconnect" : {
+                    chatConnectService.disconnectChatServer(request.getServerUrl());
                     break;
                 }
             }
