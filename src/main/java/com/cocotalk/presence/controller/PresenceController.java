@@ -1,10 +1,12 @@
 package com.cocotalk.presence.controller;
 
+import com.cocotalk.presence.application.UserVo;
 import com.cocotalk.presence.dto.response.CustomResponse;
 import com.cocotalk.presence.exception.CustomError;
 import com.cocotalk.presence.exception.CustomException;
 import com.cocotalk.presence.service.ChatConnectService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ public class PresenceController {
     private final ChatConnectService chatConnectService;
 
     @GetMapping("/chatserver/connect")
-    public ResponseEntity<CustomResponse<String>> handoverChatServerUrl() {
+    public ResponseEntity<CustomResponse<String>> handoverChatServerUrl(@Parameter(hidden = true) UserVo userVo) {
          String data = chatConnectService.handoverConnectionUrl();
          return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }

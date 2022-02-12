@@ -70,7 +70,7 @@ public class ChatConnectService {
     public String handoverConnectionUrl() {
         String prefix =  "CC/*";
         Set<String> urls = redisTemplate.keys(prefix);
-        if(urls == null) throw new CustomException(CustomError.CHAT_SERVER_CONNECTION, "연결할 수 있는 채팅 서버가 없습니다");
+        if(urls.size() == 0) throw new CustomException(CustomError.CHAT_SERVER_CONNECTION, "연결할 수 있는 채팅 서버가 없습니다");
         ValueOperations<String, Integer> valueOperations = redisTemplate.opsForValue();
         for(String key : urls) {
             Integer numberOfClients = valueOperations.get(key); // multiGet으로 개선 가능
