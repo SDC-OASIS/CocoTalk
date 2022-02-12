@@ -20,17 +20,17 @@
           <div class="add-friend-modal-info row" style="justify-content: center">
             <div v-if="friendInfo" style="dispaly: inline-block; text-align: center">
               <div>
-                <profile-img :imgUrl="friendInfo.profile.profile" width=" 70px" />
+                <profile-img :imgUrl="friendInfo.friend.profile.profile" width=" 70px" />
               </div>
-              <div style="font-weight: bold">{{ this.friendInfo.username }}</div>
-              <div>{{ this.friendInfo.profile.message }}</div>
+              <div style="font-weight: bold">{{ this.friendInfo.friend.username }}</div>
+              <div>{{ this.friendInfo.friend.profile.message }}</div>
             </div>
           </div>
         </div>
-        <div v-if="friendInfo" class="row" style="justify-content: right" @click="addFriend">
-          <Button text="친구추가" width="80px" height="30px" />
-          <Button text="나와의 채팅" width="80px" height="30px" />
-          <Button text="1:1 채팅" width="80px" height="30px" />
+        <div v-if="friendInfo" class="row" style="justify-content: right">
+          <Button v-if="friendInfo.type == 0" text="1:1 채팅" width="80px" height="30px" />
+          <Button v-else-if="friendInfo.type == 2 || friendInfo.type == 1" text="친구추가" width="80px" height="30px" @click.native="addFriend" />
+          <Button v-else-if="friendInfo.type == 3" text="나와의 채팅" width="100px" height="30px" />
         </div>
         <!-- <div v-else class="row" style="justify-content: right" @click="getFriendInfo">
 					<Button text="검색" width="80px" height="30px" />
@@ -43,7 +43,7 @@
 <script>
 import ProfileImg from "../common/ProfileImg.vue";
 import Button from "../common/Button.vue";
-import axios from "axios";
+import axios from "@/utils/axios";
 export default {
   name: "AddFriendModal",
   data() {
@@ -78,17 +78,23 @@ export default {
     },
     getFriendInfo() {
       if (this.friendId) {
-        axios.get(`user/cid/${this.friendId}`).then((res) => {
+        axios.get(`user/friends/cid/${this.friendId}`).then((res) => {
           console.log("친구정보 가져오기");
+          console.log(res);
           let friendInfo = res.data.data;
-          friendInfo.profile = JSON.parse(friendInfo.profile);
-          this.friendInfo = friendInfo;
-          console.log(this.friendInfo);
+          if (friendInfo.friend.id) {
+            friendInfo.friend.profile = JSON.parse(friendInfo.friend.profile);
+            this.friendInfo = friendInfo;
+            console.log(this.friendInfo);
+          }
         });
       }
     },
     addFriend() {
-      this.$store.dispatch("friend/addFriend", this.friendInfo, { root: true });
+      const friendId = {
+        toUid: this.friendInfo.friend.id,
+      };
+      this.$store.dispatch("friend/addFriend", friendId, { root: true });
     },
   },
 };

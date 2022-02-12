@@ -15,7 +15,6 @@ axios.interceptors.request.use(
     config.headers["X-ACCESS-TOKEN"] = store.getters["userStore/accessToken"];
     // config.headers["X-REFRESH-TOKEN"] = state.refreshToken;
     console.log("헤더넣기 완료");
-    console.log(store.getters["userStore/accessToken"]);
     return config;
   },
   function (error) {
