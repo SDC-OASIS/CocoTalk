@@ -4,7 +4,7 @@ import com.cocotalk.chat.domain.vo.*;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
 import com.cocotalk.chat.dto.request.InviteMessageRequest;
 import com.cocotalk.chat.dto.request.RoomRequest;
-import com.cocotalk.chat.service.KafkaProducer;
+import com.cocotalk.chat.service.kafak.KafkaProducer;
 import com.cocotalk.chat.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.List;
  * @author 황종훈
  * @version 1.0, 최초 작성
  * @see com.cocotalk.chat.service.RoomService
- * @see com.cocotalk.chat.service.KafkaProducer
+ * @see KafkaProducer
  */
 
 @Slf4j

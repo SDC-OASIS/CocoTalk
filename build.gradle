@@ -73,6 +73,9 @@ dependencies {
 
     // Jackson
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+
+    //s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
 }
 
 dependencyManagement {

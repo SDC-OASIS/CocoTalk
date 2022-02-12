@@ -1,4 +1,4 @@
-package com.cocotalk.chat.service;
+package com.cocotalk.chat.service.kafak;
 
 import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
