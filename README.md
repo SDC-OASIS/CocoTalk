@@ -40,9 +40,7 @@
 
 ### 🔧아키텍쳐
 
-<img src = "./assets/프론트아키텍처.png" width="50%" height="50%">
-
-![프론트엔드 아키텍처](./assets/프론트아키텍처.png){: width="50%"}
+<img src = "./assets/프론트아키텍처.png" width="70%" height="70%">
 
 <hr/>
 
