@@ -14,7 +14,7 @@ public class WebSocketConfig {
     private String PRESENCE_SERVICE_WEBSOCKET_URL;
 
     @Bean
-    public WebSocketUtils websocketClient() throws Exception{
+    public WebSocketUtils webSocketClient() throws Exception {
         URI uri = new URI(PRESENCE_SERVICE_WEBSOCKET_URL);
         WebSocketUtils webSocketUtils = new WebSocketUtils(uri, new Draft_6455());
         //웹소켓 커넥팅

@@ -1,7 +1,6 @@
 package com.cocotalk.chat.controller;
 
 import com.cocotalk.chat.domain.vo.*;
-import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
 import com.cocotalk.chat.dto.request.InviteMessageRequest;
 import com.cocotalk.chat.dto.request.RoomRequest;
@@ -14,9 +13,10 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 /**
  * STOMP 메시지를 받는 컨트롤러
@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @MessageMapping("/chatroom")
 public class ChatController {
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final RoomService roomService;
     private final KafkaProducer kafkaProducer;
 
@@ -51,7 +50,7 @@ public class ChatController {
         RoomVo roomVo = roomService.create(roomRequest); // (1) 메시지 수신 후 방 생성
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) { // (2) 방 생성 정보를 채팅방에 포함된 멤버들에게 pub
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
@@ -65,11 +64,14 @@ public class ChatController {
     @MessageMapping("/{roomId}/message/send")
     public void send(@DestinationVariable ObjectId roomId,
                             @Payload ChatMessageRequest chatMessageRequest) {
-
         MessageVo<ChatMessageVo> messageVo = roomService.saveChatMessage(roomId, chatMessageRequest);
-        log.info("[ChatController] 토픽 전송 : " + "/topic/" + roomId + "/message");
-        // kafka에 메세지 전송
+        List<Long> receiverIds = chatMessageRequest.getReceiverIds();
+
         kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
+
+        for (Long userId : receiverIds) {
+            kafkaProducer.sendToChat("/topic/" + userId + "/message", messageVo);
+        }
         kafkaProducer.sendToPush(chatMessageRequest);
     }
 
@@ -92,7 +94,7 @@ public class ChatController {
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
@@ -115,7 +117,7 @@ public class ChatController {
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }
@@ -137,7 +139,7 @@ public class ChatController {
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) {
-            long userId = roomVo.getMembers().get(i).getUserId();
+            Long userId = roomVo.getMembers().get(i).getUserId();
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
         }
     }

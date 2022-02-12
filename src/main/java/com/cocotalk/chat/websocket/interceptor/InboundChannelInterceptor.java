@@ -1,19 +1,16 @@
 package com.cocotalk.chat.websocket.interceptor;
 
 import com.cocotalk.chat.service.RoomService;
-import com.cocotalk.chat.utils.logging.ChannelLogger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+// import com.cocotalk.chat.utils.logging.ChannelLogger;
 
 
 @Slf4j
@@ -21,7 +18,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class InboundChannelInterceptor implements ChannelInterceptor {
     private final RoomService roomService;
-    private final ChannelLogger channelLogger;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -70,38 +66,38 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
 //                }
 //            }
 //        }
-        channelLogger.loggingMessage(message);
+        // channelLogger.loggingMessage(message);
         return message;
     }
 
     @Override
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
-        channelLogger.loggingMessage(message);
+        // channelLogger.loggingMessage(message);
     }
 
     @Override
     public void afterSendCompletion(Message<?> message, MessageChannel channel, boolean sent, Exception ex) {
-        channelLogger.loggingMessage(message);
-        log.info(String.format("<----------------------------------- %s ----------------------------------->",
-                Thread.currentThread().getStackTrace()[1].getMethodName()));
+        // channelLogger.loggingMessage(message);
+        // log.info(String.format("<----------------------------------- %s ----------------------------------->",
+        //         Thread.currentThread().getStackTrace()[1].getMethodName()));
     }
 
     @Override
     public boolean preReceive(MessageChannel channel) {
-        log.info(channelLogger.getPath());
+        // log.info(channelLogger.getPath());
         return ChannelInterceptor.super.preReceive(channel);
     }
 
     @Override
     public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-        channelLogger.loggingMessage(message);
+        // channelLogger.loggingMessage(message);
         return message;
     }
 
     @Override
     public void afterReceiveCompletion(Message<?> message, MessageChannel channel, Exception ex) {
-        channelLogger.loggingMessage(message);
-        log.info(String.format("<----------------------------------- %s ----------------------------------->",
-                Thread.currentThread().getStackTrace()[1].getMethodName()));
+        // channelLogger.loggingMessage(message);
+        // log.info(String.format("<----------------------------------- %s ----------------------------------->",
+        //         Thread.currentThread().getStackTrace()[1].getMethodName()));
     }
 }

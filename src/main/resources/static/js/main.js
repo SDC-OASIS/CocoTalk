@@ -119,7 +119,7 @@ function createRoomAndConnectAndSend(event){
                 },
                 {
                     userId: friendId,
-                    username: "이희은",
+                    username: "병학",
                     profile: JSON.stringify({
                         profile: "https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg",
                         background: "https://ifh.cc/g/CgiChn.jpg",
