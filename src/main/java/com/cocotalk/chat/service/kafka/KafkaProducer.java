@@ -1,4 +1,4 @@
-package com.cocotalk.chat.service.kafak;
+package com.cocotalk.chat.service.kafka;
 
 import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.cocotalk.chat.dto.kafka.PushTopicDto;
@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author 김민정
