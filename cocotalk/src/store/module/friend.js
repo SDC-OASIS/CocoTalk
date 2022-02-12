@@ -1,4 +1,6 @@
 import createPersistedState from "vuex-persistedstate";
+import store from "../../store";
+import router from "../../router";
 import axios from "@/utils/axios";
 
 const friend = {
@@ -36,22 +38,16 @@ const friend = {
         console.log(friends);
       });
     },
-    addFriend: function (context, payload) {
-      console.log(payload);
-      // axios.post(`user/friends/${this.friendInfo.id}`).then((res) => {
-      // 	console.log("친구추가하기");
-      // 	console.log(res);
-      // 	// let friendInfo = res.data.data;
-      // 	// friendInfo.profile = JSON.parse(friendInfo.profile);
-      // 	// this.friendInfo = friendInfo;
-      // 	console.log(this.friendInfo);
-
-      // 	// let userInfo = res.data.data;
-      // 	// userInfo.profile = JSON.parse(userInfo.profile);
-      // 	// context.commit("SET_USER", userInfo);
-      // 	// console.log(userInfo);
-      // });
-      // context.commit("ADD_FRIEND", payload);
+    addFriend: function (context, friendId) {
+      axios.post("user/friends", friendId).then((res) => {
+        console.log("친구추가성공");
+        let friendInfo = res.data.data.toUser;
+        friendInfo.profile = JSON.parse(friendInfo.profile);
+        console.log(friendInfo);
+        store.dispatch("modal/closeAddFriendModal");
+        router.go();
+      });
+      // context.commit("ADD_FRIEND", friendInfo);
     },
   },
   modules: {},

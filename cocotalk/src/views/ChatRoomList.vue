@@ -81,7 +81,6 @@ export default {
   },
   created() {
     console.log("========[채팅목록페이지]=========");
-    console.log(this.$route.params);
     this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
     this.getChatList();
     this.chatListSubscribe();
