@@ -11,8 +11,8 @@ moment.locale("ko");
 Vue.use(VueMoment, { moment });
 
 new Vue({
-	router,
-	store,
-	InfiniteLoading,
-	render: (h) => h(App),
+  router,
+  store,
+  InfiniteLoading,
+  render: (h) => h(App),
 }).$mount("#app");

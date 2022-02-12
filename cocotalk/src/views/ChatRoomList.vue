@@ -11,12 +11,13 @@
         </div>
       </div>
     </div>
-    <div class="chat-room-list-container">
-      <div class="chat-room-item-container row" v-for="(chat, idx) in chats" :key="idx">
+    <!-- <div class="chat-room-list-container"> -->
+    <transition-group class="chat-room-list-container" @before-enter="beforeEnter" @after-enter="afterEnter" @enter-cancelled="afterEnter">
+      <div class="chat-room-item-container row" v-for="(chat, idx) in chats" :key="chat.room.id" :data-index="idx">
         <!-- <div>
 					<ProfileImg :imgUrl="chat.img" width="50px" />
 				</div> -->
-        <button @click="deleteMessage(chat.room.id)">ddd</button>
+        <!-- <button @click="deleteMessage(chat.room.id)">ddd</button> -->
 
         <div style="dispaly: inline-block; text-align: center">
           <div v-if="chat.room.members.length == 1">
@@ -53,11 +54,12 @@
           <chat-list-info :chatInfo="chat" />
           <div class="box row chat-detail-info">
             <div class="received-time">{{ messageSentTime(chat.recentChatMessage.sentAt) }}</div>
-            <div class="message-cnt box">{{ chat.unreadNumber }}</div>
+            <div v-show="chat.unreadNumber" class="message-cnt box">{{ chat.unreadNumber }}</div>
           </div>
         </div>
       </div>
-    </div>
+    </transition-group>
+    <!-- </div> -->
     {{ roomStatus }}
   </div>
 </template>
@@ -91,10 +93,40 @@ export default {
     ...mapState("socket", ["stompChatListClient", "stompChatListConnected"]),
   },
   methods: {
+    clone(o) {
+      var result = {};
+      for (var i in o) {
+        result[i] = o[i];
+      }
+      return result;
+    },
     chatListSubscribe() {
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/message`, (res) => {
         console.log("구독으로 받은 메시지목록의 마지막 메세지 정보 입니다.");
-        console.log(res);
+        const data = JSON.parse(res.body);
+        let lastMessage = data.message;
+        let bundleInfo = data.bundleInfo;
+        const idx = this.chats.findIndex(function (item) {
+          return item.room.id == lastMessage.roomId;
+        });
+        console.log(idx);
+        this.chats[idx].recentChatMessage = lastMessage;
+        // 현재 입장한 방이 아니라면 안읽은메세지수에 더해줌
+        if (this.chats[idx].room.id != this.roomStatus.roomId) {
+          this.chats[idx].unreadNumber++;
+        }
+        if (idx) {
+          console.log("화이팅");
+          const updateData = this.chats[idx];
+          console.log(updateData);
+          this.chats.splice(idx, 1);
+          this.chats.unshift(updateData);
+        }
+
+        const recentMessageBundleCount = bundleInfo.currentMessageBundleCount;
+        this.$store.dispatch("chat/updateMessageBundleCount", recentMessageBundleCount, { root: true });
+        console.log(lastMessage);
+        console.log(bundleInfo);
       });
       // 채팅목록 채팅방정보 채널 subscribe
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
@@ -111,12 +143,18 @@ export default {
       this.$store.dispatch("modal/openChatCreationModal", "open", { root: true });
     },
     goChat(chat) {
+      // 현재 swagger로 채팅방생성중이기때문에 첫메세지가 없는 경우가 있어 nextMessageBundleId 업데이트.
+      // 채팅방내부에서 채팅내역불러와서 갱신해주기 때문에 이후에는 필요없음
       let payload = {
         roomId: chat.room.id,
         nextMessageBundleId: chat.room.messageBundleIds[chat.room.messageBundleIds.length - 1],
         recentMessageBundleCount: chat.recentMessageBundleCount,
       };
       this.$store.dispatch("chat/goChat", payload, { root: true });
+      const idx = this.chats.findIndex(function (item) {
+        return item.room.id == chat.room.id;
+      });
+      this.chats[idx].unreadNumber = 0;
     },
     messageSentTime(time) {
       return this.$moment(time).format("LT");
@@ -147,6 +185,22 @@ export default {
       console.log(idx);
       this.chats.splice(idx, 1);
       console.log(this.chats);
+    },
+    // 트랜지션 시작에서 인덱스*100ms 만큼의 딜레이 부여
+    beforeEnter(el) {
+      this.$nextTick(() => {
+        if (!this.addEnter) {
+          // 추가가 아니라면 딜레이 적용
+          el.style.transitionDelay = 100 * parseInt(el.dataset.index, 10) + "ms";
+        } else {
+          // 추가라면 플래그 제거만
+          this.addEnter = false;
+        }
+      });
+    },
+    // 트랜지션을 완료하거나 취소할 때는 딜레이를 제거합니다.
+    afterEnter(el) {
+      el.style.transitionDelay = "";
     },
   },
 };
@@ -291,5 +345,19 @@ export default {
   position: relative;
   top: -8px;
   left: -7px;
+}
+/* 트랜지션 전용 스타일 */
+.v-enter-active,
+.v-leave-active,
+.v-move {
+  transition: opacity 0.5s, transform 0.5s;
+}
+.v-leave-active {
+  position: absolute;
+}
+
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 </style>

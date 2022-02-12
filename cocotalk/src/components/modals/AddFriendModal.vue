@@ -29,7 +29,7 @@
         </div>
         <div v-if="friendInfo" class="row" style="justify-content: right">
           <Button v-if="friendInfo.type == 0" text="1:1 채팅" width="80px" height="30px" />
-          <Button v-else-if="friendInfo.type == 2 || friendInfo.type == 1" text="친구추가" width="80px" height="30px" @click.native="addFriend" />
+          <Button v-else-if="friendInfo.type == 1 || friendInfo.type == 2" text="친구추가" width="80px" height="30px" @click.native="addFriend" />
           <Button v-else-if="friendInfo.type == 3" text="나와의 채팅" width="100px" height="30px" />
         </div>
         <!-- <div v-else class="row" style="justify-content: right" @click="getFriendInfo">

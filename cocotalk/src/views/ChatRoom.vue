@@ -25,12 +25,13 @@
           <!-- {{ chatMessage }} -->
           <!-- 상대가 한 말 -->
           <div v-if="chatMessage.userId != userInfo.id" class="row">
-            <!-- <ProfileImg :imgUrl="chatMessage.userInfo.profile" width="40px" /> -->
+            <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
             <div class="chat-message">
-              <!-- <div style="padding-bottom: 7px">{{ chatMessage.userInfo.userName }}</div> -->
+              <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
               <div class="row">
                 <div class="bubble box">{{ chatMessage.content }}</div>
                 <div style="position: relative; width: 70px">
+                  <div class="unread-number">2</div>
                   <div class="sent-time">오후2:00</div>
                 </div>
               </div>
@@ -41,6 +42,7 @@
             <div class="chat-message">
               <div class="row">
                 <div style="position: relative; width: 55px">
+                  <div class="unread-number-me">2</div>
                   <div class="sent-time-me">오후2:00</div>
                 </div>
                 <div class="bubble-me box">{{ chatMessage.content }}</div>
@@ -50,10 +52,9 @@
         </div>
       </div>
     </div>
-    <!-- <button @click="changeNow">kkk</button> -->
-    {{ roomStatus }}
     <div class="message-input-container row">
-      <textarea v-model="message"></textarea>
+      <!-- <input v-model.trim="message" type="textarea" @keypress.enter="send" /> -->
+      <textarea v-model.trim="message" @keypress.enter="send"></textarea>
       <div @click="send">
         <Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
       </div>
@@ -64,7 +65,7 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
-// import ProfileImg from "../components/common/ProfileImg.vue";
+import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
 import Sidebar from "../components/chat/Sidebar.vue";
 import Stomp from "webstomp-client";
@@ -83,7 +84,7 @@ export default {
     };
   },
   components: {
-    // ProfileImg,
+    ProfileImg,
     Button,
     Sidebar,
   },
@@ -100,6 +101,7 @@ export default {
     this.chatRoomConnect();
     this.getChat();
   },
+
   mounted() {
     console.log("채팅연결시작");
     console.log(this.roomId);
@@ -171,13 +173,34 @@ export default {
       axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
         console.log("채팅내역 가져오기");
         let chatData = res.data.data;
-        this.chatMessages = chatData.messageList;
         this.roomInfo = chatData.room;
-        let members = chatData.room.members;
-        members.forEach((e) => {
+        this.chatMessages = chatData.messageList;
+        chatData.room.messageBundleIds = chatData.room.messageBundleIds.slice(1, -1).split(", ");
+        // 새로 받은 최신 bundleId 업데이트
+        const payload = {
+          nextMessageBundleId: this.roomInfo.messageBundleIds[this.roomInfo.messageBundleIds.length - 1],
+        };
+        this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
+        // 이후 메세지 보낼때 필요한 룸멤버의 아이디 값 계산
+        this.roomInfo.members.forEach((e) => {
           this.roomMemberIds.push(e.userId);
+          if (e.profile) {
+            e.profile = JSON.parse(e.profile);
+          }
         });
       });
+    },
+    sentUserName(userId) {
+      const idx = this.roomInfo.members.findIndex(function (item) {
+        return item.userId == userId;
+      });
+      return this.roomInfo.members[idx].username;
+    },
+    profileImg(userId) {
+      const idx = this.roomInfo.members.findIndex(function (item) {
+        return item.userId == userId;
+      });
+      return this.roomInfo.members[idx].profile.profile;
     },
     chatRoomConnect: function () {
       const serverURL = "http://138.2.93.111:8080/stomp";
@@ -196,7 +219,7 @@ export default {
             const receivedMessage = JSON.parse(res.body);
             this.chatMessages.push(receivedMessage.message);
             console.log(receivedMessage);
-            // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId 저장
+            // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId로 업데이트
             const payload = {
               nextMessageBundleId: receivedMessage.bundleInfo.nextMessageBundleId,
             };
@@ -206,6 +229,7 @@ export default {
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/room`, (res) => {
             console.log("구독으로 받은 채팅방 정보입니다.");
             this.roomInfo = JSON.parse(res.body);
+            console.log(this.roomInfo);
           });
           // 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
           // const msg = {
@@ -229,11 +253,11 @@ export default {
     },
     send() {
       console.log("Send message");
-      if (this.stompChatRoomClient && this.stompChatRoomClient.connected) {
+      if (this.stompChatRoomClient && this.stompChatRoomClient.connected && this.message) {
         const msg = {
           type: 0,
           content: this.message,
-          roomId: this.roomStatus.id,
+          roomId: this.roomStatus.roomId,
           roomType: this.roomInfo.type,
           roomname: this.roomInfo.roomname,
           userId: this.userInfo.id,
@@ -243,6 +267,10 @@ export default {
         };
         this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
       }
+      this.message = "";
+      // [메세지보낸 후 엔터커서 위로 올라오지 않는 현상 해결중]
+      // e.target.value = "";
+      // document.getElementById("textarea").focus();
     },
   },
 };
@@ -266,7 +294,7 @@ export default {
   overflow: auto;
 }
 .chat-messages-container {
-  height: 70vh;
+  height: 71vh;
 }
 .chat-messages-outer-container::-webkit-scrollbar {
   position: absolute;
@@ -307,7 +335,7 @@ export default {
   /* -moz-border-radius: 10px; */
   border-radius: 5px;
   margin-right: 5px;
-  max-width: 300px;
+  max-width: 250px;
   word-break: break-all;
 }
 
@@ -323,20 +351,39 @@ export default {
   left: -11px;
   top: 8px;
 }
+.unread-number {
+  color: #749f58;
+  font-size: 10px;
+  position: absolute;
+  bottom: 10px;
+  left: 1px;
+  width: 70px;
+  height: 15px;
+}
+.unread-number-me {
+  color: #749f58;
+  font-size: 10px;
+  position: absolute;
+  bottom: 10px;
+  right: 1px;
+  width: 12px;
+  height: 15px;
+}
 .sent-time {
   position: absolute;
   bottom: 0;
   right: 0;
   width: 70px;
   height: 15px;
-  font-size: 12px;
+  font-size: 11px;
 }
 .sent-time-me {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 2px;
+  right: 0;
+  width: 50px;
   height: 15px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .bubble-me {
