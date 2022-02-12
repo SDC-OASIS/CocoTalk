@@ -54,7 +54,7 @@
           <chat-list-info :chatInfo="chat" />
           <div class="box row chat-detail-info">
             <div class="received-time">{{ messageSentTime(chat.recentChatMessage.sentAt) }}</div>
-            <div class="message-cnt box">{{ chat.unreadNumber }}</div>
+            <div v-show="chat.unreadNumber" class="message-cnt box">{{ chat.unreadNumber }}</div>
           </div>
         </div>
       </div>
@@ -111,6 +111,10 @@ export default {
         });
         console.log(idx);
         this.chats[idx].recentChatMessage = lastMessage;
+        // 현재 입장한 방이 아니라면 안읽은메세지수에 더해줌
+        if (this.chats[idx].room.id != this.roomStatus.roomId) {
+          this.chats[idx].unreadNumber++;
+        }
         if (idx) {
           console.log("화이팅");
           const updateData = this.chats[idx];
@@ -147,6 +151,10 @@ export default {
         recentMessageBundleCount: chat.recentMessageBundleCount,
       };
       this.$store.dispatch("chat/goChat", payload, { root: true });
+      const idx = this.chats.findIndex(function (item) {
+        return item.room.id == chat.room.id;
+      });
+      this.chats[idx].unreadNumber = 0;
     },
     messageSentTime(time) {
       return this.$moment(time).format("LT");
