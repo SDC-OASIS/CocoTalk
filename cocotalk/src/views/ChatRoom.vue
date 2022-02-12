@@ -53,7 +53,7 @@
     <!-- <button @click="changeNow">kkk</button> -->
     {{ roomStatus }}
     <div class="message-input-container row">
-      <textarea v-model="message"></textarea>
+      <textarea v-model="message" @keypress.enter="send"></textarea>
       <div @click="send">
         <Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
       </div>
@@ -239,7 +239,7 @@ export default {
         const msg = {
           type: 0,
           content: this.message,
-          roomId: this.roomStatus.id,
+          roomId: this.roomStatus.roomId,
           roomType: this.roomInfo.type,
           roomname: this.roomInfo.roomname,
           userId: this.userInfo.id,

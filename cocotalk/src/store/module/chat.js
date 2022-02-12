@@ -44,6 +44,9 @@ const chat = {
     UPDATE_MESSAGE_BUNDLE_ID(state, payload) {
       state.chatInfo.nextMessageBundleId = payload.nextMessageBundleId;
     },
+    UPDATE_MESSAGE_BUNDLE_COUNT(state, recentMessageBundleCount) {
+      state.chatInfo.recentMessageBundleCount = recentMessageBundleCount;
+    },
   },
   actions: {
     // 페이지 전환
@@ -72,6 +75,9 @@ const chat = {
     },
     updateMessageBundleId(context, payload) {
       context.commit("UPDATE_MESSAGE_BUNDLE_ID", payload);
+    },
+    updateMessageBundleCount(context, recentMessageBundleCount) {
+      context.commit("UPDATE_MESSAGE_BUNDLE_COUNT", recentMessageBundleCount);
     },
   },
   modules: {},
