@@ -281,7 +281,7 @@ public class RoomService {
 
 
                     // Pagination을 제한적으로 사용하기 때문에 (전부 읽었을 수도 있고, 일정 갯수 넘어가면 탈출) 따로 limit 쿼리를 쓸 필요는 없어 보인다.
-                    while(amountUnread < messageBundleLimit && mbIdx >= 0) {
+                    while(amountUnread < messageBundleLimit && mbIdx-- >= 0) {
                         // (8) 현재 메시지 번들에서 읽지 않은 메시지 수 계산
                         long partUnread = messageBundleVo.getMessageIds().parallelStream()
                                 .map(chatMessageService::find)
@@ -293,7 +293,7 @@ public class RoomService {
                         else {
                             amountUnread += partUnread; // (9)이 메시지 번들에서 읽지 않은 메시지 수 더하기
                             if(amountUnread >= messageBundleLimit) amountUnread = messageBundleLimit;
-                            messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx--)); // (10) 이전 메시지 번들로 변경
+                            else messageBundleVo = messageBundleService.find(messageBundleIds.get(mbIdx)); // (10) 이전 메시지 번들로 변경
                         }
                     }
 
