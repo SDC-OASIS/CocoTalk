@@ -4,21 +4,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.*;
+import java.net.URI;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Slf4j
 public class WebSocketUtils extends WebSocketClient {
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    // private static ScheduledFuture<?> task;
+
     public WebSocketUtils(URI serverUri, Draft protocolDraft) {
         super(serverUri, protocolDraft);
     }
 
     @Override
-    public void onOpen(ServerHandshake handshake) { log.info("Opened connection to presence service"); }
+    public void onOpen(ServerHandshake handshake) {
+        log.info("Opened connection to presence service");
+        // task.cancel(false);
+    }
 
     @Override
     public void onMessage(String message) {
@@ -26,10 +30,24 @@ public class WebSocketUtils extends WebSocketClient {
     }
 
     @Override
-    public void onClose(int code, String reason, boolean remote) { log.info("Closed connection to presence service"); }
+    public void onClose(int code, String reason, boolean remote) {
+        log.info("Closed connection to presence service");
+        // tryReconnect();
+    }
 
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
     }
+
+//    public void tryReconnect() {
+//         task = executor.scheduleAtFixedRate(() -> {
+//            try {
+//                log.info("Try reconnect per 5 seconds");
+//                this.reconnectBlocking();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }, 0, 50000, TimeUnit.MILLISECONDS);
+//    }
 }
