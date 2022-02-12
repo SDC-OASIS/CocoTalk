@@ -36,18 +36,18 @@ public class MessageController {
     /**
      * 채팅방 메시지 페이징 [GET] /messages
      *
-     * @param roomid 메시지를 페이징할 채팅방의 ObjectId
-     * @param bundleid 메시지를 페이징할 메시지 번들의 ObjectId
+     * @param roomId 메시지를 페이징할 채팅방의 ObjectId
+     * @param bundleId 메시지를 페이징할 메시지 번들의 ObjectId
      * @param count 마지막으로 조회한 메시지 번들의 count
      * @return ResponseEntity<CustomResponse<List<ChatMessageVo>>> 페이징한 채팅방의 메시지 정보가 포함됩니다.
      */
     @GetMapping
     @Operation(summary = "채팅방 메시지 페이징")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<List<ChatMessageVo>>> findRoomList(@RequestParam ObjectId roomid,
-                                                                            @RequestParam ObjectId bundleid,
+    public ResponseEntity<CustomResponse<List<ChatMessageVo>>> findRoomList(@RequestParam ObjectId roomId,
+                                                                            @RequestParam ObjectId bundleId,
                                                                             @RequestParam int count){
-        List<ChatMessageVo> data = chatMessageService.findMessagePage(roomid, bundleid, count, messagePagingSize);
+        List<ChatMessageVo> data = chatMessageService.findMessagePage(roomId, bundleId, count, messagePagingSize);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
