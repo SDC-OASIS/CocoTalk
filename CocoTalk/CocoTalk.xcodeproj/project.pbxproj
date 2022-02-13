@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FC40085705DAD086F6CC797 /* Pods_CocoTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F1DCD2F1CA7C0387905AAD9 /* Pods_CocoTalk.framework */; };
 		EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */; };
 		EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */; };
 		EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA14D4F32786B16C00EDC892 /* SplashViewController.swift */; };
@@ -36,7 +37,6 @@
 		EA2913DA27AA2DAD00324476 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = EA2913D927AA2DAD00324476 /* RxMoya */; };
 		EA2913DD27AA349D00324476 /* BaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913DC27AA349D00324476 /* BaseRepository.swift */; };
 		EA2913DF27AA43D800324476 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913DE27AA43D800324476 /* APIError.swift */; };
-		EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E027AA520B00324476 /* ProfileRepository.swift */; };
 		EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */; };
 		EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E427AA6B3200324476 /* MessageRepository.swift */; };
 		EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2913E627AB6CE300324476 /* UserRepository.swift */; };
@@ -54,7 +54,6 @@
 		EA29140D27B0B16F00324476 /* URL+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29140C27B0B16F00324476 /* URL+Ext.swift */; };
 		EA29140F27B0B36400324476 /* ModelEmailVerifyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29140E27B0B36400324476 /* ModelEmailVerifyRequest.swift */; };
 		EA29141327B0B40800324476 /* APIResult_0.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141227B0B40800324476 /* APIResult_0.swift */; };
-		EA29141527B0DA5300324476 /* ModelUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141427B0DA5300324476 /* ModelUserResponse.swift */; };
 		EA29141727B0F35900324476 /* APIResult_1.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141627B0F35900324476 /* APIResult_1.swift */; };
 		EA29141927B1096C00324476 /* EmailRegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141827B1096C00324476 /* EmailRegisterViewModel.swift */; };
 		EA29141B27B10C0100324476 /* ModelIssueEmailCodeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29141A27B10C0100324476 /* ModelIssueEmailCodeRequest.swift */; };
@@ -96,12 +95,29 @@
 		EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376E278C61E9007957EB /* PasswordViewController.swift */; };
 		EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3771278C623F007957EB /* NewProfileViewController.swift */; };
 		EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */; };
+		EA8F20A527B79458008A01ED /* SelectableFrinedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20A427B79458008A01ED /* SelectableFrinedCell.swift */; };
+		EA8F20A727B79506008A01ED /* CreateChatRoomDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20A627B79506008A01ED /* CreateChatRoomDelegate.swift */; };
+		EA8F20A927B796C7008A01ED /* ClosableFriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20A827B796C7008A01ED /* ClosableFriendCell.swift */; };
+		EA8F20AD27B7DBA9008A01ED /* SocketTopicRoomListEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20AC27B7DBA9008A01ED /* SocketTopicRoomListEnum.swift */; };
+		EA8F20B227B80816008A01ED /* CreateGroupChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B127B80816008A01ED /* CreateGroupChatViewController.swift */; };
+		EA8F20B427B80826008A01ED /* CreateGroupChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B327B80826008A01ED /* CreateGroupChatViewModel.swift */; };
+		EA8F20B627B8B441008A01ED /* ProfileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B527B8B441008A01ED /* ProfileHelper.swift */; };
+		EA8F20B827B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */; };
+		EA8F20BA27B918C9008A01ED /* WebSocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
 		EAC6159027B62E7C00B213BC /* ModelFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6158F27B62E7C00B213BC /* ModelFriend.swift */; };
 		EAC6159627B6926000B213BC /* ProfileModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */; };
 		EAC6159727B6926000B213BC /* ProfileModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159527B6926000B213BC /* ProfileModalViewController.swift */; };
 		EAC6159927B692F100B213BC /* GNBDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159827B692F100B213BC /* GNBDelegate.swift */; };
+		EAC6159E27B6B64900B213BC /* CreateChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6159D27B6B64900B213BC /* CreateChatRoomViewController.swift */; };
+		EAC615A127B6B65F00B213BC /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A027B6B65F00B213BC /* AddFriendViewController.swift */; };
+		EAC615A327B6B67900B213BC /* AddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A227B6B67900B213BC /* AddFriendViewModel.swift */; };
+		EAC615A527B6C0C500B213BC /* AddFriendDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */; };
+		EAC615A727B6D43600B213BC /* ModelAddFriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */; };
+		EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */; };
+		EAC615AB27B6E35F00B213BC /* TabEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AA27B6E35F00B213BC /* TabEnum.swift */; };
+		EAC615AE27B7673100B213BC /* CreateChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */; };
 		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
 		EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A7279A981A00777EBF /* MessageEnum.swift */; };
 		EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A9279A986C00777EBF /* ModelMessage.swift */; };
@@ -115,6 +131,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		60D658A020784DB3358F0410 /* Pods-CocoTalk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoTalk.release.xcconfig"; path = "Target Support Files/Pods-CocoTalk/Pods-CocoTalk.release.xcconfig"; sourceTree = "<group>"; };
+		6F1DCD2F1CA7C0387905AAD9 /* Pods_CocoTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CocoTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D71070A1DBC41D06752AFED3 /* Pods-CocoTalk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoTalk.debug.xcconfig"; path = "Target Support Files/Pods-CocoTalk/Pods-CocoTalk.debug.xcconfig"; sourceTree = "<group>"; };
 		EA14D4EC2786B16C00EDC892 /* CocoTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -141,7 +160,6 @@
 		EA22D5602797FC2800E1F39A /* UIImageView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Ext.swift"; sourceTree = "<group>"; };
 		EA2913DC27AA349D00324476 /* BaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRepository.swift; sourceTree = "<group>"; };
 		EA2913DE27AA43D800324476 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
-		EA2913E027AA520B00324476 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
 		EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomRepository.swift; sourceTree = "<group>"; };
 		EA2913E427AA6B3200324476 /* MessageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRepository.swift; sourceTree = "<group>"; };
 		EA2913E627AB6CE300324476 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
@@ -159,7 +177,6 @@
 		EA29140C27B0B16F00324476 /* URL+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Ext.swift"; sourceTree = "<group>"; };
 		EA29140E27B0B36400324476 /* ModelEmailVerifyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelEmailVerifyRequest.swift; sourceTree = "<group>"; };
 		EA29141227B0B40800324476 /* APIResult_0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult_0.swift; sourceTree = "<group>"; };
-		EA29141427B0DA5300324476 /* ModelUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUserResponse.swift; sourceTree = "<group>"; };
 		EA29141627B0F35900324476 /* APIResult_1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult_1.swift; sourceTree = "<group>"; };
 		EA29141827B1096C00324476 /* EmailRegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewModel.swift; sourceTree = "<group>"; };
 		EA29141A27B10C0100324476 /* ModelIssueEmailCodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelIssueEmailCodeRequest.swift; sourceTree = "<group>"; };
@@ -194,10 +211,27 @@
 		EA3F376E278C61E9007957EB /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		EA3F3771278C623F007957EB /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
 		EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
+		EA8F20A427B79458008A01ED /* SelectableFrinedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableFrinedCell.swift; sourceTree = "<group>"; };
+		EA8F20A627B79506008A01ED /* CreateChatRoomDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomDelegate.swift; sourceTree = "<group>"; };
+		EA8F20A827B796C7008A01ED /* ClosableFriendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosableFriendCell.swift; sourceTree = "<group>"; };
+		EA8F20AC27B7DBA9008A01ED /* SocketTopicRoomListEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTopicRoomListEnum.swift; sourceTree = "<group>"; };
+		EA8F20B127B80816008A01ED /* CreateGroupChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupChatViewController.swift; sourceTree = "<group>"; };
+		EA8F20B327B80826008A01ED /* CreateGroupChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupChatViewModel.swift; sourceTree = "<group>"; };
+		EA8F20B527B8B441008A01ED /* ProfileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHelper.swift; sourceTree = "<group>"; };
+		EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCreateChatRoomRequest.swift; sourceTree = "<group>"; };
+		EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketDelegate.swift; sourceTree = "<group>"; };
 		EAC6158F27B62E7C00B213BC /* ModelFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFriend.swift; sourceTree = "<group>"; };
 		EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewModel.swift; sourceTree = "<group>"; };
 		EAC6159527B6926000B213BC /* ProfileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewController.swift; sourceTree = "<group>"; };
 		EAC6159827B692F100B213BC /* GNBDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBDelegate.swift; sourceTree = "<group>"; };
+		EAC6159D27B6B64900B213BC /* CreateChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomViewController.swift; sourceTree = "<group>"; };
+		EAC615A027B6B65F00B213BC /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
+		EAC615A227B6B67900B213BC /* AddFriendViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewModel.swift; sourceTree = "<group>"; };
+		EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendDelegate.swift; sourceTree = "<group>"; };
+		EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendRequest.swift; sourceTree = "<group>"; };
+		EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendResponse.swift; sourceTree = "<group>"; };
+		EAC615AA27B6E35F00B213BC /* TabEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabEnum.swift; sourceTree = "<group>"; };
+		EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomViewModel.swift; sourceTree = "<group>"; };
 		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		EAE555A7279A981A00777EBF /* MessageEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEnum.swift; sourceTree = "<group>"; };
 		EAE555A9279A986C00777EBF /* ModelMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelMessage.swift; sourceTree = "<group>"; };
@@ -230,17 +264,37 @@
 				EA29143027B20A1400324476 /* FirebaseMessaging in Frameworks */,
 				EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */,
 				EA3F3767278C4145007957EB /* RxGesture in Frameworks */,
+				0FC40085705DAD086F6CC797 /* Pods_CocoTalk.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4FFF956C6B7BC9277C82CC32 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6F1DCD2F1CA7C0387905AAD9 /* Pods_CocoTalk.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BFB8B7732836F6FF8700919A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D71070A1DBC41D06752AFED3 /* Pods-CocoTalk.debug.xcconfig */,
+				60D658A020784DB3358F0410 /* Pods-CocoTalk.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		EA14D4E32786B16C00EDC892 = {
 			isa = PBXGroup;
 			children = (
 				EA14D4EE2786B16C00EDC892 /* CocoTalk */,
 				EA14D4ED2786B16C00EDC892 /* Products */,
+				BFB8B7732836F6FF8700919A /* Pods */,
+				4FFF956C6B7BC9277C82CC32 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -269,11 +323,14 @@
 		EA14D5062786BEFB00EDC892 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				EA29146A27B5155B00324476 /* More */,
-				EA22D53C2794F7D400E1F39A /* Root */,
-				EA22D5392794F76D00E1F39A /* FriendList */,
-				EA22D54D27967BF700E1F39A /* ChatRoomList */,
+				EAC615AC27B766EF00B213BC /* MainTabs */,
+				EAC6159F27B6B64E00B213BC /* AddFriend */,
+				EA8F20B027B80801008A01ED /* CreateGroupChat */,
+				EAC6159C27B6B62800B213BC /* CreateChatRoom */,
 				EA22D557279797BE00E1F39A /* ChatRoom */,
+				EAC6159B27B6B61F00B213BC /* Setting */,
+				EAC6159A27B6B61800B213BC /* Search */,
+				EA22D53C2794F7D400E1F39A /* Root */,
 				EA3F375A278BD068007957EB /* Splash */,
 				EAE575C1278BB37D00D959A0 /* Auth */,
 			);
@@ -309,6 +366,7 @@
 			children = (
 				EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */,
 				EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */,
+				EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -425,7 +483,6 @@
 			isa = PBXGroup;
 			children = (
 				EA2913DC27AA349D00324476 /* BaseRepository.swift */,
-				EA2913E027AA520B00324476 /* ProfileRepository.swift */,
 				EA2913E227AA6B2700324476 /* ChatRoomRepository.swift */,
 				EA2913E427AA6B3200324476 /* MessageRepository.swift */,
 				EA2913E627AB6CE300324476 /* UserRepository.swift */,
@@ -444,7 +501,6 @@
 				EA29140827B0B13E00324476 /* ModelSignupResponse.swift */,
 				EA29140A27B0B14E00324476 /* ModelEmailVerifyResponse.swift */,
 				EA29140E27B0B36400324476 /* ModelEmailVerifyRequest.swift */,
-				EA29141427B0DA5300324476 /* ModelUserResponse.swift */,
 				EA29141A27B10C0100324476 /* ModelIssueEmailCodeRequest.swift */,
 				EA29141C27B10C2E00324476 /* ModelIssueEmailCodeResponse.swift */,
 			);
@@ -476,6 +532,8 @@
 			children = (
 				EA22D541279544E100E1F39A /* ModelProfile.swift */,
 				EAC6158F27B62E7C00B213BC /* ModelFriend.swift */,
+				EAC615A627B6D43600B213BC /* ModelAddFriendRequest.swift */,
+				EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */,
 			);
 			path = Friend;
 			sourceTree = "<group>";
@@ -485,6 +543,7 @@
 			children = (
 				EA29145127B3D49800324476 /* ModelRoom.swift */,
 				EA29145327B3D4A000324476 /* ModelRoomList.swift */,
+				EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */,
 			);
 			path = ChatRoom;
 			sourceTree = "<group>";
@@ -542,12 +601,38 @@
 			path = EmailAuth;
 			sourceTree = "<group>";
 		};
+		EA8F20AA27B798C0008A01ED /* SelectableFriendCell */ = {
+			isa = PBXGroup;
+			children = (
+				EA8F20A427B79458008A01ED /* SelectableFrinedCell.swift */,
+			);
+			path = SelectableFriendCell;
+			sourceTree = "<group>";
+		};
+		EA8F20AB27B798CA008A01ED /* ClosableFriendCell */ = {
+			isa = PBXGroup;
+			children = (
+				EA8F20A827B796C7008A01ED /* ClosableFriendCell.swift */,
+			);
+			path = ClosableFriendCell;
+			sourceTree = "<group>";
+		};
+		EA8F20B027B80801008A01ED /* CreateGroupChat */ = {
+			isa = PBXGroup;
+			children = (
+				EA8F20B127B80816008A01ED /* CreateGroupChatViewController.swift */,
+				EA8F20B327B80826008A01ED /* CreateGroupChatViewModel.swift */,
+			);
+			path = CreateGroupChat;
+			sourceTree = "<group>";
+		};
 		EAA6A3D02787E0D6001A7E46 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				EA29143D27B37C4700324476 /* WebSocketHelper.swift */,
 				EA29143F27B37C5A00324476 /* ContactHelper.swift */,
 				EA29145C27B3F77D00324476 /* CoreDataHelper.swift */,
+				EA8F20B527B8B441008A01ED /* ProfileHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -559,6 +644,50 @@
 				EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */,
 			);
 			path = ProfileModal;
+			sourceTree = "<group>";
+		};
+		EAC6159A27B6B61800B213BC /* Search */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		EAC6159B27B6B61F00B213BC /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		EAC6159C27B6B62800B213BC /* CreateChatRoom */ = {
+			isa = PBXGroup;
+			children = (
+				EAC6159D27B6B64900B213BC /* CreateChatRoomViewController.swift */,
+				EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */,
+				EA8F20A627B79506008A01ED /* CreateChatRoomDelegate.swift */,
+			);
+			path = CreateChatRoom;
+			sourceTree = "<group>";
+		};
+		EAC6159F27B6B64E00B213BC /* AddFriend */ = {
+			isa = PBXGroup;
+			children = (
+				EAC615A027B6B65F00B213BC /* AddFriendViewController.swift */,
+				EAC615A227B6B67900B213BC /* AddFriendViewModel.swift */,
+				EAC615A427B6C0C500B213BC /* AddFriendDelegate.swift */,
+			);
+			path = AddFriend;
+			sourceTree = "<group>";
+		};
+		EAC615AC27B766EF00B213BC /* MainTabs */ = {
+			isa = PBXGroup;
+			children = (
+				EA29146A27B5155B00324476 /* More */,
+				EA22D5392794F76D00E1F39A /* FriendList */,
+				EA22D54D27967BF700E1F39A /* ChatRoomList */,
+			);
+			path = MainTabs;
 			sourceTree = "<group>";
 		};
 		EAE555A3279A700400777EBF /* MessageCell */ = {
@@ -574,6 +703,8 @@
 			children = (
 				EAE555A7279A981A00777EBF /* MessageEnum.swift */,
 				EA2913FB27AF5F4500324476 /* UserDefaultsKeyEnum.swift */,
+				EAC615AA27B6E35F00B213BC /* TabEnum.swift */,
+				EA8F20AC27B7DBA9008A01ED /* SocketTopicRoomListEnum.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -610,6 +741,8 @@
 		EAE575C4278BB5B600D959A0 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				EA8F20AB27B798CA008A01ED /* ClosableFriendCell */,
+				EA8F20AA27B798C0008A01ED /* SelectableFriendCell */,
 				EAE555A3279A700400777EBF /* MessageCell */,
 				EA22D55227967CCB00E1F39A /* ChatRoomCell */,
 				EA22D5322794E25500E1F39A /* ProfileCell */,
@@ -678,9 +811,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EA14D5032786B16E00EDC892 /* Build configuration list for PBXNativeTarget "CocoTalk" */;
 			buildPhases = (
+				C214C62B117D9D688E872CF6 /* [CP] Check Pods Manifest.lock */,
 				EA14D4E82786B16C00EDC892 /* Sources */,
 				EA14D4E92786B16C00EDC892 /* Frameworks */,
 				EA14D4EA2786B16C00EDC892 /* Resources */,
+				71B292155EAD8A25E59DF8F6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -765,6 +900,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		71B292155EAD8A25E59DF8F6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CocoTalk/Pods-CocoTalk-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CocoTalk/Pods-CocoTalk-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CocoTalk/Pods-CocoTalk-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C214C62B117D9D688E872CF6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CocoTalk-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		EA14D4E82786B16C00EDC892 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -776,16 +953,21 @@
 				EA3F375E278BF472007957EB /* CheckBoxCell.swift in Sources */,
 				EA22D5312793D9CC00E1F39A /* EmailAuthNumberViewController.swift in Sources */,
 				EA29142827B1612700324476 /* KeyChainWrapper+Ext.swift in Sources */,
+				EA8F20B227B80816008A01ED /* CreateGroupChatViewController.swift in Sources */,
 				EA29144027B37C5A00324476 /* ContactHelper.swift in Sources */,
 				EA14D4F42786B16C00EDC892 /* SplashViewController.swift in Sources */,
+				EAC615A127B6B65F00B213BC /* AddFriendViewController.swift in Sources */,
 				EAFFC86E278E7820003EE1E4 /* UIButton+Ext.swift in Sources */,
 				EA2913F427AC0B1E00324476 /* SmsAuthViewModel.swift in Sources */,
+				EAC6159E27B6B64900B213BC /* CreateChatRoomViewController.swift in Sources */,
 				EA2913DD27AA349D00324476 /* BaseRepository.swift in Sources */,
 				EA22D5612797FC2800E1F39A /* UIImageView+Ext.swift in Sources */,
 				EA2913DF27AA43D800324476 /* APIError.swift in Sources */,
 				EA29140627B0B04F00324476 /* AuthAPI.swift in Sources */,
+				EAC615A527B6C0C500B213BC /* AddFriendDelegate.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EAC6159627B6926000B213BC /* ProfileModalViewModel.swift in Sources */,
+				EA8F20B427B80826008A01ED /* CreateGroupChatViewModel.swift in Sources */,
 				EA29141927B1096C00324476 /* EmailRegisterViewModel.swift in Sources */,
 				EA2913FC27AF5F4500324476 /* UserDefaultsKeyEnum.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
@@ -793,7 +975,6 @@
 				EA2913FE27AF6A4E00324476 /* UserDefaults+Ext.swift in Sources */,
 				EA29146927B4E19800324476 /* UIImage+Ext.swift in Sources */,
 				EA29143C27B339D700324476 /* SigninViewModel.swift in Sources */,
-				EA29141527B0DA5300324476 /* ModelUserResponse.swift in Sources */,
 				EA2913F627AC0F5900324476 /* String+Ext.swift in Sources */,
 				EA22D5362794E4FD00E1F39A /* ProfileTableViewCell.swift in Sources */,
 				EAE55602279FDE2300777EBF /* UICollectionView+Ext.swift in Sources */,
@@ -801,10 +982,12 @@
 				EA3F3752278BCCDE007957EB /* SigninViewController.swift in Sources */,
 				EA29140427B0AB0C00324476 /* AuthRepository.swift in Sources */,
 				EA2913E327AA6B2700324476 /* ChatRoomRepository.swift in Sources */,
+				EAC615AE27B7673100B213BC /* CreateChatRoomViewModel.swift in Sources */,
 				EA29144927B3A6B600324476 /* UserAPI.swift in Sources */,
 				EA22D5382794E76E00E1F39A /* ProfileImageView.swift in Sources */,
 				EA22D54F27967C1500E1F39A /* ChatRoomListViewController.swift in Sources */,
 				EA14D4F02786B16C00EDC892 /* AppDelegate.swift in Sources */,
+				EA8F20B627B8B441008A01ED /* ProfileHelper.swift in Sources */,
 				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
 				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
 				EA29141727B0F35900324476 /* APIResult_1.swift in Sources */,
@@ -815,18 +998,24 @@
 				EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */,
 				EA29146E27B51A9A00324476 /* UIViewController+Ext.swift in Sources */,
 				EA29140927B0B13E00324476 /* ModelSignupResponse.swift in Sources */,
+				EA8F20A727B79506008A01ED /* CreateChatRoomDelegate.swift in Sources */,
 				EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */,
 				EAC6159027B62E7C00B213BC /* ModelFriend.swift in Sources */,
 				EA29141327B0B40800324476 /* APIResult_0.swift in Sources */,
 				EAC6159727B6926000B213BC /* ProfileModalViewController.swift in Sources */,
+				EA8F20BA27B918C9008A01ED /* WebSocketDelegate.swift in Sources */,
 				EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */,
 				EAE5560C27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift in Sources */,
 				EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */,
+				EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */,
 				EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */,
 				EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */,
+				EA8F20B827B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
+				EA8F20A527B79458008A01ED /* SelectableFrinedCell.swift in Sources */,
 				EAE555FA279E10DF00777EBF /* ChatRoomTextFieldView.swift in Sources */,
 				EA22D55427967CED00E1F39A /* ChatRoomCell.swift in Sources */,
+				EAC615AB27B6E35F00B213BC /* TabEnum.swift in Sources */,
 				EA2913FA27AC4D7000324476 /* ModelSignupData.swift in Sources */,
 				EA29141D27B10C2E00324476 /* ModelIssueEmailCodeResponse.swift in Sources */,
 				EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */,
@@ -837,12 +1026,14 @@
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
 				EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */,
 				EA22D5442795511800E1F39A /* MyProfileCell.swift in Sources */,
-				EA2913E127AA520B00324476 /* ProfileRepository.swift in Sources */,
+				EAC615A727B6D43600B213BC /* ModelAddFriendRequest.swift in Sources */,
+				EA8F20AD27B7DBA9008A01ED /* SocketTopicRoomListEnum.swift in Sources */,
 				EA29145D27B3F77D00324476 /* CoreDataHelper.swift in Sources */,
 				EA22D55B279797DB00E1F39A /* ChatRoomViewModel.swift in Sources */,
 				EA29140B27B0B14E00324476 /* ModelEmailVerifyResponse.swift in Sources */,
 				EA29143E27B37C4800324476 /* WebSocketHelper.swift in Sources */,
 				EA29141B27B10C0100324476 /* ModelIssueEmailCodeRequest.swift in Sources */,
+				EA8F20A927B796C7008A01ED /* ClosableFriendCell.swift in Sources */,
 				EA29140D27B0B16F00324476 /* URL+Ext.swift in Sources */,
 				EA29142127B1514200324476 /* ModelSigninRequest.swift in Sources */,
 				EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */,
@@ -850,6 +1041,7 @@
 				EA22D542279544E100E1F39A /* ModelProfile.swift in Sources */,
 				EAC6159927B692F100B213BC /* GNBDelegate.swift in Sources */,
 				EA22D55F2797FB6900E1F39A /* UILabel+Ext.swift in Sources */,
+				EAC615A327B6B67900B213BC /* AddFriendViewModel.swift in Sources */,
 				EAE555FD279E21E800777EBF /* PaddingLabel.swift in Sources */,
 				EA22D55D2797EA8000E1F39A /* ProfileCellDelegate.swift in Sources */,
 				EA29140F27B0B36400324476 /* ModelEmailVerifyRequest.swift in Sources */,
@@ -992,6 +1184,7 @@
 		};
 		EA14D5042786B16E00EDC892 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D71070A1DBC41D06752AFED3 /* Pods-CocoTalk.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1025,6 +1218,7 @@
 		};
 		EA14D5052786B16E00EDC892 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60D658A020784DB3358F0410 /* Pods-CocoTalk.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -10,7 +10,7 @@ import RxSwift
 import RxRelay
 import CoreData
 
-class MessageRepository: BaseRepository {
+class MessageRepository {
     typealias ItemType = ModelMessage
     
     var items: [ItemType] = []
@@ -26,6 +26,7 @@ class MessageRepository: BaseRepository {
     }
     
     func insert(_ newItem: ItemType) -> Bool {
+        items.append(newItem)
         return true
     }
     

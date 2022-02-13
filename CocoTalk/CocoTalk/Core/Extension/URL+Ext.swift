@@ -9,4 +9,6 @@ import Foundation
 
 extension URL {
     static let baseURL = URL(string: "http://138.2.88.163:8000")!
+    #warning("8080, 8081, 8082")
+    static let baseSocketURL = URL(string: "http://138.2.93.111:8082/stomp/websocket")!
 }

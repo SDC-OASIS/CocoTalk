@@ -29,14 +29,12 @@ class SigninViewController: UIViewController {
         $0.textAlignment = .center
     }
     
-    /// 이메일 텍스트 필드
+    /// 코코톡 아이디 텍스트 필드
     private let textFieldEmail = UITextField().then {
         $0.placeholder = "코코톡 아이디"
         $0.autocorrectionType = .no
         $0.autocapitalizationType = .none
         $0.spellCheckingType = .no
-        $0.textContentType = .emailAddress
-        $0.keyboardType = .emailAddress
     }
     
     /// 비밀번호 텍스트 필드
@@ -206,6 +204,8 @@ extension SigninViewController {
                 }
                 
                 if isCompleted {
+                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                    appDelegate?.initializeListSocket()
                     self.move2Home()
                 }
             }).disposed(by: bag)

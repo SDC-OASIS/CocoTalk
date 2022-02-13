@@ -12,7 +12,7 @@ import CoreData
 import Moya
 import RxMoya
 
-class ChatRoomRepository: BaseRepository {
+class ChatRoomRepository {
     typealias ItemType = ModelRoomList
     
     private let provider: MoyaProvider<RoomAPI>
@@ -21,18 +21,63 @@ class ChatRoomRepository: BaseRepository {
         provider = MoyaProvider<RoomAPI>()
     }
     
-    var items: [ItemType] = []
+    static var items: [ItemType] = []
     
-    func initFetch() -> [ItemType] {
-        return items
+    static var chatRooms: [ItemType] {
+        get {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+            
+            return items.sorted(by: {
+                let aDate = dateFormatter.date(from: $0.recentChatMessage?.sentAt ?? "") ?? Date()
+                let bDate = dateFormatter.date(from: $1.recentChatMessage?.sentAt ?? "") ?? Date()
+                return aDate > bDate
+            })
+        }
     }
     
-    func fetchFromServer(with token: String) -> Observable<[ItemType]?> {
+    func initFetch() -> [ItemType] {
+        return Self.items
+    }
+    
+    func fetchFromServer(with token: String) -> Observable<APIResult_1<[ItemType]>> {
         return provider.rx.request(.fetchRooms(token))
             .retry(3)
             .asObservable()
-            .map { try? JSONDecoder().decode(APIResult_1<[ModelRoomList]>.self, from: $0.data) }
-            .map { $0?.data }
+            .map { try JSONDecoder().decode(APIResult_1<[ItemType]>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
+    
+    func createChatRoom(with token: String, data: ModelCreateChatRoomRequest) -> Observable<APIResult_1<ModelRoom>>{
+        return provider.rx.request(.createRoom(token, data: data))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
+    
+    func checkRoomExist(with token: String, memberId: String) -> Observable<APIResult_1<ModelRoom>> {
+        return provider.rx.request(.checkRoomExist(token, memberId: memberId))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
+    
+    func fetchRoomInfo(with token: String, roomId: String) -> Observable<APIResult_1<ModelRoom>> {
+        return provider.rx.request(.fetchRoomInfo(token, roomId: roomId))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
             .catch { error in
                 print(error)
                 return Observable.error(error)
@@ -52,47 +97,6 @@ class ChatRoomRepository: BaseRepository {
     }
     
     func search(query: String) -> [ItemType] {
-        return items
+        return Self.items
     }
 }
-
-
-/*
- {
-             "room": {
-                 "id": "6204e68642a9385c78f2ead4",
-                 "roomname": "단체 채팅방",
-                 "img": "채팅방 이미지",
-                 "type": 1,
-                 "members": [
-                     {
-                         "userId": 64,
-                         "username": "고병학",
-                         "profile": "프로필",
-                         "joining": true,
-                         "joinedAt": "2022-02-10T10:18:46.792",
-                         "enteredAt": "2022-02-10T10:18:46.792",
-                         "awayAt": "2022-02-10T10:18:46.792",
-                         "leftAt": "2022-02-10T10:18:46.792"
-                     },
-                     {
-                         "userId": 93,
-                         "username": "권희은",
-                         "profile": "프로필",
-                         "joining": true,
-                         "joinedAt": "2022-02-10T10:18:46.792",
-                         "enteredAt": "2022-02-10T10:18:46.792",
-                         "awayAt": "2022-02-10T10:18:46.792",
-                         "leftAt": "2022-02-10T10:18:46.792"
-                     }
-                 ],
-                 "messageBundleIds": "[6204e68642a9385c78f2ead5]",
-                 "noticeIds": "[]"
-             },
-             "recentChatMessage": {
-             },
-             "recentMessageBundleCount": 0,
-             "unreadNumber": 0
-         }
- 
- */

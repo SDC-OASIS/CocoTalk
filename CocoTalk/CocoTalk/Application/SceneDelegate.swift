@@ -6,18 +6,29 @@
 //
 
 import UIKit
+import RxSwift
+import SwiftKeychainWrapper
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    
+    let authRepository = AuthRepository()
+    let bag = DisposeBag()
+    let viewModel = SplashViewModel()
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.windowScene = windowScene
+        
+        bindRx()
+        initializeSocketDelegate()
+        
         let vc = SplashViewController()
         let nav = UINavigationController(rootViewController: vc)
+        
         window?.backgroundColor = .white
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
@@ -33,12 +44,60 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
+        viewModel.verifyToken()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.listSocket?.closeConnection()
+        appDelegate?.saveContext()
     }
 
 
 }
 
+extension SceneDelegate {
+    func bindRx() {
+        viewModel.dependency.shouldSignout
+            .subscribe(onNext: { [weak self] shouldSignout in
+                guard let self = self,
+                      let shouldSignout = shouldSignout else {
+                    return
+                }
+                
+                if shouldSignout {
+                    UserDefaults.resetUserData()
+                    KeychainWrapper.resetKeys()
+                    let vc = SigninViewController()
+                    let nav = UINavigationController(rootViewController: vc)
+                    
+                    self.window?.backgroundColor = .white
+                    self.window?.rootViewController = nav
+                    self.window?.makeKeyAndVisible()
+                } else {
+                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                    appDelegate?.initializeListSocket()
+                }
+            }).disposed(by: bag)
+    }
+}
+
+extension SceneDelegate: WebSocketDelegate {
+    func initializeSocketDelegate() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.socketDelegate = self
+    }
+    
+    func signoutBySocket() {
+        let alert = UIAlertController(title: "로그아웃", message: "다른 기기에서 로그인되었습니다.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            KeychainWrapper.resetKeys()
+            let signInVC = SigninViewController()
+            let root = UINavigationController(rootViewController: signInVC)
+            self?.window?.backgroundColor = .white
+            self?.window?.rootViewController = root
+            self?.window?.makeKeyAndVisible()
+        })
+        window?.rootViewController?.present(alert, animated: true)
+    }
+}

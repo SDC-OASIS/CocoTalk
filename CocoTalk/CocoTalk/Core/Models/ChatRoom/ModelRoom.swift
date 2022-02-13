@@ -21,6 +21,11 @@ struct ModelRoom: Codable {
     var isSilent: Bool?
 }
 
+struct ModelTimeStamp: Codable {
+    var timestamp: Int?
+    var date: String?
+}
+
 struct RoomMember: Codable {
     var userId: Int?
     var username: String?
@@ -30,5 +35,7 @@ struct RoomMember: Codable {
     var enteredAt: String?
     var awayAt: String?
     var leftAt: String?
-    
+    var profileImageURL: String?
+    var bgImageURL: String?
+    var bio: String?
 }

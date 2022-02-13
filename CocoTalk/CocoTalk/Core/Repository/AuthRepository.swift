@@ -34,10 +34,7 @@ class AuthRepository {
             .retry(3)
             .asObservable()
             .map { try JSONDecoder().decode(APIResult_0<ModelEmailVerifyResponse>.self, from: $0.data) }
-            .catch { error in
-                print(error)
-                return Observable.error(error)
-            }
+            .catchAndReturn(APIResult_0<ModelEmailVerifyResponse>())
     }
     
 
@@ -96,33 +93,33 @@ class AuthRepository {
             }
     }
 
-    func isIdExist(id: String) -> Observable<APIResult_1<ModelUserResponse>> {
+    func isIdExist(id: String) -> Observable<APIResult_1<ModelProfile>> {
         return provider.rx.request(.isIdExist(id))
             .retry(3)
             .asObservable()
-            .map { try JSONDecoder().decode(APIResult_1<ModelUserResponse>.self, from: $0.data)}
+            .map { try JSONDecoder().decode(APIResult_1<ModelProfile>.self, from: $0.data)}
             .catch { error in
                 print(error)
                 return Observable.error(error)
             }
     }
     
-    func isEmailExist(email: String) -> Observable<APIResult_1<ModelUserResponse>> {
+    func isEmailExist(email: String) -> Observable<APIResult_1<ModelProfile>> {
         return provider.rx.request(.isEmailExist(email))
             .retry(3)
             .asObservable()
-            .map { try JSONDecoder().decode(APIResult_1<ModelUserResponse>.self, from: $0.data)}
+            .map { try JSONDecoder().decode(APIResult_1<ModelProfile>.self, from: $0.data)}
             .catch { error in
                 print(error)
                 return Observable.error(error)
             }
     }
     
-    func isPhoneExist(phone: String) -> Observable<APIResult_1<[ModelUserResponse]>> {
+    func isPhoneExist(phone: String) -> Observable<APIResult_1<[ModelProfile]>> {
         return provider.rx.request(.isPhoneExist(phone))
             .retry(3)
             .asObservable()
-            .map { try JSONDecoder().decode(APIResult_1<[ModelUserResponse]>.self, from: $0.data)}
+            .map { try JSONDecoder().decode(APIResult_1<[ModelProfile]>.self, from: $0.data)}
             .catch { error in
                 print(error)
                 return Observable.error(error)

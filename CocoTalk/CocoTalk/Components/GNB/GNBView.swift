@@ -15,8 +15,6 @@ class GNBView: UIView {
     
     // MARK: - UI properties
     private let lblTitle = UILabel().then {
-        #warning("[삭제 예정] 페이지 별로 다르게 하기")
-        $0.text = "친구"
         $0.font = .systemFont(ofSize: 28, weight: .semibold)
     }
     
@@ -54,7 +52,7 @@ class GNBView: UIView {
     
     // MARK: - Properties
     let bag = DisposeBag()
-    var delegate: GNBDelegate?
+    private var delegate: GNBDelegate?
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -68,10 +66,44 @@ class GNBView: UIView {
     }
     
     // MARK: - Helpers
-    private func setUI() {
-        [ivSearch, ivAddFriend, ivSetting].forEach {
-            stackView.addArrangedSubview($0)
+    
+    /// GNBDelegate 설정
+    func setDelegate(delegate: GNBDelegate) {
+        self.delegate = delegate
+        
+        let tabType = delegate.gnbTabType()
+        lblTitle.text = tabType.rawValue
+        
+        switch tabType {
+        case .friend:
+            setFriendUI()
+            break
+        case .chatRoom:
+            setRoomUI()
+            break
+        case .more:
+            setMoreUI()
+            break
         }
+    }
+    
+    private func setFriendUI() {
+        stackView.addArrangedSubview(ivAddFriend)
+        stackView.addArrangedSubview(ivSetting)
+    }
+    
+    private func setRoomUI() {
+        stackView.addArrangedSubview(ivAddChat)
+        stackView.addArrangedSubview(ivSetting)
+    }
+    
+    private func setMoreUI() {
+        stackView.addArrangedSubview(ivQr)
+        stackView.addArrangedSubview(ivSetting)
+    }
+    
+    private func setUI() {
+        stackView.addArrangedSubview(ivSearch)
         addSubview(stackView)
         addSubview(lblTitle)
         
@@ -80,7 +112,7 @@ class GNBView: UIView {
             $0.bottom.equalToSuperview()
         }
         
-        [ivSearch, ivAddFriend, ivSetting].forEach {
+        [ivSearch, ivAddFriend, ivAddChat, ivQr, ivSetting].forEach {
             $0.snp.makeConstraints {
                 $0.height.width.equalTo(24)
             }
@@ -97,7 +129,13 @@ class GNBView: UIView {
         ivAddFriend.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
-                self?.delegate?.tapAddFriend?()
+                self?.delegate?.tapAddFriend()
+            }).disposed(by: bag)
+        
+        ivAddChat.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                self?.delegate?.tapAddChat()
             }).disposed(by: bag)
         
         ivSearch.rx.tapGesture()

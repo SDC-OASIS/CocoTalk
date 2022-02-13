@@ -108,7 +108,6 @@ extension SigninViewModel {
                           self?.dependency.isSigninComplete.accept(false)
                           return
                       }
-                print(myProfile)
                 UserDefaults.standard.set(myProfile.encode() ?? nil, forKey: UserDefaultsKey.myData.rawValue)
                 self.dependency.isSigninComplete.accept(true)
             }).disposed(by: bag)

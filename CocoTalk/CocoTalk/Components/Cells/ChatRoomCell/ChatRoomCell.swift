@@ -93,7 +93,6 @@ class ChatRoomCell: UITableViewCell {
     }
 
     private let lblUnreadMessageNumber = UILabel().then {
-        $0.text = "7"
         $0.font = .systemFont(ofSize: 12, weight: .bold)
         $0.textColor = .white
         $0.textAlignment = .center
@@ -211,7 +210,14 @@ class ChatRoomCell: UITableViewCell {
         
         lblLastMessage.text = data.recentChatMessage?.content ?? ""
         
-        lblLastMsgTime.text = data.recentChatMessage?.sentAt
-        lblUnreadMessageNumber.text = (data.recentMessageBundleCount ?? 0).description
+        lblLastMsgTime.text = String((data.recentChatMessage?.sentAt?.split(separator: ".")[0].description.dropLast(3)) ?? "")
+        if data.recentMessageBundleCount ?? 0 > 0 {
+            viewUnreadNumberContainer.backgroundColor = .red
+            lblUnreadMessageNumber.isHidden = false
+            lblUnreadMessageNumber.text = (data.recentMessageBundleCount ?? 0).description
+        } else {
+            viewUnreadNumberContainer.backgroundColor = .clear
+            lblUnreadMessageNumber.isHidden = true
+        }
     }
 }

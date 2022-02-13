@@ -27,7 +27,9 @@ class FriendListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
         navigationController?.isNavigationBarHidden = true
+        gnbView.setDelegate(delegate: self)
         
         configureView()
         configureSubviews()
@@ -39,7 +41,22 @@ class FriendListViewController: UIViewController {
         fetch()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
     // MARK: - Helper
+    private func openChatRoom() {
+        tabBarController?.selectedIndex = 1
+        let chatRoomListVC = tabBarController?.viewControllers![1] as! UINavigationController
+        let members = viewModel.output.talkMembers.value ?? []
+        let roomId = viewModel.output.roomId.value ?? ""
+        let vc = ChatRoomViewController(members: members, roomId: roomId)
+        vc.title = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
+        vc.hidesBottomBarWhenPushed = true
+        chatRoomListVC.pushViewController(vc, animated: true)
+    }
+    
     private func fetch() {
         viewModel.fetch()
     }
@@ -57,8 +74,6 @@ extension FriendListViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 60
         view.addSubview(tableView)
-        
-        gnbView.delegate = self
         view.addSubview(gnbView)
     }
     
@@ -96,6 +111,19 @@ extension FriendListViewController {
                     return
                 }
                 self.tableView.reloadData()
+            }).disposed(by: bag)
+        
+        viewModel.output.isRoomExist
+            .subscribe(onNext: { [weak self] isRoomExist in
+                guard let self = self else {
+                    return
+                }
+                
+                if let isRoomExist = isRoomExist,
+                    isRoomExist {
+                        self.openChatRoom()
+                }
+                
             }).disposed(by: bag)
     }
 }
@@ -163,20 +191,24 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - PrfofileCellDelegate
 extension FriendListViewController: ProfileCellDelegate {
-    func openChatRoom() {
-        tabBarController?.selectedIndex = 1
-        let chatRoomListVC = tabBarController?.viewControllers![1] as! UINavigationController
-        let vc = ChatRoomViewController()
-        vc.hidesBottomBarWhenPushed = true
-        chatRoomListVC.pushViewController(vc, animated: true)
+    func checkChatRoomExist(userId: Int) {
+        viewModel.checkChatRoomExist(userId: userId)
     }
 }
 
 
 // MARK: - GNBDelegate
 extension FriendListViewController: GNBDelegate {
+    func gnbTabType() -> TabEnum {
+        return .friend
+    }
+    
     func tapAddFriend() {
-        print("friend")
+        let addFriendVC = AddFriendViewController()
+        addFriendVC.modalPresentationStyle = .overFullScreen
+        addFriendVC.modalTransitionStyle = .coverVertical
+        addFriendVC.delegate = self
+        self.present(addFriendVC, animated: true)
     }
     
     func tapSearch() {
@@ -185,5 +217,13 @@ extension FriendListViewController: GNBDelegate {
     
     func tapSetting() {
         print("setting")
+    }
+}
+
+
+extension FriendListViewController: AddFriendDelegate {
+    func didAddFriend() {
+        #warning("코어 데이터로 불러오기")
+        viewModel.getFriends()
     }
 }

@@ -13,6 +13,9 @@ import RxSwift
 class ChatRoomListViewController: UIViewController {
     
     // MARK: - UI Properties
+    /// 네비게이션 바
+    private let gnbView = GNBView()
+    
     private let tableView = UITableView()
     
     // MARK: - Properties
@@ -24,9 +27,15 @@ class ChatRoomListViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        navigationController?.isNavigationBarHidden = true
+        gnbView.setDelegate(delegate: self)
+        
         configureView()
         configureSubviews()
         bindRx()
+        
+#warning("처음 로드할 때만 연결")
+#warning("소켓 연결")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,11 +58,18 @@ extension ChatRoomListViewController {
         tableView.register(ChatRoomCell.self, forCellReuseIdentifier: ChatRoomCell.identifier)
         tableView.rowHeight = 76
         view.addSubview(tableView)
+        view.addSubview(gnbView)
     }
     
     func configureSubviews() {
+        gnbView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(100)
+        }
+        
         tableView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(gnbView.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
@@ -84,18 +100,48 @@ extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
+    // 채팅방 클릭
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = ChatRoomViewController()
+        let room = viewModel.output.rooms.value[indexPath.row].room
+        let members = room?.members ?? []
+        let roomId = room?.id ?? ""
+        let vc = ChatRoomViewController(members: members, roomId: roomId)
+        vc.title = room?.roomname ?? ""
         vc.hidesBottomBarWhenPushed = true
         guard let nav = self.navigationController else {
             return
         }
-        
-        let backBarButtonItem = UIBarButtonItem(title: "350", style: .plain, target: self, action: nil)
-        backBarButtonItem.tintColor = .black
-        navigationItem.backBarButtonItem = backBarButtonItem
         nav.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+}
+
+extension ChatRoomListViewController: GNBDelegate {
+    func gnbTabType() -> TabEnum {
+        return .chatRoom
+    }
+    
+    func tapAddChat() {
+        let createChatVC = CreateChatRoomViewController()
+        let nav = UINavigationController(rootViewController: createChatVC)
+        nav.modalPresentationStyle = .overFullScreen
+        nav.modalTransitionStyle = .coverVertical
+        createChatVC.delegate = self
+        self.present(nav, animated: true)
+    }
+    
+    func tapSearch() {
+        
+    }
+    
+    func tapSetting() {
+        
+    }
+}
+
+extension ChatRoomListViewController: CreateChatRoomDelegate {
+    func fetchChatRoom() {
+        viewModel.fetch()
+    }
 }

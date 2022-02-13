@@ -13,9 +13,9 @@ import Moya
 import RxMoya
 import SwiftKeychainWrapper
 
-class UserRepository: BaseRepository {
+class UserRepository {
     /// ModelFriend
-    typealias ItemType = ModelFriend
+    typealias ItemType = ModelProfile
     
     private let provider: MoyaProvider<UserAPI>
     
@@ -23,11 +23,11 @@ class UserRepository: BaseRepository {
         provider = MoyaProvider<UserAPI>()
     }
     
-    var items: [ItemType] = []
+    static var items: [ItemType] = []
     
 #warning("코어 데이터에서 불러오기")
     func initFetch() -> [ItemType] {
-        return items
+        return UserRepository.items
     }
     
     func fetchMyProfile() -> ModelProfile {
@@ -46,7 +46,7 @@ class UserRepository: BaseRepository {
             }
     }
     
-    func fetchFromServer(with token: String) -> Observable<[ItemType]?> {
+    func fetchFromServer(with token: String) -> Observable<[ModelFriend]?> {
         return provider.rx.request(.fetchFriends(token))
             .retry(3)
             .asObservable()
@@ -58,8 +58,29 @@ class UserRepository: BaseRepository {
             }
     }
     
-    func insert(_ newItem: ItemType) -> Bool {
-        return true
+    /// 코코톡 아이디로 유저 찾기
+    func findUserByCid(_ cid: String, token: String) -> Observable<ModelProfile?> {
+        return provider.rx.request(.findUserByCid(cid, token))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<ModelProfile>.self, from: $0.data) }
+            .map { $0.data }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
+    
+    func addFriend(_ id: Int, token: String) -> Observable<ModelAddFirendResponse?> {
+        return provider.rx.request(.addFriend(id, token))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<ModelAddFirendResponse>.self, from: $0.data) }
+            .map { $0.data }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
     }
     
     func update(item: ItemType) -> Bool {
@@ -70,8 +91,16 @@ class UserRepository: BaseRepository {
         return true
     }
     
+    /// Search
+    /// 유저네임으로 찾기
     func search(query: String) -> [ItemType] {
-        return items
+        if query.isEmpty {
+            return UserRepository.items
+        }
+        return UserRepository.items.filter { ($0.username ?? "").contains(query) }
+    }
+    
+    func findUserById(_ userId: Int) -> ItemType? {
+        return UserRepository.items.filter { $0.id ?? -1 == userId }.first
     }
 }
-
