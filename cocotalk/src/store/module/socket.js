@@ -35,7 +35,7 @@ const socket = {
       let socket = new SockJS(serverURL);
       context.commit("setStompChatListClient", Stomp.over(socket));
       context.state.stompChatListClient.connect(
-        { view: "chatList", userId: store.getters["userStore/userInfo"] },
+        { view: "chatList", userId: store.getters["userStore/userInfo"].id },
         (frame) => {
           this.connected = true;
           context.commit("setStompChatListConnected", true);

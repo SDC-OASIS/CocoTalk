@@ -10,7 +10,7 @@
             <profile-img :imgUrl="userProfileInfo.profile.profile" width="70px" />
           </div>
           <br />
-          <span>{{ userProfileInfo.userName }}</span>
+          <span>{{ userProfileInfo.username }}</span>
           <br />
           <span v-if="userProfileInfo.profile.message">{{ userProfileInfo.profile.message }}</span>
           <div v-else style="height: 20px; width: 10px"></div>
@@ -21,7 +21,7 @@
             <i class="chat fas fa-comment"></i>
             <div style="font-size: 13px">1:1 채팅</div>
           </div>
-          <div v-if="userProfileInfo.userName == userInfo.userName" style="display: inline-block; font-size: 20px; margin: 0 20px">
+          <div v-if="userProfileInfo.id == userInfo.id" style="display: inline-block; font-size: 20px; margin: 0 20px">
             <i class="fas fa-pen" style="margin: 10px 0"></i>
             <div style="font-size: 13px">프로필 관리</div>
           </div>

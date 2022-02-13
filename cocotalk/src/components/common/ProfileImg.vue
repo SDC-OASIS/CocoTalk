@@ -8,11 +8,10 @@
           <use xlink:href="#shapeSquircle" />
         </clipPath>
       </defs>
-      <image style="border: 10px solid #ffffff" id="profileImg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipSquircle)" :xlink:href="imgCheck" />
+      <image style="border: 10px solid #ffffff" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clipSquircle)" :xlink:href="imgCheck" />
     </svg>
     <svg v-if="radius == 1" :style="backStyle" width="78px" height="80px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
       <image
-        id="profileImg"
         width="100%"
         height="100%"
         preserveAspectRatio="xMidYMid slice"
@@ -23,7 +22,6 @@
     <!-- 채팅방목록에서 멤버가 2명인경우 -->
     <svg v-if="radius == 3" :style="backStyle" width="3px" height="41px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
       <image
-        id="profileImg"
         width="100%"
         height="100%"
         preserveAspectRatio="xMidYMid slice"
@@ -34,7 +32,6 @@
     <!-- 채팅방목록에서 멤버가 3명인경우 -->
     <svg v-if="radius == 4" :style="backStyle" width="3px" height="41px" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
       <image
-        id="profileImg"
         width="100%"
         height="100%"
         preserveAspectRatio="xMidYMid slice"
@@ -57,7 +54,7 @@ export default {
   props: {
     imgUrl: {
       type: String,
-      default: "https://ifh.cc/g/pLtMj2.png",
+      default: "https://ifh.ccs/g/pLtMj2.png",
     },
     width: {
       type: String,
@@ -77,7 +74,17 @@ export default {
       return this.imgUrl;
     },
   },
-  methods: {},
+  methods: {
+    replaceImg(e) {
+      e.target.src = "https://ifh.cc/g/pLtMj2.png";
+    },
+    // d(e) {
+    //   let element = e.target.getAttributeNS("http://www.ws.org/1999/xlink", "href");
+    //   // element = "https://ifh.cc/g/pLtMj2.png";
+    //   console.log(element);
+    //   console.log(e);
+    // },
+  },
   mounted() {
     if (this.radius > 0) {
       this.style = {

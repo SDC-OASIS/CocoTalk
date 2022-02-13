@@ -25,7 +25,9 @@
           <!-- {{ chatMessage }} -->
           <!-- 상대가 한 말 -->
           <div v-if="chatMessage.userId != userInfo.id" class="row">
-            <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
+            <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
+              <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
+            </div>
             <div class="chat-message">
               <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
               <div class="row">
@@ -116,7 +118,6 @@ export default {
       const headers = {
         action: "leave",
       };
-      this.stompChatRoomClient.disconnect();
       this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/message`);
       this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/room`);
       this.stompChatRoomClient.disconnect(() => {}, headers);
@@ -202,6 +203,15 @@ export default {
       });
       return this.roomInfo.members[idx].profile.profile;
     },
+    getMemberInfo(userId) {
+      const idx = this.roomInfo.members.findIndex(function (item) {
+        return item.userId == userId;
+      });
+      return this.roomInfo.members[idx];
+    },
+    openProfileModal(userProfileInfo) {
+      this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
+    },
     chatRoomConnect: function () {
       const serverURL = "http://138.2.93.111:8080/stomp";
       let socket = new SockJS(serverURL);
@@ -229,6 +239,13 @@ export default {
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/room`, (res) => {
             console.log("구독으로 받은 채팅방 정보입니다.");
             this.roomInfo = JSON.parse(res.body);
+            this.roomInfo.members.forEach((e) => {
+              this.roomMemberIds = [];
+              this.roomMemberIds.push(e.userId);
+              if (e.profile) {
+                e.profile = JSON.parse(e.profile);
+              }
+            });
             console.log(this.roomInfo);
           });
           // 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
@@ -294,7 +311,12 @@ export default {
   overflow: auto;
 }
 .chat-messages-container {
-  height: 71vh;
+  height: 72vh;
+}
+@media (max-height: 880px) {
+  .chat-messages-container {
+    height: 70vh;
+  }
 }
 .chat-messages-outer-container::-webkit-scrollbar {
   position: absolute;
@@ -364,7 +386,7 @@ export default {
   color: #749f58;
   font-size: 10px;
   position: absolute;
-  bottom: 10px;
+  bottom: 11px;
   right: 1px;
   width: 12px;
   height: 15px;
@@ -390,8 +412,6 @@ export default {
   position: relative;
   padding: 7px 10px;
   background: #ffed59;
-  /* -webkit-border-radius: 100px; */
-  /* -moz-border-radius: 10px; */
   border-radius: 5px;
   max-width: 300px;
   word-break: break-all;
@@ -417,6 +437,7 @@ export default {
   bottom: 0px;
   width: inherit;
   text-align: left;
+  z-index: 2;
 }
 .message-input-container textarea {
   width: 80%;
