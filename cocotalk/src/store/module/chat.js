@@ -28,6 +28,9 @@ const chat = {
         state.roomStatus.roomId = payload.roomId;
       }
     },
+    CLEAR_PAGE(state) {
+      state.roomStatus = {};
+    },
     GO_CHAT(state, payload) {
       state.chatInfo.recentMessageBundleCount = payload.recentMessageBundleCount;
       state.chatInfo.nextMessageBundleId = payload.nextMessageBundleId;
@@ -55,6 +58,9 @@ const chat = {
     },
     changeMainPage: function (context, payload) {
       context.commit("CHANGE_MAIN_PAGE", payload);
+    },
+    clearPage: function (context) {
+      context.commit("CLEAR_PAGE");
     },
     // 채팅방목록에서 채팅방 클릭해 채팅방 열기
     async goChat(context, payload) {

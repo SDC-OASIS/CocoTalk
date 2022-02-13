@@ -22,11 +22,6 @@ export default {
     ...mapState("chat", ["roomStatus"]),
     ...mapState("chat", ["friends"]),
   },
-  watch: {
-    "$route.params.roomId": function () {
-      console.log("=======[채팅시작전페이지]=======");
-    },
-  },
   methods: {
     changeNow() {
       this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" });

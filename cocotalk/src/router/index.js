@@ -19,14 +19,7 @@ const routes = [
     components: {
       login: Login,
     },
-    // [로그인한 상태로 입장을 막아주는 네비게이션 가드]
-    // beforeEnter: (to, from, next) => {
-    //   if (store.state.userStore.isLogin) {
-    //     next("/friends");
-    //   }
-    // },
   },
-  // [로그인 이후 사용가능한 서비스 메인 페이지]
   {
     path: "/",
     name: "MainPage",
@@ -94,11 +87,11 @@ const routes = [
       if (!store.state.userStore.isLogin) {
         next("/login");
       }
-      // 로그인한 경우 기본 url 진입하는 경우 메인페이지로 이동
+      // 로그인된 상태로 기본 url 진입하는 경우 메인페이지로 이동
       else if (to.fullPath == "/") {
         next("/friends");
       }
-      // 로그인하고 이외 url로 진입하는 경우
+      // 로그인된 상태로 이외 url로 진입하는 경우
       else {
         next();
       }

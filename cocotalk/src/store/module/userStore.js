@@ -99,6 +99,7 @@ const userStore = {
       context.commit("CLEAR_REFRESH_TOKEN");
       context.commit("CLEAR_ISLOGIN");
       context.commit("GO_LOGINPAGE");
+      store.dispatch("chat/clearPage");
     },
     getUser: function (context) {
       axios.get("user/token").then((res) => {

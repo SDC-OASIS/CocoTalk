@@ -1,5 +1,5 @@
 <template>
-  <div class="chat" :key="componentChat">
+  <div class="chat">
     <!-- 채팅방 Header -->
     <div class="chat-header row align-center">
       <div class="row align-center">
@@ -8,7 +8,7 @@
         </div>
         <span class="bold" style="font-size: 18px">999+</span>
       </div>
-      <span class="bold" style="font-size: 18px">채팅방 이름</span>
+      <span class="bold" style="font-size: 18px">{{ this.roomInfo.roomname }}</span>
       <div class="box">
         <span>
           <span class="iconify" data-icon="ant-design:search-outlined" style="cursor: pointer; color: black; padding-right: 10px"></span>
@@ -69,7 +69,7 @@
 import { mapMutations, mapState } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
-import Sidebar from "../components/chat/Sidebar.vue";
+import Sidebar from "../components/chatroom/Sidebar.vue";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import axios from "@/utils/axios";
@@ -77,7 +77,6 @@ import axios from "@/utils/axios";
 export default {
   data() {
     return {
-      componentChat: 0,
       roomId: this.$route.params.roomId,
       chatMessages: [],
       roomInfo: {},
@@ -91,7 +90,7 @@ export default {
     Sidebar,
   },
   created() {
-    console.log("채팅나와라");
+    console.log("===========[채팅페이지]============");
     this.$store.dispatch(
       "chat/changePage",
       {
@@ -103,11 +102,6 @@ export default {
     this.chatRoomConnect();
     this.getChat();
   },
-
-  mounted() {
-    console.log("채팅연결시작");
-    console.log(this.roomId);
-  },
   computed: {
     ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo"]),
     ...mapState("userStore", ["userInfo"]),
@@ -118,8 +112,6 @@ export default {
       const headers = {
         action: "leave",
       };
-      this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/message`);
-      this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/room`);
       this.stompChatRoomClient.disconnect(() => {}, headers);
       // vuex에 마지막 페이지 방문 저장
       this.$store.dispatch(
@@ -144,33 +136,9 @@ export default {
   },
   methods: {
     ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected"]),
-
-    changeNow() {
-      this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" }, { root: true });
-    },
-    openSidebar() {
-      const sidebar = document.querySelector(".sidebar-container");
-      const sidebarBack = document.querySelector(".sidebar-background");
-      sidebarBack.style.display = "block";
-      sidebar.style.right = "0px";
-    },
-    exitChat() {
-      console.log("채팅방 닫기");
-      const headers = {
-        action: "leave",
-      };
-      this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/message`);
-      this.stompChatRoomClient.unsubscribe(`/topic/${this.roomStatus.roomId}/room`);
-      this.stompChatRoomClient.disconnect(() => {}, headers);
-      this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
-    },
-    forceRerender() {
-      console.log("재로딩");
-      this.componentChat += 1;
-    },
+    // 1.채팅내역 불러오기
     getChat() {
       this.roomMemberIds = [];
-      console.log("채팅내역 불러오기");
       axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
         console.log("채팅내역 가져오기");
         let chatData = res.data.data;
@@ -191,6 +159,7 @@ export default {
         });
       });
     },
+    // 2.채팅방에 참여중인 멤버의 정보를 메세지마다 적용해줍니다.
     sentUserName(userId) {
       const idx = this.roomInfo.members.findIndex(function (item) {
         return item.userId == userId;
@@ -212,6 +181,7 @@ export default {
     openProfileModal(userProfileInfo) {
       this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
     },
+    // 3.채팅방 소켓 연결
     chatRoomConnect: function () {
       const serverURL = "http://138.2.93.111:8080/stomp";
       let socket = new SockJS(serverURL);
@@ -225,7 +195,6 @@ export default {
           // 채팅 메세지 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
             console.log("구독으로 받은 메시지 입니다.");
-            // 받은 데이터를 json으로 파싱하고 리스트에 넣어줌
             const receivedMessage = JSON.parse(res.body);
             this.chatMessages.push(receivedMessage.message);
             console.log(receivedMessage);
@@ -268,8 +237,8 @@ export default {
       );
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
     },
+    // 메세지 전송 클릭시 소켓이 연결되어 있고 입력한 메세지가 있다면 전송합니다.
     send() {
-      console.log("Send message");
       if (this.stompChatRoomClient && this.stompChatRoomClient.connected && this.message) {
         const msg = {
           type: 0,
@@ -289,6 +258,19 @@ export default {
       // e.target.value = "";
       // document.getElementById("textarea").focus();
     },
+    openSidebar() {
+      const sidebar = document.querySelector(".sidebar-container");
+      const sidebarBack = document.querySelector(".sidebar-background");
+      sidebarBack.style.display = "block";
+      sidebar.style.right = "0px";
+    },
+    exitChat() {
+      const headers = {
+        action: "leave",
+      };
+      this.stompChatRoomClient.disconnect(() => {}, headers);
+      this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
+    },
   },
 };
 </script>
@@ -298,7 +280,6 @@ export default {
   justify-content: space-between;
   padding: 20px;
 }
-/* 왜 span으로는 하위처리가 안되지 */
 .chat-header .iconify {
   font-size: 25px;
   font-weight: bold;
@@ -321,7 +302,7 @@ export default {
 .chat-messages-outer-container::-webkit-scrollbar {
   position: absolute;
   background-color: #d8eec0;
-  width: 18px;
+  width: 23px;
 }
 .chat-messages-outer-container::-webkit-scrollbar-track {
   background-color: #d8eec0;
@@ -332,18 +313,16 @@ export default {
   border-radius: 10px;
   width: 10px;
   background-clip: padding-box;
-  border: 5px solid transparent;
+  border: 8px solid transparent;
 }
 .chat-messages {
   text-align: left;
   padding: 10px 0;
   font-size: 14px;
 }
-
 .chat-message {
   padding-left: 15px;
 }
-
 .chat {
   background-color: #d8eec0;
   border-right: 2px solid #9eac95;
@@ -353,14 +332,11 @@ export default {
   position: relative;
   padding: 7px 10px;
   background: #ffffff;
-  /* -webkit-border-radius: 100px; */
-  /* -moz-border-radius: 10px; */
   border-radius: 5px;
   margin-right: 5px;
   max-width: 250px;
   word-break: break-all;
 }
-
 .bubble:after {
   content: "";
   position: absolute;
@@ -416,7 +392,6 @@ export default {
   max-width: 300px;
   word-break: break-all;
 }
-
 .bubble-me:after {
   content: "";
   position: absolute;
@@ -429,7 +404,6 @@ export default {
   right: -11px;
   top: 8px;
 }
-
 .message-input-container {
   position: fixed;
   background-color: #ffffff;

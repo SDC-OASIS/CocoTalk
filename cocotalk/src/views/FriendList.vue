@@ -1,5 +1,6 @@
 <template>
   <div class="friend-list-outer-container">
+    <!-- 상단바 -->
     <div class="header row">
       <span>친구</span>
       <div class="header-icon-container row">
@@ -11,7 +12,9 @@
         </div>
       </div>
     </div>
+    <!-- 목록 -->
     <div class="friend-list-inner-container">
+      <!-- 내 프로필 -->
       <div class="myprofile row">
         <div @click="openProfileModal(userInfo)">
           <profile-img :imgUrl="userInfo.profile.profile" width="60px" />
@@ -19,6 +22,7 @@
         <friend-list-user-info :userInfo="userInfo" />
       </div>
       <hr />
+      <!-- 친구목록 -->
       <div class="friend-list-container">
         <div class="friend-cnt">친구 - {{ friendsCnt }}</div>
         <div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
@@ -43,8 +47,11 @@ export default {
     ProfileImg,
     FriendListUserInfo,
   },
-  mounted() {
+  created() {
+    console.log("=========[친구목록페이지]==========");
     this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
+    this.getUser();
+    this.getFriends();
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
@@ -63,15 +70,6 @@ export default {
     openAddFriendModal() {
       this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
     },
-  },
-  created() {
-    console.log("=========[친구목록페이지]==========");
-    if (screen.width <= 1600) {
-      this.width = "60px";
-    }
-    this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
-    this.getUser();
-    this.getFriends();
   },
 };
 </script>

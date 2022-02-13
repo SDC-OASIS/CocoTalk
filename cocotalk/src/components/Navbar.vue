@@ -16,6 +16,7 @@
           </router-link>
         </li>
         <li>
+          <!-- 페이지 이동이 아닌 알림 온오프를 위한 자리입니다. 임시로 다른 용도로 쓰고있습니다. -->
           <router-link to="/friends/setting">
             <span class="iconify" data-icon="bi:bell-fill"></span>
           </router-link>
@@ -27,9 +28,7 @@
         </li>
         <li @click="logout">
           <router-link to="/login">
-            <span>
-              <span class="iconify" data-icon="fe:logout"></span>
-            </span>
+            <span class="iconify" data-icon="fe:logout"></span>
           </router-link>
         </li>
       </ul>

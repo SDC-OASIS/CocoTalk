@@ -1,7 +1,6 @@
 <template>
   <div id="mainPage">
     <div v-if="this.stompChatListConnected">
-      <router-view name="login" />
       <router-view name="error" />
       <div>
         <navbar v-if="nav" />
@@ -22,11 +21,11 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import Navbar from "@/components/Navbar.vue";
+import Alert from "@/components/modals/Alert.vue";
+import ProfileModal from "@/components/modals/ProfileModal.vue";
 import AddFriendModal from "@/components/modals/AddFriendModal.vue";
 import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
 import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
-import ProfileModal from "@/components/modals/ProfileModal.vue";
-import Alert from "@/components/modals/Alert.vue";
 
 export default {
   name: "MainPage",
@@ -45,8 +44,6 @@ export default {
   },
   created() {
     this.setStompChatListDisconnect();
-    const width = screen.width;
-    this.$store.dispatch("userStore/getScreen", { width: width });
     this.$store.dispatch("socket/chatListConnect");
     // 에러페이지에서는 navbar 안보이게 만들기
     if (window.location.pathname == "/error") {
@@ -60,7 +57,7 @@ export default {
     ...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal"]),
   },
   methods: {
-    ...mapMutations("socket", ["setStompChatListClient", "setStompChatRoomClient", "setStompChatListConnected", "setStompChatListDisconnect", "setStompChatRoomConnected"]),
+    ...mapMutations("socket", ["setStompChatListClient", "setStompChatListConnected", "setStompChatListDisconnect"]),
   },
 };
 </script>
