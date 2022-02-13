@@ -115,7 +115,7 @@ sha256:
   salt: {{ yout salt }}
 
 api:
-  push: {{ push-server-url }}
+  gateway: {{ your gateway-url }}
 
 
 cloud:
