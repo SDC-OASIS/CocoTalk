@@ -19,35 +19,38 @@
       </div>
     </div>
     <!-- 채팅 대화 -->
-    <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages">
-      <div class="chat-messages-container">
-        <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
-          <!-- {{ chatMessage }} -->
-          <!-- 상대가 한 말 -->
-          <div v-if="chatMessage.userId != userInfo.id" class="row">
-            <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
-              <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
-            </div>
-            <div class="chat-message">
-              <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
-              <div class="row">
-                <div class="bubble box">{{ chatMessage.content }}</div>
-                <div style="position: relative; width: 70px">
-                  <div class="unread-number">2</div>
-                  <div class="sent-time">오후2:00</div>
+    <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages" v-scroll:#main="scroll">
+      <div infinite-wrapper>
+        <div class="chat-messages-container">
+          <infinite-loading force-use-infinite-wrapper="body" v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+          <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
+            <!-- {{ chatMessage }} -->
+            <!-- 상대가 한 말 -->
+            <div v-if="chatMessage.userId != userInfo.id" class="row">
+              <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
+                <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
+              </div>
+              <div class="chat-message">
+                <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
+                <div class="row">
+                  <div class="bubble box">{{ chatMessage.content }}</div>
+                  <div style="position: relative; width: 70px">
+                    <div class="unread-number">2</div>
+                    <div class="sent-time">오후2:00</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- 내가 한 말 -->
-          <div v-else class="row" style="justify-content: right">
-            <div class="chat-message">
-              <div class="row">
-                <div style="position: relative; width: 55px">
-                  <div class="unread-number-me">2</div>
-                  <div class="sent-time-me">오후2:00</div>
+            <!-- 내가 한 말 -->
+            <div v-else class="row" style="justify-content: right">
+              <div class="chat-message">
+                <div class="row">
+                  <div style="position: relative; width: 55px">
+                    <div class="unread-number-me">2</div>
+                    <div class="sent-time-me">오후2:00</div>
+                  </div>
+                  <div class="bubble-me box">{{ chatMessage.content }}</div>
                 </div>
-                <div class="bubble-me box">{{ chatMessage.content }}</div>
               </div>
             </div>
           </div>
@@ -70,6 +73,7 @@ import { mapMutations, mapState } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
 import Sidebar from "../components/chatroom/Sidebar.vue";
+import InfiniteLoading from "vue-infinite-loading";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import axios from "@/utils/axios";
@@ -78,13 +82,15 @@ export default {
   data() {
     return {
       roomId: this.$route.params.roomId,
+      roomMemberIds: [],
       chatMessages: [],
       roomInfo: {},
       message: "",
-      roomMemberIds: [],
+      limit: 0,
     };
   },
   components: {
+    InfiniteLoading,
     ProfileImg,
     Button,
     Sidebar,
@@ -101,6 +107,18 @@ export default {
     );
     this.chatRoomConnect();
     this.getChat();
+    window.addEventListener("scroll", () => {
+      let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
+      let windowHeight = window.innerHeight; // 스크린 창
+      let fullHeight = document.body.scrollHeight - 300; //  margin 값은 포함 x
+
+      if (scrollLocation + windowHeight >= fullHeight) {
+        console.log("끝");
+      }
+    });
+  },
+  mounted: function () {
+    window.addEventListener("scroll", this.handleNotificationListScroll);
   },
   computed: {
     ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo"]),
@@ -137,9 +155,9 @@ export default {
   methods: {
     ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected"]),
     // 1.채팅내역 불러오기
-    getChat() {
+    async getChat() {
       this.roomMemberIds = [];
-      axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
+      await axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
         console.log("채팅내역 가져오기");
         let chatData = res.data.data;
         this.roomInfo = chatData.room;
@@ -157,6 +175,9 @@ export default {
             e.profile = JSON.parse(e.profile);
           }
         });
+        console.log(this.chatMessages);
+        console.log(this.roomInfo);
+        this.limit += 1;
       });
     },
     // 2.채팅방에 참여중인 멤버의 정보를 메세지마다 적용해줍니다.
@@ -257,6 +278,47 @@ export default {
       // [메세지보낸 후 엔터커서 위로 올라오지 않는 현상 해결중]
       // e.target.value = "";
       // document.getElementById("textarea").focus();
+    },
+    infiniteHandler($state) {
+      console.log("!!!!");
+      console.log($state);
+      axios
+        .get("chat/messages", {
+          params: {
+            roomId: this.roomStatus.roomId,
+            bundleId: this.chatMessages[0].messageBundleId,
+            count: this.chatInfo.recentMessageBundleCount - 10 + 10,
+            size: 10,
+          },
+        })
+        .then((res) => {
+          console.log("스크롤업");
+          console.log(res);
+
+          if (res.data.data.length) {
+            this.limit += 1;
+            console.log(res.data.data);
+            this.chatMessages.unshift(...res.data.data);
+            console.log(this.chatMessages);
+            $state.loaded();
+            $state.complete();
+          } else {
+            $state.complete();
+          }
+          // this.$nextTick(() => {
+          //   let chatMessages = this.$refs.chatMessages;
+          //   chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+          // });
+        });
+    },
+
+    scroll: function (e) {
+      this.scrollPostion = e.target.scrollTop;
+      if (this.scrollPosition > 100) {
+        console.log("UP");
+      } else {
+        console.log("DOWN");
+      }
     },
     openSidebar() {
       const sidebar = document.querySelector(".sidebar-container");
