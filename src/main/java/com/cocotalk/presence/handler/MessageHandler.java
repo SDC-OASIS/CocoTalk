@@ -22,29 +22,31 @@ public class MessageHandler extends TextWebSocketHandler {
     private final ChatConnectService chatConnectService;
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) {
+    public void handleTextMessage(WebSocketSession session, TextMessage message) { // 채팅 서버로부터 수신한 웹 소켓 메시지를 처리하는 핸들 메서드입니다.
         try {
             PresenceRequest request = objectMapper.readValue(message.getPayload(), PresenceRequest.class);
             switch (request.getAction()) {
-                case "register" : {
+                case "register" : { // (1) 채팅 서버 기동 시 URL 등록 메시지
                     chatConnectService.registerConnectionUrl(request.getServerUrl());
                     break;
                 }
-                case "withdraw" : {
+                case "withdraw" : { // (2) 채팅 서버 종료 시 URL 삭제 메시지
                     chatConnectService.withdrawConnectionUrl(request.getServerUrl());
                     break;
                 }
-                case "connect" : {
+                case "connect" : { // (3) 클라이어트 STOMP Connect 시 연결 정보 업데이트 메시지
                     chatConnectService.connectChatServer(request.getServerUrl());
                     break;
                 }
-                case "disconnect" : {
+                case "disconnect" : { // (4) 클라이어트 STOMP Disconnect 시 연결 정보 업데이트 메시지
                     chatConnectService.disconnectChatServer(request.getServerUrl());
                     break;
                 }
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            log.error("[MessageHandler/handleTextMessage] : 채팅 서버로부터 수신한 WebSocket 메시지를 파싱하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.BAD_REQUEST, e);
         }
     }
 

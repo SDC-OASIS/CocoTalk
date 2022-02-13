@@ -10,13 +10,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class CustomExceptionHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse<?>> handle(CustomException e) {
+    public ResponseEntity<ErrorResponse<?>> handleCustomException(CustomException e) {
         CustomError error = e.getError();
-        ErrorDetails details = new ErrorDetails(e);
+        ErrorDetails details;
+        if(e.getCause() != null) {
+            Throwable cause = e.getCause();
+            details = new ErrorDetails(error, cause);
+            log.error("CustomException : " + cause.getMessage());
+        } else {
+            details = new ErrorDetails(e);
+            log.error("CustomException : " + e.getMessage());
+        }
 
-        log.error("CustomException : " + e.getMessage());
         return ResponseEntity.status(error.getStatus()).body(new ErrorResponse<>(details));
     }
 

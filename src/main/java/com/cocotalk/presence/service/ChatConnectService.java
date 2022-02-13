@@ -24,12 +24,12 @@ public class ChatConnectService {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class Connection implements Comparable {
+    private static class Connection implements Comparable { // 채팅 서버의 STOMP Connetion 정보를 추상화한 클래스
         public String url;
         public Integer noc; // numberOfClients
 
         @Override
-        public int compareTo(Object obj) {
+        public int compareTo(Object obj) { // PriorityQueue 정렬을 위한 compareTo 메서드 재정의
             Connection connection = (Connection) obj;
             return this.noc - connection.noc; // connection 적은 순으로 정렬
         }
@@ -43,31 +43,31 @@ public class ChatConnectService {
         }
     }
 
-    public void registerConnectionUrl(String serverUrl) {
+    public void registerConnectionUrl(String serverUrl) { // [Key : 채팅 서버 URL], [Value: 0] Redis에 등록
         String key =  "CC/" + serverUrl;
         setData(key, 0);
         log.info("serverUrl {} Redis에 등록됨.", serverUrl);
     }
 
-    public void withdrawConnectionUrl(String serverUrl) {
+    public void withdrawConnectionUrl(String serverUrl) { // [Key : 채팅 서버 URL], [Value: ?] Redis에서 삭제
         String key =  "CC/" + serverUrl;
         deleteData(key);
         log.info("serverUrl {} Redis에서 제거됨.", serverUrl);
     }
 
-    public void connectChatServer(String serverUrl) {
+    public void connectChatServer(String serverUrl) { // 채팅 서버에 클라이언트가 STOMP Connect 되었을 때 호출됩니다.
         String key =  "CC/" + serverUrl;
         redisTemplate.opsForValue().increment(key);
         log.info("serverUrl {} 커넥션 + 1.", serverUrl);
     }
 
-    public void disconnectChatServer(String serverUrl) {
+    public void disconnectChatServer(String serverUrl) { // 채팅 서버에 클라이언트가 STOMP Disonnect 되었을 때 호출됩니다.
         String key =  "CC/" + serverUrl;
         redisTemplate.opsForValue().decrement(key);
         log.info("serverUrl {} 커넥션 - 1", serverUrl);
     }
 
-    public String handoverConnectionUrl() {
+    public String handoverConnectionUrl() { // least connection 상태인 채팅서버 URL을 클라이언트에게 전달하는 메서드입니다.
         String prefix =  "CC/*";
         Set<String> urls = redisTemplate.keys(prefix);
         if(urls.size() == 0) throw new CustomException(CustomError.CHAT_SERVER_CONNECTION, "연결할 수 있는 채팅 서버가 없습니다");
@@ -76,7 +76,7 @@ public class ChatConnectService {
             Integer numberOfClients = valueOperations.get(key); // multiGet으로 개선 가능
             key = key.replaceFirst(prefix, "");
             log.info("URL로 변환된 Redis key : {}", key);
-            chatConnections.add(new Connection(key, numberOfClients));
+            chatConnections.add(new Connection(key, numberOfClients)); // PriorityQueue<Connection> chatConnections
         }
         String leastConnectionUrl = chatConnections.peek().url;
         chatConnections.clear();
@@ -87,8 +87,9 @@ public class ChatConnectService {
         try {
             ValueOperations<String, Integer> valueOperations = redisTemplate.opsForValue();
             valueOperations.set(key, value);
-        } catch (Exception e) { // 그냥 Exception만 있는 것은 CustomException 날려주기
+        } catch (Exception e) {
             e.printStackTrace();
+            log.error("[ChatConnectService/setData] : Redis에 데이터를 Set 하는 도중 문제가 발생했습니다.");
             throw new CustomException(CustomError.REDIS, e);
         }
     }
@@ -96,8 +97,9 @@ public class ChatConnectService {
     public void deleteData(String key) {
         try {
             redisTemplate.delete(key);
-        } catch (Exception e) { // 그냥 Exception만 있는 것은 CustomException 날려주기
+        } catch (Exception e) {
             e.printStackTrace();
+            log.error("[ChatConnectService/deleteData] : Redis에서 데이터를 delete 하는 도중 문제가 발생했습니다.");
             throw new CustomException(CustomError.REDIS, e);
         }
     }
