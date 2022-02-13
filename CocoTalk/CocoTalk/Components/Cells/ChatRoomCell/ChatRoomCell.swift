@@ -210,7 +210,7 @@ class ChatRoomCell: UITableViewCell {
         
         lblLastMessage.text = data.recentChatMessage?.content ?? ""
         
-        lblLastMsgTime.text = data.recentChatMessage?.sentAt?.split(separator: "T")[0].description
+        lblLastMsgTime.text = String((data.recentChatMessage?.sentAt?.split(separator: ".")[0].description.dropLast(3)) ?? "")
         if data.recentMessageBundleCount ?? 0 > 0 {
             viewUnreadNumberContainer.backgroundColor = .red
             lblUnreadMessageNumber.isHidden = false

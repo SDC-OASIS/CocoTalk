@@ -34,10 +34,7 @@ class AuthRepository {
             .retry(3)
             .asObservable()
             .map { try JSONDecoder().decode(APIResult_0<ModelEmailVerifyResponse>.self, from: $0.data) }
-            .catch { error in
-                print(error)
-                return Observable.error(error)
-            }
+            .catchAndReturn(APIResult_0<ModelEmailVerifyResponse>())
     }
     
 

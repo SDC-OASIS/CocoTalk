@@ -48,13 +48,23 @@ class ChatRoomViewController: UIViewController {
     
     // MARK: - Properties
     let bag = DisposeBag()
-    let viewModel = ChatRoomViewModel()
+    let viewModel: ChatRoomViewModel
     private var members: [RoomMember]
+    private var roomId: String
+    private var myId: Int?
     
     // MARK: - Life cycle
     
-    init (members: [RoomMember]) {
+    init (members: [RoomMember], roomId: String) {
         self.members = members
+        self.roomId = roomId
+        self.viewModel = ChatRoomViewModel(roomId: roomId)
+        
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
+           let myData = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
+            self.myId = myData.id
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -77,8 +87,48 @@ class ChatRoomViewController: UIViewController {
         // http://minsone.github.io/mac/ios/falling-snow-with-spritekit-on-uiview-in-swift
     }
     
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.scrollToBottom(animated: false)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setNavigationAppearance()
+        viewModel.dependency.socket.accept(WebSocketHelper(socketType: .chatRoom, userId: self.myId,roomId: self.roomId))
+        viewModel.dependency.socket.value?.establishConnection()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        resetNavigationAppearance()
+        
+        guard let socket = viewModel.dependency.socket.value else {
+            return
+        }
+        socket.closeConnection()
+        viewModel.dependency.socket.accept(nil)
+    }
+    
+    // MARK: - Helper
+    private func fetch() {
+        viewModel.getMessages()
+        viewModel.fetchRoomInfo()
+    }
+    
+    private func setBackButton() {
+        self.navigationController?.navigationBar.tintColor = .black
+    }
+    
+    private func resetNavigationAppearance() {
+        navigationController?.isNavigationBarHidden = true
+        navigationController?.tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.standardAppearance = UINavigationBarAppearance()
+        navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
+    }
+    
+    private func setNavigationAppearance() {
         navigationController?.isNavigationBarHidden = false
         navigationController?.tabBarController?.tabBar.isHidden = true
         
@@ -92,28 +142,6 @@ class ChatRoomViewController: UIViewController {
         navAppearance.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 19, weight: .semibold)]
         navigationController?.navigationBar.standardAppearance = navAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.scrollToBottom(animated: false)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.isNavigationBarHidden = true
-        navigationController?.tabBarController?.tabBar.isHidden = false
-        navigationController?.navigationBar.standardAppearance = UINavigationBarAppearance()
-        navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
-    }
-    
-    // MARK: - Helper
-    private func fetch() {
-        viewModel.getMessages()
-    }
-    
-    private func setBackButton() {
-        self.navigationController?.navigationBar.tintColor = .black
     }
 }
 
@@ -181,9 +209,33 @@ extension ChatRoomViewController {
 extension ChatRoomViewController {
     func bind() {
         bindViewMdoel()
+        bindTextField()
+        bindButton()
     }
     
     func bindViewMdoel() {
+    }
+    
+    func bindTextField() {
+        textField.rx.text
+            .orEmpty
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else {
+                    return
+                }
+                self.viewModel.input.text.accept(text)
+            }).disposed(by: bag)
+    }
+    
+    func bindButton() {
+        ivSend.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.viewModel.sendMessage()
+            }).disposed(by: bag)
     }
 }
 

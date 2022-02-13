@@ -89,11 +89,15 @@ extension SceneDelegate: WebSocketDelegate {
     }
     
     func signoutBySocket() {
-        KeychainWrapper.resetKeys()
-        let signInVC = SigninViewController()
-        let root = UINavigationController(rootViewController: signInVC)
-        window?.backgroundColor = .white
-        window?.rootViewController = root
-        window?.makeKeyAndVisible()
+        let alert = UIAlertController(title: "로그아웃", message: "다른 기기에서 로그인되었습니다.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            KeychainWrapper.resetKeys()
+            let signInVC = SigninViewController()
+            let root = UINavigationController(rootViewController: signInVC)
+            self?.window?.backgroundColor = .white
+            self?.window?.rootViewController = root
+            self?.window?.makeKeyAndVisible()
+        })
+        window?.rootViewController?.present(alert, animated: true)
     }
 }

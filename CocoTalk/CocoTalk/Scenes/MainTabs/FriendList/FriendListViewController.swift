@@ -50,7 +50,8 @@ class FriendListViewController: UIViewController {
         tabBarController?.selectedIndex = 1
         let chatRoomListVC = tabBarController?.viewControllers![1] as! UINavigationController
         let members = viewModel.output.talkMembers.value ?? []
-        let vc = ChatRoomViewController(members: members)
+        let roomId = viewModel.output.roomId.value ?? ""
+        let vc = ChatRoomViewController(members: members, roomId: roomId)
         vc.title = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
         vc.hidesBottomBarWhenPushed = true
         chatRoomListVC.pushViewController(vc, animated: true)

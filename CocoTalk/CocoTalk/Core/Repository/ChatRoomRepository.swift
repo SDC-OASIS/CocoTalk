@@ -73,6 +73,17 @@ class ChatRoomRepository {
             }
     }
     
+    func fetchRoomInfo(with token: String, roomId: String) -> Observable<APIResult_1<ModelRoom>> {
+        return provider.rx.request(.fetchRoomInfo(token, roomId: roomId))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
+    
     func insert(_ newItem: ItemType) -> Bool {
         return true
     }

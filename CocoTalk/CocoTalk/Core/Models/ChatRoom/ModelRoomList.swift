@@ -9,7 +9,7 @@ import Foundation
 
 struct ModelRoomList: Codable {
     var room: ModelRoom?
-    var recentChatMessage: ModelChatMessage?
+    var recentChatMessage: ModelChatMessageSub?
     var recentMessageBundleCount: Int?
     var unreadNumber: Int?
 }

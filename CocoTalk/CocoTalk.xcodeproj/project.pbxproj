@@ -103,6 +103,7 @@
 		EA8F20B427B80826008A01ED /* CreateGroupChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B327B80826008A01ED /* CreateGroupChatViewModel.swift */; };
 		EA8F20B627B8B441008A01ED /* ProfileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B527B8B441008A01ED /* ProfileHelper.swift */; };
 		EA8F20B827B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */; };
+		EA8F20BA27B918C9008A01ED /* WebSocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
 		EAC6159027B62E7C00B213BC /* ModelFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6158F27B62E7C00B213BC /* ModelFriend.swift */; };
@@ -218,6 +219,7 @@
 		EA8F20B327B80826008A01ED /* CreateGroupChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupChatViewModel.swift; sourceTree = "<group>"; };
 		EA8F20B527B8B441008A01ED /* ProfileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHelper.swift; sourceTree = "<group>"; };
 		EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCreateChatRoomRequest.swift; sourceTree = "<group>"; };
+		EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketDelegate.swift; sourceTree = "<group>"; };
 		EAC6158F27B62E7C00B213BC /* ModelFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFriend.swift; sourceTree = "<group>"; };
 		EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewModel.swift; sourceTree = "<group>"; };
 		EAC6159527B6926000B213BC /* ProfileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewController.swift; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 			children = (
 				EA14D4EF2786B16C00EDC892 /* AppDelegate.swift */,
 				EA14D4F12786B16C00EDC892 /* SceneDelegate.swift */,
+				EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -1000,6 +1003,7 @@
 				EAC6159027B62E7C00B213BC /* ModelFriend.swift in Sources */,
 				EA29141327B0B40800324476 /* APIResult_0.swift in Sources */,
 				EAC6159727B6926000B213BC /* ProfileModalViewController.swift in Sources */,
+				EA8F20BA27B918C9008A01ED /* WebSocketDelegate.swift in Sources */,
 				EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */,
 				EAE5560C27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift in Sources */,
 				EA22D540279544A100E1F39A /* FirendListViewModel.swift in Sources */,

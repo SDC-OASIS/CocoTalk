@@ -9,23 +9,26 @@ import Foundation
 import RxSwift
 import RxRelay
 import StompClientLib
+import SwiftKeychainWrapper
 
 final class WebSocketHelper: StompClientLibDelegate {
      
+    private var userId: String = ""
+    private var roomId: String = ""
+    private var socketType: SocketType
+    
     var socketClient: StompClientLib?
     let header: [String: String]
+    private var destinationToType: [String: SocketTopicEnum] = [:]
     
-    init(view: SocketType, roomId: String? = "") {
-        var userId: Int?
-        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
-           let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
-            userId = data.id
-        }
-        
-        if view == .chatList {
-            header = ["view": "chatList", "userId": "\(userId ?? -1)"]
+    init(socketType: SocketType, userId: Int? = -1, roomId: String? = "") {
+        self.socketType = socketType
+        self.userId = "\(userId ?? -1)"
+        self.roomId = roomId ?? ""
+        if socketType == .chatList {
+            header = ["view": "chatList", "userId": "\(self.userId)"]
         } else {
-            header = ["view": "chatRoom", "userId": "\(userId ?? -1)", "roomId": roomId ?? ""]
+            header = ["view": "chatRoom", "userId": "\(self.userId)", "roomId": self.roomId]
         }
     }
     
@@ -41,8 +44,31 @@ final class WebSocketHelper: StompClientLibDelegate {
     }
     
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, akaStringBody stringBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
-        print(jsonBody ?? "")
+        print("🟢 STOMP CLIENT MESSAGE 🟢")
+        print("[destination]")
+        print(destination)
+        print("[header]")
+        print(header ?? "")
+        print("[string body]")
         print(stringBody ?? "")
+        
+        switch destinationToType[destination] {
+        case .some(.chatRoomInfo):
+            break
+        case .some(.listMessage):
+            break
+        case .some(.listRoomInfo):
+            break
+        case .some(.listNewRoom):
+            break
+        case .some(.listCrash):
+            signout(fcmToken: stringBody ?? "")
+            break
+        case .some(.chatMessage):
+            break
+        case .none:
+            break
+        }
     }
     
     func stompClientDidDisconnect(client: StompClientLib!) {
@@ -51,6 +77,11 @@ final class WebSocketHelper: StompClientLibDelegate {
     
     func stompClientDidConnect(client: StompClientLib!) {
         print("connected")
+        if socketType == .chatList {
+            subscribeList()
+        } else if socketType == .chatRoom {
+            subscribeChat()
+        }
     }
     
     func serverDidSendReceipt(client: StompClientLib!, withReceiptId receiptId: String) {
@@ -65,7 +96,24 @@ final class WebSocketHelper: StompClientLibDelegate {
         print("Server ping")
     }
     
-    func subscribeTopic(topic: SocketTopicEnum, userId: String?, roomId: String?) {
+    private func subscribeList() {
+        let userId = self.userId
+        subscribeTopic(topic: .listMessage, userId: "\(userId)", roomId: nil)
+        subscribeTopic(topic: .listRoomInfo, userId: "\(userId)", roomId: nil)
+        subscribeTopic(topic: .listNewRoom, userId: "\(userId)", roomId: nil)
+        subscribeTopic(topic: .listCrash, userId: "\(userId)", roomId: nil)
+    }
+    
+    private func subscribeChat() {
+        subscribeTopic(topic: .chatMessage, userId: nil, roomId: self.roomId)
+        subscribeTopic(topic: .chatRoomInfo, userId: nil, roomId: self.roomId)
+    }
+    
+    func sendMessage(_ message: ModelChatMessagePub) {
+        socketClient?.sendJSONForDict(dict: (message.dictionary ?? [:]) as NSDictionary, toDestination: "/simple/chatroom/\(self.roomId)/message/send")
+    }
+    
+    private func subscribeTopic(topic: SocketTopicEnum, userId: String?, roomId: String?) {
         let roomId = roomId ?? ""
         let userId = userId ?? ""
         var destination: String
@@ -86,14 +134,35 @@ final class WebSocketHelper: StompClientLibDelegate {
         case .listRoomInfo:
             destination = "/topic/\(userId)/room"
             break
+        case .listCrash:
+            destination = "/topic/\(userId)/crash/mobile"
         }
         
+        print("client subscribed: \(destination)")
+        destinationToType[destination] = topic
         socketClient?.subscribe(destination: destination)
     }
 }
 
+// MARK: - SocketType
 enum SocketType {
     case chatList
     case chatRoom
+}
+
+
+// MARK: - Subscribe Helpers
+extension WebSocketHelper {
+    
+    private func signout(fcmToken: String) {
+        let token: String? = KeychainWrapper.standard[.fcmToken]
+        guard let token = token else {
+            return
+        }
+        if token != fcmToken {
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            appDelegate?.signout()
+        }
+    }
 }
 

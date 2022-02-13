@@ -63,14 +63,19 @@ extension SplashViewModel {
         }
         authRepository.verifyToken(token)
             .subscribe(onNext: { [weak self] response in
-                guard let self = self,
-                      let isSuccess = response.isSuccess else {
+                guard let self = self else {
                     return
                 }
-
+                
+                guard let isSuccess = response.isSuccess else {
+                    self.dependency.isValidToken.accept(false)
+                    self.reissueToken()
+                    return
+                }
+                
                 guard isSuccess,
                       let result = response.result else {
-                    self.dependency.isValidToken.accept(false)
+                          self.dependency.isValidToken.accept(false)
                     self.reissueToken()
                     return
                 }

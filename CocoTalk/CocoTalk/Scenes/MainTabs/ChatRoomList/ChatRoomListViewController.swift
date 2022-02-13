@@ -102,8 +102,11 @@ extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource
     
     // 채팅방 클릭
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let members: [RoomMember] = viewModel.output.rooms.value[indexPath.row].room?.members ?? []
-        let vc = ChatRoomViewController(members: members)
+        let room = viewModel.output.rooms.value[indexPath.row].room
+        let members = room?.members ?? []
+        let roomId = room?.id ?? ""
+        let vc = ChatRoomViewController(members: members, roomId: roomId)
+        vc.title = room?.roomname ?? ""
         vc.hidesBottomBarWhenPushed = true
         guard let nav = self.navigationController else {
             return

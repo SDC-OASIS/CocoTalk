@@ -23,6 +23,7 @@ protocol FriendListDependency {
 
 protocol FriendListOutput {
     var isRoomExist: BehaviorRelay<Bool?> { get }
+    var roomId: BehaviorRelay<String?> { get }
     var talkMembers: BehaviorRelay<[RoomMember]?> { get }
     var myProfile: BehaviorRelay<ModelProfile> { get }
     var friends: BehaviorRelay<[ModelProfile]> { get }
@@ -56,6 +57,7 @@ class FriendListViewModel {
     
     struct Output: FriendListOutput {
         var talkMembers = BehaviorRelay<[RoomMember]?>(value: nil)
+        var roomId = BehaviorRelay<String?>(value: nil)
         var isRoomExist = BehaviorRelay<Bool?>(value: nil)
         var myProfile = BehaviorRelay<ModelProfile>(value: ModelProfile())
         var friends = BehaviorRelay<[ModelProfile]>(value: [])
@@ -140,8 +142,9 @@ extension FriendListViewModel {
                 }
                 
                 self.output.talkMembers.accept(room.members)
-                if let _ = room.id {
+                if let id = room.id {
                     self.dependency.isLoading.accept(false)
+                    self.output.roomId.accept(id)
                     self.output.isRoomExist.accept(true)
                 } else {
                     self.createChatRoom(userId)
@@ -188,12 +191,15 @@ extension FriendListViewModel {
                     return
                 }
                 
-                guard let _ = response.data else {
+                guard let room = response.data,
+                      let id = room.id else {
                     self.dependency.isFailed.accept(true)
                     return
                 }
-                self.output.isRoomExist.accept(true)
+                
                 self.dependency.isFailed.accept(false)
+                self.output.isRoomExist.accept(true)
+                self.output.roomId.accept(id)
             }).disposed(by: bag)
     }
     
