@@ -59,8 +59,6 @@
         </div>
       </div>
     </transition-group>
-    <!-- </div> -->
-    {{ roomStatus }}
   </div>
 </template>
 
