@@ -8,13 +8,16 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 protocol ChatRoomInput {
-    var messages: [ModelMessage] { get set }
+    var text: BehaviorRelay<String> { get }
+    var type: BehaviorRelay<MessageTypeEnum> { get }
 }
 
 protocol ChatRoomDependency {
-    
+    var messages: BehaviorRelay<[ModelMessage]> { get }
+    var members: BehaviorRelay<[ModelProfile]> { get }
 }
 
 protocol ChatRoomOutput {
@@ -29,11 +32,13 @@ class ChatRoomViewModel {
     var output = Output()
     
     struct Input: ChatRoomInput {
-        var messages: [ModelMessage] = []
+        var type = BehaviorRelay<MessageTypeEnum>(value: .text)
+        var text = BehaviorRelay<String>(value: "")
     }
     
     struct Dependency: ChatRoomDependency {
-        
+        var messages = BehaviorRelay<[ModelMessage]>(value: [])
+        var members = BehaviorRelay<[ModelProfile]>(value: [])
     }
     
     struct Output: ChatRoomOutput {
@@ -45,8 +50,10 @@ class ChatRoomViewModel {
 extension ChatRoomViewModel {
     
     func getMessages() {
+        var newValue = dependency.messages.value
         for i in 0..<40 {
-            input.messages.append(ModelMessage.getRandomMessage(id: i))
+            newValue.append(ModelMessage.getRandomMessage(id: i))
         }
+        dependency.messages.accept(newValue)
     }
 }

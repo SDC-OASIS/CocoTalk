@@ -223,7 +223,7 @@ extension ProfileModalViewController {
                       let delegate = self.delegate  else {
                           return
                       }
-                delegate.openChatRoom()
+                delegate.openChatRoom(username: self.profile.username ?? "")
                 self.dismiss(animated: true)
             }).disposed(by: bag)
         

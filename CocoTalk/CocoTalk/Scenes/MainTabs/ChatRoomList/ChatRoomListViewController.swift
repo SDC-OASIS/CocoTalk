@@ -33,6 +33,9 @@ class ChatRoomListViewController: UIViewController {
         configureView()
         configureSubviews()
         bindRx()
+        
+#warning("처음 로드할 때만 연결")
+#warning("소켓 연결")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,16 +100,14 @@ extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
+    // 채팅방 클릭
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = ChatRoomViewController()
+        let members: [RoomMember] = viewModel.output.rooms.value[indexPath.row].room?.members ?? []
+        let vc = ChatRoomViewController(members: members)
         vc.hidesBottomBarWhenPushed = true
         guard let nav = self.navigationController else {
             return
         }
-        
-        let backBarButtonItem = UIBarButtonItem(title: "350", style: .plain, target: self, action: nil)
-        backBarButtonItem.tintColor = .black
-        navigationItem.backBarButtonItem = backBarButtonItem
         nav.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -119,7 +120,12 @@ extension ChatRoomListViewController: GNBDelegate {
     }
     
     func tapAddChat() {
-        
+        let createChatVC = CreateChatRoomViewController()
+        let nav = UINavigationController(rootViewController: createChatVC)
+        nav.modalPresentationStyle = .overFullScreen
+        nav.modalTransitionStyle = .coverVertical
+        createChatVC.delegate = self
+        self.present(nav, animated: true)
     }
     
     func tapSearch() {
@@ -128,5 +134,11 @@ extension ChatRoomListViewController: GNBDelegate {
     
     func tapSetting() {
         
+    }
+}
+
+extension ChatRoomListViewController: CreateChatRoomDelegate {
+    func fetchChatRoom() {
+        viewModel.fetch()
     }
 }

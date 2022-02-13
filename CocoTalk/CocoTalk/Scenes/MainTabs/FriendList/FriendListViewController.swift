@@ -167,12 +167,16 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - PrfofileCellDelegate
 extension FriendListViewController: ProfileCellDelegate {
-    func openChatRoom() {
+    func openChatRoom(username: String) {
         tabBarController?.selectedIndex = 1
         let chatRoomListVC = tabBarController?.viewControllers![1] as! UINavigationController
-        let vc = ChatRoomViewController()
-        vc.hidesBottomBarWhenPushed = true
-        chatRoomListVC.pushViewController(vc, animated: true)
+        #warning("룸멤버 넣기")
+        print("개인톡 개발중")
+//        개인톡방에서 룸멤버 정보를 어떻게 받아오지?
+//        let vc = ChatRoomViewController(members: <#T##[RoomMember]#>)
+//        vc.title = username
+//        vc.hidesBottomBarWhenPushed = true
+//        chatRoomListVC.pushViewController(vc, animated: true)
     }
 }
 

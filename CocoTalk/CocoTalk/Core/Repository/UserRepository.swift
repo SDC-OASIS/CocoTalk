@@ -15,7 +15,7 @@ import SwiftKeychainWrapper
 
 class UserRepository {
     /// ModelFriend
-    typealias ItemType = ModelFriend
+    typealias ItemType = ModelProfile
     
     private let provider: MoyaProvider<UserAPI>
     
@@ -23,11 +23,11 @@ class UserRepository {
         provider = MoyaProvider<UserAPI>()
     }
     
-    var items: [ItemType] = []
+    static var items: [ItemType] = []
     
 #warning("코어 데이터에서 불러오기")
     func initFetch() -> [ItemType] {
-        return items
+        return UserRepository.items
     }
     
     func fetchMyProfile() -> ModelProfile {
@@ -46,7 +46,7 @@ class UserRepository {
             }
     }
     
-    func fetchFromServer(with token: String) -> Observable<[ItemType]?> {
+    func fetchFromServer(with token: String) -> Observable<[ModelFriend]?> {
         return provider.rx.request(.fetchFriends(token))
             .retry(3)
             .asObservable()
@@ -90,7 +90,12 @@ class UserRepository {
         return true
     }
     
+    /// Search
+    /// 유저네임으로 찾기
     func search(query: String) -> [ItemType] {
-        return items
+        if query.isEmpty {
+            return UserRepository.items
+        }
+        return UserRepository.items.filter { ($0.username ?? "").contains(query) }
     }
 }

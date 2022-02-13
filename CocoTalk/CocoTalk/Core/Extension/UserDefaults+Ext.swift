@@ -9,6 +9,14 @@ import Foundation
 
 extension UserDefaults {
     
+    static func getMyData() -> ModelSignupResponse? {
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
+           let myData = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
+            return myData
+        }
+        return nil
+    }
+    
     static func resetUserData() {
         UserDefaults.standard.removeObject(forKey: UserDefaultsKey.myData.rawValue)
     }

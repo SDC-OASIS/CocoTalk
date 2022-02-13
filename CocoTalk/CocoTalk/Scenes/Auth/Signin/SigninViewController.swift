@@ -204,6 +204,8 @@ extension SigninViewController {
                 }
                 
                 if isCompleted {
+                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                    appDelegate?.listSocket?.establishConnection()
                     self.move2Home()
                 }
             }).disposed(by: bag)

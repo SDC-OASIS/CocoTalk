@@ -47,7 +47,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.listSocket?.closeConnection()
+        appDelegate?.saveContext()
     }
 
 
@@ -71,6 +73,9 @@ extension SceneDelegate {
                     self.window?.backgroundColor = .white
                     self.window?.rootViewController = nav
                     self.window?.makeKeyAndVisible()
+                } else {
+                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                    appDelegate?.initializeListSocket()
                 }
             }).disposed(by: bag)
     }

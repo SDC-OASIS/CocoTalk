@@ -132,6 +132,12 @@ class GNBView: UIView {
                 self?.delegate?.tapAddFriend()
             }).disposed(by: bag)
         
+        ivAddChat.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                self?.delegate?.tapAddChat()
+            }).disposed(by: bag)
+        
         ivSearch.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in

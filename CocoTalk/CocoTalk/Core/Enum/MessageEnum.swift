@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MessageType: Int, Codable {
+enum MessageTypeEnum: Int, Codable {
     case text
     case photo
     case video
@@ -15,7 +15,7 @@ enum MessageType: Int, Codable {
     case file
 }
 
-enum MessagePosition {
+enum MessagePositionEnum {
     case send
     case receive
     case unknown

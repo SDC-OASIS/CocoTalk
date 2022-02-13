@@ -35,9 +35,7 @@ class FriendListViewModel {
     init() {
         let myProfile = userRepsository.fetchMyProfile()
         output.myProfile.accept(myProfile)
-        
-        let friends = handleFriends(userRepsository.initFetch())
-        output.friends.accept(friends)
+        output.friends.accept(userRepsository.initFetch())
     }
     
     struct Input: FriendListInput {
@@ -67,7 +65,7 @@ class FriendListViewModel {
                 }
             }
             .filter{ $0.type == 0 }
-            .map { $0.friend!.decodeProfile() }
+            .map { ProfileHelper().decodeProfile(profile: $0.friend!) }
             .sorted(by: { $0.username ?? "" < $1.username ?? "" })
     }
 }
@@ -91,7 +89,7 @@ extension FriendListViewModel {
                       let myProfile = response else {
                     return
                 }
-                self.output.myProfile.accept(myProfile.decodeProfile())
+                self.output.myProfile.accept(ProfileHelper().decodeProfile(profile: myProfile))
             }).disposed(by: bag)
     }
     
@@ -106,7 +104,9 @@ extension FriendListViewModel {
                       let friends = response else {
                     return
                 }
-                self.output.friends.accept(self.handleFriends(friends))
+                let profiles = self.handleFriends(friends)
+                self.output.friends.accept(profiles)
+                UserRepository.items = profiles
             }).disposed(by: bag)
         #warning("비교 후 업데이트된 프로필 표시하기")
     }

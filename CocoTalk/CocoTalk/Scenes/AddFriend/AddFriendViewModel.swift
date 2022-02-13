@@ -78,7 +78,7 @@ extension AddFriendViewModel {
                           return
                       }
                 self.dependency.noResult.accept(false)
-                self.output.resultProfile.accept(response.decodeProfile())
+                self.output.resultProfile.accept(ProfileHelper().decodeProfile(profile: response))
             }).disposed(by: bag)
     }
     
@@ -101,7 +101,7 @@ extension AddFriendViewModel {
                           self.dependency.noResult.accept(true)
                           return
                       }
-                self.output.resultProfile.accept(profile.decodeProfile())
+                self.output.resultProfile.accept(ProfileHelper().decodeProfile(profile: profile))
                 self.dependency.isAddCompleted.accept(true)
             }).disposed(by: bag)
     }

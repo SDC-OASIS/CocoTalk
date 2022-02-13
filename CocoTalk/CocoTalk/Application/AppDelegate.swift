@@ -16,10 +16,12 @@ import UserNotifications
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    var listSocket: WebSocketHelper?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         
         FirebaseApp.configure()
@@ -91,5 +93,12 @@ extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         #warning("이전 코드랑 다르면 post 호출")
         KeychainWrapper.standard[.fcmToken] = fcmToken ?? ""
+    }
+}
+
+extension AppDelegate {
+    func initializeListSocket() {
+        listSocket = WebSocketHelper(view: .chatList)
+        listSocket?.establishConnection()
     }
 }

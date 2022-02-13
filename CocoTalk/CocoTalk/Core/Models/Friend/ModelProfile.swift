@@ -29,19 +29,3 @@ struct ModelProfile: Codable {
     /// 2. 뉴 프로필 true (24시간 안에 봤을 경우)
     var isNewProfile: Bool?
 }
-
-extension ModelProfile {
-    func decodeProfile() -> ModelProfile {
-        let decoder = JSONDecoder()
-        guard let jsonString = self.profile else {
-            return self
-        }
-        var profileData = self
-        let jsonData = Data(jsonString.utf8)
-        let decoded = try? decoder.decode(ModelProfileData.self, from: jsonData)
-        profileData.profileImageURL = decoded?.profile
-        profileData.bgImageURL = decoded?.background
-        profileData.bio = decoded?.message
-        return profileData
-    }
-}
