@@ -2,7 +2,7 @@
 
 ## 폴더 구조
 
-<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%ED%8F%B4%EB%8D%94%EA%B5%AC%EC%A1%B0.png?raw=true" alt="Screen Shot 2022-02-14 at 8.14.02 AM" style="zoom:50%;" />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%ED%8F%B4%EB%8D%94%EA%B5%AC%EC%A1%B0.png?raw=true" alt="Screen Shot 2022-02-14 at 8.14.02 AM" width="33%" />
 
 
 
