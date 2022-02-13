@@ -41,7 +41,9 @@ public class S3Service {
             log.info("[S3Service/uploadImage] : " + filePath + " is uploaded");
             return cloudFrontDomain+"/"+filePath;
         } catch (IOException e) {
-            throw new CustomException(CustomError.UNKNOWN);
+            e.printStackTrace();
+            log.error("[S3Service/uploadFile] : S3에 파일을 업로드하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.INPUT_OUTPUT, e);
         }
     }
 

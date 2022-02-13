@@ -2,7 +2,7 @@ package com.cocotalk.chat.service;
 
 import com.cocotalk.chat.config.ServerUrlConfig;
 import com.cocotalk.chat.dto.request.PresenceRequest;
-import com.cocotalk.chat.utils.WebSocketUtils;
+import com.cocotalk.chat.utils.WebSocketUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PresenceService implements ApplicationRunner, ApplicationListener<ContextClosedEvent> {
     private final ObjectMapper objectMapper;
-    private final WebSocketUtils webSocketUtils;
+    private final WebSocketUtil webSocketUtil;
     private final ServerUrlConfig serverUrlConfig;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         String serverUrl = serverUrlConfig.ServerUrl();
         PresenceRequest registerRequest = PresenceRequest.builder()
                 .action("register")
@@ -30,9 +30,11 @@ public class PresenceService implements ApplicationRunner, ApplicationListener<C
         try {
             String requestString = objectMapper.writeValueAsString(registerRequest);
             log.info(requestString);
-            webSocketUtils.send(requestString);
+            webSocketUtil.send(requestString);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.toString());
+            log.error("[PresenceService/run] : 프리젠스 서버에게 URL 등록 메시지를 보내는 도중 문제가 발생했습니다.");
         }
     }
 
@@ -46,9 +48,11 @@ public class PresenceService implements ApplicationRunner, ApplicationListener<C
         try {
             String requestString = objectMapper.writeValueAsString(withdrawRequest);
             log.info(requestString);
-            webSocketUtils.send(requestString);
+            webSocketUtil.send(requestString);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.toString());
+            log.error("[PresenceService/onApplicationEvent] : 프리젠스 서버에게 URL 해제 메시지를 보내는 도중 문제가 발생했습니다.");
         }
     }
 }
