@@ -5,7 +5,7 @@ import com.cocotalk.user.domain.vo.TokenPayload;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
 import com.cocotalk.user.repository.UserRepository;
-import com.cocotalk.user.utils.JwtUtils;
+import com.cocotalk.user.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         String token = req.getHeader("X-ACCESS-TOKEN"); // (1) X-ACCESS-TOKEN 추출
         if (!StringUtils.hasLength(token)) throw new CustomException(CustomError.NOT_LOGIN);
-        TokenPayload payload = JwtUtils.getPayload();
+        TokenPayload payload = JwtUtil.getPayload();
         Long userId = payload.getUserId();
         return userRepository.findById(userId).orElseThrow(() -> INVALID_USER_ID); // (2) JWT 인가
     }

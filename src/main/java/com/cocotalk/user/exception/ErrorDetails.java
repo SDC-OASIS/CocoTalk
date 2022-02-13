@@ -14,27 +14,21 @@ public class ErrorDetails {
     private String desc;
     private String type;
 
-    public ErrorDetails(CustomException ce) {
-        this.code = ce.getError().getCode();
-        this.desc = ce.getMessage();
-        this.type = ce.getError().getType();
+    public ErrorDetails(CustomException exception) {
+        this.code = exception.getError().getCode();
+        this.desc = exception.getMessage();
+        this.type = exception.getError().getType();
     }
 
-    public ErrorDetails(CustomError ce, Exception e) {
-        this.code = ce.getCode();
-        this.desc = e.getMessage();
-        this.type = ce.toString();
-    }
-
-    public ErrorDetails(CustomError e) {
-        this.code = e.getCode();
-        this.desc = e.getDesc();
-        this.type = e.toString();
-    }
-
-    public ErrorDetails(CustomError ce, String desc) {
-        this.code = ce.getCode();
+    public ErrorDetails(CustomError error, String desc) {
+        this.code = error.getCode();
         this.desc = desc;
-        this.type = ce.toString();
+        this.type = error.getType();
+    }
+
+    public ErrorDetails(CustomError error, Throwable cause) {
+        this.code = error.getCode();
+        this.desc = cause.getMessage();
+        this.type = error.getType();
     }
 }

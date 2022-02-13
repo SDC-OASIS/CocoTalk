@@ -2,15 +2,14 @@ package com.cocotalk.user.domain.vo;
 
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
-
-@Builder
+@Slf4j
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfilePayload {
@@ -23,7 +22,9 @@ public class ProfilePayload {
         try {
             return mapper.writeValueAsString(profilePayload);
         } catch (Exception e) {
-            throw new CustomException(CustomError.JSON_PARSE);
+            e.printStackTrace();
+            log.error("[ProfilePayload/toJSON] : profilePayload를 파싱하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 
@@ -32,7 +33,9 @@ public class ProfilePayload {
         try {
             return mapper.readValue(jsonString, ProfilePayload.class);
         } catch (Exception e) {
-            throw new CustomException(CustomError.JSON_PARSE);
+            e.printStackTrace();
+            log.error("[ProfilePayload/toObject] : jsonString를 파싱하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 }
