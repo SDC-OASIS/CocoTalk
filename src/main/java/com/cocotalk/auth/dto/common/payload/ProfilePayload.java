@@ -7,7 +7,8 @@ import lombok.*;
 
 /**
  *
- * User의 profile 필드에 들어가는 josn의 payload
+ * User의 프로필 정보를 profile 컬럼에 JSON 형태의 String으로 저장하는데,
+ * profile 컬럼의 json과 매핑되는 Class입니다.
  *
  */
 @Builder

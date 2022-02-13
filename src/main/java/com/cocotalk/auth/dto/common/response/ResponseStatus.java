@@ -3,12 +3,12 @@ package com.cocotalk.auth.dto.common.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/*
+/**
 *
-* Response Code
-* 성공일 경우 code에 200, 실패일 경우 error용 코드를 보내줌
+* Response에 사용되는 ResponseStatus
+* 실패일 경우 error용 코드를 보내줍니다.
 *
- */
+*/
 @AllArgsConstructor
 @Getter
 public enum ResponseStatus {
