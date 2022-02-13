@@ -60,12 +60,12 @@ public class S3Service {
             amazonS3.putObject(new PutObjectRequest(bucket, filePath, file.getInputStream(), null)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
             log.info("[S3Service/uploadImage] : " + filePath + " is uploaded");
-            return cloudFrontDomain+"/"+filePath;
+            return cloudFrontDomain + "/" + filePath;
         } catch (IOException e) {
-            throw new CustomException(CustomError.UNKNOWN);
+            e.printStackTrace();
+            throw new CustomException(CustomError.INPUT_OUTPUT, e);
         }
     }
-
     private void deleteFile(String filePath) {
         ObjectListing objectList = amazonS3.listObjects(bucket, filePath);
         List<S3ObjectSummary> objectSummeryList = objectList.getObjectSummaries();

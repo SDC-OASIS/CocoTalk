@@ -1,9 +1,6 @@
-package com.cocotalk.user.application;
+package com.cocotalk.user.exception;
 
 import com.cocotalk.user.dto.response.ErrorResponse;
-import com.cocotalk.user.exception.CustomException;
-import com.cocotalk.user.exception.ErrorDetails;
-import com.cocotalk.user.exception.CustomError;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
@@ -20,13 +17,19 @@ import static com.cocotalk.user.exception.CustomError.BAD_SQL;
 
 @Slf4j
 @RestControllerAdvice
-public class CustomExceptionHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse<?>> handle(CustomException e) {
+    public ResponseEntity<ErrorResponse<?>> handleCustomException(CustomException e) {
         CustomError error = e.getError();
-        ErrorDetails details = new ErrorDetails(e);
-
-        log.error("CustomException : " + e.getMessage());
+        ErrorDetails details;
+        if(e.getCause() != null) {
+            Throwable cause = e.getCause();
+            details = new ErrorDetails(error, cause);
+            log.error("CustomException : " + cause.getMessage());
+        } else {
+            details = new ErrorDetails(e);
+            log.error("CustomException : " + e.getMessage());
+        }
         return ResponseEntity.status(error.getStatus()).body(new ErrorResponse<>(details));
     }
 
