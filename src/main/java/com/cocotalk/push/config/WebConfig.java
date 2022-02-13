@@ -1,6 +1,6 @@
 package com.cocotalk.push.config;
 
-import com.cocotalk.push.ClientArgumentResolver;
+import com.cocotalk.push.application.ClientArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.ResourceHandlerRegistry;

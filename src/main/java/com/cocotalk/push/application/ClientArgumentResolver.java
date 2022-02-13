@@ -1,4 +1,4 @@
-package com.cocotalk.push;
+package com.cocotalk.push.application;
 
 import com.cocotalk.push.dto.common.ClientType;
 import com.cocotalk.push.dto.device.ClientInfo;
@@ -12,6 +12,9 @@ import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
 
+/**
+ * 요청 해더를 통해 user-agent, client ip 정보를 찾아 controlloer에서 필요한 ClientInfo.class 형태로 가공합니다.
+ */
 @Slf4j
 public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
 

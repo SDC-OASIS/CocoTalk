@@ -3,8 +3,11 @@ package com.cocotalk.push.dto.common.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/*
- HTTP 에러 코드
+/**
+ *
+ * Response에 사용되는 ResponseStatus
+ * 실패일 경우 error용 코드를 보내줍니다.
+ *
  */
 @AllArgsConstructor
 @Getter
