@@ -1,5 +1,6 @@
 <template>
   <div class="chat-room-list-outer-container">
+    <!-- 상단바 -->
     <div class="header row">
       <span>채팅</span>
       <div class="header-icon-container row">
@@ -11,15 +12,11 @@
         </div>
       </div>
     </div>
-    <!-- <div class="chat-room-list-container"> -->
+    <!-- 채팅방 목록 -->
     <transition-group class="chat-room-list-container" @before-enter="beforeEnter" @after-enter="afterEnter" @enter-cancelled="afterEnter">
       <div class="chat-room-item-container row" v-for="(chat, idx) in chats" :key="chat.room.id" :data-index="idx">
-        <!-- <div>
-					<ProfileImg :imgUrl="chat.img" width="50px" />
-				</div> -->
-        <!-- <button @click="deleteMessage(chat.room.id)">ddd</button> -->
-
         <div style="dispaly: inline-block; text-align: center">
+          <!-- 채팅방 멤버수에 따라 다른 형태의 프로필 모양 -->
           <div v-if="chat.room.members.length == 1">
             <profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 50px" />
           </div>
@@ -50,6 +47,7 @@
             </div>
           </div>
         </div>
+        <!--채팅방 정보 : 채팅방이름과 마지막 메세지, 안읽은 메세지수 -->
         <div class="chat-info-container row" @click="goChat(chat)">
           <chat-list-info :chatInfo="chat" />
           <div class="box row chat-detail-info">
@@ -65,8 +63,8 @@
 <script>
 import { mapState } from "vuex";
 import axios from "@/utils/axios";
-import ProfileImg from "../components/common/ProfileImg.vue";
-import ChatListInfo from "../components/chats/ChatListInfo.vue";
+import ProfileImg from "@/components/common/ProfileImg.vue";
+import ChatListInfo from "@/components/chats/ChatListInfo.vue";
 
 export default {
   name: "ChatList",
@@ -86,19 +84,13 @@ export default {
     this.chatListSubscribe();
   },
   computed: {
-    ...mapState("userStore", ["userInfo"]),
     ...mapState("chat", ["roomStatus"]),
+    ...mapState("userStore", ["userInfo"]),
     ...mapState("socket", ["stompChatListClient", "stompChatListConnected"]),
   },
   methods: {
-    clone(o) {
-      var result = {};
-      for (var i in o) {
-        result[i] = o[i];
-      }
-      return result;
-    },
     chatListSubscribe() {
+      //[채팅목록 마지막 메세지 subscribe]
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/message`, (res) => {
         console.log("구독으로 받은 메시지목록의 마지막 메세지 정보 입니다.");
         const data = JSON.parse(res.body);
@@ -107,57 +99,40 @@ export default {
         const idx = this.chats.findIndex(function (item) {
           return item.room.id == lastMessage.roomId;
         });
-        console.log(idx);
+        // 1.마지막 메세지 갱신
         this.chats[idx].recentChatMessage = lastMessage;
-        // 현재 입장한 방이 아니라면 안읽은메세지수에 더해줌
+        // 현재 입장한 방이 아니라면 안읽은 메세지수에 더해줌
         if (this.chats[idx].room.id != this.roomStatus.roomId) {
           this.chats[idx].unreadNumber++;
         }
+        // 2.채팅방 목록에 있는 방의 메세지인 경우
         if (idx) {
-          console.log("화이팅");
           const updateData = this.chats[idx];
           console.log(updateData);
           this.chats.splice(idx, 1);
           this.chats.unshift(updateData);
         }
-
-        const recentMessageBundleCount = bundleInfo.currentMessageBundleCount;
-        this.$store.dispatch("chat/updateMessageBundleCount", recentMessageBundleCount, { root: true });
+        // 채팅방별 최신 메세지의 번들 수 갱신
+        this.chats[idx].recentMessageBundleCount = bundleInfo.currentMessageBundleCount;
+        // this.$store.dispatch("chat/updateMessageBundleCount", recentMessageBundleCount, { root: true });
         console.log(lastMessage);
-        console.log(bundleInfo);
+
+        // 3.채팅방 목록에 없는 방의 메세지인 경우 (나가기한 1대1 채팅) == 구현중 ==
       });
-      // 채팅목록 채팅방정보 채널 subscribe
+
+      //[채팅목록 채팅방정보 채널 subscribe] == 구현중 ==
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
         console.log("구독으로 받은 업데이트된 룸정보입니다.");
         console.log(res);
       });
-      // 채팅목록 새로 생섣된 채팅방정보 채널 subscribe
+
+      //[채팅목록 새로 생성된 채팅방정보 채널 subscribe] == 구현중 ==
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
-        console.log("구독으로 받은 룸정보입니다.");
+        console.log("구독으로 받은 새로 생성된 룸정보입니다.");
         console.log(res);
       });
     },
-    openChatCreationModal() {
-      this.$store.dispatch("modal/openChatCreationModal", "open", { root: true });
-    },
-    goChat(chat) {
-      // 현재 swagger로 채팅방생성중이기때문에 첫메세지가 없는 경우가 있어 nextMessageBundleId 업데이트.
-      // 채팅방내부에서 채팅내역불러와서 갱신해주기 때문에 이후에는 필요없음
-      let payload = {
-        roomId: chat.room.id,
-        nextMessageBundleId: chat.room.messageBundleIds[chat.room.messageBundleIds.length - 1],
-        recentMessageBundleCount: chat.recentMessageBundleCount,
-      };
-      this.$store.dispatch("chat/goChat", payload, { root: true });
-      const idx = this.chats.findIndex(function (item) {
-        return item.room.id == chat.room.id;
-      });
-      this.chats[idx].unreadNumber = 0;
-    },
-    messageSentTime(time) {
-      return this.$moment(time).format("LT");
-    },
-    getChatList: function () {
+    getChatList() {
       axios.get("chat/rooms/list").then((res) => {
         console.log("채팅방목록 가져오기");
         const chatList = res.data.data;
@@ -175,14 +150,26 @@ export default {
         console.log(chatList);
       });
     },
-    deleteMessage(id) {
-      console.log(id);
+    openChatCreationModal() {
+      this.$store.dispatch("modal/openChatCreationModal", "open", { root: true });
+    },
+    goChat(chat) {
+      // 현재 swagger로 채팅방생성중이기때문에 첫메세지가 없는 경우가 있어 nextMessageBundleId 업데이트.
+      // 채팅방내부에서 채팅내역불러와서 갱신해주기 때문에 이후에는 필요없음
+      let payload = {
+        roomId: chat.room.id,
+        nextMessageBundleId: chat.room.messageBundleIds[chat.room.messageBundleIds.length - 1],
+        recentMessageBundleCount: chat.recentMessageBundleCount,
+      };
+      this.$store.dispatch("chat/goChat", payload, { root: true });
       const idx = this.chats.findIndex(function (item) {
-        return item.room.id == id;
+        return item.room.id == chat.room.id;
       });
-      console.log(idx);
-      this.chats.splice(idx, 1);
-      console.log(this.chats);
+      // 읽지 않은 메세지수 0으로 만들기
+      this.chats[idx].unreadNumber = 0;
+    },
+    messageSentTime(time) {
+      return this.$moment(time).format("LT");
     },
     // 트랜지션 시작에서 인덱스*100ms 만큼의 딜레이 부여
     beforeEnter(el) {
@@ -200,6 +187,16 @@ export default {
     afterEnter(el) {
       el.style.transitionDelay = "";
     },
+    // 목록에서 삭제시 애니메이션을 보기위한 테스트 함수입니다.
+    deleteMessage(id) {
+      console.log(id);
+      const idx = this.chats.findIndex(function (item) {
+        return item.room.id == id;
+      });
+      console.log(idx);
+      this.chats.splice(idx, 1);
+      console.log(this.chats);
+    },
   },
 };
 </script>
@@ -211,7 +208,6 @@ export default {
   border-left: 2px solid #9eac95;
   border-right: 2px solid #9eac95;
   font-size: 15px;
-  overflow: auto;
 }
 .header {
   justify-content: space-between;
@@ -245,25 +241,28 @@ export default {
 .chat-room-list-container {
   padding: 20px 0;
   text-align: left;
+  display: block;
+  height: 82vh;
+  overflow: auto;
 }
-.chat-room-list-outer-container::-webkit-scrollbar {
+.chat-room-list-container::-webkit-scrollbar {
   background-color: #ffffff;
   width: 18px;
 }
-.chat-room-list-outer-container::-webkit-scrollbar-track {
+.chat-room-list-container::-webkit-scrollbar-track {
   background-color: #ffffff;
   width: 10px;
 }
-.chat-room-list-outer-container::-webkit-scrollbar-thumb {
+.chat-room-list-container::-webkit-scrollbar-thumb {
   background-color: #b8c8ae;
   border-radius: 10px;
   width: 10px;
   background-clip: padding-box;
   border: 5px solid transparent;
 }
+
 .chat-room-list-container > span {
   margin-bottom: 100px;
-  /* 왜 안되지! */
 }
 .chat-room-item-container {
   padding: 10px 0;
@@ -271,6 +270,7 @@ export default {
   padding-left: 20px;
   cursor: pointer;
 }
+
 .chat-room-item-container img {
   width: 50px;
   height: 50px;

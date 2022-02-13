@@ -13,7 +13,6 @@
 
 <script>
 import { mapActions } from "vuex";
-import router from "@/router";
 
 export default {
   name: "login",
@@ -33,7 +32,6 @@ export default {
       this.user.password = this.user.password.replace(/\s/g, "");
       this.user.fcmToken = "token";
       this.login(this.user);
-      router.push({ name: "friends" }).catch(() => {});
     },
   },
 };

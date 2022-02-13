@@ -63,6 +63,8 @@ npm install
 
 #### 프로젝트 실행
 
+* cocotalk 폴더로 이동해 명령어를 실행해주세요.
+
 ```
 npm run serve
 ```
