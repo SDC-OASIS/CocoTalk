@@ -1,8 +1,8 @@
 package com.cocotalk.auth.utils;
 
 import com.cocotalk.auth.exception.CustomException;
-import com.cocotalk.auth.dto.common.TokenPayload;
-import com.cocotalk.auth.dto.common.response.ResponseStatus;
+import com.cocotalk.auth.dto.common.payload.TokenPayload;
+import com.cocotalk.auth.dto.common.response.ResponseCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -113,7 +113,7 @@ public class JwtUtils {
             TokenPayload payload = objectMapper.readValue(claims.getSubject(), TokenPayload.class);
             return payload;
         } catch (JacksonException e) {
-            throw new CustomException(ResponseStatus.UNAUTHORIZED, e);
+            throw new CustomException(ResponseCode.UNAUTHORIZED, e);
         }
     }
 

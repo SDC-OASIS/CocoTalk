@@ -1,10 +1,14 @@
-package com.cocotalk.auth.dto.common;
+package com.cocotalk.auth.dto.common.payload;
 
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-
+/**
+ *
+ * access token, refresh token의 안에 들어가는 payload
+ *
+ */
 @Builder
 @Getter
 @Setter

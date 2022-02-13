@@ -1,7 +1,7 @@
 package com.cocotalk.auth.exception;
 
 import com.cocotalk.auth.dto.common.response.Response;
-import com.cocotalk.auth.dto.common.response.ResponseStatus;
+import com.cocotalk.auth.dto.common.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Response<?>> serverException(CustomException e) {
-        ResponseStatus status = e.getStatus();
+        ResponseCode status = e.getStatus();
         log.error("AuthException : " + status.getMessage());
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(status));
@@ -30,7 +30,7 @@ public class CustomExceptionHandler {
         String code = bindingResult.getAllErrors().get(0).getCodes()[0];
         log.error("BindException : " + errorMessage +" ("+ code +") at " + objName);
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.NO_VALUES));
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseCode.NO_VALUES));
     }
 
     @ExceptionHandler(NoSuchMethodError.class)
@@ -42,8 +42,8 @@ public class CustomExceptionHandler {
          * ex) LocalDate birth에 빈문자열 ""를 넣은 경우
          */
         if(e.getMessage()!=null && e.getMessage().contains(parseMessage))
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.PARSE_ERROR));
-        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.INTERNAL_SERVER_ERROR));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseCode.PARSE_ERROR));
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseCode.INTERNAL_SERVER_ERROR));
     }
 
 }

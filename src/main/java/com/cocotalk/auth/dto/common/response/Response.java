@@ -17,7 +17,6 @@ import java.util.Date;
 public class Response<T> {
     @JsonProperty(value = "isSuccess")
     private boolean isSuccess;
-    private int status;
     private int code;
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,9 +26,8 @@ public class Response<T> {
     /*
      성공 시 호출
      */
-    public Response(T result, ResponseStatus status) {
+    public Response(T result, ResponseCode status) {
         this.isSuccess = true;
-        this.status = status.getStatus();
         this.code = status.getCode();
         this.message = status.getMessage();
         this.result = result;
@@ -39,9 +37,8 @@ public class Response<T> {
     /*
      실패 시 호출
      */
-    public Response(ResponseStatus status) {
+    public Response(ResponseCode status) {
         this.isSuccess = false;
-        this.status = status.getStatus();
         this.code = status.getCode();
         this.message = status.getMessage();
         this.timestamp = new Date();

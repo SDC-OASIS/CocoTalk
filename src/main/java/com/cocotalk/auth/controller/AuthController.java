@@ -30,7 +30,7 @@ import java.io.IOException;
 
 /**
  * 인증에 필요한 API
- * clientInfo ClientArgumentResolver를 통해 자동으로 들어옴
+ * clientInfo는 ClientArgumentResolver를 통해 자동으로 들어옴
  */
 @Tag(name = "인증 API")
 @RestController
@@ -42,7 +42,9 @@ public class AuthController {
 
     /**
      * 로그인 API [POST] /signin
+     * 
      * @param signinInput 로그인에 필요한 정보
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
      * @return ResponseEntity<Response<TokenDto>> 발급된 accesstoken과 refreshtoken 반환
      */
     @Operation(summary  = "로그인")
@@ -54,6 +56,7 @@ public class AuthController {
     /**
      * 로그아웃 API [POST] /signout
      *
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
      * @return ResponseEntity<Response<Object>>
      */
     @Operation(summary = "로그아웃")
@@ -64,6 +67,7 @@ public class AuthController {
 
     /**
      * 회원가입 API [POST] /signup
+     *
      * @param signUpInput 회원가입에 필요한 정보
      * @return ResponseEntity<Response<SignUpOutput>> 가입된 회원 정보
      */
@@ -78,6 +82,7 @@ public class AuthController {
     /**
      * ACCESS TOKEN 재발급 API [POST] /reissue
      *
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
      * @return ResponseEntity<Response<TokenDto>> 발급된 accesstoken과 refreshtoken 반환
      */
     @Operation(summary = "ACCESS TOKEN 재발급")
@@ -90,6 +95,7 @@ public class AuthController {
     /**
      * 이메일 인증 코드 보내기 API [POST] /email/issue
      *
+     * @param emailInput 인증 코드를 보낼 이메일 정보
      * @return ResponseEntity<Response<EmailOutput>>
      */
     @Operation(summary = "Eamil 인증 코드 발송")
@@ -115,6 +121,7 @@ public class AuthController {
      * 마지막으로 로그인한 기기 검증 API [POST] /device
      * request의 accesstoken 속 fcmtoken과 redis에 보관된 마지막 접속자의 refreshtoken속 fcmtoken을 비교
      *
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
      * @return ResponseEntity<Response<ValidationDto>>
      */
     @Operation(summary = "마지막으로 로그인한 기기가 맞는지 체크")

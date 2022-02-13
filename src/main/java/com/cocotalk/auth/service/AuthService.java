@@ -1,10 +1,14 @@
 package com.cocotalk.auth.service;
 
+import com.cocotalk.auth.dto.common.payload.TokenPayload;
+import com.cocotalk.auth.dto.common.request.chat.CrashRequest;
+import com.cocotalk.auth.dto.common.request.push.FCMTokenRequest;
+import com.cocotalk.auth.dto.common.payload.ProfilePayload;
 import com.cocotalk.auth.exception.CustomException;
 import com.cocotalk.auth.dto.common.*;
 import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.repository.UserRepository;
-import com.cocotalk.auth.dto.common.response.ResponseStatus;
+import com.cocotalk.auth.dto.common.response.ResponseCode;
 import com.cocotalk.auth.dto.email.issue.IssueInput;
 import com.cocotalk.auth.dto.email.issue.IssueOutput;
 import com.cocotalk.auth.dto.email.validation.ValidationInput;
@@ -25,20 +29,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 
-import static com.cocotalk.auth.dto.common.response.ResponseStatus.*;
+import static com.cocotalk.auth.dto.common.response.ResponseCode.*;
 
 
 @Service
@@ -51,8 +48,8 @@ public class AuthService {
     private final JavaMailSender mailSender;
     private final S3Service s3Service;
 
-    @Value("${api.push}")
-    String pushApiUrl;
+    @Value("${api.gateway}")
+    String gatewayAPI;
 
     @Value("${mail.exp}")
     long mailCodeExp;
@@ -76,7 +73,10 @@ public class AuthService {
         // 2. push 서버에 fcm token 갱신하라고 알려주기
         setFcmToken(user.getId(), signinInput.getFcmToken(), clientInfo);
 
-        // 3. token 생성
+        // 3. chat 서버에 기존에 로그인 중인 device 강제종료 요청하기 (기기별 동시 로그인 제한)
+        sendCrashRequest(user.getId(), signinInput.getFcmToken(), clientInfo.getClientType());
+
+        // 4. token 생성
         String accessToken;
         String refreshToken;
         try {
@@ -86,10 +86,10 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.OK).body(new Response<>(BAD_REQUEST));
         }
 
-        // 4. redis에 refresh token 기록
+        // 5. redis에 refresh token 기록
         redisService.setRefreshToken(clientInfo.getClientType(), user.getId(), refreshToken);
 
-        // 5. 결과 return
+        // 6. 결과 return
         TokenDto tokenDto = TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -235,7 +235,7 @@ public class AuthService {
     public ResponseEntity<Response<ValidationDto>> checkLastly(ClientInfo clientInfo) {
         String accessToken = JwtUtils.getAccessToken();
         if(accessToken==null)
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseCode.UNAUTHORIZED));
         /*
          [인증 요청한 기기]의 FCM Token과
          서버에 기록된 [마지막 로그인 기기]의 FCM Token
@@ -253,11 +253,11 @@ public class AuthService {
     private void setFcmToken(Long userId, String fcmToken, ClientInfo clientInfo){
         log.info("[getFcmToken/userId] : "+userId);
 
-        FCMTokenDto fcmTokenDto = FCMTokenDto.builder()
+        FCMTokenRequest fcmTokenDto = FCMTokenRequest.builder()
                 .userId(userId)
                 .fcmToken(fcmToken)
                 .build();
-        WebClient webClient = WebClient.create(pushApiUrl);
+        WebClient webClient = WebClient.create(gatewayAPI+"/push");
         try{
              String response =  webClient.post()
                       .uri("/device")
@@ -273,4 +273,30 @@ public class AuthService {
         }
     }
 
+    /**
+     * chat server에게 현재 로그인한 기기를 제외하고 같은 타입의 기기는 로그아웃 처리해 달라는 요청을 보냄
+     * ex) 모바일로 로그인 했으면 다른 모바일 기기는 로그인이 해제되어야 함
+     * @param userId 현재 로그인한 user의 id
+     * @param fcmToken 현재 로그인한 user의 device 정보 (FCM TOKEN)
+     * @param clientType 현재 로그인한 user의 client type (WEB or MOBILE)
+     */
+    private void sendCrashRequest(Long userId, String fcmToken, ClientType clientType){
+        CrashRequest crashRequest = CrashRequest.builder()
+                .clientType(clientType.name())
+                .userId(userId)
+                .fcmToken(fcmToken)
+                .build();
+        WebClient webClient = WebClient.create(gatewayAPI+"/chat");
+        try{
+            String response =  webClient.post()
+                    .uri("/crash")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(crashRequest)
+                    .retrieve()
+                    .bodyToMono(String.class).block();
+            log.info("[sendCrashRequest/result] :" + response);
+        }catch (Exception e){
+            throw new CustomException(SERVER_ERROR,e);
+        }
+    }
 }

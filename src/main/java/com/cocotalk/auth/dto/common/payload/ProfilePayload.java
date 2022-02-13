@@ -1,10 +1,15 @@
-package com.cocotalk.auth.dto.common;
+package com.cocotalk.auth.dto.common.payload;
 
-import com.cocotalk.auth.dto.common.response.ResponseStatus;
+import com.cocotalk.auth.dto.common.response.ResponseCode;
 import com.cocotalk.auth.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 
+/**
+ *
+ * User의 profile 필드에 들어가는 josn의 payload
+ *
+ */
 @Builder
 @Getter
 @Setter
@@ -20,7 +25,7 @@ public class ProfilePayload {
         try {
             return mapper.writeValueAsString(profilePayload);
         } catch (Exception e) {
-            throw new CustomException(ResponseStatus.PARSE_ERROR);
+            throw new CustomException(ResponseCode.PARSE_ERROR);
         }
     }
 
@@ -29,7 +34,7 @@ public class ProfilePayload {
         try {
             return mapper.readValue(jsonString, ProfilePayload.class);
         } catch (Exception e) {
-            throw new CustomException(ResponseStatus.PARSE_ERROR);
+            throw new CustomException(ResponseCode.PARSE_ERROR);
         }
     }
 }
