@@ -33,25 +33,26 @@ const userStore = {
     },
     SET_ACCESS_TOKEN(state, payload) {
       state.accessToken = payload;
-      console.log("accessToken 저장");
+      console.log("[userStore] accessToken 저장");
     },
     CLEAR_ACCESS_TOKEN(state) {
       state.accessToken = "";
-      console.log("accessToken 삭제");
+      console.log("[userStore] accessToken 삭제");
     },
     SET_REFRESH_TOKEN(state, payload) {
       state.refreshToken = payload;
+      console.log("[userStore] refreshToken 저장");
     },
     CLEAR_REFRESH_TOKEN(state) {
       state.refreshToken = "";
-      console.log("refreshToken 삭제");
+      console.log("[userStore] refreshToken 삭제");
     },
     SET_FCM_TOKEN(state, payload) {
       state.fcmToken = payload;
     },
     CLEAR_FCM_TOKEN(state) {
-      state.refreshToken = "";
-      console.log("refreshToken 삭제");
+      state.fcmToken = "";
+      console.log("[userStore] fcmToken 삭제");
     },
     SET_ISLOGIN(state) {
       state.isLogin = true;
@@ -110,6 +111,29 @@ const userStore = {
         console.log(userInfo);
       });
     },
+    reissue: ({ state, commit }) => {
+      return new Promise((resolve, reject) => {
+        console.log("[userStore/reissue] 호출", state.refreshToken);
+        axios
+          .get("auth/reissue", { headers: { "X-REFRESH-TOKEN": state.refreshToken } })
+          .then((res) => {
+            if (res.data.isSuccess) {
+              console.log("[userStore/reissue] TOKEN 재발급 완료", res.data);
+              commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
+              commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
+              console.log("[VUEX] TOKEN 재설정 완료");
+              resolve(res);
+            } else {
+              // console.log("TOKEN 재발급 실패", res.data);
+              reject(res);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            reject(error);
+          });
+      }); //Promise END
+    }, //reissue END
   },
   modules: {},
 };
