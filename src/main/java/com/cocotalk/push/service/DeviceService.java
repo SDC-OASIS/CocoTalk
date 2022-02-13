@@ -1,5 +1,6 @@
 package com.cocotalk.push.service;
 
+import com.cocotalk.push.dto.common.ClientInfo;
 import com.cocotalk.push.dto.device.*;
 import com.cocotalk.push.dto.common.ClientType;
 import com.cocotalk.push.entity.Device;
@@ -16,6 +17,12 @@ import java.time.LocalDateTime;
 
 import static com.cocotalk.push.dto.common.response.ResponseStatus.*;
 
+/**
+ *
+ * Device를 관리하는 메서드들이 포함된 클래스 입니다.
+ * 주로 Device의 FCM TOKEN을 관리하기 위해 사용됩니다.
+ *
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

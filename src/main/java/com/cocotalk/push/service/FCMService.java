@@ -19,6 +19,11 @@ import java.util.List;
 import static com.cocotalk.push.dto.common.response.ResponseStatus.BAD_REQUEST;
 import static com.cocotalk.push.dto.common.response.ResponseStatus.SUBSCRIBE_ERROR;
 
+/**
+ *
+ * Firebase Cloud Messaging에 푸시 요청을 보내는데 필요한 메서드들이 포함된 클래스 입니다.
+ *
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

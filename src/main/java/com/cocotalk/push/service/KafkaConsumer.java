@@ -12,6 +12,13 @@ import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 
+/**
+ *
+ * Kafka의 push topic에서 push 요청을 기다리고 있다가,
+ * 푸시 요청을 받으면 fcm을 이용해 client에게 push를 보냅니다.
+ * push topic에 요청은 PushTopicDto 형태로 Chat 서버에서 보냅니다.
+ *
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

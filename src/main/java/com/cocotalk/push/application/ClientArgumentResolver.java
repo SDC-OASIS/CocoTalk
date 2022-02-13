@@ -1,7 +1,7 @@
 package com.cocotalk.push.application;
 
 import com.cocotalk.push.dto.common.ClientType;
-import com.cocotalk.push.dto.device.ClientInfo;
+import com.cocotalk.push.dto.common.ClientInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.MethodParameter;

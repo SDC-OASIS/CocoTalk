@@ -1,4 +1,4 @@
-package com.cocotalk.push.dto.device;
+package com.cocotalk.push.dto.common;
 import com.cocotalk.push.dto.common.ClientType;
 import lombok.Builder;
 import lombok.Getter;

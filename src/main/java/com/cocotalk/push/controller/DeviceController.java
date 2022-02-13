@@ -1,5 +1,6 @@
 package com.cocotalk.push.controller;
 
+import com.cocotalk.push.dto.common.ClientInfo;
 import com.cocotalk.push.dto.device.*;
 import com.cocotalk.push.entity.Device;
 import com.cocotalk.push.service.DeviceService;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.relational.core.sql.Update;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
