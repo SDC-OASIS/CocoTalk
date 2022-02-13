@@ -32,6 +32,8 @@ open CocoTalk.xcworkspace
 
 <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/동시로그인방지.gif?raw=true" alt="동시로그인방지" style="zoom:67%;" />
 
+**왼쪽과 오른쪽기기가 같은 아이디로 로그인 되는 모습입니다. 오른쪽이 더 최근에 로그인된 기기이므로 왼쪽은 알림경고창이 보인 후 로그아웃 됩니다.**
+
 #### 같은 아이디로 다른 기기에서 로그인했을 경우 아래 3가지 방법으로 자동 로그아웃 됩니다.
 
 - 앱이 켜져있고, 소켓에 연결되어 있을 때 현재 기기 검증 후 로그아웃
@@ -39,25 +41,31 @@ open CocoTalk.xcworkspace
 - 앱이 백그라운드에서 포그라운드로 전환될 때 현재 기기 검증 후 로그아웃
 
 
+---
+
+
 
 ### 카카오톡 채팅방 UI 구현 중
+**카카오톡과 비슷한 채팅 UI 구현을 위해 UICollectionViewLayout을 커스텀한 MessageCollectionViewLayout를 만들어 사용했습니다.**
 
-<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9.gif?raw=true" alt="채팅방" style="zoom:50%;" />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9.gif?raw=true" alt="채팅방" style="zoom:33%;" />
 
-#### 카카오톡과 비슷한 채팅 UI 구현을 위해 UICollectionViewLayout을 커스텀한 MessageCollectionViewLayout를 만들어 사용했습니다.
 
+---
 
 
 ### 친구 추가
 
-<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B9%9C%EA%B5%AC%EC%B6%94%EA%B0%80.gif?raw=true" alt="친구추가" style="zoom:50%;" />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B9%9C%EA%B5%AC%EC%B6%94%EA%B0%80.gif?raw=true" alt="친구추가" style="zoom:33%;" />
 
 
+
+---
 
 
 ### 채팅방 생성
 
-<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9%20%EC%83%9D%EC%84%B1.gif?raw=true" alt="채팅방 생성" style="zoom: 50%;" />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9%20%EC%83%9D%EC%84%B1.gif?raw=true" alt="채팅방 생성" style="zoom: 33%;" />
 
 
 
