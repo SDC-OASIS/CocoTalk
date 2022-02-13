@@ -1,6 +1,6 @@
 package com.cocotalk.auth.dto.common.payload;
 
-import com.cocotalk.auth.dto.common.response.ResponseCode;
+import com.cocotalk.auth.dto.common.response.ResponseStatus;
 import com.cocotalk.auth.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
@@ -25,7 +25,7 @@ public class ProfilePayload {
         try {
             return mapper.writeValueAsString(profilePayload);
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.PARSE_ERROR);
+            throw new CustomException(ResponseStatus.PARSE_ERROR);
         }
     }
 
@@ -34,7 +34,7 @@ public class ProfilePayload {
         try {
             return mapper.readValue(jsonString, ProfilePayload.class);
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.PARSE_ERROR);
+            throw new CustomException(ResponseStatus.PARSE_ERROR);
         }
     }
 }

@@ -2,7 +2,7 @@ package com.cocotalk.auth.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import com.cocotalk.auth.dto.common.response.ResponseCode;
+import com.cocotalk.auth.dto.common.response.ResponseStatus;
 import com.cocotalk.auth.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class S3Service {
             log.info("[S3Service/uploadImage] : " + filePath + " is uploaded");
             return cloudFrontDomain+"/"+filePath;
         } catch (IOException e) {
-            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+            throw new CustomException(ResponseStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

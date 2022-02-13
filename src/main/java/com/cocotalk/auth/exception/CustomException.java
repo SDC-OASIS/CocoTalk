@@ -1,23 +1,23 @@
 package com.cocotalk.auth.exception;
 
-import com.cocotalk.auth.dto.common.response.ResponseCode;
+import com.cocotalk.auth.dto.common.response.ResponseStatus;
 import lombok.Getter;
 
 @Getter
 public class CustomException extends RuntimeException {
-    private final ResponseCode status;
+    private final ResponseStatus status;
 
-    public CustomException(ResponseCode status) {
+    public CustomException(ResponseStatus status) {
         super(status.getMessage());
         this.status = status;
     }
 
-    public CustomException(ResponseCode status, String errorMessage) {
+    public CustomException(ResponseStatus status, String errorMessage) {
         super(status.getMessage() + " : " + errorMessage);
         this.status = status;
     }
 
-    public CustomException(ResponseCode status, Throwable cause) {
+    public CustomException(ResponseStatus status, Throwable cause) {
         super(status.getMessage(), cause);
         this.status = status;
     }

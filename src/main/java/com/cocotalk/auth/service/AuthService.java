@@ -8,7 +8,7 @@ import com.cocotalk.auth.exception.CustomException;
 import com.cocotalk.auth.dto.common.*;
 import com.cocotalk.auth.dto.signup.SignupInput;
 import com.cocotalk.auth.repository.UserRepository;
-import com.cocotalk.auth.dto.common.response.ResponseCode;
+import com.cocotalk.auth.dto.common.response.ResponseStatus;
 import com.cocotalk.auth.dto.email.issue.IssueInput;
 import com.cocotalk.auth.dto.email.issue.IssueOutput;
 import com.cocotalk.auth.dto.email.validation.ValidationInput;
@@ -35,7 +35,7 @@ import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 
-import static com.cocotalk.auth.dto.common.response.ResponseCode.*;
+import static com.cocotalk.auth.dto.common.response.ResponseStatus.*;
 
 
 @Service
@@ -235,7 +235,7 @@ public class AuthService {
     public ResponseEntity<Response<ValidationDto>> checkLastly(ClientInfo clientInfo) {
         String accessToken = JwtUtils.getAccessToken();
         if(accessToken==null)
-            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseCode.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.OK).body(new Response<>(ResponseStatus.UNAUTHORIZED));
         /*
          [인증 요청한 기기]의 FCM Token과
          서버에 기록된 [마지막 로그인 기기]의 FCM Token

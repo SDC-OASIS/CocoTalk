@@ -11,13 +11,13 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum ResponseCode {
+public enum ResponseStatus {
     /*
      *  Success
      */
-    SUCCESS(200, "요청에 성공하였습니다."),
-    CREATED(200, "리소스 생성에 성공하였습니다."),
-    NO_CONTENT( 200, "요청에 성공하였습니다."),
+    SUCCESS("요청에 성공하였습니다."),
+    CREATED("리소스 생성에 성공하였습니다."),
+    NO_CONTENT(  "요청에 성공하였습니다."),
 
     /*
      *  Fail
@@ -38,6 +38,16 @@ public enum ResponseCode {
     DATABASE_ERROR( 2013, "데이터베이스 연결에 실패하였습니다."),
     PARSE_ERROR( 2014, "파싱 과정 중 에러가 발생했습니다.");
 
-    private final int code;
+    private final Integer code;
     private final String message;
+
+    ResponseStatus(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    ResponseStatus(String message) {
+        this.code = null;
+        this.message = message;
+    }
 }
