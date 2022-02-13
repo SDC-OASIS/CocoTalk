@@ -46,7 +46,6 @@ public class JwtUtils {
     }
 
     public static String createAccessToken(long userId, String fcmToken) {
-        log.info("jwtSecret:"+jwtSecret);
         TokenPayload tokenPayload = TokenPayload.builder()
                 .userId(userId)
                 .fcmToken(fcmToken)

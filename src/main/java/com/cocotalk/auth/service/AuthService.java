@@ -251,8 +251,6 @@ public class AuthService {
     }
 
     private void setFcmToken(Long userId, String fcmToken, ClientInfo clientInfo){
-        log.info("[getFcmToken/userId] : "+userId);
-
         FCMTokenRequest fcmTokenDto = FCMTokenRequest.builder()
                 .userId(userId)
                 .fcmToken(fcmToken)
@@ -288,13 +286,12 @@ public class AuthService {
                 .build();
         WebClient webClient = WebClient.create(gatewayAPI+"/chat");
         try{
-            String response =  webClient.post()
+            webClient.post()
                     .uri("/crash")
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(crashRequest)
                     .retrieve()
                     .bodyToMono(String.class).block();
-            log.info("[sendCrashRequest/result] :" + response);
         }catch (Exception e){
             throw new CustomException(SERVER_ERROR,e);
         }
