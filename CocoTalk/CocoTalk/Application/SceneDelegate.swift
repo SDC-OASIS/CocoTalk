@@ -24,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         
         bindRx()
+        initializeSocketDelegate()
         
         let vc = SplashViewController()
         let nav = UINavigationController(rootViewController: vc)
@@ -78,5 +79,21 @@ extension SceneDelegate {
                     appDelegate?.initializeListSocket()
                 }
             }).disposed(by: bag)
+    }
+}
+
+extension SceneDelegate: WebSocketDelegate {
+    func initializeSocketDelegate() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.socketDelegate = self
+    }
+    
+    func signoutBySocket() {
+        KeychainWrapper.resetKeys()
+        let signInVC = SigninViewController()
+        let root = UINavigationController(rootViewController: signInVC)
+        window?.backgroundColor = .white
+        window?.rootViewController = root
+        window?.makeKeyAndVisible()
     }
 }

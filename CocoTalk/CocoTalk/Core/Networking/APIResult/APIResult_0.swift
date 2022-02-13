@@ -10,7 +10,6 @@ import Foundation
 /// 민정님 API
 struct APIResult_0<T: Decodable>: Decodable {
     var isSuccess: Bool?
-    var status: Int?
     var code: Int?
     var message: String?
     var result: T?

@@ -46,6 +46,8 @@ class MoreViewController: UIViewController {
     
     // MARK: - Helper
     private func signout() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.listSocket?.closeConnection()
         KeychainWrapper.resetKeys()
         let signInVC = SigninViewController()
         let root = UINavigationController(rootViewController: signInVC)

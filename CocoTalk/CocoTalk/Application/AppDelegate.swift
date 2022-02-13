@@ -17,6 +17,7 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var listSocket: WebSocketHelper?
+    var socketDelegate: SceneDelegate?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -96,9 +97,17 @@ extension AppDelegate: MessagingDelegate {
     }
 }
 
+// MARK: - WebSocket
 extension AppDelegate {
     func initializeListSocket() {
-        listSocket = WebSocketHelper(view: .chatList)
-        listSocket?.establishConnection()
+        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
+           let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
+            listSocket = WebSocketHelper(socketType: .chatList, userId: data.id)
+            listSocket?.establishConnection()
+        }
+    }
+    
+    func signout() {
+        socketDelegate?.signoutBySocket()
     }
 }
