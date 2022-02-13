@@ -26,12 +26,12 @@ class ChatRoomRepository {
     static var chatRooms: [ItemType] {
         get {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-ddTHH:mm:ss"
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
             
             return items.sorted(by: {
                 let aDate = dateFormatter.date(from: $0.recentChatMessage?.sentAt ?? "") ?? Date()
                 let bDate = dateFormatter.date(from: $1.recentChatMessage?.sentAt ?? "") ?? Date()
-                return aDate < bDate
+                return aDate > bDate
             })
         }
     }

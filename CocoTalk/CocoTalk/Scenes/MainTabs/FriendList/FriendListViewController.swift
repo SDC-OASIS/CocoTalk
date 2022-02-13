@@ -46,6 +46,16 @@ class FriendListViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func openChatRoom() {
+        tabBarController?.selectedIndex = 1
+        let chatRoomListVC = tabBarController?.viewControllers![1] as! UINavigationController
+        let members = viewModel.output.talkMembers.value ?? []
+        let vc = ChatRoomViewController(members: members)
+        vc.title = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
+        vc.hidesBottomBarWhenPushed = true
+        chatRoomListVC.pushViewController(vc, animated: true)
+    }
+    
     private func fetch() {
         viewModel.fetch()
     }
@@ -100,6 +110,19 @@ extension FriendListViewController {
                     return
                 }
                 self.tableView.reloadData()
+            }).disposed(by: bag)
+        
+        viewModel.output.isRoomExist
+            .subscribe(onNext: { [weak self] isRoomExist in
+                guard let self = self else {
+                    return
+                }
+                
+                if let isRoomExist = isRoomExist,
+                    isRoomExist {
+                        self.openChatRoom()
+                }
+                
             }).disposed(by: bag)
     }
 }
@@ -167,16 +190,8 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - PrfofileCellDelegate
 extension FriendListViewController: ProfileCellDelegate {
-    func openChatRoom(username: String) {
-        tabBarController?.selectedIndex = 1
-        let chatRoomListVC = tabBarController?.viewControllers![1] as! UINavigationController
-        #warning("룸멤버 넣기")
-        print("개인톡 개발중")
-//        개인톡방에서 룸멤버 정보를 어떻게 받아오지?
-//        let vc = ChatRoomViewController(members: <#T##[RoomMember]#>)
-//        vc.title = username
-//        vc.hidesBottomBarWhenPushed = true
-//        chatRoomListVC.pushViewController(vc, animated: true)
+    func checkChatRoomExist(userId: Int) {
+        viewModel.checkChatRoomExist(userId: userId)
     }
 }
 

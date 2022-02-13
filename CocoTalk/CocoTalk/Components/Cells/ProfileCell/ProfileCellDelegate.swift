@@ -8,5 +8,5 @@
 import Foundation
 
 protocol ProfileCellDelegate {
-    func openChatRoom(username: String)
+    func checkChatRoomExist(userId: Int)
 }

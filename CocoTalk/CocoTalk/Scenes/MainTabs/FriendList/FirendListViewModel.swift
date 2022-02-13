@@ -15,17 +15,22 @@ protocol FriendListInput {
 }
 
 protocol FriendListDependency {
+    var isFailed: BehaviorRelay<Bool?> { get }
+    var isLoading: BehaviorRelay<Bool> { get }
     var favoriteProfile: [ModelProfile] { get set }
     var sections: [String] { get set }
 }
 
 protocol FriendListOutput {
+    var isRoomExist: BehaviorRelay<Bool?> { get }
+    var talkMembers: BehaviorRelay<[RoomMember]?> { get }
     var myProfile: BehaviorRelay<ModelProfile> { get }
     var friends: BehaviorRelay<[ModelProfile]> { get }
 }
 
 class FriendListViewModel {
     
+    var chatRoomRepository = ChatRoomRepository()
     var userRepsository = UserRepository()
     var bag = DisposeBag()
     var input = Input()
@@ -43,11 +48,15 @@ class FriendListViewModel {
     }
     
     struct Dependency: FriendListDependency {
+        var isFailed = BehaviorRelay<Bool?>(value: nil)
+        var isLoading = BehaviorRelay<Bool>(value: false)
         var favoriteProfile: [ModelProfile] = []
         var sections = ["내 프로필", "즐겨찾기", "친구 목록"]
     }
     
     struct Output: FriendListOutput {
+        var talkMembers = BehaviorRelay<[RoomMember]?>(value: nil)
+        var isRoomExist = BehaviorRelay<Bool?>(value: nil)
         var myProfile = BehaviorRelay<ModelProfile>(value: ModelProfile())
         var friends = BehaviorRelay<[ModelProfile]>(value: [])
     }
@@ -111,13 +120,85 @@ extension FriendListViewModel {
         #warning("비교 후 업데이트된 프로필 표시하기")
     }
     
-    func addFirendsWithContact() {
-#warning("가입되지 않은 연락처는 user.id가 null")
+    #warning("채팅방 생성하는 로직 모달로 이동시키기")
+    func checkChatRoomExist(userId: Int) {
+        let token: String? = KeychainWrapper.standard[.accessToken]
+        guard let token = token else {
+            return
+        }
+        
+        dependency.isLoading.accept(true)
+        chatRoomRepository.checkRoomExist(with: token, memberId: "\(userId)")
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else {
+                    return
+                }
+                
+                guard let room = response.data else {
+                    self.dependency.isFailed.accept(true)
+                    return
+                }
+                
+                self.output.talkMembers.accept(room.members)
+                if let _ = room.id {
+                    self.dependency.isLoading.accept(false)
+                    self.output.isRoomExist.accept(true)
+                } else {
+                    self.createChatRoom(userId)
+                }
+                
+            }).disposed(by: bag)
     }
     
-#warning("코코톡 ID로 친구추가 리스트로")
-    func addFriendsWithCid() {
+    func createChatRoom(_ memberId: Int) {
+        let token: String? = KeychainWrapper.standard[.accessToken]
+        guard let token = token else {
+            return
+        }
+        guard let myProfile = UserDefaults.getMyData(),
+              let member = userRepsository.findUserById(memberId) else {
+            dependency.isFailed.accept(true)
+            return
+        }
         
+        var selectedMembers: [SelectableProfile] = []
+        
+        selectedMembers.append(SelectableProfile(id: member.id ?? -1,
+                                                 profileImageUrl: "",
+                                                 profile: member.profile ?? "",
+                                                 username: member.username ?? "",
+                                                 isSelected: true))
+        selectedMembers.append(SelectableProfile(id: myProfile.id ?? -1,
+                                                 profileImageUrl: "",
+                                                 profile: myProfile.profile ?? "",
+                                                 username: myProfile.username ?? "",
+                                                 isSelected: true))
+        let members = selectedMembers.map {
+            return ProfileForCreateChatRoom(userId: $0.id, username: $0.username, profile: $0.profile)
+        }
+        let roomName = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
+        
+        let data = ModelCreateChatRoomRequest(roomname: roomName, img: "", type: 0, members: members)
+        
+        dependency.isLoading.accept(true)
+        chatRoomRepository.createChatRoom(with: token, data: data)
+            .subscribe(onNext: { [weak self] response in
+                self?.dependency.isLoading.accept(false)
+                guard let self = self else {
+                    return
+                }
+                
+                guard let _ = response.data else {
+                    self.dependency.isFailed.accept(true)
+                    return
+                }
+                self.output.isRoomExist.accept(true)
+                self.dependency.isFailed.accept(false)
+            }).disposed(by: bag)
+    }
+    
+    func addFirendsWithContact() {
+#warning("가입되지 않은 연락처는 user.id가 null")
     }
 }
 

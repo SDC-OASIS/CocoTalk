@@ -58,6 +58,7 @@ class UserRepository {
             }
     }
     
+    /// 코코톡 아이디로 유저 찾기
     func findUserByCid(_ cid: String, token: String) -> Observable<ModelProfile?> {
         return provider.rx.request(.findUserByCid(cid, token))
             .retry(3)
@@ -97,5 +98,9 @@ class UserRepository {
             return UserRepository.items
         }
         return UserRepository.items.filter { ($0.username ?? "").contains(query) }
+    }
+    
+    func findUserById(_ userId: Int) -> ItemType? {
+        return UserRepository.items.filter { $0.id ?? -1 == userId }.first
     }
 }
