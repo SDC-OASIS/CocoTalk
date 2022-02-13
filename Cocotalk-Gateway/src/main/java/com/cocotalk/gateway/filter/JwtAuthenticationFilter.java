@@ -1,6 +1,7 @@
 package com.cocotalk.gateway.filter;
 
-import com.cocotalk.gateway.utils.JwtUtils;
+import com.cocotalk.gateway.dto.TokenPayload;
+import com.cocotalk.gateway.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -38,7 +39,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 
     @Bean
     public ErrorWebExceptionHandler jwtWebExceptionHandler() {
-        return new JwtUtils.JwtWebExceptionHandler();
+        return new JwtUtil.JwtWebExceptionHandler();
     }
 
     @Override
@@ -48,11 +49,11 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 
             List<String> list = request.getHeaders().get("X-ACCESS-TOKEN"); // (1) X-ACCESS-TOKEN 추출
             String token = Objects.requireNonNull(list).get(0);
-            Map<String, Object> payload = JwtUtils.getPayload(token, objectMapper); // (2) JWT Authenticaiton
+            TokenPayload payload = JwtUtil.getPayload(token, objectMapper); // (2) JWT Authenticaiton
 
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                        log.info("userId inside X-ACCESS-TOKEN : {}", payload.get("userId"));
-                        log.info("fcmToken inside X-ACCESS-TOKEN : {}", payload.get("fcmToken"));
+                        log.info("userId inside X-ACCESS-TOKEN : {}", payload.getUserId());
+                        log.info("fcmToken inside X-ACCESS-TOKEN : {}", payload.getFcmToken());
                     }));
         };
     }

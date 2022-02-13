@@ -13,26 +13,22 @@ public class ErrorDetails {
     private int code;
     private String desc;
     private String type;
-    private String stackTrace; // debug용
 
-    public ErrorDetails(CustomException e) {
-        this.code = e.getError().getCode();
-        this.desc = e.getMessage();
-        this.type = e.getError().getType();
-        this.stackTrace = e.getStackTrace()[0].toString();
+    public ErrorDetails(CustomException exception) {
+        this.code = exception.getError().getCode();
+        this.desc = exception.getMessage();
+        this.type = exception.getError().getType();
     }
 
-    public ErrorDetails(CustomError e, String stackTrace) {
-        this.code = e.getCode();
-        this.desc = e.getDesc();
-        this.type = e.toString();
-        this.stackTrace = stackTrace;
-    }
-
-    public ErrorDetails(CustomError e, String desc, String stackTrace) {
-        this.code = e.getCode();
+    public ErrorDetails(CustomError error, String desc) {
+        this.code = error.getCode();
         this.desc = desc;
-        this.type = e.toString();
-        this.stackTrace = stackTrace;
+        this.type = error.getType();
+    }
+
+    public ErrorDetails(CustomError error, Throwable cause) {
+        this.code = error.getCode();
+        this.desc = cause.getMessage();
+        this.type = error.getType();
     }
 }

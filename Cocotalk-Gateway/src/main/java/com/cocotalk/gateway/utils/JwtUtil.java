@@ -1,6 +1,7 @@
 package com.cocotalk.gateway.utils;
 
 import com.cocotalk.gateway.dto.ErrorResponse;
+import com.cocotalk.gateway.dto.TokenPayload;
 import com.cocotalk.gateway.exception.CustomError;
 import com.cocotalk.gateway.exception.CustomException;
 import com.cocotalk.gateway.exception.ErrorDetails;
@@ -23,14 +24,11 @@ import reactor.core.publisher.Mono;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtUtils {
+public class JwtUtil {
     private static String jwtSecret;
 
     @Value("${jwt.secret}")
@@ -38,26 +36,38 @@ public class JwtUtils {
         this.jwtSecret = jwtSecret;
     }
 
-    public static Map<String, Object> getPayload(String token, ObjectMapper objectMapper) {
+    public static TokenPayload getPayload(String token, ObjectMapper objectMapper) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecret))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
         try {
-            Map<String, Object> payload = objectMapper.readValue(claims.getSubject(), Map.class);
+            TokenPayload payload = objectMapper.readValue(claims.getSubject(), TokenPayload.class);
             return payload;
         } catch (JacksonException e) {
+            e.printStackTrace();
+            log.error("[JwtUtil/getPayload] : Jwt Payload를 파싱하는 도중 문제가 발생했습니다.");
             throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 
     public static class JwtWebExceptionHandler implements ErrorWebExceptionHandler {
         private String serializeError(CustomError error, String message) {
-            CustomException exception = new CustomException(error, message);
-            ErrorDetails details = new ErrorDetails(exception);
+            ErrorDetails details = new ErrorDetails(error, message);
 
-            log.error("CustomException : " + exception.getMessage());
+            ErrorResponse response = new ErrorResponse(details);
+            try {
+                return ObjectMapperUtils.serialization(response);
+            } catch (JsonProcessingException e) {
+                throw new CustomException(CustomError.JSON_PARSE, e);
+            }
+        }
+
+        private String serializeError(CustomError error, Throwable cause) {
+            ErrorDetails details = new ErrorDetails(error, cause);
+
+            log.error("CustomException : " + cause.getMessage());
 
             ErrorResponse response = new ErrorResponse(details);
             try {
@@ -69,7 +79,9 @@ public class JwtUtils {
 
         @Override
         public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
-            log.warn("JwtWebExceptionHandler : " + ex);
+            ex.printStackTrace();
+
+            byte[] bytes;
 
             String message = "";
             if (ex.getClass() == NullPointerException.class) {
@@ -85,11 +97,12 @@ public class JwtUtils {
                 message = "헤더에 토큰이 포함되지 않았습니다.";
             }
 
-            log.error(ex.getMessage());
-            log.error(ex.getCause().getMessage());
-            ex.printStackTrace();
-
-            byte[] bytes = serializeError(CustomError.JWT_AUTHENTICATION, message).getBytes(StandardCharsets.UTF_8);
+            if(message.equals("")) {
+                bytes = serializeError(CustomError.JSON_PARSE, ex.getCause()).getBytes(StandardCharsets.UTF_8);
+            } else {
+                bytes = serializeError(CustomError.JWT_AUTHENTICATION, message).getBytes(StandardCharsets.UTF_8);
+                log.error("[JwtUtil/JwtWebExceptionHandler] : " + message);
+            }
             ServerHttpResponse response = exchange.getResponse();
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
             DataBuffer buffer = response.bufferFactory().wrap(bytes);
