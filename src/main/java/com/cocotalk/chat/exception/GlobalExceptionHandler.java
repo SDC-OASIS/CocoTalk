@@ -1,9 +1,6 @@
-package com.cocotalk.chat.application;
+package com.cocotalk.chat.exception;
 
 import com.cocotalk.chat.dto.response.ErrorResponse;
-import com.cocotalk.chat.exception.CustomError;
-import com.cocotalk.chat.exception.CustomException;
-import com.cocotalk.chat.exception.ErrorDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +11,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class CustomExceptionHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse<?>> handle(CustomException e) {
-        e.printStackTrace();
+    public ResponseEntity<ErrorResponse<?>> handleCustomException(CustomException e) {
         CustomError error = e.getError();
-        ErrorDetails details = new ErrorDetails(e);
-
-        log.error("CustomException : " + e.getMessage());
+        ErrorDetails details;
+        if(e.getCause() != null) {
+            Throwable cause = e.getCause();
+            details = new ErrorDetails(error, cause);
+            log.error("CustomException : " + cause.getMessage());
+        } else {
+            details = new ErrorDetails(e);
+            log.error("CustomException : " + e.getMessage());
+        }
         return ResponseEntity.status(error.getStatus()).body(new ErrorResponse<>(details));
     }
 

@@ -1,6 +1,6 @@
 package com.cocotalk.chat.config;
 
-import com.cocotalk.chat.utils.WebSocketUtils;
+import com.cocotalk.chat.utils.WebSocketUtil;
 import org.java_websocket.drafts.Draft_6455;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,12 +14,12 @@ public class WebSocketConfig {
     private String PRESENCE_SERVICE_WEBSOCKET_URL;
 
     @Bean
-    public WebSocketUtils webSocketClient() throws Exception {
+    public WebSocketUtil webSocketClient() throws Exception {
         URI uri = new URI(PRESENCE_SERVICE_WEBSOCKET_URL);
-        WebSocketUtils webSocketUtils = new WebSocketUtils(uri, new Draft_6455());
+        WebSocketUtil webSocketUtil = new WebSocketUtil(uri, new Draft_6455());
         //웹소켓 커넥팅
-        webSocketUtils.connectBlocking();
+        webSocketUtil.connectBlocking();
 
-        return webSocketUtils;
+        return webSocketUtil;
     }
 }

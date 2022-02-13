@@ -3,6 +3,8 @@ package com.cocotalk.chat.service.kafka;
 import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.cocotalk.chat.dto.kafka.PushTopicDto;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
+import com.cocotalk.chat.exception.CustomError;
+import com.cocotalk.chat.exception.CustomException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +39,9 @@ public class KafkaProducer {
             kafkaTemplate.send(chatTopic, mapper.writeValueAsString(chatTopicDto));
             log.info(String.format("Produce message ("+chatTopic+") : %s", mapper.writeValueAsString(chatTopicDto)));
         } catch (JsonProcessingException e) {
-            log.error("[KafkaProducer/sendToChat] : json 변환 실패");
             e.printStackTrace();
+            log.error("[KafkaProducer/sendToChat] : 메시지를 파싱하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 
@@ -60,8 +63,9 @@ public class KafkaProducer {
             kafkaTemplate.send(pushTopic, mapper.writeValueAsString(pushTopicDto));
             log.info(String.format("Produce message ("+pushTopic+") : %s", mapper.writeValueAsString(pushTopicDto)));
         } catch (JsonProcessingException e) {
-            log.error("[KafkaProducer/sendToPush] : json 변환 실패");
             e.printStackTrace();
+            log.error("[KafkaProducer/sendToPush] : 메시지를 파싱하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 

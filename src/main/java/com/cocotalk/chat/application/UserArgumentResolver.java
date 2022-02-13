@@ -5,7 +5,7 @@ import com.cocotalk.chat.dto.TokenPayload;
 import com.cocotalk.chat.dto.response.CustomResponse;
 import com.cocotalk.chat.exception.CustomError;
 import com.cocotalk.chat.exception.CustomException;
-import com.cocotalk.chat.utils.JwtUtils;
+import com.cocotalk.chat.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +59,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         headers.set(TOKEN_HEADER_NAME, token);
         HttpEntity<HttpHeaders> request = new HttpEntity<>(headers);
 
-        TokenPayload payload = JwtUtils.getPayload();
+        TokenPayload payload = JwtUtil.getPayload();
 
         UriComponentsBuilder uriComponentsBuilder =
                 UriComponentsBuilder.fromHttpUrl(USER_SERVICE_URL);

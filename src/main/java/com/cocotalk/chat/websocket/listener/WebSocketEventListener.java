@@ -7,7 +7,7 @@ import com.cocotalk.chat.exception.CustomError;
 import com.cocotalk.chat.exception.CustomException;
 import com.cocotalk.chat.service.RoomService;
 import com.cocotalk.chat.service.kafka.KafkaProducer;
-import com.cocotalk.chat.utils.WebSocketUtils;
+import com.cocotalk.chat.utils.WebSocketUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class WebSocketEventListener {
     private final RoomService roomService;
     private final ServerUrlConfig serverUrlConfig;
     private final ObjectMapper objectMapper;
-    private final WebSocketUtils webSocketUtils;
+    private final WebSocketUtil webSocketUtil;
     private final KafkaProducer kafkaProducer;
 
     @EventListener
@@ -49,11 +49,12 @@ public class WebSocketEventListener {
                 .serverUrl(serverUrlConfig.ServerUrl())
                 .build();
         try {
-            webSocketUtils.send(objectMapper.writeValueAsString(connectRequest));
+            webSocketUtil.send(objectMapper.writeValueAsString(connectRequest));
             log.info("sessionId = {}, {}에 연결됨.", accessor.getSessionId(), serverUrlConfig);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            throw new CustomException(CustomError.JSON_PARSE, "프리젠스 서버에 connect 요청을 보내는 데 실패했습니다.");
+            log.error("[WebSocketEventListener/handleWebSocketConnectListener] : connect 요청을 파싱하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 
@@ -73,7 +74,8 @@ public class WebSocketEventListener {
                     kafkaProducer.sendToChat("/topic/" + roomVo.getId() + "/room", roomVo);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
-                    throw new CustomException(CustomError.BAD_REQUEST, "WebSocket ChatRoom Connect 헤더에 roomId 또는 userId가 설정되지 않았습니다.");
+                    log.error("[WebSocketEventListener/handleWebSocketConnectSession] : ChatRoom Connect 헤더에 roomId 또는 userId가 설정되지 않았습니다.");
+                    throw new CustomException(CustomError.BAD_REQUEST, e);
                 }
             } else if (view.equals("chatList")) {
                 try {
@@ -81,11 +83,13 @@ public class WebSocketEventListener {
                     sessionAttributes.put("userId", userId);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
-                    throw new CustomException(CustomError.BAD_REQUEST, "WebSocket ChatList Connect 헤더에 userId가 설정되지 않았습니다.");
+                    log.error("[WebSocketEventListener/handleWebSocketConnectSession] : ChatList Connect 헤더에 userId가 설정되지 않았습니다.");
+                    throw new CustomException(CustomError.BAD_REQUEST, e);
                 }
             }
         } else {
-            throw new CustomException(CustomError.BAD_REQUEST, "WebSocket Connect 헤더에 view가 설정되지 않았습니다.");
+            log.error("[WebSocketEventListener/handleWebSocketConnectSession] : Connect 헤더에 view가 설정되지 않았습니다.");
+            throw new CustomException(CustomError.BAD_REQUEST, "Connect 헤더에 view가 설정되지 않았습니다.");
         }
     }
 
@@ -98,11 +102,12 @@ public class WebSocketEventListener {
                 .serverUrl(serverUrlConfig.ServerUrl())
                 .build();
         try {
-            webSocketUtils.send(objectMapper.writeValueAsString(disconnectRequest));
+            webSocketUtil.send(objectMapper.writeValueAsString(disconnectRequest));
             log.info("sessionId = {}, {}과 연결 끊어짐.", accessor.getSessionId(), serverUrlConfig);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            throw new CustomException(CustomError.JSON_PARSE, "프리젠스 서버에 disconnect 요청을 보내는 데 실패했습니다.");
+            log.error("[WebSocketEventListener/handleWebSocketConnectListener] : disconnect 요청을 파싱하는 도중 문제가 발생했습니다.");
+            throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
 
@@ -127,7 +132,7 @@ public class WebSocketEventListener {
                                 kafkaProducer.sendToChat("/topic/" + memberId + "/room", roomVo);
                             }
                         } else {
-                            throw new CustomException(CustomError.UNKNOWN, "지원하지 않는 형식의 action 입니다.");
+                            throw new CustomException(CustomError.BAD_REQUEST, "지원하지 않는 형식의 action 입니다.");
                         }
                     } else {
                         RoomVo roomVo = roomService.saveAwayAt(roomId, userId);

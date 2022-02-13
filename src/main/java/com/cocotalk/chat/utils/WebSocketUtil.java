@@ -10,11 +10,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 @Slf4j
-public class WebSocketUtils extends WebSocketClient {
+public class WebSocketUtil extends WebSocketClient {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     // private static ScheduledFuture<?> task;
 
-    public WebSocketUtils(URI serverUri, Draft protocolDraft) {
+    public WebSocketUtil(URI serverUri, Draft protocolDraft) {
         super(serverUri, protocolDraft);
     }
 
