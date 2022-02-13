@@ -24,7 +24,6 @@
         <div class="chat-messages-container">
           <infinite-loading force-use-infinite-wrapper="body" v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
           <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
-            <!-- {{ chatMessage }} -->
             <!-- 상대가 한 말 -->
             <div v-if="chatMessage.userId != userInfo.id" class="row">
               <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
@@ -107,15 +106,6 @@ export default {
     );
     this.chatRoomConnect();
     this.getChat();
-    window.addEventListener("scroll", () => {
-      let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
-      let windowHeight = window.innerHeight; // 스크린 창
-      let fullHeight = document.body.scrollHeight - 300; //  margin 값은 포함 x
-
-      if (scrollLocation + windowHeight >= fullHeight) {
-        console.log("끝");
-      }
-    });
   },
   mounted: function () {
     window.addEventListener("scroll", this.handleNotificationListScroll);
@@ -154,10 +144,11 @@ export default {
   },
   methods: {
     ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected"]),
+
     // 1.채팅내역 불러오기
-    async getChat() {
+    getChat() {
       this.roomMemberIds = [];
-      await axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
+      axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
         console.log("채팅내역 가져오기");
         let chatData = res.data.data;
         this.roomInfo = chatData.room;
@@ -180,6 +171,7 @@ export default {
         this.limit += 1;
       });
     },
+
     // 2.채팅방에 참여중인 멤버의 정보를 메세지마다 적용해줍니다.
     sentUserName(userId) {
       const idx = this.roomInfo.members.findIndex(function (item) {
@@ -202,6 +194,7 @@ export default {
     openProfileModal(userProfileInfo) {
       this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
     },
+
     // 3.채팅방 소켓 연결
     chatRoomConnect: function () {
       const serverURL = "http://138.2.93.111:8080/stomp";
@@ -279,6 +272,22 @@ export default {
       // e.target.value = "";
       // document.getElementById("textarea").focus();
     },
+
+    openSidebar() {
+      const sidebar = document.querySelector(".sidebar-container");
+      const sidebarBack = document.querySelector(".sidebar-background");
+      sidebarBack.style.display = "block";
+      sidebar.style.right = "0px";
+    },
+    exitChat() {
+      const headers = {
+        action: "leave",
+      };
+      this.stompChatRoomClient.disconnect(() => {}, headers);
+      this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
+    },
+
+    //==============무한스크롤 구현중입니다.========================
     infiniteHandler($state) {
       console.log("!!!!");
       console.log($state);
@@ -305,13 +314,8 @@ export default {
           } else {
             $state.complete();
           }
-          // this.$nextTick(() => {
-          //   let chatMessages = this.$refs.chatMessages;
-          //   chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
-          // });
         });
     },
-
     scroll: function (e) {
       this.scrollPostion = e.target.scrollTop;
       if (this.scrollPosition > 100) {
@@ -319,19 +323,6 @@ export default {
       } else {
         console.log("DOWN");
       }
-    },
-    openSidebar() {
-      const sidebar = document.querySelector(".sidebar-container");
-      const sidebarBack = document.querySelector(".sidebar-background");
-      sidebarBack.style.display = "block";
-      sidebar.style.right = "0px";
-    },
-    exitChat() {
-      const headers = {
-        action: "leave",
-      };
-      this.stompChatRoomClient.disconnect(() => {}, headers);
-      this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
     },
   },
 };
