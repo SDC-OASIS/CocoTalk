@@ -48,7 +48,7 @@ open CocoTalk.xcworkspace
 ### 카카오톡 채팅방 UI 구현 중
 **카카오톡과 비슷한 채팅 UI 구현을 위해 UICollectionViewLayout을 커스텀한 MessageCollectionViewLayout를 만들어 사용했습니다.**
 
-<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9.gif?raw=true" alt="채팅방" style="zoom:33%;" />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9.gif?raw=true" alt="채팅방" width="33%" />
 
 
 ---
@@ -56,7 +56,7 @@ open CocoTalk.xcworkspace
 
 ### 친구 추가
 
-<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B9%9C%EA%B5%AC%EC%B6%94%EA%B0%80.gif?raw=true" alt="친구추가" style="zoom:33%;" />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B9%9C%EA%B5%AC%EC%B6%94%EA%B0%80.gif?raw=true" alt="친구추가" width="33%" />
 
 
 
@@ -65,7 +65,7 @@ open CocoTalk.xcworkspace
 
 ### 채팅방 생성
 
-<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9%20%EC%83%9D%EC%84%B1.gif?raw=true" alt="채팅방 생성" style="zoom: 33%;" />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9%20%EC%83%9D%EC%84%B1.gif?raw=true" alt="채팅방 생성" width="33%" />
 
 
 
