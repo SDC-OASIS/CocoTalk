@@ -13,6 +13,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { getToken } from "@/utils/firebase";
 
 export default {
   name: "login",
@@ -27,10 +28,12 @@ export default {
   },
   methods: {
     ...mapActions("userStore", ["login"]),
-    Login() {
+    async Login() {
       this.user.cid = this.user.cid.replace(/\s/g, "");
       this.user.password = this.user.password.replace(/\s/g, "");
-      this.user.fcmToken = "token";
+      let fcmToken = await getToken();
+      console.log("fcmtoken", fcmToken);
+      this.user.fcmToken = fcmToken;
       this.login(this.user);
     },
   },
