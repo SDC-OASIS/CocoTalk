@@ -17,6 +17,7 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var listSocket: WebSocketHelper?
+    var chatSocket: WebSocketHelper?
     var socketDelegate: SceneDelegate?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -105,6 +106,18 @@ extension AppDelegate {
             listSocket = WebSocketHelper(socketType: .chatList, userId: data.id)
             listSocket?.establishConnection()
         }
+    }
+    
+    func initializeChatSocket() {
+        chatSocket?.establishConnection()
+    }
+    
+    func closeChatSocket() {
+        chatSocket?.closeConnection()
+    }
+    
+    func removeChatSocket() {
+        chatSocket = nil
     }
     
     func signout() {

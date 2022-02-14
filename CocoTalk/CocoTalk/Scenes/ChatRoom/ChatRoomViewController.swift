@@ -96,22 +96,42 @@ class ChatRoomViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationAppearance()
-        viewModel.dependency.socket.accept(WebSocketHelper(socketType: .chatRoom, userId: self.myId,roomId: self.roomId))
-        viewModel.dependency.socket.value?.establishConnection()
+        connectSocket()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         resetNavigationAppearance()
-        
-        guard let socket = viewModel.dependency.socket.value else {
-            return
-        }
-        socket.closeConnection()
-        viewModel.dependency.socket.accept(nil)
+        disconnectSocket()
     }
     
     // MARK: - Helper
+    private func connectSocket() {
+        var socket: WebSocketHelper
+        if let dependecySocket = viewModel.dependency.socket.value {
+            socket = dependecySocket
+        } else {
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            if let appDelegateSocket = appDelegate?.chatSocket {
+                socket = appDelegateSocket
+            } else {
+                socket = WebSocketHelper(socketType: .chatRoom, userId: self.myId,roomId: self.roomId)
+                appDelegate?.chatSocket = socket
+            }
+        }
+        socket.establishConnection()
+        viewModel.dependency.socket.accept(socket)
+    }
+    
+    private func disconnectSocket() {
+        guard let socket = viewModel.dependency.socket.value else {
+            return
+        }
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.removeChatSocket()
+        viewModel.dependency.socket.accept(socket)
+    }
+    
     private func fetch() {
         viewModel.getMessages()
         viewModel.fetchRoomInfo()

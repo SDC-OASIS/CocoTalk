@@ -104,6 +104,8 @@
 		EA8F20B627B8B441008A01ED /* ProfileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B527B8B441008A01ED /* ProfileHelper.swift */; };
 		EA8F20B827B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */; };
 		EA8F20BA27B918C9008A01ED /* WebSocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */; };
+		EA8F20BC27BA2705008A01ED /* ModelSocketSubMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20BB27BA2705008A01ED /* ModelSocketSubMessage.swift */; };
+		EA8F20BE27BA276A008A01ED /* ModelSocketSubMessageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20BD27BA276A008A01ED /* ModelSocketSubMessageHeader.swift */; };
 		EAA6A3CB2786CEFE001A7E46 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CA2786CEFE001A7E46 /* SnapKit */; };
 		EAA6A3CE2786CF2B001A7E46 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAA6A3CD2786CF2B001A7E46 /* Then */; };
 		EAC6159027B62E7C00B213BC /* ModelFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC6158F27B62E7C00B213BC /* ModelFriend.swift */; };
@@ -220,6 +222,8 @@
 		EA8F20B527B8B441008A01ED /* ProfileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHelper.swift; sourceTree = "<group>"; };
 		EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCreateChatRoomRequest.swift; sourceTree = "<group>"; };
 		EA8F20B927B918C8008A01ED /* WebSocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketDelegate.swift; sourceTree = "<group>"; };
+		EA8F20BB27BA2705008A01ED /* ModelSocketSubMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSocketSubMessage.swift; sourceTree = "<group>"; };
+		EA8F20BD27BA276A008A01ED /* ModelSocketSubMessageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSocketSubMessageHeader.swift; sourceTree = "<group>"; };
 		EAC6158F27B62E7C00B213BC /* ModelFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFriend.swift; sourceTree = "<group>"; };
 		EAC6159427B6926000B213BC /* ProfileModalViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewModel.swift; sourceTree = "<group>"; };
 		EAC6159527B6926000B213BC /* ProfileModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModalViewController.swift; sourceTree = "<group>"; };
@@ -544,6 +548,8 @@
 				EA29145127B3D49800324476 /* ModelRoom.swift */,
 				EA29145327B3D4A000324476 /* ModelRoomList.swift */,
 				EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */,
+				EA8F20BB27BA2705008A01ED /* ModelSocketSubMessage.swift */,
+				EA8F20BD27BA276A008A01ED /* ModelSocketSubMessageHeader.swift */,
 			);
 			path = ChatRoom;
 			sourceTree = "<group>";
@@ -997,6 +1003,7 @@
 				EA29143727B2290C00324476 /* APIResult_Device.swift in Sources */,
 				EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */,
 				EA29146E27B51A9A00324476 /* UIViewController+Ext.swift in Sources */,
+				EA8F20BE27BA276A008A01ED /* ModelSocketSubMessageHeader.swift in Sources */,
 				EA29140927B0B13E00324476 /* ModelSignupResponse.swift in Sources */,
 				EA8F20A727B79506008A01ED /* CreateChatRoomDelegate.swift in Sources */,
 				EA22D53E2794F7E100E1F39A /* RootTabBarController.swift in Sources */,
@@ -1010,6 +1017,7 @@
 				EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */,
 				EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */,
 				EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */,
+				EA8F20BC27BA2705008A01ED /* ModelSocketSubMessage.swift in Sources */,
 				EA8F20B827B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
 				EA8F20A527B79458008A01ED /* SelectableFrinedCell.swift in Sources */,

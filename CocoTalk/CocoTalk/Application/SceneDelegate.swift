@@ -50,6 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.listSocket?.closeConnection()
+        appDelegate?.chatSocket?.closeConnection()
         appDelegate?.saveContext()
     }
 
@@ -77,6 +78,7 @@ extension SceneDelegate {
                 } else {
                     let appDelegate = UIApplication.shared.delegate as? AppDelegate
                     appDelegate?.initializeListSocket()
+                    appDelegate?.initializeChatSocket()
                 }
             }).disposed(by: bag)
     }

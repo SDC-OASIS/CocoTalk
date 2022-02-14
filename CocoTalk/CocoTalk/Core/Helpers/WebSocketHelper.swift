@@ -21,6 +21,9 @@ final class WebSocketHelper: StompClientLibDelegate {
     let header: [String: String]
     private var destinationToType: [String: SocketTopicEnum] = [:]
     
+    #warning("받은 데이터 저장하는 변수")
+//    var receivedData = BehaviorRelay<>(value: nil)
+    
     init(socketType: SocketType, userId: Int? = -1, roomId: String? = "") {
         self.socketType = socketType
         self.userId = "\(userId ?? -1)"
