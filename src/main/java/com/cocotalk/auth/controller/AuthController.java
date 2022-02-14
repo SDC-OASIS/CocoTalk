@@ -55,7 +55,7 @@ public class AuthController {
     }
 
     /**
-     * 로그아웃 API [POST] /signout
+     * 로그아웃 API [GET] /signout
      *
      * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
      * @return ResponseEntity<Response<Object>>
@@ -81,7 +81,7 @@ public class AuthController {
 
 
     /**
-     * ACCESS TOKEN 재발급 API [POST] /reissue
+     * ACCESS TOKEN 재발급 API [GET] /reissue
      *
      * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
      * @return ResponseEntity<Response<TokenDto>> 발급된 accesstoken과 refreshtoken 반환
@@ -89,7 +89,7 @@ public class AuthController {
     @Operation(summary = "ACCESS TOKEN 재발급")
     @GetMapping("/reissue")
     public ResponseEntity<Response<TokenDto>> reissue(ClientInfo clientInfo) {
-        log.info("[POST] /api/users/reissue");
+        log.info("[GET] /api/users/reissue");
         return authService.reissue(clientInfo);
     }
 
@@ -119,7 +119,7 @@ public class AuthController {
     }
 
     /**
-     * 마지막으로 로그인한 기기 검증 API [POST] /device
+     * 마지막으로 로그인한 기기 검증 API [GET] /device
      * request의 accesstoken 속 fcmtoken과 redis에 보관된 마지막 접속자의 refreshtoken속 fcmtoken을 비교
      *
      * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
@@ -129,7 +129,7 @@ public class AuthController {
     @GetMapping("/device")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<Response<ValidationDto>>checkLastly(ClientInfo clientInfo) {
-        log.info("[POST] /device");
+        log.info("[GET] /device");
         return authService.checkLastly(clientInfo);
     }
 
