@@ -12,7 +12,8 @@ public enum CustomError {
     BAD_REQUEST(3004, "잘못된 요청입니다."),
     NOT_PERMITTED(3005, "권한이 없는 유저 입니다."),
     COMMUNICATION(3006, "통신 중 문제가 발생했습니다."),
-    INPUT_OUTPUT(3007, "입출력 실행 중 문제가 발생했습니다.");
+    INPUT_OUTPUT(3007, "입출력 실행 중 문제가 발생했습니다."),
+    STOMP(3008, "STOMP 메시징 중 문제가 발생했습니다.");
 
     private final int code;
     private final String desc;
