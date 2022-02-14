@@ -21,7 +21,7 @@
     <!-- 채팅 대화 -->
     <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="scrollRef" @scroll="handleScroll">
       <div class="chat-messages-container">
-        <!-- <infinite-loading v-if="limit" direction="top" @infinite="getMessageHistory" spinner="waveDots"></infinite-loading> -->
+        <!-- <infinite-loading v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
         <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
           <!-- 상대가 한 말 -->
           <div v-if="chatMessage.userId != userInfo.id" class="row">
@@ -84,10 +84,9 @@ export default {
       roomInfo: {},
       message: "",
       limit: 0,
-      previousScrollHeight: 0,
+      previousTop: 0,
+      previousBottom: 0,
       moreMessages: 0,
-      nowScroll: 0,
-      bottomScrollTop: 0,
     };
   },
   components: {
@@ -108,6 +107,10 @@ export default {
     );
     this.chatRoomConnect();
     this.getChat();
+    this.$nextTick(() => {
+      let chatMessages = this.$refs.scrollRef;
+      chatMessages.scrollTo({ top: chatMessages.scrollHeight - chatMessages.clientHeight, behavior: "smooth" });
+    });
   },
   mounted: function () {
     // window.addEventListener("scroll", this.handleNotificationListScroll);
@@ -133,27 +136,11 @@ export default {
         },
         { root: true },
       );
-      this.moreMessages = 0;
       this.chatMessages = [];
       this.getChat();
       this.chatRoomConnect();
-      // 스크롤 최하단으로 이동
-      this.$nextTick(() => {
-        let chatMessages = this.$refs.scrollRef;
-        chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-        this.previousScrollHeight = chatMessages.scrollHeight;
-        this.bottomScrollTop = chatMessages.scrollTop;
-        // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
-        this.$el.addEventListener("scroll", this.handleScroll);
-      });
     },
-    chatMessages() {
-      let chatMessages = this.$refs.scrollRef;
-      console.log("메세지목록 변화");
-      console.log(chatMessages.scrollTop);
-      this.previousScrollHeight = chatMessages.scrollHeight;
-      this.bottomScrollTop = chatMessages.scrollTop;
-    },
+    // 스크롤 메세지리스트 최하단으로 이동
   },
   methods: {
     ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected"]),
@@ -182,17 +169,9 @@ export default {
         console.log(this.chatMessages);
         console.log(this.roomInfo);
         this.limit += 1;
-        this.moreMessages = 1;
-        this.$nextTick(() => {
-          let chatMessages = this.$refs.scrollRef;
-          chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-          this.previousScrollHeight = chatMessages.scrollHeight;
-          this.bottomScrollTop = chatMessages.scrollTop;
-          this.bottomScrollTop = chatMessages.scrollTop;
-          // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
-          this.moreMessages = 1;
-          this.$el.addEventListener("scroll", this.handleScroll);
-        });
+        let chatMessages = this.$refs.scrollRef;
+        console.log(chatMessages.scrollHeight - chatMessages.clientHeight);
+        chatMessages.scrollTo({ top: chatMessages.scrollHeight - chatMessages.clientHeight, behavior: "smooth" });
       });
     },
 
@@ -241,7 +220,6 @@ export default {
               nextMessageBundleId: receivedMessage.bundleInfo.nextMessageBundleId,
             };
             this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
-            this.scrollBottom();
           });
           // 채팅 메세지 룸정보 업데이트 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/room`, (res) => {
@@ -293,6 +271,9 @@ export default {
         this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
       }
       this.message = "";
+      // [메세지보낸 후 엔터커서 위로 올라오지 않는 현상 해결중]
+      // e.target.value = "";
+      // document.getElementById("textarea").focus();
     },
 
     openSidebar() {
@@ -309,19 +290,40 @@ export default {
       this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
     },
 
-    //스크롤 최상단 위치하면 페이징 실행
+    //==============무한스크롤 구현중입니다.========================
+
     handleScroll(e) {
-      const { scrollTop } = e.target;
-      // 스크롤위치가 최상단이고 처음 입장한 경우에는 페이징 요청을 보내지않는다.
-      // 해당 경우가 아닌 경우에만 요청 보내도록 설정
-      if (scrollTop == 0 && this.moreMessages != 0) {
-        this.getMessageHistory(e);
+      const { scrollHeight, scrollTop, clientHeight } = e.target;
+      console.log(clientHeight, scrollHeight, scrollTop);
+
+      if (scrollTop & !this.moreMessages) {
         this.$nextTick(() => {
-          this.loadingIsActive = false;
+          let chatMessages = this.$refs.scrollRef;
+          chatMessages.scrollTo({ top: scrollHeight - clientHeight, behavior: "smooth" });
+        });
+        // this.$refs.scrollRef.screenTo(scrollHeight - clientHeight);
+      }
+
+      if (scrollTop > this.previousTop) {
+        this.previousTop = scrollTop;
+      } else if (scrollTop == this.previousTop) {
+        this.$nextTick(() => {
+          let chatMessages = this.$refs.scrollRef;
+          chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+        });
+      }
+
+      if (!scrollTop & this.moreMessages) {
+        this.infiniteHandler(e);
+        this.$nextTick(() => {
+          // this.loadingIsActive = false;
         });
       }
     },
-    getMessageHistory() {
+
+    infiniteHandler() {
+      console.log("!!!!");
+      // console.log($state);
       axios
         .get("chat/messages", {
           params: {
@@ -332,45 +334,32 @@ export default {
           },
         })
         .then((res) => {
-          // 메세지목록에 추가 + 스크롤 기존 위치 지정
+          console.log("스크롤업");
+          console.log(res);
+
           if (res.data.data.length) {
+            // this.limit += 1;
+            console.log(res.data.data);
             this.chatMessages.unshift(...res.data.data);
+            console.log(this.chatMessages);
             this.$nextTick(() => {
-              let chatMessages = this.$refs.scrollRef;
-              const nowScrollTo = chatMessages.scrollHeight - this.previousScrollHeight;
-              chatMessages.scrollTo({ top: nowScrollTo });
-              this.previousScrollHeight = chatMessages.scrollHeight;
-              this.bottomScrollTop = chatMessages.scrollTop;
+              this.loadingIsActive = false;
             });
+            // $state.loaded();
+            // $state.complete();
+          } else {
+            // $state.complete();
           }
         });
     },
-    scrollBottom() {
-      let chatMessages = this.$refs.scrollRef;
-      console.log("확인");
-      console.log(chatMessages.scrollTop);
-      console.log(this.bottomScrollTop);
-      console.log(this);
-      // 메세지가 왔을때 현재 스크롤 위치와 최하단 스크롤 위치가
-      if (chatMessages.scrollTop - this.bottomScrollTop < 1000) {
-        this.$nextTick(() => {
-          let chatMessages = this.$refs.scrollRef;
-          chatMessages.scrollTo({ top: this.previousScrollHeight, behavior: "smooth" });
-          this.bottomScrollTop = chatMessages.scrollTop;
-          // this.previousScrollHeight = chatMessages.scrollHeight;
-          this.previousScrollHeight = chatMessages.scrollHeight;
-          this.bottomScrollTop = chatMessages.scrollTop;
-          console.log(chatMessages.scrollTop);
-          console.log(this.bottomScrollTop);
-        });
-      }
-
-      // this.$nextTick(() => {
-      //   if(chatMessages.scrollTop)
-      //   chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-      //   this.previousScrollHeight = chatMessages.scrollHeight;
-      // });
-    },
+    // scroll: function (e) {
+    //   this.scrollPostion = e.target.scrollTop;
+    //   if (this.scrollPosition > 100) {
+    //     console.log("UP");
+    //   } else {
+    //     console.log("DOWN");
+    //   }
+    // },
   },
 };
 </script>
