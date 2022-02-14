@@ -1,6 +1,5 @@
 package com.cocotalk.chat.websocket.listener;
 
-import com.cocotalk.chat.config.ServerUrlConfig;
 import com.cocotalk.chat.domain.vo.RoomVo;
 import com.cocotalk.chat.dto.request.PresenceRequest;
 import com.cocotalk.chat.exception.CustomError;
@@ -13,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.broker.BrokerAvailabilityEvent;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -25,10 +25,10 @@ import java.util.Objects;
 
 @Slf4j
 @Component
+@DependsOn("ServerUrl")
 @RequiredArgsConstructor
 public class WebSocketEventListener {
     private final RoomService roomService;
-    private final ServerUrlConfig serverUrlConfig;
     private final ObjectMapper objectMapper;
     private final WebSocketUtil webSocketUtil;
     private final KafkaProducer kafkaProducer;
@@ -46,11 +46,11 @@ public class WebSocketEventListener {
         handleWebSocketConnectSession(accessor);
         PresenceRequest connectRequest = PresenceRequest.builder()
                 .action("connect")
-                .serverUrl(serverUrlConfig.ServerUrl())
+                .serverUrl(webSocketUtil.getStompEndpoint())
                 .build();
         try {
             webSocketUtil.send(objectMapper.writeValueAsString(connectRequest));
-            log.info("sessionId = {}, {}에 연결됨.", accessor.getSessionId(), serverUrlConfig);
+            log.info("sessionId = {}, {}에 연결됨.", accessor.getSessionId(), webSocketUtil.getStompEndpoint());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             log.error("[WebSocketEventListener/handleWebSocketConnectListener] : connect 요청을 파싱하는 도중 문제가 발생했습니다.");
@@ -99,11 +99,11 @@ public class WebSocketEventListener {
         handleWebSocketDisconnectSession(accessor);
         PresenceRequest disconnectRequest = PresenceRequest.builder()
                 .action("disconnect")
-                .serverUrl(serverUrlConfig.ServerUrl())
+                .serverUrl(webSocketUtil.getStompEndpoint())
                 .build();
         try {
             webSocketUtil.send(objectMapper.writeValueAsString(disconnectRequest));
-            log.info("sessionId = {}, {}과 연결 끊어짐.", accessor.getSessionId(), serverUrlConfig);
+            log.info("sessionId = {}, {}과 연결 끊어짐.", accessor.getSessionId(), webSocketUtil.getStompEndpoint());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             log.error("[WebSocketEventListener/handleWebSocketConnectListener] : disconnect 요청을 파싱하는 도중 문제가 발생했습니다.");
