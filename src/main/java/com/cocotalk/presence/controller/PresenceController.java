@@ -2,18 +2,15 @@ package com.cocotalk.presence.controller;
 
 import com.cocotalk.presence.application.UserVo;
 import com.cocotalk.presence.dto.response.CustomResponse;
-import com.cocotalk.presence.exception.CustomError;
-import com.cocotalk.presence.exception.CustomException;
 import com.cocotalk.presence.service.ChatConnectService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class PresenceController {
     private final ChatConnectService chatConnectService;
