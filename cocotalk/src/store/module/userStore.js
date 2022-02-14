@@ -103,7 +103,7 @@ const userStore = {
       store.dispatch("chat/clearPage");
     },
     getUser: function (context) {
-      axios.get("user/token").then((res) => {
+      axios.get("user/profile/token").then((res) => {
         console.log("유저정보 가져오기");
         console.log(res);
         let userInfo = res.data.data;
