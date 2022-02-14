@@ -175,6 +175,8 @@ spring:
 
 ### API 명세서
 
+**[Swagger UI API Docs 바로가기](http://138.2.88.163:8000/webjars/swagger-ui/index.html?urls.primaryName=chat)**
+
 - 테스트 페이지  `[GET] /`
 - user가 참가중인 채팅방 리스트 조회  `[GET] /rooms/list`
 - roomId로 채팅방 조회 `[GET] /rooms/{id}`
