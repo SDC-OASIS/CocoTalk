@@ -19,7 +19,7 @@
       </div>
     </div>
     <!-- 채팅 대화 -->
-    <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages" v-scroll:#main="scroll">
+    <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages">
       <div infinite-wrapper>
         <div class="chat-messages-container">
           <!-- <infinite-loading force-use-infinite-wrapper="body" v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
@@ -108,7 +108,7 @@ export default {
     this.getChat();
   },
   mounted: function () {
-    window.addEventListener("scroll", this.handleNotificationListScroll);
+    // window.addEventListener("scroll", this.handleNotificationListScroll);
   },
   computed: {
     ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo"]),
@@ -125,6 +125,7 @@ export default {
       this.$store.dispatch(
         "chat/changePage",
         {
+          mainPage: this.roomStatus.mainPage,
           chat: this.$route.params.chat,
           roomId: this.$route.params.roomId,
         },
