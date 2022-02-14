@@ -8,7 +8,6 @@
     - [배포 방법](#배포-방법)
     - [산출물](#산출물)
         - [API 명세서](#API-명세서)
-        - [메시지 토픽](#메시지-토픽)
         - [ERD](#DB-ERD)
 
 ---
@@ -171,6 +170,9 @@ spring:
 ## 🎞 산출물
 
 ### API 명세서
+
+**[Swagger UI API Docs 바로가기](http://138.2.88.163:8000/webjars/swagger-ui/index.html?urls.primaryName=user)**
+
 ### 사용자 (유저)
 - 유저 전체 조회 `[GET] /`
 - 유저 Aceess Token으로 조회 `[GET] /token`
