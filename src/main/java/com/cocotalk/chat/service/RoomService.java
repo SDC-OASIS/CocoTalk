@@ -1,11 +1,13 @@
 package com.cocotalk.chat.service;
 
-import com.cocotalk.chat.domain.entity.room.QRoom;
 import com.cocotalk.chat.domain.entity.room.Room;
 import com.cocotalk.chat.domain.entity.room.RoomMember;
 import com.cocotalk.chat.domain.entity.room.RoomType;
 import com.cocotalk.chat.domain.vo.*;
-import com.cocotalk.chat.dto.request.*;
+import com.cocotalk.chat.dto.request.ChatMessageRequest;
+import com.cocotalk.chat.dto.request.InviteMessageRequest;
+import com.cocotalk.chat.dto.request.RoomMemberRequest;
+import com.cocotalk.chat.dto.request.RoomRequest;
 import com.cocotalk.chat.exception.CustomError;
 import com.cocotalk.chat.exception.CustomException;
 import com.cocotalk.chat.repository.RoomRepository;
@@ -38,8 +40,6 @@ public class RoomService {
     @Value(value = "${cocotalk.message-paging-size}")
     private int messagePagingSize;
 
-    QRoom qRoom = QRoom.room;
-
     public static final Room emptyRoom = new Room();
     public static final ChatMessageVo emptyChatMessageVo = ChatMessageVo.builder()
             .content("채팅방에 메시지가 없습니다.")
@@ -50,8 +50,12 @@ public class RoomService {
             new CustomException(CustomError.BAD_REQUEST, "해당 roomId를 갖는 채팅방이 존재하지 않습니다.");
     public static final CustomException INVALID_ROOM_MEMBER =
             new CustomException(CustomError.BAD_REQUEST, "해당 채팅방에 속해 있지 않은 유저입니다.");
-    public static final CustomException WRONG_MEMBER_SIZE =
-            new CustomException(CustomError.BAD_REQUEST, "채팅방 멤버는 둘 이상이어야 합니다.");
+    public static final CustomException WRONG_GROUP_MEMBER_SIZE =
+            new CustomException(CustomError.BAD_REQUEST, "단체 채팅방 멤버는 세 명 이상이어야 합니다.");
+    public static final CustomException WRONG_PRIVATE_MEMBER_SIZE =
+            new CustomException(CustomError.BAD_REQUEST, "1:1 채팅방 멤버는 두 명이어야 합니다.");
+    public static final CustomException PRIVATE_ROOM_ALREADY_EXIST =
+            new CustomException(CustomError.BAD_REQUEST, "이미 존재하는 1:1 채팅방은 생성할 수 없습니다.");
     public static final CustomException TARGET_YOURSELF =
             new CustomException(CustomError.BAD_REQUEST, "자기 자신을 대상으로 할 수 없습니다.");
     public static final CustomException INVALID_MESSAGE_TYPE =
@@ -67,37 +71,46 @@ public class RoomService {
         // (1) 채팅방 멤버 중복 제거
         List<RoomMemberRequest> members = request.getMembers().stream().distinct().collect(Collectors.toList());
 
-        // (2) 채팅방 생성시 멤버는 2명 이상이어야 함
-        if (members.size() >= 2) {
-            List<RoomMember> roomMembers = request.getMembers().stream()
-                    .map(member -> RoomMember.builder()
-                            .userId(member.getUserId())
-                            .username(member.getUsername())
-                            .profile(member.getProfile())
-                            .joinedAt(now)
-                            .enteredAt(now)
-                            .joining(true)
-                            .awayAt(now)
-                            .leftAt(now)
-                            .build())
-                    .collect(Collectors.toList());
-
-            Room createdRoom = roomRepository.save(Room.builder()
-                    .roomname(request.getRoomname())
-                    .img(request.getImg())
-                    .type(request.getType())
-                    .members(roomMembers)
-                    .messageBundleIds(new ArrayList<>())
-                    .noticeIds(new ArrayList<>())
-                    .build());
-
-            // (3) 방 생성시 메시지 번들도 함께 생성
-            MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
-            createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
-            return roomMapper.toVo(roomRepository.save(createdRoom));
+        if (request.getType() == RoomType.PRIVATE.ordinal()) { 
+            if (members.size() != 2) { // (2) 개인 채팅방은 멤버수 2명
+                throw WRONG_PRIVATE_MEMBER_SIZE;
+            } else {
+                UserVo userVo = UserVo.builder().id(members.get(0).getUserId()).build();
+                RoomVo roomVo = this.findPrivate(userVo, members.get(1).getUserId());
+                if (roomVo.getId() != null) throw PRIVATE_ROOM_ALREADY_EXIST; // (3) 개인 채팅방 중복 생성 방지
+            }
         } else {
-            throw WRONG_MEMBER_SIZE;
+            if (members.size() < 3) { // (3) 단체 체팅방은 멤버수 3명 이상이 생성 조건
+                throw WRONG_GROUP_MEMBER_SIZE;
+            }
         }
+
+        List<RoomMember> roomMembers = request.getMembers().stream()
+                .map(member -> RoomMember.builder()
+                        .userId(member.getUserId())
+                        .username(member.getUsername())
+                        .profile(member.getProfile())
+                        .joinedAt(now)
+                        .enteredAt(now)
+                        .joining(true)
+                        .awayAt(now)
+                        .leftAt(now)
+                        .build())
+                .collect(Collectors.toList());
+
+        Room createdRoom = roomRepository.save(Room.builder()
+                .roomname(request.getRoomname())
+                .img(request.getImg())
+                .type(request.getType())
+                .members(roomMembers)
+                .messageBundleIds(new ArrayList<>())
+                .noticeIds(new ArrayList<>())
+                .build());
+
+        // (4) 방 생성시 메시지 번들도 함께 생성
+        MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
+        createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
+        return roomMapper.toVo(roomRepository.save(createdRoom));
     }
 
     public RoomVo save(RoomVo roomVo) {

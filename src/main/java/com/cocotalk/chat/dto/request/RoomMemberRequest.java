@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -15,4 +17,12 @@ public class RoomMemberRequest {
     private String username;
 
     private String profile;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        else if (!(obj instanceof RoomMemberRequest)) return false;
+        RoomMemberRequest roomMemberRequest = (RoomMemberRequest) obj;
+        return Objects.equals(userId, roomMemberRequest.getUserId());
+    }
 }
