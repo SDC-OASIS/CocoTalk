@@ -19,37 +19,35 @@
       </div>
     </div>
     <!-- 채팅 대화 -->
-    <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages">
-      <div infinite-wrapper>
-        <div class="chat-messages-container">
-          <!-- <infinite-loading force-use-infinite-wrapper="body" v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
-          <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
-            <!-- 상대가 한 말 -->
-            <div v-if="chatMessage.userId != userInfo.id" class="row">
-              <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
-                <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
-              </div>
-              <div class="chat-message">
-                <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
-                <div class="row">
-                  <div class="bubble box">{{ chatMessage.content }}</div>
-                  <div style="position: relative; width: 70px">
-                    <div class="unread-number">2</div>
-                    <div class="sent-time">오후2:00</div>
-                  </div>
+    <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="scrollRef" @scroll="handleScroll">
+      <div class="chat-messages-container">
+        <!-- <infinite-loading v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
+        <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
+          <!-- 상대가 한 말 -->
+          <div v-if="chatMessage.userId != userInfo.id" class="row">
+            <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
+              <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
+            </div>
+            <div class="chat-message">
+              <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
+              <div class="row">
+                <div class="bubble box">{{ chatMessage.content }}</div>
+                <div style="position: relative; width: 70px">
+                  <div class="unread-number">2</div>
+                  <div class="sent-time">오후2:00</div>
                 </div>
               </div>
             </div>
-            <!-- 내가 한 말 -->
-            <div v-else class="row" style="justify-content: right">
-              <div class="chat-message">
-                <div class="row">
-                  <div style="position: relative; width: 55px">
-                    <div class="unread-number-me">2</div>
-                    <div class="sent-time-me">오후2:00</div>
-                  </div>
-                  <div class="bubble-me box">{{ chatMessage.content }}</div>
+          </div>
+          <!-- 내가 한 말 -->
+          <div v-else class="row" style="justify-content: right">
+            <div class="chat-message">
+              <div class="row">
+                <div style="position: relative; width: 55px">
+                  <div class="unread-number-me">2</div>
+                  <div class="sent-time-me">오후2:00</div>
                 </div>
+                <div class="bubble-me box">{{ chatMessage.content }}</div>
               </div>
             </div>
           </div>
@@ -138,8 +136,9 @@ export default {
     // 스크롤 메세지리스트 최하단으로 이동
     chatMessages() {
       this.$nextTick(() => {
-        let chatMessages = this.$refs.chatMessages;
+        let chatMessages = this.$refs.scrollRef;
         chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+        this.$el.addEventListener("scroll", this.handleScroll);
       });
     },
   },
@@ -289,16 +288,27 @@ export default {
     },
 
     //==============무한스크롤 구현중입니다.========================
-    infiniteHandler($state) {
+    handleScroll(e) {
+      const { scrollHeight, scrollTop } = e.target;
+      console.log(scrollHeight, scrollTop);
+      if (scrollTop == 0) {
+        this.infiniteHandler(e);
+        this.$nextTick(() => {
+          this.loadingIsActive = false;
+        });
+      }
+    },
+
+    infiniteHandler() {
       console.log("!!!!");
-      console.log($state);
+      // console.log($state);
       axios
         .get("chat/messages", {
           params: {
             roomId: this.roomStatus.roomId,
             bundleId: this.chatMessages[0].messageBundleId,
-            count: this.chatInfo.recentMessageBundleCount - 10 + 10,
-            size: 10,
+            count: this.chatInfo.recentMessageBundleCount - 20 + 20,
+            size: 20,
           },
         })
         .then((res) => {
@@ -306,14 +316,17 @@ export default {
           console.log(res);
 
           if (res.data.data.length) {
-            this.limit += 1;
+            // this.limit += 1;
             console.log(res.data.data);
             this.chatMessages.unshift(...res.data.data);
             console.log(this.chatMessages);
-            $state.loaded();
-            $state.complete();
+            this.$nextTick(() => {
+              this.loadingIsActive = false;
+            });
+            // $state.loaded();
+            // $state.complete();
           } else {
-            $state.complete();
+            // $state.complete();
           }
         });
     },
