@@ -86,6 +86,7 @@ export default {
       limit: 0,
       previousTop: 0,
       previousBottom: 0,
+      moreMessages: 0,
     };
   },
   components: {
@@ -106,6 +107,10 @@ export default {
     );
     this.chatRoomConnect();
     this.getChat();
+    this.$nextTick(() => {
+      let chatMessages = this.$refs.scrollRef;
+      chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+    });
   },
   mounted: function () {
     // window.addEventListener("scroll", this.handleNotificationListScroll);
@@ -136,13 +141,6 @@ export default {
       this.chatRoomConnect();
     },
     // 스크롤 메세지리스트 최하단으로 이동
-    chatMessages() {
-      this.$nextTick(() => {
-        let chatMessages = this.$refs.scrollRef;
-        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
-        this.$el.addEventListener("scroll", this.handleScroll);
-      });
-    },
   },
   methods: {
     ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected"]),
@@ -293,7 +291,17 @@ export default {
     handleScroll(e) {
       const { scrollHeight, scrollTop } = e.target;
       console.log(scrollHeight, scrollTop);
-      if (scrollTop == 0) {
+
+      if (scrollTop > this.previousTop) {
+        this.previousTop = scrollTop;
+      } else if (scrollTop == this.previousTop) {
+        this.$nextTick(() => {
+          let chatMessages = this.$refs.scrollRef;
+          chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+        });
+      }
+
+      if (!scrollTop & this.moreMessages) {
         this.infiniteHandler(e);
         this.$nextTick(() => {
           this.loadingIsActive = false;
