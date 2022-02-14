@@ -64,10 +64,11 @@ extension ChatRoomListViewModel {
                       let rooms = response.data else {
                     return
                 }
-                
                 ChatRoomRepository.items = rooms
                 self.output.rooms.accept(ChatRoomRepository.chatRooms)
             }).disposed(by: bag)
     }
 }
+
+
 
