@@ -6,7 +6,9 @@ const chat = {
   namespaced: true,
   plugins: [createPersistedState()],
   state: {
-    roomStatus: {},
+    roomStatus: {
+      chatPage: "chat",
+    },
     chats: [],
     chatInfo: {
       nextMessageBundleId: "",
@@ -25,11 +27,16 @@ const chat = {
       }
       // roomId가 존재하는 경우 == 채팅방이 열려있는 경우
       else {
-        state.roomStatus.roomId = payload.roomId;
+        const data = {
+          mainPage: payload.mainPage,
+          chatPage: "chat",
+          roomId: payload.roomId,
+        };
+        state.roomStatus = data;
       }
     },
     CLEAR_PAGE(state) {
-      state.roomStatus = {};
+      state.roomStatus = { chatPage: "chat" };
     },
     GO_CHAT(state, payload) {
       state.chatInfo.recentMessageBundleCount = payload.recentMessageBundleCount;
