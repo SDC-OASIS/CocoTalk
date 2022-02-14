@@ -22,7 +22,7 @@
     <div class="chat-messages-outer-container" id="chatMessagesContainer" ref="chatMessages" v-scroll:#main="scroll">
       <div infinite-wrapper>
         <div class="chat-messages-container">
-          <infinite-loading force-use-infinite-wrapper="body" v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+          <!-- <infinite-loading force-use-infinite-wrapper="body" v-if="limit" direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
           <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
             <!-- 상대가 한 말 -->
             <div v-if="chatMessage.userId != userInfo.id" class="row">
@@ -72,7 +72,7 @@ import { mapMutations, mapState } from "vuex";
 import ProfileImg from "../components/common/ProfileImg.vue";
 import Button from "../components/common/Button.vue";
 import Sidebar from "../components/chatroom/Sidebar.vue";
-import InfiniteLoading from "vue-infinite-loading";
+// import InfiniteLoading from "vue-infinite-loading";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import axios from "@/utils/axios";
@@ -89,7 +89,7 @@ export default {
     };
   },
   components: {
-    InfiniteLoading,
+    // InfiniteLoading,
     ProfileImg,
     Button,
     Sidebar,

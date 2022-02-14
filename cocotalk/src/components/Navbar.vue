@@ -45,7 +45,7 @@ export default {
     changePath() {
       // roomId가 있는 경우 == 채팅창이 열려있는 경우
       if (this.roomStatus.roomId) {
-        return `/${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
+        return `/chat/${this.roomStatus.roomId}`;
       }
       // 채팅창이 닫혀있는 경우
       else {
