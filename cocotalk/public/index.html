@@ -12,6 +12,105 @@
   />
   </head>
   <body>
+
+    <!-- 테스트용 div입니다 -->
+    <div>
+
+      <input type="button" value="getToken()" onclick="getToken();">
+      <div id="token"></div>
+      <div id="msg"></div>
+      <div id="notis"></div>
+      <div id="err"></div>
+      <!-- The core Firebase JS SDK is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-messaging.js"></script>
+      <script>
+        //서비스 워커 등록
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js').then(
+              function (registration) {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              },
+              function (err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+              }
+            );
+          });
+        }
+  
+        MsgElem = document.getElementById('msg');
+        TokenElem = document.getElementById('token');
+        NotisElem = document.getElementById('notis');
+        ErrElem = document.getElementById('err');
+  
+        // TODO: Replace firebaseConfig you get from Firebase Console
+        var firebaseConfig = {
+          apiKey: 'AIzaSyAVvM4t9bfI2HR007WmjEAoT4lmBGfS4LM',
+          authDomain: 'cocotalk-1cc7f.firebaseapp.com',
+          projectId: 'cocotalk-1cc7f',
+          storageBucket: 'cocotalk-1cc7f.appspot.com',
+          messagingSenderId: '1046572361165',
+          appId: '1:1046572361165:web:a27023ed3d8eeabb365084',
+          measurementId: 'G-GR9JM30497',
+        };
+        firebase.initializeApp(firebaseConfig);
+  
+        const messaging = firebase.messaging();
+  
+        // 개인 추가
+        messaging.usePublicVapidKey(
+          'BEIp55hsuhlZ7a5Je4RVO88REMm15L2jUP18Zc5VBvCFq9EWDZuIcFWldZ1t1niosZ-lRhQlceECGTcA-wFZT4U'
+        );
+  
+        function getToken() {
+          messaging
+            .requestPermission()
+            .then(function () {
+              MsgElem.innerHTML =
+                '<div style="padding:10px">' + 'Notification permission granted.' + '</div>';
+              console.log('Notification permission granted.');
+  
+              // get the token in the form of promise
+              return messaging.getToken();
+            })
+            .then(function (token) {
+              console.log('token', token);
+              TokenElem.innerHTML =
+                '<div style="padding:10px">' + 'Device token is : <br>' + token + '</div>';
+            })
+            .catch(function (err) {
+              ErrElem.innerHTML = ErrElem.innerHTML + '; ' + err;
+              console.log('Unable to get permission to notify.', err);
+            });
+        }
+        getToken();
+
+        // 알림 수신을 위한 사용자 권한 요청
+        Notification.requestPermission()
+          .then((permission) => {
+            console.log('permission ', permission)
+            if (permission !== 'granted') {
+              alert('알림을 허용해주세요')
+            }
+          })
+      //  포그라운드 상태에서 받은 알림 처리
+      messaging.onMessage(function(payload){
+        console.log('onMessage: ', payload);
+        var title = "고라니 포그라운드 서비스";
+        let cbody = null;
+        if(payload.notification) cbody = "서버API:"+payload.notification.body //정식 서버 푸시
+        else cbody = "테스트API:"+payload.data.message; //테스트용 푸시
+        var options = {
+                // body: payload.notification.body
+                body : cbody
+        };
+        var notification = new Notification(title, options); //app 내부에서만 돌아가는 코드
+        });
+      </script>
+    </div>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
