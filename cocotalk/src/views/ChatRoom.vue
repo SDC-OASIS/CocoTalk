@@ -84,6 +84,8 @@ export default {
       roomInfo: {},
       message: "",
       limit: 0,
+      previousTop: 0,
+      previousBottom: 0,
     };
   },
   components: {
@@ -330,14 +332,14 @@ export default {
           }
         });
     },
-    scroll: function (e) {
-      this.scrollPostion = e.target.scrollTop;
-      if (this.scrollPosition > 100) {
-        console.log("UP");
-      } else {
-        console.log("DOWN");
-      }
-    },
+    // scroll: function (e) {
+    //   this.scrollPostion = e.target.scrollTop;
+    //   if (this.scrollPosition > 100) {
+    //     console.log("UP");
+    //   } else {
+    //     console.log("DOWN");
+    //   }
+    // },
   },
 };
 </script>
