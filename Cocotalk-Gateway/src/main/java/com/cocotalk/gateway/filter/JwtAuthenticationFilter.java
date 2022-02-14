@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -64,5 +63,6 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     @AllArgsConstructor
     public static class Config {
         private Long userId;
+        private String fcmToken;
     }
 }
