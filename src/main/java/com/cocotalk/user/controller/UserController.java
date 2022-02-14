@@ -45,7 +45,7 @@ public class UserController {
      * @return ResponseEntity<CustomResponse<List<UserResponse>>> 조회된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 전체 조회")
-    @GetMapping
+    @GetMapping("/profile")
     public ResponseEntity<CustomResponse<List<UserVo>>> findAll(@Parameter(hidden = true) User user) {
         List<UserVo> data = userService.findAll();
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
@@ -58,7 +58,7 @@ public class UserController {
      * @exception CustomException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
     @Operation(summary = "유저 Access Token으로 조회")
-    @GetMapping("/token")
+    @GetMapping("/profile/token")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<UserVo>> findByAccessToken(@Parameter(hidden = true) User user) {
         UserVo data = userService.findByAccessToken(user);
@@ -73,7 +73,7 @@ public class UserController {
      * @exception CustomException 해당 id를 가진 유저가 존재하지 않는다면 BAD_REQUEST 예외가 발생합니다
      */
     @Operation(summary = "유저 id로 조회")
-    @GetMapping("/{id}")
+    @GetMapping("/profile/{id}")
     public ResponseEntity<CustomResponse<UserVo>> findById(@Parameter(hidden = true) User user, @PathVariable Long id) {
         UserVo data = userService.findById(id);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
@@ -87,7 +87,7 @@ public class UserController {
      */
     @Operation(summary = "유저 코코톡 Id(cid)로 조회")
     @GetMapping("/cid/{cocotalkId}")
-    public ResponseEntity<CustomResponse<UserVo>> findByCid(@Parameter(hidden = true) User user, @PathVariable String cocotalkId) {
+    public ResponseEntity<CustomResponse<UserVo>> findByCid(@PathVariable String cocotalkId) {
         UserVo data = userService.findByCid(cocotalkId);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -100,7 +100,7 @@ public class UserController {
      */
     @Operation(summary = "유저 email로 조회")
     @GetMapping("/email/{address}")
-    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@Parameter(hidden = true) User user, @PathVariable String address) {
+    public ResponseEntity<CustomResponse<UserVo>> findByEmail(@PathVariable String address) {
         UserVo data = userService.findByEmail(address);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -113,7 +113,7 @@ public class UserController {
      */
     @Operation(summary = "유저 연락처로 조회")
     @GetMapping("/phone")
-    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(@Parameter(hidden = true) User user, @RequestParam List<String> phones) {
+    public ResponseEntity<CustomResponse<List<UserVo>>> findByPhone(@RequestParam List<String> phones) {
         List<UserVo> data = userService.findByPhones(phones);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
@@ -126,7 +126,7 @@ public class UserController {
      * @return ResponseEntity<CustomResponse<UserVo>> 수정된 유저 정보가 데이터에 포함됩니다.
      */
     @Operation(summary = "유저 수정")
-    @PutMapping
+    @PutMapping("/profile")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<UserVo>> modify(@Parameter(hidden = true) User user, @RequestBody @Valid UserModifyRequest request) {
         UserVo data = userService.modify(user, request);
@@ -139,7 +139,7 @@ public class UserController {
      * @return ResponseEntity<CustomResponse<String>> 삭제된 유저 cid를 포함한 메시지가 포함됩니다.
      */
     @Operation(summary = "유저 삭제")
-    @DeleteMapping
+    @DeleteMapping("/profile")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<String>> delete(@Parameter(hidden = true) User user) {
         String result = userService.delete(user);

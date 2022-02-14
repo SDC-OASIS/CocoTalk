@@ -174,17 +174,17 @@ spring:
 **[Swagger UI API Docs 바로가기](http://138.2.88.163:8000/webjars/swagger-ui/index.html?urls.primaryName=user)**
 
 ### 사용자 (유저)
-- 유저 전체 조회 `[GET] /`
-- 유저 Aceess Token으로 조회 `[GET] /token`
-- 유저 PK로 조회 `[GET] /{id}`
+- 유저 전체 조회 `[GET] /profile`
+- 유저 Aceess Token으로 조회 `[GET] /profile/token`
+- 유저 PK로 조회 `[GET] /profile/{id}`
 - 유저 코코톡 Id(cid)로 조회 `[GET] /cid/{cocotalkId}/`
 - 유저 email로 조회 `[GET] /email/{adderess}`
 - 유저 연락처로 조회 `[GET] /phone?phones=[]`
-- 유저 수정 `[PUT] /`
-- 유저 삭제 `[DELETE] /`
+- 유저 수정 `[PUT] /profile`
 - 유저 프로필 사진 수정 `[PUT] /profile/img`
 - 유저 백그라운드 사진 수정`[PUT] /profile/bg`
 - 유저 프로필 메시지 수정 `[PUT] /profile/message`
+- 유저 삭제 `[DELETE] /profile`
 
 ### 친구
 - 친구 추가 `[POST] /friends`
