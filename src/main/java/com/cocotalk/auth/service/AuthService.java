@@ -70,13 +70,7 @@ public class AuthService {
             throw new CustomException(DATABASE_ERROR, e);
         }
 
-        // 2. push 서버에 fcm token 갱신하라고 알려주기
-        setFcmToken(user.getId(), signinInput.getFcmToken(), clientInfo);
-
-        // 3. chat 서버에 기존에 로그인 중인 device 강제종료 요청하기 (기기별 동시 로그인 제한)
-        sendCrashRequest(user.getId(), signinInput.getFcmToken(), clientInfo.getClientType());
-
-        // 4. token 생성
+        // 2. token 생성
         String accessToken;
         String refreshToken;
         try {
@@ -86,8 +80,14 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.OK).body(new Response<>(BAD_REQUEST));
         }
 
-        // 5. redis에 refresh token 기록
+        // 3. push 서버에 fcm token 갱신하라고 알려주기
+        setFcmToken(user.getId(), signinInput.getFcmToken(), clientInfo);
+
+        // 4. redis에 refresh token 기록
         redisService.setRefreshToken(clientInfo.getClientType(), user.getId(), refreshToken);
+
+        // 5. chat 서버에 기존에 로그인 중인 device 강제종료 요청하기 (기기별 동시 로그인 제한)
+        sendCrashRequest(accessToken, user.getId(), signinInput.getFcmToken(), clientInfo.getClientType());
 
         // 6. 결과 return
         TokenDto tokenDto = TokenDto.builder()
@@ -278,7 +278,7 @@ public class AuthService {
      * @param fcmToken 현재 로그인한 user의 device 정보 (FCM TOKEN)
      * @param clientType 현재 로그인한 user의 client type (WEB or MOBILE)
      */
-    private void sendCrashRequest(Long userId, String fcmToken, ClientType clientType){
+    private void sendCrashRequest(String accessToken, Long userId, String fcmToken, ClientType clientType){
         CrashRequest crashRequest = CrashRequest.builder()
                 .clientType(clientType.name())
                 .userId(userId)
@@ -289,6 +289,7 @@ public class AuthService {
             webClient.post()
                     .uri("/crash")
                     .contentType(MediaType.APPLICATION_JSON)
+                    .header("X-ACCESS-TOKEN", accessToken)
                     .bodyValue(crashRequest)
                     .retrieve()
                     .bodyToMono(String.class).block();
