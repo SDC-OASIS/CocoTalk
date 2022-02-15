@@ -42,14 +42,19 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
+  created() {
+    //서비스 워커의 mute 상태 vuex 값으로 초기화
+    this.setMute(this.isMute);
+  },
   computed: {
     ...mapState("chat", ["roomStatus"]),
-    ...mapState("userStore", ["isMute"]),
+    ...mapGetters("workerStore", ["isMute"]),
     changePath() {
       // roomId가 있는 경우 == 채팅창이 열려있는 경우
+      console.log("안된다!!!!!");
       if (this.roomStatus.roomId) {
         console.log(this.roomStatus);
         return `/${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
@@ -68,7 +73,8 @@ export default {
       this.$store.dispatch("userStore/logout", { root: true });
     },
     setMute(flag) {
-      this.$store.dispatch("userStore/setMute", flag);
+      this.$store.dispatch("workerStore/setMute", flag);
+      console.log("[VUEX GETTER] isMute", this.isMute);
     },
   },
 };

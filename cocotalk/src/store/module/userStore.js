@@ -15,7 +15,6 @@ const userStore = {
     fcmToken: "",
     userInfo: {},
     isLogin: false,
-    isMute: false,
   },
   getters: {
     accessToken(state) {
@@ -26,9 +25,6 @@ const userStore = {
     },
     userInfo(state) {
       return state.userInfo;
-    },
-    isMute(state) {
-      return state.isMute;
     },
   },
   mutations: {
@@ -46,10 +42,6 @@ const userStore = {
     SET_REFRESH_TOKEN(state, payload) {
       state.refreshToken = payload;
       console.log("[userStore] refreshToken 저장");
-    },
-    SET_IS_MUTE(state, payload) {
-      state.isMute = payload;
-      console.log("[userStore] isMute 변경", payload);
     },
     CLEAR_REFRESH_TOKEN(state) {
       state.refreshToken = "";
@@ -147,9 +139,6 @@ const userStore = {
           }); //axios END
       }); //Promise END
     }, //reissue END
-    setMute: ({ commit }, payload) => {
-      commit("SET_IS_MUTE", payload);
-    },
   }, //actions END
   modules: {},
 };
