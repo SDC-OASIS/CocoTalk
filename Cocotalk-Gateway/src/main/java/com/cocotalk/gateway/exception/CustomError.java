@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum CustomError {
-    UNKNOWN(0001, "알 수 없는 에러입니다."),
-    JWT_AUTHENTICATION(0002, "JWT 인중 중 문제가 발생했습니다."),
-    JSON_PARSE(0003, "JSON 파싱 중 문제가 발생했습니다"),
-    NOT_LOGIN(0003, "로그인 하지 않은 사용자입니다.");
+    UNKNOWN(6001, "알 수 없는 에러입니다."),
+    JWT_AUTHENTICATION(6002, "JWT 인중 중 문제가 발생했습니다."),
+    JSON_PARSE(6003, "JSON 파싱 중 문제가 발생했습니다"),
+    NOT_LOGIN(6004, "로그인 하지 않은 사용자입니다.");
 
     private final int code;
     private final String desc;

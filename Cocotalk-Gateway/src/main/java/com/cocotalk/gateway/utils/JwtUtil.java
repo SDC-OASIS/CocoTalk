@@ -53,8 +53,8 @@ public class JwtUtil {
     }
 
     public static class JwtWebExceptionHandler implements ErrorWebExceptionHandler {
-        private String serializeError(CustomError error, String message) {
-            ErrorDetails details = new ErrorDetails(error, message);
+        private String serializeError(CustomException customException) {
+            ErrorDetails details = new ErrorDetails(customException);
 
             ErrorResponse response = new ErrorResponse(details);
             try {
@@ -100,7 +100,7 @@ public class JwtUtil {
             if(message.equals("")) {
                 bytes = serializeError(CustomError.JSON_PARSE, ex.getCause()).getBytes(StandardCharsets.UTF_8);
             } else {
-                bytes = serializeError(CustomError.JWT_AUTHENTICATION, message).getBytes(StandardCharsets.UTF_8);
+                bytes = serializeError(new CustomException(CustomError.JWT_AUTHENTICATION, message)).getBytes(StandardCharsets.UTF_8);
                 log.error("[JwtUtil/JwtWebExceptionHandler] : " + message);
             }
             ServerHttpResponse response = exchange.getResponse();

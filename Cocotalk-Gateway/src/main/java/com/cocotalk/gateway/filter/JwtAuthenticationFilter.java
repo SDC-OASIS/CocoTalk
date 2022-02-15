@@ -1,6 +1,8 @@
 package com.cocotalk.gateway.filter;
 
 import com.cocotalk.gateway.dto.TokenPayload;
+import com.cocotalk.gateway.exception.CustomError;
+import com.cocotalk.gateway.exception.CustomException;
 import com.cocotalk.gateway.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -21,7 +23,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -45,15 +46,37 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+            String requestPath = request.getPath().toString();
+            log.info("API Gateway Request Path = [{}]", requestPath);
 
-            List<String> list = request.getHeaders().get("X-ACCESS-TOKEN"); // (1) X-ACCESS-TOKEN 추출
-            String token = Objects.requireNonNull(list).get(0);
-            TokenPayload payload = JwtUtil.getPayload(token, objectMapper); // (2) JWT Authenticaiton
+            List<String> accessList = request.getHeaders().get("X-ACCESS-TOKEN"); // (1) X-ACCESS-TOKEN 추출
 
-            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                        log.info("userId inside X-ACCESS-TOKEN : {}", payload.getUserId());
-                        log.info("fcmToken inside X-ACCESS-TOKEN : {}", payload.getFcmToken());
+            if(accessList == null) {
+                List<String> refreshList = request.getHeaders().get("X-REFRESH-TOKEN"); // (2) X-REFRESH-TOKEN 추출
+                if(refreshList == null) {
+                    throw new CustomException(CustomError.JWT_AUTHENTICATION, "헤더에 토큰이 설정되지 않았습니다.");
+                }
+                String refreshToken = refreshList.get(0);
+                if(requestPath.contains("reissue")) {
+                    return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                        log.info("need to be reissued X-REFRESH-TOKEN : {}", refreshToken);
                     }));
+                } else {
+                    TokenPayload payload = JwtUtil.getPayload(refreshToken, objectMapper); // (2) X-REFRESH-TOKEN Authenticaiton
+                    return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                        log.info("userId inside X-REFRESH-TOKEN : {}", payload.getUserId());
+                        log.info("fcmToken inside X-REFRESH-TOKEN : {}", payload.getFcmToken());
+                    }));
+                }
+            } else {
+                String accessToken = accessList.get(0);
+                TokenPayload payload = JwtUtil.getPayload(accessToken, objectMapper); // (2) JWT Authenticaiton
+
+                return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                    log.info("userId inside X-ACCESS-TOKEN : {}", payload.getUserId());
+                    log.info("fcmToken inside X-ACCESS-TOKEN : {}", payload.getFcmToken());
+                }));
+            }
         };
     }
 
