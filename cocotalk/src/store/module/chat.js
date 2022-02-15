@@ -1,5 +1,5 @@
 import createPersistedState from "vuex-persistedstate";
-import axios from "../../utils/axios";
+// import axios from "../../utils/axios";
 import router from "../../router";
 
 const chat = {
@@ -13,6 +13,11 @@ const chat = {
     chatInfo: {
       nextMessageBundleId: "",
       recentMessageBundleCount: 0,
+    },
+  },
+  getters: {
+    roomStatus(state) {
+      return state.roomStatus;
     },
   },
   mutations: {
@@ -80,12 +85,12 @@ const chat = {
         await router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
       }
     },
-    createChat(context, payload) {
-      axios.post("chat/rooms", payload).then((res) => {
-        console.log("채팅방생성");
-        console.log(res);
-      });
-    },
+    // createChat(context, payload) {
+    //   axios.post("chat/rooms", payload).then((res) => {
+    //     console.log("채팅방생성");
+    //     console.log(res);
+    //   });
+    // },
     updateMessageBundleId(context, payload) {
       context.commit("UPDATE_MESSAGE_BUNDLE_ID", payload);
     },

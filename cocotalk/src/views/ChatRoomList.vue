@@ -86,7 +86,7 @@ export default {
   computed: {
     ...mapState("chat", ["roomStatus"]),
     ...mapState("userStore", ["userInfo"]),
-    ...mapState("socket", ["stompChatListClient", "stompChatListConnected"]),
+    ...mapState("socket", ["stompChatListClient", "stompChatListConnected", "createChatRoomStatus"]),
   },
   methods: {
     chatListSubscribe() {
@@ -130,6 +130,7 @@ export default {
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
         console.log("구독으로 받은 새로 생성된 룸정보입니다.");
         console.log(res);
+        console.log("crateChatRoomStatus:");
       });
     },
     getChatList() {

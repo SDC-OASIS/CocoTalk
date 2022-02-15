@@ -109,21 +109,18 @@ export default {
     this.chatRoomConnect();
     this.getChat();
   },
-  mounted: function () {
-    // window.addEventListener("scroll", this.handleNotificationListScroll);
-  },
   computed: {
     ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo"]),
     ...mapState("userStore", ["userInfo"]),
     ...mapState("socket", ["stompChatRoomClient", "stompChatRoomConnected"]),
   },
   watch: {
+    // 채팅방을 켜둔상태에서 다른 채팅방으로 이동할 경우
     "$route.params.roomId": function () {
-      const headers = {
-        action: "leave",
-      };
+      // 이전 채팅방 disconnect
+      const headers = { action: "leave" };
       this.stompChatRoomClient.disconnect(() => {}, headers);
-      // vuex에 마지막 페이지 방문 저장
+      // vuex에 이동한 url저장
       this.$store.dispatch(
         "chat/changePage",
         {
@@ -133,7 +130,7 @@ export default {
         },
         { root: true },
       );
-      this.moreMessages = 0;
+      this.moreMessages = 0; //채팅방 히스트로릴 불러올 때 = true
       this.chatMessages = [];
       this.getChat();
       this.chatRoomConnect();
@@ -141,16 +138,14 @@ export default {
       this.$nextTick(() => {
         let chatMessages = this.$refs.scrollRef;
         chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-        this.previousScrollHeight = chatMessages.scrollHeight;
-        this.bottomScrollTop = chatMessages.scrollTop;
+        this.previousScrollHeight = chatMessages.scrollHeight; //메세지 불러온 후 scrollHeight
+        this.bottomScrollTop = chatMessages.scrollTop; //메세지 불러온 후 최하단 scrollTop
         // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
         this.$el.addEventListener("scroll", this.handleScroll);
       });
     },
     chatMessages() {
       let chatMessages = this.$refs.scrollRef;
-      console.log("메세지목록 변화");
-      console.log(chatMessages.scrollTop);
       this.previousScrollHeight = chatMessages.scrollHeight;
       this.bottomScrollTop = chatMessages.scrollTop;
     },
@@ -181,16 +176,14 @@ export default {
         });
         console.log(this.chatMessages);
         console.log(this.roomInfo);
-        this.limit += 1;
-        this.moreMessages = 1;
+        this.moreMessages = 1; // 첫입장 후 스크롤 최상단 위치시 채팅내역 불러올 수 있게 변경
         this.$nextTick(() => {
           let chatMessages = this.$refs.scrollRef;
           chatMessages.scrollTo({ top: chatMessages.scrollHeight });
           this.previousScrollHeight = chatMessages.scrollHeight;
           this.bottomScrollTop = chatMessages.scrollTop;
-          this.bottomScrollTop = chatMessages.scrollTop;
           // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
-          this.moreMessages = 1;
+          // this.moreMessages = 1;
           this.$el.addEventListener("scroll", this.handleScroll);
         });
       });
@@ -214,9 +207,6 @@ export default {
         return item.userId == userId;
       });
       return this.roomInfo.members[idx];
-    },
-    openProfileModal(userProfileInfo) {
-      this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
     },
 
     // 3.채팅방 소켓 연결
@@ -295,6 +285,9 @@ export default {
       this.message = "";
     },
 
+    openProfileModal(userProfileInfo) {
+      this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
+    },
     openSidebar() {
       const sidebar = document.querySelector(".sidebar-container");
       const sidebarBack = document.querySelector(".sidebar-background");
@@ -347,29 +340,14 @@ export default {
     },
     scrollBottom() {
       let chatMessages = this.$refs.scrollRef;
-      console.log("확인");
-      console.log(chatMessages.scrollTop);
-      console.log(this.bottomScrollTop);
-      console.log(this);
       // 메세지가 왔을때 현재 스크롤 위치와 최하단 스크롤 위치가
       if (chatMessages.scrollTop - this.bottomScrollTop < 1000) {
         this.$nextTick(() => {
           let chatMessages = this.$refs.scrollRef;
           chatMessages.scrollTo({ top: this.previousScrollHeight, behavior: "smooth" });
-          this.bottomScrollTop = chatMessages.scrollTop;
-          // this.previousScrollHeight = chatMessages.scrollHeight;
           this.previousScrollHeight = chatMessages.scrollHeight;
-          this.bottomScrollTop = chatMessages.scrollTop;
-          console.log(chatMessages.scrollTop);
-          console.log(this.bottomScrollTop);
         });
       }
-
-      // this.$nextTick(() => {
-      //   if(chatMessages.scrollTop)
-      //   chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-      //   this.previousScrollHeight = chatMessages.scrollHeight;
-      // });
     },
   },
 };

@@ -72,6 +72,7 @@ export default {
   },
   computed: {
     ...mapState("modal", ["roomNameEditModal"]),
+    ...mapState("userStore", ["userInfo"]),
     friendIdCnt() {
       if (this.roomName.length) {
         return this.roomName.length;
@@ -108,18 +109,29 @@ export default {
       if (this.roomNameEditModal.selectedFriends.length > 1) {
         type = 1;
       }
-      let memberIds = [];
+      let members = [];
       this.roomNameEditModal.selectedFriends.forEach((e) => {
-        memberIds.push(e.id);
+        let member = {
+          userId: e.id,
+          username: e.username,
+          profile: JSON.stringify(e.profile),
+        };
+        members.push(member);
       });
+      let userInfo = {
+        userId: this.userInfo.id,
+        username: this.userInfo.username,
+        profile: JSON.stringify(this.userInfo.profile),
+      };
+      members.push(userInfo);
       const payload = {
-        name: this.roomName,
-        img: "",
+        roomname: this.roomName,
+        img: null,
         type: type,
-        memberIds: memberIds,
+        members: members,
       };
       console.log(payload);
-      this.$store.dispatch("chat/createChat", payload, { root: true });
+      this.$store.dispatch("socket/createChat", payload, { root: true });
     },
   },
   created() {
