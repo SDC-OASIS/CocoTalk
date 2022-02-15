@@ -8,9 +8,10 @@ const socket = {
   namespaced: true,
   state: {
     stompChatListClient: null,
-    stompChatRoomClient: null,
     stompChatListConnected: false,
+    stompChatRoomClient: null,
     stompChatRoomConnected: false,
+    createChatRoomStatus: false,
   },
   mutations: {
     setStompChatListClient(state, stompChatListClient) {
@@ -27,6 +28,9 @@ const socket = {
     },
     setStompChatListDisconnect(state) {
       state.stompChatListConnected = false;
+    },
+    setCreateChatRoomStatus(state, payload) {
+      state.createChatRoomStatus = payload;
     },
   },
   actions: {
@@ -48,6 +52,16 @@ const socket = {
         },
       );
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
+    },
+    createChat(context, data) {
+      console.log("채팅방생성");
+      context.state.stompChatListClient.send("/simple/chatroom/new", JSON.stringify(data), (res) => {
+        console.log("생성결과");
+        console.log(res);
+      });
+      // store.actions["modal/closeRoomNameEditModal"];
+      store.dispatch("modal/closeRoomNameEditModal");
+      context.commit("setCreateChatRoomStatus", true);
     },
   },
   modules: {},

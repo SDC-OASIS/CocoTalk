@@ -1,5 +1,5 @@
 import createPersistedState from "vuex-persistedstate";
-import axios from "../../utils/axios";
+// import axios from "../../utils/axios";
 import router from "../../router";
 
 const chat = {
@@ -13,6 +13,12 @@ const chat = {
     chatInfo: {
       nextMessageBundleId: "",
       recentMessageBundleCount: 0,
+    },
+    newRoomInfo: {},
+  },
+  getters: {
+    roomStatus(state) {
+      return state.roomStatus;
     },
   },
   mutations: {
@@ -57,6 +63,9 @@ const chat = {
     UPDATE_MESSAGE_BUNDLE_COUNT(state, recentMessageBundleCount) {
       state.chatInfo.recentMessageBundleCount = recentMessageBundleCount;
     },
+    NEW_ROOM_INFO(state, payload) {
+      state.newRoomInfo = payload;
+    },
   },
   actions: {
     // 페이지 전환
@@ -80,17 +89,24 @@ const chat = {
         await router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
       }
     },
-    createChat(context, payload) {
-      axios.post("chat/rooms", payload).then((res) => {
-        console.log("채팅방생성");
-        console.log(res);
-      });
-    },
+    // createChat(context, payload) {
+    //   axios.post("chat/rooms", payload).then((res) => {
+    //     console.log("채팅방생성");
+    //     console.log(res);
+    //   });
+    // },
     updateMessageBundleId(context, payload) {
       context.commit("UPDATE_MESSAGE_BUNDLE_ID", payload);
     },
     updateMessageBundleCount(context, recentMessageBundleCount) {
+      console.log("확인하라요:" + recentMessageBundleCount);
       context.commit("UPDATE_MESSAGE_BUNDLE_COUNT", recentMessageBundleCount);
+    },
+    goNewChat(context, newRoomInfo) {
+      console.log("새로운 채팅방 오픈");
+      context.commit("GO_CHAT", newRoomInfo);
+      context.commit("NEW_ROOM_INFO", newRoomInfo.newRoom);
+      router.push({ name: "chatsChat", params: { chat: "chat", roomId: newRoomInfo.roomId } }).catch(() => {});
     },
   },
   modules: {},

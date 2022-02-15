@@ -89,7 +89,12 @@ const routes = [
       }
       // 로그인된 상태로 기본 url 진입하는 경우 메인페이지로 이동
       else if (to.fullPath == "/") {
-        next(`/friend/${this.roomStatus.chatPage}/${this.roomStatus.roomId}`);
+        console.log("엥");
+        if (store.getters["chat/roomStatus"].roomId) {
+          next(`/friends/chat/${store.getters["chat/roomStatus"].roomId}`);
+        } else {
+          next("/friends");
+        }
       }
       // 로그인된 상태로 이외 url로 진입하는 경우
       else {

@@ -86,7 +86,7 @@ export default {
   computed: {
     ...mapState("chat", ["roomStatus"]),
     ...mapState("userStore", ["userInfo"]),
-    ...mapState("socket", ["stompChatListClient", "stompChatListConnected"]),
+    ...mapState("socket", ["stompChatListClient", "stompChatListConnected", "createChatRoomStatus"]),
   },
   methods: {
     chatListSubscribe() {
@@ -96,6 +96,7 @@ export default {
         const data = JSON.parse(res.body);
         let lastMessage = data.message;
         let bundleInfo = data.bundleInfo;
+        console.log(data);
         const idx = this.chats.findIndex(function (item) {
           return item.room.id == lastMessage.roomId;
         });
@@ -116,6 +117,7 @@ export default {
         this.chats[idx].recentMessageBundleCount = bundleInfo.currentMessageBundleCount;
         // this.$store.dispatch("chat/updateMessageBundleCount", recentMessageBundleCount, { root: true });
         console.log(lastMessage);
+        console.log(bundleInfo);
 
         // 3.채팅방 목록에 없는 방의 메세지인 경우 (나가기한 1대1 채팅) == 구현중 ==
       });
@@ -129,7 +131,28 @@ export default {
       //[채팅목록 새로 생성된 채팅방정보 채널 subscribe] == 구현중 ==
       this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
         console.log("구독으로 받은 새로 생성된 룸정보입니다.");
-        console.log(res);
+        console.log(JSON.parse(res.body));
+        let newRoom = JSON.parse(res.body);
+
+        newRoom.messageBundleIds = newRoom.messageBundleIds.slice(1, -1).split(", ");
+        newRoom.members.forEach((e) => {
+          if (e.profile) {
+            e.profile = JSON.parse(e.profile);
+          }
+        });
+        console.log(newRoom);
+        let chatRoom = {
+          recentChatMessage: {},
+          recentMessageBundleCount: 0,
+          room: newRoom,
+          unreadNumber: 0,
+        };
+        this.chats.unshift(chatRoom);
+
+        console.log("===방생성중[crateChatRoomStatus:" + this.createChatRoomStatus + "]===");
+        if (this.createChatRoomStatus) {
+          this.goNewChat(newRoom);
+        }
       });
     },
     getChatList() {
@@ -168,9 +191,20 @@ export default {
       // 읽지 않은 메세지수 0으로 만들기
       this.chats[idx].unreadNumber = 0;
     },
+    goNewChat(newRoom) {
+      // 새로생성된 채팅방으로 가기
+      let newRoomInfo = {
+        roomId: newRoom.id,
+        nextMessageBundleId: newRoom.messageBundleIds[0],
+        recentMessageBundleCount: null,
+        newRoom: newRoom,
+      };
+      this.$store.dispatch("chat/goNewChat", newRoomInfo, { root: true });
+    },
     messageSentTime(time) {
       return this.$moment(time).format("LT");
     },
+
     // 트랜지션 시작에서 인덱스*100ms 만큼의 딜레이 부여
     beforeEnter(el) {
       this.$nextTick(() => {

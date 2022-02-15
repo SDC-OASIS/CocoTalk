@@ -23,33 +23,38 @@
       <div class="chat-messages-container">
         <!-- <infinite-loading v-if="limit" direction="top" @infinite="getMessageHistory" spinner="waveDots"></infinite-loading> -->
         <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
-          <!-- 상대가 한 말 -->
-          <div v-if="chatMessage.userId != userInfo.id" class="row">
-            <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
-              <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
+          <div v-if="chatMessage.type == 0">
+            <!-- 상대가 한 말 -->
+            <div v-if="chatMessage.userId != userInfo.id" class="row">
+              <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
+                <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
+              </div>
+              <div class="chat-message">
+                <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
+                <div class="row">
+                  <div class="bubble box">{{ chatMessage.content }}</div>
+                  <div style="position: relative; width: 70px">
+                    <div class="unread-number">2</div>
+                    <div class="sent-time">오후2:00</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="chat-message">
-              <div style="padding-bottom: 7px">{{ sentUserName(chatMessage.userId) }}</div>
-              <div class="row">
-                <div class="bubble box">{{ chatMessage.content }}</div>
-                <div style="position: relative; width: 70px">
-                  <div class="unread-number">2</div>
-                  <div class="sent-time">오후2:00</div>
+            <!-- 내가 한 말 -->
+            <div v-else class="row" style="justify-content: right">
+              <div class="chat-message">
+                <div class="row">
+                  <div style="position: relative; width: 55px">
+                    <div class="unread-number-me">2</div>
+                    <div class="sent-time-me">오후2:00</div>
+                  </div>
+                  <div class="bubble-me box">{{ chatMessage.content }}</div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- 내가 한 말 -->
-          <div v-else class="row" style="justify-content: right">
-            <div class="chat-message">
-              <div class="row">
-                <div style="position: relative; width: 55px">
-                  <div class="unread-number-me">2</div>
-                  <div class="sent-time-me">오후2:00</div>
-                </div>
-                <div class="bubble-me box">{{ chatMessage.content }}</div>
-              </div>
-            </div>
+          <div v-else-if="chatMessage.type == 1" class="invite-message">
+            <div>{{ chatMessage.content }}</div>
           </div>
         </div>
       </div>
@@ -107,23 +112,23 @@ export default {
       { root: true },
     );
     this.chatRoomConnect();
-    this.getChat();
-  },
-  mounted: function () {
-    // window.addEventListener("scroll", this.handleNotificationListScroll);
+    if (!this.createChatRoomStatus) {
+      this.getChat();
+    }
   },
   computed: {
-    ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo"]),
+    ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo", "newRoomInfo"]),
     ...mapState("userStore", ["userInfo"]),
-    ...mapState("socket", ["stompChatRoomClient", "stompChatRoomConnected"]),
+    ...mapState("modal", ["roomNameEditModal"]),
+    ...mapState("socket", ["stompChatRoomClient", "stompChatRoomConnected", "createChatRoomStatus"]),
   },
   watch: {
+    // 채팅방을 켜둔상태에서 다른 채팅방으로 이동할 경우
     "$route.params.roomId": function () {
-      const headers = {
-        action: "leave",
-      };
+      // 이전 채팅방 disconnect
+      const headers = { action: "leave" };
       this.stompChatRoomClient.disconnect(() => {}, headers);
-      // vuex에 마지막 페이지 방문 저장
+      // vuex에 이동한 url저장
       this.$store.dispatch(
         "chat/changePage",
         {
@@ -133,7 +138,7 @@ export default {
         },
         { root: true },
       );
-      this.moreMessages = 0;
+      this.moreMessages = 0; //채팅방 히스트로릴 불러올 때 = true
       this.chatMessages = [];
       this.getChat();
       this.chatRoomConnect();
@@ -141,24 +146,23 @@ export default {
       this.$nextTick(() => {
         let chatMessages = this.$refs.scrollRef;
         chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-        this.previousScrollHeight = chatMessages.scrollHeight;
-        this.bottomScrollTop = chatMessages.scrollTop;
+        this.previousScrollHeight = chatMessages.scrollHeight; //메세지 불러온 후 scrollHeight
+        this.bottomScrollTop = chatMessages.scrollTop; //메세지 불러온 후 최하단 scrollTop
         // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
         this.$el.addEventListener("scroll", this.handleScroll);
       });
     },
     chatMessages() {
       let chatMessages = this.$refs.scrollRef;
-      console.log("메세지목록 변화");
-      console.log(chatMessages.scrollTop);
       this.previousScrollHeight = chatMessages.scrollHeight;
       this.bottomScrollTop = chatMessages.scrollTop;
     },
   },
   methods: {
-    ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected"]),
+    ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus"]),
 
     // 1.채팅내역 불러오기
+    // 1-1. 일반 채팅방 입장
     getChat() {
       this.roomMemberIds = [];
       axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
@@ -181,19 +185,23 @@ export default {
         });
         console.log(this.chatMessages);
         console.log(this.roomInfo);
-        this.limit += 1;
-        this.moreMessages = 1;
+        this.moreMessages = 1; // 첫입장 후 스크롤 최상단 위치시 채팅내역 불러올 수 있게 변경
         this.$nextTick(() => {
           let chatMessages = this.$refs.scrollRef;
           chatMessages.scrollTo({ top: chatMessages.scrollHeight });
           this.previousScrollHeight = chatMessages.scrollHeight;
           this.bottomScrollTop = chatMessages.scrollTop;
-          this.bottomScrollTop = chatMessages.scrollTop;
           // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
-          this.moreMessages = 1;
+          // this.moreMessages = 1;
           this.$el.addEventListener("scroll", this.handleScroll);
         });
       });
+    },
+    // 1-2. 채팅방 생성시 자동 입장
+    getNewChat() {
+      console.log("========[새로운 채팅방 입성]==========");
+      decodeURI;
+      this.sendInviteMessage();
     },
 
     // 2.채팅방에 참여중인 멤버의 정보를 메세지마다 적용해줍니다.
@@ -215,9 +223,6 @@ export default {
       });
       return this.roomInfo.members[idx];
     },
-    openProfileModal(userProfileInfo) {
-      this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
-    },
 
     // 3.채팅방 소켓 연결
     chatRoomConnect: function () {
@@ -230,17 +235,21 @@ export default {
           // 소켓 연결 성공
           this.connected = true;
           console.log("소켓 연결 성공", frame);
+          if (this.createChatRoomStatus) {
+            this.getNewChat();
+          }
           // 채팅 메세지 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
             console.log("구독으로 받은 메시지 입니다.");
             const receivedMessage = JSON.parse(res.body);
             this.chatMessages.push(receivedMessage.message);
             console.log(receivedMessage);
-            // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId로 업데이트
+            // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId로 업데이트 / 채팅방 첫 생성시를 위한 bundlecount도 업데이트
             const payload = {
               nextMessageBundleId: receivedMessage.bundleInfo.nextMessageBundleId,
             };
             this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
+            this.$store.dispatch("chat/updateMessageBundleCount", receivedMessage.bundleInfo.currentMessageBundleCount, { root: true });
             this.scrollBottom();
           });
           // 채팅 메세지 룸정보 업데이트 채널 subscribe
@@ -294,7 +303,38 @@ export default {
       }
       this.message = "";
     },
+    // 처음 방이 생성된 경우 자동으로 초대메세지를 전송합니다.
+    sendInviteMessage() {
+      if (this.stompChatRoomClient && this.stompChatRoomClient.connected) {
+        let invitedFriendsNames = [];
+        let invitedFriendsIds = [];
+        let invitedFriends = this.newRoomInfo.members;
+        invitedFriends.forEach((e) => {
+          if (e.userId != this.userInfo.id) {
+            invitedFriendsNames.push(e.username + "님");
+          }
+          invitedFriendsIds.push(e.userId);
+        });
+        this.roomInfo = this.newRoomInfo;
+        const message = `${this.userInfo.username}님이 ${invitedFriendsNames.join(",")}을 초대했습니다.`;
+        const msg = {
+          type: 1,
+          content: message,
+          roomId: this.newRoomInfo.id,
+          roomname: this.newRoomInfo.roomname,
+          userId: this.userInfo.id,
+          username: this.userInfo.username,
+          receiverIds: invitedFriendsIds,
+          messageBundleId: this.chatInfo.nextMessageBundleId,
+        };
+        this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
+      }
+      this.setCreateChatRoomStatus(false);
+    },
 
+    openProfileModal(userProfileInfo) {
+      this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
+    },
     openSidebar() {
       const sidebar = document.querySelector(".sidebar-container");
       const sidebarBack = document.querySelector(".sidebar-background");
@@ -347,29 +387,14 @@ export default {
     },
     scrollBottom() {
       let chatMessages = this.$refs.scrollRef;
-      console.log("확인");
-      console.log(chatMessages.scrollTop);
-      console.log(this.bottomScrollTop);
-      console.log(this);
       // 메세지가 왔을때 현재 스크롤 위치와 최하단 스크롤 위치가
       if (chatMessages.scrollTop - this.bottomScrollTop < 1000) {
         this.$nextTick(() => {
           let chatMessages = this.$refs.scrollRef;
           chatMessages.scrollTo({ top: this.previousScrollHeight, behavior: "smooth" });
-          this.bottomScrollTop = chatMessages.scrollTop;
-          // this.previousScrollHeight = chatMessages.scrollHeight;
           this.previousScrollHeight = chatMessages.scrollHeight;
-          this.bottomScrollTop = chatMessages.scrollTop;
-          console.log(chatMessages.scrollTop);
-          console.log(this.bottomScrollTop);
         });
       }
-
-      // this.$nextTick(() => {
-      //   if(chatMessages.scrollTop)
-      //   chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-      //   this.previousScrollHeight = chatMessages.scrollHeight;
-      // });
     },
   },
 };
@@ -521,5 +546,10 @@ export default {
   border: none;
   resize: none;
   font-size: 20px;
+}
+.invite-message {
+  background-color: #bad1ac;
+  padding: 5px 0;
+  text-align: center;
 }
 </style>
