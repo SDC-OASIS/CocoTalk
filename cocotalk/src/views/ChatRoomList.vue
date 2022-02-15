@@ -18,32 +18,32 @@
         <div style="dispaly: inline-block; text-align: center">
           <!-- 채팅방 멤버수에 따라 다른 형태의 프로필 모양 -->
           <div v-if="chat.room.members.length == 1">
-            <profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 50px" />
+            <profile-img :imgUrl="chat.room.members[0].profile.profile" width=" 50px" />
           </div>
           <div v-if="chat.room.members.length == 2" style="width: 50px; height: 60px">
-            <div style="position: absolute">
+            <div style="position: relative">
               <div v-if="!chat.img">
-                <profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width="30px" :radius="3" />
-                <profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="two-friends-second-img" :radius="3" />
+                <profile-img :imgUrl="chat.room.members[0].profile.profile" class="two-friends-first-img" width="30px" :radius="3" />
+                <profile-img :imgUrl="chat.room.members[1].profile.profile" width=" 30px" class="two-friends-second-img" :radius="3" />
               </div>
               <div v-else>
                 <profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" />
               </div>
             </div>
           </div>
-          <div v-if="chat.room.members.length == 3" style="width: 50px; height: 50px; padding-left: 7px">
-            <div style="position: absolute">
-              <profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" width=" 30px" />
-              <profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 30px" class="three-friends-second-img" :radius="4" />
-              <profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 30px" class="three-friends-third-img" :radius="4" />
+          <div v-if="chat.room.members.length == 3" style="width: 50px; height: 50px">
+            <div style="position: relative">
+              <profile-img :imgUrl="chat.room.members[0].profile.profile" class="three-friends-first-img" width=" 25px" />
+              <profile-img :imgUrl="chat.room.members[1].profile.profile" width=" 25px" class="three-friends-second-img" :radius="4" />
+              <profile-img :imgUrl="chat.room.members[2].profile.profile" width=" 25px" class="three-friends-third-img" :radius="4" />
             </div>
           </div>
-          <div v-if="chat.room.members.length >= 4" style="width: 50px; height: 50px; padding-top: 7px">
-            <div style="position: absolute">
-              <profile-img :imgUrl="'https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg'" class="four-friends-first-img" width=" 25px" />
-              <profile-img :imgUrl="'https://ifh.cc/g/qKgD7C.png'" width=" 25px" class="four-friends-second-img" :radius="5" />
-              <profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 25px" class="four-friends-third-img" :radius="5" />
-              <profile-img :imgUrl="'https://ifh.cc/g/CgiChn.jpg'" width=" 25px" class="four-friends-forth-img" :radius="5" />
+          <div v-if="chat.room.members.length >= 4" style="width: 50px; height: 50px">
+            <div style="position: relative">
+              <profile-img :imgUrl="chat.room.members[0].profile.profile" class="four-friends-first-img" width=" 21px" />
+              <profile-img :imgUrl="chat.room.members[1].profile.profile" width=" 21px" class="four-friends-second-img" :radius="5" />
+              <profile-img :imgUrl="chat.room.members[2].profile.profile" width=" 21px" class="four-friends-third-img" :radius="5" />
+              <profile-img :imgUrl="chat.room.members[3].profile.profile" width=" 21px" class="four-friends-forth-img" :radius="5" />
             </div>
           </div>
         </div>
@@ -318,8 +318,8 @@ export default {
 }
 .received-time {
   color: #90949b;
-  font-size: 13px;
-  padding-top: 4px;
+  font-size: 11px;
+  padding-top: 1px;
 }
 .message-cnt {
   background-color: #e80c4e;
@@ -329,6 +329,7 @@ export default {
   font-weight: bold;
   border-radius: 20px;
   margin-top: 5px;
+  font-size: 12px;
 }
 .chat-detail-info {
   text-align: right;
@@ -340,43 +341,54 @@ export default {
     width: 75%;
   }
 }
+.two-friends-first-img {
+  position: relative;
+  top: -12px;
+  left: -30px;
+}
 .two-friends-second-img {
   position: relative;
-  top: -20px;
+  top: 4px;
   left: -14px;
 }
 
+.three-friends-first-img {
+  position: relative;
+  top: 2px;
+  left: -2px;
+  z-index: 10;
+}
 .three-friends-second-img {
   position: relative;
-  top: -15px;
-  left: -45px;
+  top: -10px;
+  left: -42px;
 }
 .three-friends-third-img {
   position: relative;
-  top: -15px;
-  left: -20px;
+  top: -10px;
+  left: -23px;
 }
 .four-friends-first-img {
   position: relative;
-  top: -5px;
-  left: -3px;
+  top: 4px;
+  left: -14px;
   z-index: 3;
 }
 .four-friends-second-img {
   position: relative;
-  top: -35px;
-  left: -6px;
+  top: -21px;
+  left: -17px;
   z-index: 3;
 }
 .four-friends-third-img {
   position: relative;
-  top: -8px;
-  left: -34px;
+  top: 1px;
+  left: -40px;
 }
 .four-friends-forth-img {
   position: relative;
-  top: -8px;
-  left: -7px;
+  top: 1px;
+  left: -18px;
 }
 /* 트랜지션 전용 스타일 */
 .v-enter-active,

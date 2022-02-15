@@ -1,7 +1,7 @@
 <template>
   <div class="box">
-    <div style="font-weight: bold">{{ userInfo.username }}</div>
-    <div>{{ userInfo.profile.message }}</div>
+    <div style="font-weight: bold; font-size: 13px">{{ userInfo.username }}</div>
+    <div style="font-size: 13px; padding-top: 3px">{{ userInfo.profile.message }}</div>
   </div>
 </template>
 

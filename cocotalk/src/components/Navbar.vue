@@ -44,7 +44,6 @@ export default {
     ...mapState("chat", ["roomStatus"]),
     changePath() {
       // roomId가 있는 경우 == 채팅창이 열려있는 경우
-      console.log("안된다!!!!!");
       if (this.roomStatus.roomId) {
         console.log(this.roomStatus);
         return `/${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
