@@ -77,7 +77,7 @@
 		EA29145227B3D49800324476 /* ModelRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145127B3D49800324476 /* ModelRoom.swift */; };
 		EA29145427B3D4A000324476 /* ModelRoomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145327B3D4A000324476 /* ModelRoomList.swift */; };
 		EA29145627B3D75400324476 /* RoomAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145527B3D75400324476 /* RoomAPI.swift */; };
-		EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145727B3DE1500324476 /* ModelChatMessage.swift */; };
+		EA29145827B3DE1500324476 /* ModelSocketChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145727B3DE1500324476 /* ModelSocketChatMessage.swift */; };
 		EA29145B27B3E22A00324476 /* GNBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145A27B3E22A00324476 /* GNBView.swift */; };
 		EA29145D27B3F77D00324476 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145C27B3F77D00324476 /* CoreDataHelper.swift */; };
 		EA29146927B4E19800324476 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29146827B4E19800324476 /* UIImage+Ext.swift */; };
@@ -199,7 +199,7 @@
 		EA29145127B3D49800324476 /* ModelRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRoom.swift; sourceTree = "<group>"; };
 		EA29145327B3D4A000324476 /* ModelRoomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRoomList.swift; sourceTree = "<group>"; };
 		EA29145527B3D75400324476 /* RoomAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomAPI.swift; sourceTree = "<group>"; };
-		EA29145727B3DE1500324476 /* ModelChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelChatMessage.swift; sourceTree = "<group>"; };
+		EA29145727B3DE1500324476 /* ModelSocketChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSocketChatMessage.swift; sourceTree = "<group>"; };
 		EA29145A27B3E22A00324476 /* GNBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBView.swift; sourceTree = "<group>"; };
 		EA29145C27B3F77D00324476 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		EA29146827B4E19800324476 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
@@ -406,7 +406,6 @@
 		EA14D50C2786C4AA00EDC892 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				EA29145727B3DE1500324476 /* ModelChatMessage.swift */,
 				EAE555A9279A986C00777EBF /* ModelMessage.swift */,
 				EA29145027B3D25A00324476 /* ChatRoom */,
 				EA29144127B37D8200324476 /* Friend */,
@@ -550,6 +549,7 @@
 				EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */,
 				EA8F20BB27BA2705008A01ED /* ModelSocketSubMessage.swift */,
 				EA8F20BD27BA276A008A01ED /* ModelSocketSubMessageHeader.swift */,
+				EA29145727B3DE1500324476 /* ModelSocketChatMessage.swift */,
 			);
 			path = ChatRoom;
 			sourceTree = "<group>";
@@ -1001,7 +1001,7 @@
 				EA29146C27B5157A00324476 /* MoreViewController.swift in Sources */,
 				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
 				EA29143727B2290C00324476 /* APIResult_Device.swift in Sources */,
-				EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */,
+				EA29145827B3DE1500324476 /* ModelSocketChatMessage.swift in Sources */,
 				EA29146E27B51A9A00324476 /* UIViewController+Ext.swift in Sources */,
 				EA8F20BE27BA276A008A01ED /* ModelSocketSubMessageHeader.swift in Sources */,
 				EA29140927B0B13E00324476 /* ModelSignupResponse.swift in Sources */,

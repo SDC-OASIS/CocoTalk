@@ -32,11 +32,3 @@ struct ModelMessage: Codable {
     
     var hasTail: Bool?
 }
-
-extension ModelMessage {
-    #warning("랜덤 메시지 함수 삭제")
-    static func getRandomMessage(id: Int) -> ModelMessage {
-        let text = Bool.random() ? "첫 번째 줄" : "^.^ 오늘 재택하신 분들은 내일부터 슥슥 가져가심됩니다. 참고로 섭취 가능 기한은 1주일!"
-        return ModelMessage(id: id, text: text, mediaType: 0, mediaUrls: nil, senderId: Int.random(in: 0..<4), date: Date.now, isMe: Bool.random(), hasTail: Bool.random())
-    }
-}

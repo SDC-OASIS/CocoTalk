@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 import RxRelay
 import SwiftKeychainWrapper
+import UIKit
 
 protocol CreateChatRoomInput {
     var keyword: BehaviorRelay<String> { get }
@@ -106,10 +107,10 @@ extension CreateChatRoomViewModel {
     }
     
     func createChatRoom() {
-        let token: String? = KeychainWrapper.standard[.accessToken]
-        guard let token = token else {
-            return
-        }
+//        let token: String? = KeychainWrapper.standard[.accessToken]
+//        guard let token = token else {
+//            return
+//        }
         guard let myProfile = UserDefaults.getMyData() else {
             dependency.isFailed.accept(true)
             return
@@ -128,21 +129,24 @@ extension CreateChatRoomViewModel {
         
         
         let data = ModelCreateChatRoomRequest(roomname: roomName, img: "", type: 0, members: members)
-        
-        dependency.isLoading.accept(true)
-        chatRoomRepository.createChatRoom(with: token, data: data)
-            .subscribe(onNext: { [weak self] response in
-                self?.dependency.isLoading.accept(false)
-                guard let self = self else {
-                    return
-                }
-                
-                guard let _ = response.data else {
-                    self.dependency.isFailed.accept(true)
-                    return
-                }
-                self.dependency.isFailed.accept(false)
-            }).disposed(by: bag)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.listSocket?.createRoom(data)
+//        dependency.isLoading.accept(true)
+//        chatRoomRepository.createChatRoom(with: token, data: data)
+//            .subscribe(onNext: { [weak self] response in
+//                self?.dependency.isLoading.accept(false)
+//                guard let self = self else {
+//                    return
+//                }
+//
+//                guard let _ = response.data else {
+//                    self.dependency.isFailed.accept(true)
+//                    return
+//                }
+//
+//
+//                self.dependency.isFailed.accept(false)
+//            }).disposed(by: bag)
     }
     
     func findFriendByKeyword() {

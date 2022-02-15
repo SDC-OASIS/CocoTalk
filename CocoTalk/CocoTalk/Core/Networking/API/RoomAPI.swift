@@ -10,7 +10,7 @@ import Moya
 
 enum RoomAPI {
     case fetchRoomInfo(_ token: String, roomId: String)
-    case createRoom(_ token: String, data: ModelCreateChatRoomRequest)
+//    case createRoom(_ token: String, data: ModelCreateChatRoomRequest)
     case fetchRooms(_ token: String)
     case checkRoomExist(_ token: String, memberId: String)
 }
@@ -24,8 +24,8 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(_):
             return "/chat/rooms/list"
-        case .createRoom(_, _):
-            return "/chat/rooms"
+//        case .createRoom(_, _):
+//            return "/chat/rooms"
         case .checkRoomExist(_, memberId: let memberId):
             return "/chat/rooms/private/\(memberId)"
         case .fetchRoomInfo(_, let roomId):
@@ -37,8 +37,8 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(_):
             return .get
-        case .createRoom(_, _):
-            return .post
+//        case .createRoom(_, _):
+//            return .post
         case .checkRoomExist(_,_):
             return .get
         case .fetchRoomInfo(_,_):
@@ -50,8 +50,8 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(_):
             return .requestPlain
-        case .createRoom(_, let data):
-            return .requestJSONEncodable(data)
+//        case .createRoom(_, let data):
+//            return .requestJSONEncodable(data)
         case .checkRoomExist(_,_):
             return .requestPlain
         case .fetchRoomInfo(_,_):
@@ -65,8 +65,8 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(let token):
             parameters["X-ACCESS-TOKEN"] = token
-        case .createRoom(let token, _):
-            parameters["X-ACCESS-TOKEN"] = token
+//        case .createRoom(let token, _):
+//            parameters["X-ACCESS-TOKEN"] = token
         case .checkRoomExist(let token, _):
             parameters["X-ACCESS-TOKEN"] = token
         case .fetchRoomInfo(let token,_):

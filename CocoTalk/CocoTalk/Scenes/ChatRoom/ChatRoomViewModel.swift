@@ -66,9 +66,6 @@ extension ChatRoomViewModel {
     
     func getMessages() {
         var newValue = dependency.messages.value
-        for i in 0..<40 {
-            newValue.append(ModelMessage.getRandomMessage(id: i))
-        }
         dependency.messages.accept(newValue)
     }
     
@@ -96,23 +93,28 @@ extension ChatRoomViewModel {
         
         guard let socket = dependency.socket.value,
               let roomInfo = dependency.roomInfo.value else {
-            return
-        }
+                  return
+              }
+        
+        let messageBundleId = ChatRoomRepository.items
+            .filter { ($0.room?.id ?? "") == self.rooomId }[0]
+            .recentChatMessage?
+            .messageBundleId
         
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
            let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
             
-//            let message = ModelChatMessagePub(roomId: self.rooomId,
-//                                              roomType: roomInfo.type ?? 0,
-//                                              roomname: roomInfo.roomname ?? "",
-//                                              userId: data.id ?? -1,
-//                                              username: data.username ?? "",
-//                                              messageBundleId: "",
-//                                              receiverIds: <#T##[String]?#>,
-//                                              type: 0,
-//                                              content: input.text.value)
-//            socket.sendMessage(message)
-//            
+            let message = ModelPubChatMessage(roomId: self.rooomId,
+                                              roomType: roomInfo.type ?? 0,
+                                              roomname: roomInfo.roomname ?? "",
+                                              userId: data.id ?? -1,
+                                              username: data.username ?? "",
+                                              messageBundleId: messageBundleId,
+                                              receiverIds: roomInfo.members?.map { "\($0.userId ?? -1)" },
+                                              type: 0,
+                                              content: input.text.value)
+            socket.sendMessage(message)
+
 //            messageRepository.insert(ModelMessage(id: <#T##Int?#>,
 //                                                  text: <#T##String?#>,
 //                                                  mediaType: <#T##Int?#>,

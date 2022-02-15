@@ -63,7 +63,6 @@ class FriendListViewController: UIViewController {
 }
 
 // MARK: - BaseViewController
-#warning("Rx로 Delegate 설정")
 extension FriendListViewController {
     func configureView() {
         tableView.separatorStyle = .none

@@ -124,12 +124,9 @@ class ChatRoomViewController: UIViewController {
     }
     
     private func disconnectSocket() {
-        guard let socket = viewModel.dependency.socket.value else {
-            return
-        }
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.removeChatSocket()
-        viewModel.dependency.socket.accept(socket)
+        viewModel.dependency.socket.accept(nil)
     }
     
     private func fetch() {

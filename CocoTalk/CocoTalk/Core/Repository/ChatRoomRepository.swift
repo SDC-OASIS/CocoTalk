@@ -23,6 +23,8 @@ class ChatRoomRepository {
     
     static var items: [ItemType] = []
     
+    static var newRoom = BehaviorRelay<ModelRoom?>(value: nil)
+    
     static var chatRooms: [ItemType] {
         get {
             let dateFormatter = DateFormatter()
@@ -51,16 +53,16 @@ class ChatRoomRepository {
             }
     }
     
-    func createChatRoom(with token: String, data: ModelCreateChatRoomRequest) -> Observable<APIResult_1<ModelRoom>>{
-        return provider.rx.request(.createRoom(token, data: data))
-            .retry(3)
-            .asObservable()
-            .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
-            .catch { error in
-                print(error)
-                return Observable.error(error)
-            }
-    }
+//    func createChatRoom(with token: String, data: ModelCreateChatRoomRequest) -> Observable<APIResult_1<ModelRoom>>{
+//        return provider.rx.request(.createRoom(token, data: data))
+//            .retry(3)
+//            .asObservable()
+//            .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
+//            .catch { error in
+//                print(error)
+//                return Observable.error(error)
+//            }
+//    }
     
     func checkRoomExist(with token: String, memberId: String) -> Observable<APIResult_1<ModelRoom>> {
         return provider.rx.request(.checkRoomExist(token, memberId: memberId))

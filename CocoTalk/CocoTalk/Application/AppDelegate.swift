@@ -117,6 +117,7 @@ extension AppDelegate {
     }
     
     func removeChatSocket() {
+        closeChatSocket()
         chatSocket = nil
     }
     

@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 import RxRelay
 import SwiftKeychainWrapper
+import UIKit
 
 protocol FriendListInput {
     
@@ -154,10 +155,10 @@ extension FriendListViewModel {
     }
     
     func createChatRoom(_ memberId: Int) {
-        let token: String? = KeychainWrapper.standard[.accessToken]
-        guard let token = token else {
-            return
-        }
+//        let token: String? = KeychainWrapper.standard[.accessToken]
+//        guard let token = token else {
+//            return
+//        }
         guard let myProfile = UserDefaults.getMyData(),
               let member = userRepsository.findUserById(memberId) else {
             dependency.isFailed.accept(true)
@@ -182,25 +183,27 @@ extension FriendListViewModel {
         let roomName = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
         
         let data = ModelCreateChatRoomRequest(roomname: roomName, img: "", type: 0, members: members)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.listSocket?.createRoom(data)
         
-        dependency.isLoading.accept(true)
-        chatRoomRepository.createChatRoom(with: token, data: data)
-            .subscribe(onNext: { [weak self] response in
-                self?.dependency.isLoading.accept(false)
-                guard let self = self else {
-                    return
-                }
-                
-                guard let room = response.data,
-                      let id = room.id else {
-                    self.dependency.isFailed.accept(true)
-                    return
-                }
-                
-                self.dependency.isFailed.accept(false)
-                self.output.isRoomExist.accept(true)
-                self.output.roomId.accept(id)
-            }).disposed(by: bag)
+//        dependency.isLoading.accept(true)
+//        chatRoomRepository.createChatRoom(with: token, data: data)
+//            .subscribe(onNext: { [weak self] response in
+//                self?.dependency.isLoading.accept(false)
+//                guard let self = self else {
+//                    return
+//                }
+//
+//                guard let room = response.data,
+//                      let id = room.id else {
+//                    self.dependency.isFailed.accept(true)
+//                    return
+//                }
+//
+//                self.dependency.isFailed.accept(false)
+//                self.output.isRoomExist.accept(true)
+//                self.output.roomId.accept(id)
+//            }).disposed(by: bag)
     }
     
     func addFirendsWithContact() {

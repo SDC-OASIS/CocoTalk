@@ -50,17 +50,17 @@ class CoreDataHelper {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         
-        do {
-            let profiles = try context.fetch(CoreDataUser.fetchRequest()) as! [CoreDataUser]
-            profiles.forEach {
-                print($0.username)
-                print($0.phone)
-                print($0.bio)
-                print($0.profileImageURL)
-            }
-            print("[profiles.count] \(profiles.count)")
-        } catch {
-            print(error.localizedDescription)
-        }
+//        do {
+//            let profiles = try context.fetch(CoreDataUser.fetchRequest()) as! [CoreDataUser]
+//            profiles.forEach {
+//                print($0.username)
+//                print($0.phone)
+//                print($0.bio)
+//                print($0.profileImageURL)
+//            }
+//            print("[profiles.count] \(profiles.count)")
+//        } catch {
+//            print(error.localizedDescription)
+//        }
     }
 }

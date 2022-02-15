@@ -27,7 +27,7 @@ extension UserAPI: TargetType {
         case .findUserByCid(let cid, _):
             return "/user/cid/\(cid)"
         case .fetchMyProfile(_):
-            return "/user/token"
+            return "/user/profile/token"
         case .fetchFriends(_):
             return "/user/friends"
         }

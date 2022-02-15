@@ -70,5 +70,3 @@ extension ChatRoomListViewModel {
     }
 }
 
-
-
