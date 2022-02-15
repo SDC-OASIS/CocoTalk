@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CrashRequest {
     private String clientType;
+
     private Long userId;
+
     private String fcmToken;
 }

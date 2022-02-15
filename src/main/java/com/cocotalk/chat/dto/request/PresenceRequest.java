@@ -8,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 public class PresenceRequest {
     private String action;
+
     private String serverUrl;
 }

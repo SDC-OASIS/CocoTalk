@@ -19,14 +19,16 @@ import java.util.List;
 public class ChatMessageRequest {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId roomId;
-    private int roomType;
+    private int roomType; // 푸시용
+
     private String roomname;
 
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId messageBundleId;
 
     private Long userId;
-    private String username;
+
+    private String username; // 푸시용
 
     private List<Long> receiverIds;
 

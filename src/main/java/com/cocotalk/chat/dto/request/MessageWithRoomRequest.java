@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MessageWithRoomRequest {
     private ChatMessageRequest chatMessageRequest;
+
     private RoomRequest roomRequest;
 }
