@@ -1,14 +1,13 @@
 import firebase from "firebase/app";
 import "firebase/messaging";
-console.log("[main.js] initializeApp", firebase.initializeApp);
 firebase.initializeApp({
-  apiKey: "AIzaSyAVvM4t9bfI2HR007WmjEAoT4lmBGfS4LM",
-  authDomain: "cocotalk-1cc7f.firebaseapp.com",
-  projectId: "cocotalk-1cc7f",
-  storageBucket: "cocotalk-1cc7f.appspot.com",
-  messagingSenderId: "1046572361165",
-  appId: "1:1046572361165:web:a27023ed3d8eeabb365084",
-  measurementId: "G-GR9JM30497",
+  apiKey: process.env.VUE_APP_FIRBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIRBASE_AUTH_DOMAIN,
+  projectId: process.env.VUE_APP_FIRBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIRBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIRBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIRBASE_API_ID,
+  measurementId: process.env.VUE_APP_FIRBASE_MEASUREMENT_ID,
 });
 const message = firebase.messaging();
 navigator.serviceWorker.register("/firebase-messaging-sw.js").then((registration) => {
