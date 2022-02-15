@@ -15,10 +15,15 @@
             <span class="iconify" data-icon="ant-design:message-filled"></span>
           </router-link>
         </li>
-        <li>
-          <!-- 페이지 이동이 아닌 알림 온오프를 위한 자리입니다. 임시로 다른 용도로 쓰고있습니다. -->
-          <router-link to="/friends/setting">
+        <li v-show="!isMute">
+          <router-link @click.native="setMute(true)" to="#">
             <span class="iconify" data-icon="bi:bell-fill"></span>
+          </router-link>
+        </li>
+        <li v-show="isMute">
+          <router-link @click.native="setMute(false)" to="#">
+            <span class="iconify" data-icon="bi:bell-slash-fill" style="color: #ffc978"></span>
+            <!-- <span class="iconify" data-icon="bi:bell-slash"></span> -->
           </router-link>
         </li>
         <li>
@@ -42,6 +47,7 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState("chat", ["roomStatus"]),
+    ...mapState("userStore", ["isMute"]),
     changePath() {
       // roomId가 있는 경우 == 채팅창이 열려있는 경우
       console.log("안된다!!!!!");
@@ -61,6 +67,9 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("userStore/logout", { root: true });
+    },
+    setMute(flag) {
+      this.$store.dispatch("userStore/setMute", flag);
     },
   },
 };
