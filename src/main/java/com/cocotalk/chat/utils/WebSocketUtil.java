@@ -71,6 +71,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
                 this.reconnectBlocking();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                log.error("[WebSocketUtil/tryReconnect] : 프리젠스 서버에 웹 소켓 재연결을 요청하는 도중 문제가 발생했습니다.");
             }
         }, 10, TimeUnit.SECONDS);
     }
@@ -86,7 +87,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
             this.send(requestString);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("[PresenceService/run] : 프리젠스 서버에게 URL 등록 메시지를 보내는 도중 문제가 발생했습니다.");
+            log.error("[WebSocketUtil/registerServer] : 프리젠스 서버에게 URL 등록 메시지를 보내는 도중 문제가 발생했습니다.");
             throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }
@@ -102,7 +103,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
             this.send(requestString);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("[PresenceService/onApplicationEvent] : 프리젠스 서버에게 URL 해제 메시지를 보내는 도중 문제가 발생했습니다.");
+            log.error("[WebSocketUtil/withdrawServer] : 프리젠스 서버에게 URL 해제 메시지를 보내는 도중 문제가 발생했습니다.");
             throw new CustomException(CustomError.JSON_PARSE, e);
         }
     }

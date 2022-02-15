@@ -4,16 +4,17 @@ import com.cocotalk.chat.dto.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse<?>> handleCustomException(CustomException e) {
+    public ResponseEntity<ErrorResponse<ErrorDetails>> handleCustomException(CustomException e) {
         CustomError error = e.getError();
         ErrorDetails details;
         if(e.getCause() != null) {
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse<?>> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse<ErrorDetails>> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         e.printStackTrace();
         BindingResult bindingResult = e.getBindingResult();
         CustomError error = CustomError.BAD_REQUEST;
@@ -39,9 +40,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponse<>(details));
     }
 
-//    @MessageExceptionHandler
-//    public ResponseEntity<ExceptionDto> handleException(BabbleException e) {
-//        return ResponseEntity.status(e.status())
-//                .body(new ExceptionDto(e.getMessage()));
-//    }
+    @MessageExceptionHandler
+    public ErrorResponse<ErrorDetails> handleException(CustomException e) {
+        e.printStackTrace();
+        ErrorDetails details = new ErrorDetails(e);
+        return new ErrorResponse<>(details);
+    }
 }
