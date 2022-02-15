@@ -1,6 +1,13 @@
 import firebase from "firebase/app";
 import "firebase/messaging";
-firebase.initializeApp({
+
+// 서비스 워크 등록
+navigator.serviceWorker.register("/firebase-messaging-sw.js").then((registration) => {
+  console.log("serviceWorker registration");
+  return message.useServiceWorker(registration);
+});
+
+const config = {
   apiKey: process.env.VUE_APP_FIRBASE_API_KEY,
   authDomain: process.env.VUE_APP_FIRBASE_AUTH_DOMAIN,
   projectId: process.env.VUE_APP_FIRBASE_PROJECT_ID,
@@ -8,12 +15,11 @@ firebase.initializeApp({
   messagingSenderId: process.env.VUE_APP_FIRBASE_MESSAGING_SENDER_ID,
   appId: process.env.VUE_APP_FIRBASE_API_ID,
   measurementId: process.env.VUE_APP_FIRBASE_MEASUREMENT_ID,
-});
+};
+
+firebase.initializeApp(config);
+
 const message = firebase.messaging();
-navigator.serviceWorker.register("/firebase-messaging-sw.js").then((registration) => {
-  console.log("serviceWorker registration");
-  return message.useServiceWorker(registration);
-});
 
 function getToken() {
   return new Promise((resolve, reject) => {
@@ -21,7 +27,7 @@ function getToken() {
       .requestPermission()
       .then(() => {
         console.log("Notification permission granted.");
-        return message.deleteToken();
+        return message.deleteToken().catch(() => console.log("제거할 FCM TOKEN이 없습니다"));
       })
       .then((isDelete) => {
         console.log("FCMTokeon Deleted", isDelete);

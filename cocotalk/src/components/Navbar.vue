@@ -15,10 +15,15 @@
             <span class="iconify" data-icon="ant-design:message-filled"></span>
           </router-link>
         </li>
-        <li>
-          <!-- 페이지 이동이 아닌 알림 온오프를 위한 자리입니다. 임시로 다른 용도로 쓰고있습니다. -->
-          <router-link to="/friends/setting">
+        <li v-show="!isMute">
+          <router-link @click.native="setMute(true)" to="#">
             <span class="iconify" data-icon="bi:bell-fill"></span>
+          </router-link>
+        </li>
+        <li v-show="isMute">
+          <router-link @click.native="setMute(false)" to="#">
+            <span class="iconify" data-icon="bi:bell-slash-fill" style="color: #ffc978"></span>
+            <!-- <span class="iconify" data-icon="bi:bell-slash"></span> -->
           </router-link>
         </li>
         <li>
@@ -37,13 +42,19 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
+  created() {
+    //서비스 워커의 mute 상태 vuex 값으로 초기화
+    this.setMute(this.isMute);
+  },
   computed: {
     ...mapState("chat", ["roomStatus"]),
+    ...mapGetters("workerStore", ["isMute"]),
     changePath() {
       // roomId가 있는 경우 == 채팅창이 열려있는 경우
+      console.log("안된다!!!!!");
       if (this.roomStatus.roomId) {
         console.log(this.roomStatus);
         return `/${this.roomStatus.chatPage}/${this.roomStatus.roomId}`;
@@ -60,6 +71,10 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("userStore/logout", { root: true });
+    },
+    setMute(flag) {
+      this.$store.dispatch("workerStore/setMute", flag);
+      console.log("[VUEX GETTER] isMute", this.isMute);
     },
   },
 };
