@@ -10,12 +10,12 @@ const axios = VueAxios.create({
   },
 });
 
+const excloudeURL = new Set(["auth/reissue"]);
 //요청) 요청 직전 인자값 : axios config / 요청 에러 : error
 axios.interceptors.request.use(
   function (config) {
-    config.headers["X-ACCESS-TOKEN"] = store.getters["userStore/accessToken"];
-    // config.headers["X-REFRESH-TOKEN"] = state.refreshToken;
-    // console.log("헤더넣기 완료");
+    //access token이 필요없는 API를 제외하고 넣어줌
+    if (!excloudeURL.has(config.url)) config.headers["X-ACCESS-TOKEN"] = store.getters["userStore/accessToken"];
     return config;
   },
   function (error) {
@@ -31,22 +31,23 @@ axios.interceptors.response.use(
   function (response) {
     const request = response.config;
     // JWT 토큰이 만료됨
-    let isExpire = response.data.error && response.data.error.type == "JWT_AUTHENTICATION";
-    // isExpire = false;
-    // 토큰 재발급 로직
-    if (isExpire) {
+    let isTokenValid = !response.data.error || response.data.error.type != "JWT_AUTHENTICATION";
+    let isReissueRq = request.url == "auth/reissue";
+    // ACCESSTOKEN 만료일 경우 토큰 재발급 요청
+    if (!isTokenValid && !isReissueRq) {
       return store
         .dispatch("userStore/reissue")
         .then(() => {
-          console.log("[axios] 토큰 재발급 성공, 기존 요청을 다시 시도합니다", request);
+          console.log("[AXIOS] 토큰 재발급 성공, 기존 요청을 다시 시도합니다 : [시도할 요청]", request);
           return axios(request);
         })
         .catch((error) => {
-          // refresh token 유효성 X
-          console.error("[REFRESH TOKEN IS NOT VALID] 토큰 재발급 실패", error);
+          console.log("[AXIOS] 토큰 재발급이 실패했습니다. : [응답]", error.data);
+          // REFRESH TOKEN 유효성 X
           store.dispatch("userStore/logout").then(() => {
             alert("로그인이 만료되었습니다");
             router.push("/login");
+            return Promise.reject("토큰 재발급 실패", error);
           });
         });
     }

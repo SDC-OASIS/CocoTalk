@@ -114,28 +114,32 @@ const userStore = {
     },
     reissue: ({ state, commit }) => {
       return new Promise((resolve, reject) => {
-        console.log("[userStore/reissue] 호출", state.refreshToken);
+        // 현재 재발급 API 호출이 진행 중이라면 시도하지 않습니다.
+        if (axios.reissueProgress) return;
+        console.log("[REISSUE] ACCESS TOKEN 만료, 토큰 재발급을 시도합니다.");
+        axios.reissueProgress = true;
         axios
           .get("auth/reissue", { headers: { "X-REFRESH-TOKEN": state.refreshToken } })
           .then((res) => {
             if (res.data.isSuccess) {
-              console.log("[userStore/reissue] TOKEN 재발급 완료", res.data);
               commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
               commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
               console.log("[VUEX] TOKEN 재설정 완료");
               resolve(res);
             } else {
-              // console.log("TOKEN 재발급 실패", res.data);
               reject(res);
             }
           })
           .catch((error) => {
             console.error(error);
             reject(error);
-          });
+          })
+          .finally(() => {
+            axios.reissueProgress = false;
+          }); //axios END
       }); //Promise END
     }, //reissue END
-  },
+  }, //actions END
   modules: {},
 };
 
