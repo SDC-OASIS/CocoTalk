@@ -46,6 +46,7 @@ class CreateChatRoomViewModel {
         var keyword = BehaviorRelay<String>(value: "")
     }
     
+    #warning("웹소켓 헬퍼 추가")
     struct Dependency: CreateChatRoomDependency {
         var isFailed = BehaviorRelay<Bool?>(value: nil)
         var isLoading = BehaviorRelay<Bool>(value: false)
@@ -131,22 +132,7 @@ extension CreateChatRoomViewModel {
         let data = ModelCreateChatRoomRequest(roomname: roomName, img: "", type: 0, members: members)
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.listSocket?.createRoom(data)
-//        dependency.isLoading.accept(true)
-//        chatRoomRepository.createChatRoom(with: token, data: data)
-//            .subscribe(onNext: { [weak self] response in
-//                self?.dependency.isLoading.accept(false)
-//                guard let self = self else {
-//                    return
-//                }
-//
-//                guard let _ = response.data else {
-//                    self.dependency.isFailed.accept(true)
-//                    return
-//                }
-//
-//
-//                self.dependency.isFailed.accept(false)
-//            }).disposed(by: bag)
+        dependency.isFailed.accept(false)
     }
     
     func findFriendByKeyword() {

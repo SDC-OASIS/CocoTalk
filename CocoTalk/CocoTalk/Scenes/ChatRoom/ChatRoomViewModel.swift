@@ -95,34 +95,37 @@ extension ChatRoomViewModel {
               let roomInfo = dependency.roomInfo.value else {
                   return
               }
-        
-        let messageBundleId = ChatRoomRepository.items
-            .filter { ($0.room?.id ?? "") == self.rooomId }[0]
-            .recentChatMessage?
-            .messageBundleId
-        
+
+        if let message = buildMessage(roomInfo) {
+              socket.sendMessage(message)
+        }
+    }
+    
+    private func buildMessage(_ room: ModelRoom) -> ModelPubChatMessage? {
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
            let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
             
-            let message = ModelPubChatMessage(roomId: self.rooomId,
-                                              roomType: roomInfo.type ?? 0,
-                                              roomname: roomInfo.roomname ?? "",
-                                              userId: data.id ?? -1,
-                                              username: data.username ?? "",
-                                              messageBundleId: messageBundleId,
-                                              receiverIds: roomInfo.members?.map { "\($0.userId ?? -1)" },
-                                              type: 0,
-                                              content: input.text.value)
-            socket.sendMessage(message)
-
-//            messageRepository.insert(ModelMessage(id: <#T##Int?#>,
-//                                                  text: <#T##String?#>,
-//                                                  mediaType: <#T##Int?#>,
-//                                                  mediaUrls: <#T##[String]?#>,
-//                                                  senderId: <#T##Int?#>,
-//                                                  date: <#T##Date?#>,
-//                                                  isMe: <#T##Bool?#>,
-//                                                  hasTail: <#T##Bool?#>))
+            guard let roomId = room.id else {
+                return nil
+            }
+            
+            let rooms = ChatRoomRepository.items
+            let messageBundleIds: String = rooms
+                .filter { ($0.room?.id ?? "") == roomId }[0]
+                .room?
+                .messageBundleIds ?? ""
+            let bundleId = messageBundleIds.parseMessageBundleIds()?.last ?? ""
+            
+            return ModelPubChatMessage(roomId: room.id ?? "",
+                                       roomType: room.type ?? 0,
+                                       roomname: room.roomname ?? "",
+                                       userId: data.id ?? -1,
+                                       username: data.username ?? "",
+                                       messageBundleId: bundleId,
+                                       receiverIds: room.members?.map { "\($0.userId ?? -1)" },
+                                       type: 0,
+                                       content: input.text.value)
         }
+        return nil
     }
 }

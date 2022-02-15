@@ -87,19 +87,5 @@ extension CreateGroupChatViewModel {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.listSocket?.createRoom(data)
         dependency.isFailed.accept(false)
-//        dependency.isLoading.accept(true)
-//        chatRoomRepository.createChatRoom(with: token, data: data)
-//            .subscribe(onNext: { [weak self] response in
-//                self?.dependency.isLoading.accept(false)
-//                guard let self = self else {
-//                    return
-//                }
-//
-//                guard let _ = response.data else {
-//                    self.dependency.isFailed.accept(true)
-//                    return
-//                }
-//                self.dependency.isFailed.accept(false)
-//            }).disposed(by: bag)
     }
 }

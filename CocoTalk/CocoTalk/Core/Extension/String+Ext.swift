@@ -21,4 +21,9 @@ extension String {
         }
         return self
     }
+    
+    func parseMessageBundleIds() -> [String]? {
+        let bundleIdString = String(self.dropFirst().dropLast())
+        return bundleIdString.components(separatedBy: ",")
+    }
 }

@@ -252,7 +252,7 @@ extension CreateChatRoomViewController {
                 
                 if selected.count == 1 {
                     self.viewModel.checkChatRoomExist()
-                } else {
+                } else if selected.count > 1 {
                     let vc = CreateGroupChatViewController(members: selected)
                     vc.delegate = self.delegate
                     self.navigationController?.pushViewController(vc, animated: true)

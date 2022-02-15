@@ -59,6 +59,7 @@ final class WebSocketHelper: StompClientLibDelegate {
     
     /// 받은 소켓 메시지 핸들링
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, akaStringBody stringBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
+        #warning("삭제")
         print("🟢 STOMP CLIENT MESSAGE 🟢")
         print("[destination]")
         print(destination)
