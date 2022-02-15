@@ -17,7 +17,7 @@
       <!-- 내 프로필 -->
       <div class="myprofile row">
         <div @click="openProfileModal(userInfo)">
-          <profile-img :imgUrl="userInfo.profile.profile" width="60px" />
+          <profile-img :imgUrl="userInfo.profile.profile" width="50px" />
         </div>
         <friend-list-user-info :userInfo="userInfo" />
       </div>
@@ -27,7 +27,7 @@
         <div class="friend-cnt">친구 - {{ friendsCnt }}</div>
         <div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
           <div @click="openProfileModal(friend.friend)">
-            <profile-img :imgUrl="friend.friend.profile.profile" width="50px" />
+            <profile-img :imgUrl="friend.friend.profile.profile" width="40px" />
           </div>
           <friend-list-user-info :userInfo="friend.friend" />
         </div>
