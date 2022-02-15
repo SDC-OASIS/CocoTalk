@@ -14,6 +14,7 @@ const chat = {
       nextMessageBundleId: "",
       recentMessageBundleCount: 0,
     },
+    newRoomInfo: {},
   },
   getters: {
     roomStatus(state) {
@@ -62,6 +63,9 @@ const chat = {
     UPDATE_MESSAGE_BUNDLE_COUNT(state, recentMessageBundleCount) {
       state.chatInfo.recentMessageBundleCount = recentMessageBundleCount;
     },
+    NEW_ROOM_INFO(state, payload) {
+      state.newRoomInfo = payload;
+    },
   },
   actions: {
     // 페이지 전환
@@ -95,7 +99,14 @@ const chat = {
       context.commit("UPDATE_MESSAGE_BUNDLE_ID", payload);
     },
     updateMessageBundleCount(context, recentMessageBundleCount) {
+      console.log("확인하라요:" + recentMessageBundleCount);
       context.commit("UPDATE_MESSAGE_BUNDLE_COUNT", recentMessageBundleCount);
+    },
+    goNewChat(context, newRoomInfo) {
+      console.log("새로운 채팅방 오픈");
+      context.commit("GO_CHAT", newRoomInfo);
+      context.commit("NEW_ROOM_INFO", newRoomInfo.newRoom);
+      router.push({ name: "chatsChat", params: { chat: "chat", roomId: newRoomInfo.roomId } }).catch(() => {});
     },
   },
   modules: {},

@@ -8,8 +8,8 @@ const socket = {
   namespaced: true,
   state: {
     stompChatListClient: null,
-    stompChatRoomClient: null,
     stompChatListConnected: false,
+    stompChatRoomClient: null,
     stompChatRoomConnected: false,
     createChatRoomStatus: false,
   },
@@ -29,8 +29,8 @@ const socket = {
     setStompChatListDisconnect(state) {
       state.stompChatListConnected = false;
     },
-    setCreateChatRoomStatus(state) {
-      state.createChatRoomStatus = true;
+    setCreateChatRoomStatus(state, payload) {
+      state.createChatRoomStatus = payload;
     },
   },
   actions: {
@@ -55,11 +55,13 @@ const socket = {
     },
     createChat(context, data) {
       console.log("채팅방생성");
-      console.log(data);
       context.state.stompChatListClient.send("/simple/chatroom/new", JSON.stringify(data), (res) => {
         console.log("생성결과");
         console.log(res);
       });
+      // store.actions["modal/closeRoomNameEditModal"];
+      store.dispatch("modal/closeRoomNameEditModal");
+      context.commit("setCreateChatRoomStatus", true);
     },
   },
   modules: {},
