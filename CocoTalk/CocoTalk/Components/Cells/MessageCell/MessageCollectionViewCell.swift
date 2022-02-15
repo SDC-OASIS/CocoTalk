@@ -75,11 +75,11 @@ class MessageCollectionViewCell: UICollectionViewCell {
     static let identifier = "MessageCollectionViewCell"
     let bag = DisposeBag()
     
-    var messageId: Int?
+    var messageId: String?
     
     var isMe: Bool?
     var userId: Int?
-    var hasTail: Bool? // prevUser == currentUser
+    var hasTail: Bool? // prevUser != currentUser
     var withDate: Bool?
     var hasUrl: Bool?
     var isReply: Bool?
@@ -213,20 +213,26 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     func setData(data: ModelMessage) {
-        ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")!
-        messageId = data.id ?? 0
-        lblName.text = "테스트 이름"
-        lblMessage.text = data.text ?? ""
+        if let profileImgUrl = data.profileImageURL,
+           !profileImgUrl.isEmpty {
+            let url = URL(string: profileImgUrl)
+            ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))
+        }
+        
+        messageId = data.id ?? ""
+        #warning("이름 설정하자")
+        lblName.text = data.username ?? ""
+        lblMessage.text = data.content ?? ""
         isMe = data.isMe ?? false
         hasTail = data.hasTail ?? false
         ivTail.image = (isMe ?? false) ? UIImage(named: "tail_right") : UIImage(named: "tail_left")
         
-        if let date = data.date {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "a h:mm"
-            dateFormatter.locale = Locale(identifier: "ko_KR")
-            dateFormatter.timeZone = NSTimeZone(name: "ko_KR") as TimeZone?
-            lblDate.text = dateFormatter.string(from: date)
+#warning("날짜 설정 다시하기")
+        if let hasData = data.hasDate,
+           hasData,
+           let sentAt = data.sentAt,
+           let dateLabel = sentAt.parseDateStringForMessage() {
+            lblDate.text = dateLabel
         }
     }
 }

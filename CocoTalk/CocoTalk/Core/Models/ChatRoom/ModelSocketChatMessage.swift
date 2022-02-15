@@ -38,7 +38,7 @@ struct ModelPubInvite: Codable {
     /// - 6: 그 외 파일
     var type: Int?
     var content: String?
-    var invitees: [ProfileForCreateChatRoom]?
+    var invitees: [UserWithPlainStringProfile]?
 }
 
 struct ModelPubChatMessage: Codable {

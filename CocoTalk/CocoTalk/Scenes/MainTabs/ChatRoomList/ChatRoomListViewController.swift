@@ -87,8 +87,8 @@ class ChatRoomListViewController: UIViewController {
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
            let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
             
-            var bundleIdString: String = room.messageBundleIds ?? ""
-            var bundleId: String = bundleIdString.parseMessageBundleIds()?.last ?? ""
+            let bundleIdString: String = room.messageBundleIds ?? ""
+            let bundleId: String = bundleIdString.parseMessageBundleIds()?.last ?? ""
             
             let inviter: RoomMember? = room.members?.filter { $0.userId == data.id }.first
             let invitee: [RoomMember]? = room.members?.filter { $0.userId != data.id }

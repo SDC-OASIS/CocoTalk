@@ -58,7 +58,7 @@ class ChatRoomViewController: UIViewController {
     init (members: [RoomMember], roomId: String) {
         self.members = members
         self.roomId = roomId
-        self.viewModel = ChatRoomViewModel(roomId: roomId)
+        self.viewModel = ChatRoomViewModel(roomId: roomId, members: members)
         
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
            let myData = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
@@ -226,12 +226,37 @@ extension ChatRoomViewController {
 // MARK: - Bindable
 extension ChatRoomViewController {
     func bind() {
-        bindViewMdoel()
+        bindViewModel()
         bindTextField()
         bindButton()
     }
     
-    func bindViewMdoel() {
+    func bindViewModel() {
+        viewModel.output.messages
+            .subscribe(onNext: { messages in
+                print("🚧 메시지 리스트 수신")
+                self.collectionView.reloadData()
+            }).disposed(by: bag)
+        
+        viewModel.output.roomInfo
+            .subscribe(onNext: { roomInfo in
+                #warning("읽은 사람 숫자 업데이트")
+                
+                print("🚧 룸 정보")
+                print(roomInfo)
+            }).disposed(by: bag)
+        
+        viewModel.output.members
+            .subscribe(onNext: { [weak self] members in
+                guard let self = self else {
+                    return
+                }
+                var newValue = self.viewModel.dependency.userId2RoomMember.value
+                members.forEach {
+                    newValue[$0.userId ?? -1] = $0
+                }
+                self.viewModel.dependency.userId2RoomMember.accept(newValue)
+            }).disposed(by: bag)
     }
     
     func bindTextField() {
@@ -263,12 +288,12 @@ extension ChatRoomViewController {
 extension ChatRoomViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.dependency.messages.value.count
+        viewModel.output.messages.value.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MessageCollectionViewCell.identifier, for: indexPath) as! MessageCollectionViewCell
-        cell.setData(data: viewModel.dependency.messages.value[indexPath.row])
+        cell.setData(data: viewModel.output.messages.value[indexPath.row])
         return cell
     }
 }
@@ -279,7 +304,7 @@ extension ChatRoomViewController: MessageCollectionViewLayoutDelegate {
         let width = collectionView.bounds.width
         let estimatedHeight: CGFloat = 800.0
         let dummyCell = MessageCollectionViewCell(frame: CGRect(x: 0, y: 0, width: width, height: estimatedHeight))
-        dummyCell.setData(data: viewModel.dependency.messages.value[indexPath.row])
+        dummyCell.setData(data: viewModel.output.messages.value[indexPath.row])
         dummyCell.layoutIfNeeded()
         let estimateSize = dummyCell.systemLayoutSizeFitting(CGSize(width: width, height: estimatedHeight))
         return estimateSize.height

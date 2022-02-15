@@ -194,9 +194,7 @@ class ChatRoomCell: UITableViewCell {
     }
     
     func setData(data: ModelRoomList) {
-        guard let img = data.room?.img else {
-            return
-        }
+        let img = data.room?.img ?? ""
         if let url = URL(string: img) {
             ivRoomImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01")!)
         } else {
@@ -210,7 +208,21 @@ class ChatRoomCell: UITableViewCell {
         
         lblLastMessage.text = data.recentChatMessage?.content ?? ""
         
-        lblLastMsgTime.text = String((data.recentChatMessage?.sentAt?.split(separator: ".")[0].description.dropLast(3)) ?? "")
+        
+        if let sentAt = data.recentChatMessage?.sentAt {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+            
+            if var sentAtDate = dateFormatter.date(from: sentAt) {
+                let myDateFormatter = DateFormatter()
+                myDateFormatter.dateFormat = "yyyy.MM.dd a hh:mm"
+                myDateFormatter.locale = Locale(identifier:"ko_KR")
+                sentAtDate.convertToKorTime()
+                
+                lblLastMsgTime.text = myDateFormatter.string(from: sentAtDate)
+            }
+        }
+
         if data.recentMessageBundleCount ?? 0 > 0 {
             viewUnreadNumberContainer.backgroundColor = .red
             lblUnreadMessageNumber.isHidden = false

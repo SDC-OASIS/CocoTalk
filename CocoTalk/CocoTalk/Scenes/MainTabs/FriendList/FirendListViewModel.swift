@@ -178,32 +178,13 @@ extension FriendListViewModel {
                                                  username: myProfile.username ?? "",
                                                  isSelected: true))
         let members = selectedMembers.map {
-            return ProfileForCreateChatRoom(userId: $0.id, username: $0.username, profile: $0.profile)
+            return UserWithPlainStringProfile(userId: $0.id, username: $0.username, profile: $0.profile)
         }
         let roomName = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
         
         let data = ModelCreateChatRoomRequest(roomname: roomName, img: "", type: 0, members: members)
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.listSocket?.createRoom(data)
-        
-//        dependency.isLoading.accept(true)
-//        chatRoomRepository.createChatRoom(with: token, data: data)
-//            .subscribe(onNext: { [weak self] response in
-//                self?.dependency.isLoading.accept(false)
-//                guard let self = self else {
-//                    return
-//                }
-//
-//                guard let room = response.data,
-//                      let id = room.id else {
-//                    self.dependency.isFailed.accept(true)
-//                    return
-//                }
-//
-//                self.dependency.isFailed.accept(false)
-//                self.output.isRoomExist.accept(true)
-//                self.output.roomId.accept(id)
-//            }).disposed(by: bag)
     }
     
     func addFirendsWithContact() {

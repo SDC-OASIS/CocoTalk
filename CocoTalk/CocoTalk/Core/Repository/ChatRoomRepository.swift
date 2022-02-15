@@ -53,17 +53,6 @@ class ChatRoomRepository {
             }
     }
     
-//    func createChatRoom(with token: String, data: ModelCreateChatRoomRequest) -> Observable<APIResult_1<ModelRoom>>{
-//        return provider.rx.request(.createRoom(token, data: data))
-//            .retry(3)
-//            .asObservable()
-//            .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
-//            .catch { error in
-//                print(error)
-//                return Observable.error(error)
-//            }
-//    }
-    
     func checkRoomExist(with token: String, memberId: String) -> Observable<APIResult_1<ModelRoom>> {
         return provider.rx.request(.checkRoomExist(token, memberId: memberId))
             .retry(3)
@@ -80,6 +69,17 @@ class ChatRoomRepository {
             .retry(3)
             .asObservable()
             .map { try JSONDecoder().decode(APIResult_1<ModelRoom>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
+
+    func fetchInitialMessages(with token: String, roomId: String, count: Int) -> Observable<APIResult_1<ModelInitialMessagesResponse>> {
+        return provider.rx.request(.fetchInitialMessages(token, roomId: roomId, count: count))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<ModelInitialMessagesResponse>.self, from: $0.data) }
             .catch { error in
                 print(error)
                 return Observable.error(error)

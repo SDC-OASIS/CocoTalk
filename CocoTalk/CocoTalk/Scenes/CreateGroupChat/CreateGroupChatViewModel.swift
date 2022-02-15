@@ -74,7 +74,7 @@ extension CreateGroupChatViewModel {
                                                  username: myProfile.username ?? "",
                                                  isSelected: true))
         let members = selectedMembers.map {
-            return ProfileForCreateChatRoom(userId: $0.id, username: $0.username, profile: $0.profile)
+            return UserWithPlainStringProfile(userId: $0.id, username: $0.username, profile: $0.profile)
         }
         
         var roomName: String

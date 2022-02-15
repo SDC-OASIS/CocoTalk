@@ -9,8 +9,8 @@ import Foundation
 import Moya
 
 enum RoomAPI {
+    case fetchInitialMessages(_ token: String, roomId: String, count: Int)
     case fetchRoomInfo(_ token: String, roomId: String)
-//    case createRoom(_ token: String, data: ModelCreateChatRoomRequest)
     case fetchRooms(_ token: String)
     case checkRoomExist(_ token: String, memberId: String)
 }
@@ -24,12 +24,12 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(_):
             return "/chat/rooms/list"
-//        case .createRoom(_, _):
-//            return "/chat/rooms"
         case .checkRoomExist(_, memberId: let memberId):
             return "/chat/rooms/private/\(memberId)"
         case .fetchRoomInfo(_, let roomId):
             return "/chat/rooms/\(roomId)"
+        case .fetchInitialMessages(_, let roomId,_):
+            return "/chat/rooms/\(roomId)/tail/"
         }
     }
     
@@ -37,11 +37,11 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(_):
             return .get
-//        case .createRoom(_, _):
-//            return .post
         case .checkRoomExist(_,_):
             return .get
         case .fetchRoomInfo(_,_):
+            return .get
+        case .fetchInitialMessages(_,_,_):
             return .get
         }
     }
@@ -50,12 +50,12 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(_):
             return .requestPlain
-//        case .createRoom(_, let data):
-//            return .requestJSONEncodable(data)
         case .checkRoomExist(_,_):
             return .requestPlain
         case .fetchRoomInfo(_,_):
             return .requestPlain
+        case .fetchInitialMessages(_,_,let count):
+            return .requestParameters(parameters: ["count": count], encoding: URLEncoding.queryString)
         }
     }
     
@@ -65,11 +65,11 @@ extension RoomAPI: TargetType {
         switch self {
         case .fetchRooms(let token):
             parameters["X-ACCESS-TOKEN"] = token
-//        case .createRoom(let token, _):
-//            parameters["X-ACCESS-TOKEN"] = token
         case .checkRoomExist(let token, _):
             parameters["X-ACCESS-TOKEN"] = token
         case .fetchRoomInfo(let token,_):
+            parameters["X-ACCESS-TOKEN"] = token
+        case .fetchInitialMessages(let token,_,_):
             parameters["X-ACCESS-TOKEN"] = token
         }
         
