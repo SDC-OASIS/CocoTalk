@@ -24,13 +24,9 @@ class ChatRoomListViewController: UIViewController {
     
     // MARK: - Life cycle
     init() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let socket = appDelegate.listSocket
-        
         viewModel = ChatRoomListViewModel()
-        viewModel.dependency.listSocket.accept(socket)
-        
         super.init(nibName: nil, bundle: nil)
+        getListSocketFromAppDelegate()
     }
     
     required init?(coder: NSCoder) {
@@ -53,11 +49,25 @@ class ChatRoomListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetch()
+        if viewModel.dependency.listSocket.value == nil {
+            print("🚧 리스트 소켓 다시 불러오기")
+            getListSocketFromAppDelegate()
+        }
     }
     
     // MARK: - Helper
     private func fetch() {
         viewModel.fetch()
+    }
+    
+    private func getListSocketFromAppDelegate() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        if let socket = appDelegate.listSocket {
+            print("🟢 리스트 소켓 불러오기 성공")
+            viewModel.dependency.listSocket.accept(socket)
+        } else {
+            print("🔴 리스트 소켓 nil")
+        }
     }
     
     private func pushChatRoom(_ room: ModelRoom?) {

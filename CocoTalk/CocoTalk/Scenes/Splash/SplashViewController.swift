@@ -39,6 +39,7 @@ class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if viewModel.dependency.isSignedIn {
+            initSockets()
             viewModel.verifyToken()
         } else {
             move2signInVC()
@@ -46,6 +47,12 @@ class SplashViewController: UIViewController {
     }
     
     // MARK: - Helper
+    func initSockets() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.initListSocket()
+        appDelegate?.establishChatSocketConnection()
+    }
+    
     private func move2Home() {
         let root = RootTabBarController()
         switchRoot(to: root)

@@ -100,7 +100,7 @@ extension AppDelegate: MessagingDelegate {
 
 // MARK: - WebSocket
 extension AppDelegate {
-    func initializeListSocket() {
+    func initListSocket() {
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
            let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
             listSocket = WebSocketHelper(socketType: .chatList, userId: data.id)
@@ -108,7 +108,7 @@ extension AppDelegate {
         }
     }
     
-    func initializeChatSocket() {
+    func establishChatSocketConnection() {
         chatSocket?.establishConnection()
     }
     
