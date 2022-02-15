@@ -45,8 +45,13 @@ axios.interceptors.response.use(
           console.log("[AXIOS] 토큰 재발급이 실패했습니다. : [응답]", error.data);
           // REFRESH TOKEN 유효성 X
           store.dispatch("userStore/logout").then(() => {
-            alert("로그인이 만료되었습니다");
+            // 만료 알림 띄우기
             router.push("/login");
+            const payload = {
+              status: "open",
+              text: "로그인이 만료되었습니다.",
+            };
+            store.dispatch("modal/openAlert", payload, { root: true });
             return Promise.reject("토큰 재발급 실패", error);
           });
         });
