@@ -61,7 +61,6 @@ class ChatRoomViewModel {
     }
 }
 
-
 extension ChatRoomViewModel {
     
     func getMessages() {

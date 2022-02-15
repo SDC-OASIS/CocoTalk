@@ -45,7 +45,7 @@ class ChatRoomListViewModel {
 }
 
 
-extension ChatRoomListViewModel {    
+extension ChatRoomListViewModel {
     func fetch() {
         let token: String? = KeychainWrapper.standard[.accessToken]
         guard let token = token else {

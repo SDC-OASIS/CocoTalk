@@ -24,6 +24,6 @@ extension String {
     
     func parseMessageBundleIds() -> [String]? {
         let bundleIdString = String(self.dropFirst().dropLast())
-        return bundleIdString.components(separatedBy: ",")
+        return bundleIdString.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
     }
 }
