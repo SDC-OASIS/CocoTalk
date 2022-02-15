@@ -200,6 +200,7 @@ extension ChatRoomViewController {
             $0.leading.equalToSuperview().offset(50)
             $0.trailing.equalToSuperview().inset(10)
             $0.top.equalToSuperview().offset(8)
+            $0.bottom.lessThanOrEqualToSuperview()
             $0.height.equalTo(40)
         }
         
@@ -210,8 +211,8 @@ extension ChatRoomViewController {
         }
         
         bottomView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(50)
-            $0.height.equalTo(250)
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo(70)
             $0.leading.trailing.equalToSuperview()
         }
         
@@ -252,6 +253,8 @@ extension ChatRoomViewController {
                     return
                 }
                 self.viewModel.sendMessage()
+                self.textField.text = ""
+                self.viewModel.input.text.accept("")
             }).disposed(by: bag)
     }
 }
