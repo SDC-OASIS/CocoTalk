@@ -9,7 +9,6 @@ import InfiniteLoading from "vue-infinite-loading";
 Vue.config.productionTip = false;
 moment.locale("ko");
 Vue.use(VueMoment, { moment });
-
 import "@/utils/firebase";
 
 new Vue({

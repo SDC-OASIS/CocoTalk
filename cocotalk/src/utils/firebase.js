@@ -1,10 +1,16 @@
 import firebase from "firebase/app";
 import "firebase/messaging";
 
-// 서비스 워크 등록
-navigator.serviceWorker.register("/firebase-messaging-sw.js").then((registration) => {
-  console.log("serviceWorker registration");
-  return message.useServiceWorker(registration);
+// 서비스 워커 삭제 후 등록
+navigator.serviceWorker.getRegistrations().then(function (registrations) {
+  for (let registration of registrations) {
+    console.log("기존 serviceWorker를 제거합니다.", registration);
+    registration.unregister();
+  }
+  navigator.serviceWorker.register("/firebase-messaging-sw.js").then((registration) => {
+    console.log("serviceWorker registration");
+    return message.useServiceWorker(registration);
+  });
 });
 
 const config = {
@@ -19,6 +25,8 @@ const config = {
 
 firebase.initializeApp(config);
 
+// firebase.initializeApp(fireConfig);
+
 const message = firebase.messaging();
 
 function getToken() {
@@ -27,10 +35,17 @@ function getToken() {
       .requestPermission()
       .then(() => {
         console.log("Notification permission granted.");
-        return message.deleteToken().catch(() => console.log("제거할 FCM TOKEN이 없습니다"));
+        message
+          .deleteToken()
+          .then((res) => {
+            console.log("FCMTokeon is Deleted", res);
+          })
+          .catch(() => console.log("제거할 FCM TOKEN이 없습니다"));
       })
-      .then((isDelete) => {
-        console.log("FCMTokeon Deleted", isDelete);
+      .catch(() => {
+        console.log("제거할 FCM TOKEN이 없습니다!");
+      })
+      .then(() => {
         resolve(message.getToken());
       })
       .catch((err) => {
