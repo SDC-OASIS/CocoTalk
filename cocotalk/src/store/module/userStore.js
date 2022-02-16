@@ -101,6 +101,8 @@ const userStore = {
       context.commit("CLEAR_ISLOGIN");
       context.commit("GO_LOGINPAGE");
       store.dispatch("chat/clearPage");
+
+      //TODO: backend에 명시적으로 logout 요청하기
     },
     getUser: function (context) {
       axios.get("user/profile/token").then((res) => {
@@ -139,6 +141,22 @@ const userStore = {
           }); //axios END
       }); //Promise END
     }, //reissue END
+    updateProfile: async function (context, payload) {
+      var frm = new FormData();
+      frm.append("profileImg", payload);
+      frm.append("profileImgThumb", payload);
+
+      await axios.put("user/profile/img", frm, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
+        console.log(res.data);
+      });
+    },
+    updateBG: async function (context, payload) {
+      var frm = new FormData();
+      frm.append("bgImg", payload);
+      await axios.put("user/profile/bg", frm, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
+        console.log(res.data);
+      });
+    },
   }, //actions END
   modules: {},
 };

@@ -1,6 +1,18 @@
 <template>
   <div class="modal row" @click.self="closeProfileModal">
     <div class="modal-container" :style="{ backgroundImage: `url(${userProfileInfo.profile.background})` }" @click.self="openFullImg(userProfileInfo.profile.background)">
+      <!--파일 업로드 테스트용 START -->
+      <div style="color: white">
+        <div style="color: yellow">프로필 사진 업로드</div>
+        <input id="customFile" type="file" @change="handleProfileFileChange" />
+        <label class="custom-file-label" for="customFile">{{ file1_name }}</label>
+      </div>
+      <div style="color: white">
+        <div style="color: yellow">배경 사진 업로드</div>
+        <input id="customFile" type="file" @change="handleBGFileChange" />
+        <label class="custom-file-label" for="customFile">{{ file2_name }}</label>
+      </div>
+      <!--파일 업로드 테스트용 END -->
       <div @click="closeProfileModal">
         <span class="iconify exit" data-icon="bx:bx-x" style="color: white"></span>
       </div>
@@ -52,6 +64,12 @@ export default {
         img: "",
       },
       profileInfo: this.userProfileInfo,
+
+      //파일 업로드 테스트용 변수
+      file1_name: "파일을 선택하세요.",
+      message1: "Hello, world",
+      file2_name: "파일을 선택하세요.",
+      message2: "Hello, world",
     };
   },
   props: {
@@ -62,6 +80,16 @@ export default {
     ...mapState("modal", ["profileModal"]),
   },
   methods: {
+    /////////////// 파일 업로드 테스트용 함수
+    handleProfileFileChange(e) {
+      this.file1_name = e.target.files[0].name;
+      this.$store.dispatch("userStore/updateProfile", e.target.files[0]);
+    },
+    handleBGFileChange(e) {
+      this.file2_name = e.target.files[0].name;
+      this.$store.dispatch("userStore/updateBG", e.target.files[0]);
+    },
+    /////////////////
     closeProfileModal() {
       this.$store.dispatch("modal/closeProfileModal");
     },
