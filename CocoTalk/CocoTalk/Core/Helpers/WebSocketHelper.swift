@@ -25,11 +25,20 @@ final class WebSocketHelper: StompClientLibDelegate {
     var socketClient: StompClientLib?
     let header: [String: String]
     
+    /// 받은 메시지
+    var receivedMessage = BehaviorRelay<ModelMessageVO?>(value: nil)
+    
+    /// 업데이트된 방 정보
+    var receivedUpdatedRoomInfo = BehaviorRelay<ModelRoom?>(value: nil)
+    
     /// 새로 생성된 방
-    var receviedNewRoom = BehaviorRelay<ModelRoom?>(value: nil)
+    var receivedNewRoom = BehaviorRelay<ModelRoom?>(value: nil)
     
     /// 방 생성 요청 로그
     var createChatRequestLog = BehaviorRelay<ModelCreateChatRoomRequest?>(value: nil)
+    
+    /// 커넥션 성공
+    var isSocketConnected = BehaviorRelay<Bool?>(value: nil)
     
     
     /// 소켓 초기화
@@ -60,28 +69,30 @@ final class WebSocketHelper: StompClientLibDelegate {
     /// 받은 소켓 메시지 핸들링
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, akaStringBody stringBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
         #warning("삭제")
-        print("🟢 STOMP CLIENT MESSAGE 🟢")
-        print("[destination]")
-        print(destination)
-        print("[header]")
-        print(header ?? "")
-        print("[string body]")
-        print(stringBody ?? "")
+//        print("🟢 STOMP CLIENT MESSAGE 🟢")
+//        print("[destination]")
+//        print(destination)
+//        print("[header]")
+//        print(header ?? "")
+//        print("[string body]")
+//        print(stringBody ?? "")
+        
+        let body = stringBody ?? ""
         
         switch destinationToType[destination] {
-        case .some(.chatRoomInfo):
-            break
-        case .some(.listMessage):
-            break
         case .some(.listRoomInfo):
             break
         case .some(.listNewRoom):
-            receiveNewRoom(stringBody ?? "")
+            receiveNewRoom(body)
             break
         case .some(.listCrash):
-            signout(fcmToken: stringBody ?? "")
+            signout(fcmToken: body)
             break
-        case .some(.chatMessage):
+        case .some(.chatRoomInfo):
+            receiveUpdateRoomInfo(body)
+            break
+        case .some(.chatMessage), .some(.listMessage):
+            receiveMessage(body)
             break
         case .none:
             break
@@ -90,10 +101,12 @@ final class WebSocketHelper: StompClientLibDelegate {
     
     func stompClientDidDisconnect(client: StompClientLib!) {
         print("\(self.socketType.rawValue) disconnected")
+        isSocketConnected.accept(false)
     }
     
     func stompClientDidConnect(client: StompClientLib!) {
         print("\(self.socketType.rawValue) connected")
+        isSocketConnected.accept(true)
         if socketType == .chatList {
             subscribeList()
         } else if socketType == .chatRoom {
@@ -191,11 +204,25 @@ enum SocketType: String {
 extension WebSocketHelper {
     
     /// 사용자가 포함된 생성된 방에 대한 정보
-    private func receiveNewRoom(_ newRoomJsonString: String) {
-        print("🟢 receive new room")
-        let room = try? JSONDecoder().decode(ModelRoom.self, from: Data(newRoomJsonString.utf8))
-        receviedNewRoom.accept(room)
+    private func receiveNewRoom(_ newRoomJSONString: String) {
+        print("🟢 receive new room\n\(Date())")
+        let room = try? JSONDecoder().decode(ModelRoom.self, from: Data(newRoomJSONString.utf8))
+        receivedNewRoom.accept(room)
         ChatRoomRepository.newRoom.accept(room)
+    }
+    
+    /// 채팅방 소켓으로 메시지 받기
+    private func receiveMessage(_ newMessageJSONString: String) {
+        print("🟢 receive message at room\n\(Date()) from CHAT SOCKET")
+        let message = try? JSONDecoder().decode(ModelMessageVO.self, from: Data(newMessageJSONString.trimmingCharacters(in: .whitespacesAndNewlines).utf8))
+        receivedMessage.accept(message)
+    }
+    
+    /// 업데이트된 채팅방 정보 소켓으로 받기
+    private func receiveUpdateRoomInfo(_ updatedRoomInfo: String) {
+        print("🟢 receive updated info at room\n\(Date())")
+        let info = try? JSONDecoder().decode(ModelRoom.self, from: Data(updatedRoomInfo.trimmingCharacters(in: .whitespacesAndNewlines).utf8))
+        receivedUpdatedRoomInfo.accept(info)
     }
     
     /// 최근 로그인한 기기가 아니면 로그아웃 시키기

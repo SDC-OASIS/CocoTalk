@@ -87,7 +87,6 @@ class ChatRoomViewController: UIViewController {
         // http://minsone.github.io/mac/ios/falling-snow-with-spritekit-on-uiview-in-swift
     }
     
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.scrollToBottom(animated: false)
@@ -121,6 +120,7 @@ class ChatRoomViewController: UIViewController {
         }
         socket.establishConnection()
         viewModel.dependency.socket.accept(socket)
+        bindSocket()
     }
     
     private func disconnectSocket() {
@@ -193,7 +193,7 @@ extension ChatRoomViewController {
         textField.snp.makeConstraints {
             $0.top.bottom.equalToSuperview()
             $0.leading.equalToSuperview().offset(14)
-            $0.trailing.equalTo(ivSend).inset(20)
+            $0.trailing.equalTo(ivSend.snp.leading).inset(-10)
         }
         
         textFieldView.snp.makeConstraints {
@@ -231,19 +231,43 @@ extension ChatRoomViewController {
         bindButton()
     }
     
-    func bindViewModel() {
+    // MARK: - BindViewModel
+    private func bindViewModel() {
+        viewModel.dependency.rawMessages
+            .subscribe(onNext: { [weak self] rawMessages in
+                guard let self = self else {
+                    return
+                }
+                let processedMessages = self.viewModel.getProcessedMessages()
+                self.viewModel.output.messages.accept(processedMessages)
+            }).disposed(by: bag)
+        
         viewModel.output.messages
-            .subscribe(onNext: { messages in
+            .subscribe(onNext: { [weak self] messages in
+                guard let self = self else {
+                    return
+                }
                 print("🚧 메시지 리스트 수신")
                 self.collectionView.reloadData()
+                self.collectionView.layoutIfNeeded()
+                DispatchQueue.main.async {
+                    self.collectionView.scrollToBottom(animated: false)
+                }
             }).disposed(by: bag)
         
         viewModel.output.roomInfo
-            .subscribe(onNext: { roomInfo in
-                #warning("읽은 사람 숫자 업데이트")
-                
-                print("🚧 룸 정보")
-                print(roomInfo)
+            .subscribe(onNext: { [weak self] roomInfo in
+                guard let self = self else {
+                    return
+                }
+                print("🚧 룸 정보 수정됨")
+                let processedMessages = self.viewModel.getProcessedMessages()
+                self.viewModel.output.messages.accept(processedMessages)
+//                self.collectionView.reloadData()
+//                self.collectionView.layoutIfNeeded()
+//                DispatchQueue.main.async {
+//                    self.collectionView.scrollToBottom(animated: false)
+//                }
             }).disposed(by: bag)
         
         viewModel.output.members
@@ -259,7 +283,7 @@ extension ChatRoomViewController {
             }).disposed(by: bag)
     }
     
-    func bindTextField() {
+    private func bindTextField() {
         textField.rx.text
             .orEmpty
             .subscribe(onNext: { [weak self] text in
@@ -270,7 +294,7 @@ extension ChatRoomViewController {
             }).disposed(by: bag)
     }
     
-    func bindButton() {
+    private func bindButton() {
         ivSend.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
@@ -280,6 +304,50 @@ extension ChatRoomViewController {
                 self.viewModel.sendMessage()
                 self.textField.text = ""
                 self.viewModel.input.text.accept("")
+            }).disposed(by: bag)
+    }
+    
+    // MARK: - BindSocket
+    private func bindSocket() {
+        
+        guard let socket = viewModel.dependency.socket.value else {
+            return
+        }
+        
+        socket.isSocketConnected
+            .subscribe(onNext: { [weak self] isConnected in
+                guard let self = self,
+                      let isConnected = isConnected else {
+                    return
+                }
+                
+                if isConnected {
+                    self.viewModel.fetchRoomInfo()
+                }
+            }).disposed(by: bag)
+        
+        socket.receivedUpdatedRoomInfo
+            .subscribe(onNext: { [weak self] info in
+                guard let self = self,
+                      let info = info else {
+                    return
+                }
+                self.viewModel.output.roomInfo.accept(info)
+            }).disposed(by: bag)
+
+        socket.receivedMessage
+            .subscribe(onNext: { [weak self] receivedMessage in
+                guard let self = self,
+                      let receivedMessage = receivedMessage else {
+                    return
+                }
+                let oldVal = self.viewModel.dependency.rawMessages.value
+                var newVal = oldVal
+                guard let newMessage = self.viewModel.convertMessage(receivedMessage) else {
+                    return
+                }
+                newVal.append(newMessage)
+                self.viewModel.dependency.rawMessages.accept(newVal)
             }).disposed(by: bag)
     }
 }

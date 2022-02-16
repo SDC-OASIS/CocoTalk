@@ -28,9 +28,8 @@ final class MessageCollectionViewLayout: UICollectionViewLayout {
     
     override func prepare() {
         super.prepare()
-        // cache에 이미 layout 정보가 있으면 그것 그대로 사용, 없으면 layout 다시 계산
-        guard cache.isEmpty,
-              let collectionView = collectionView else {
+        
+        guard let collectionView = collectionView else {
                   return
               }
         

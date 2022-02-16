@@ -198,13 +198,13 @@ class ChatRoomCell: UITableViewCell {
         if let url = URL(string: img) {
             ivRoomImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01")!)
         } else {
-            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_0\(Int.random(in: 1..<4))")!
+            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
         }
         
         lblTitle.text = data.room?.roomname ?? ""
         lblMemeberNumber.text = "\(data.room?.members?.count ?? -1)"
-        ivPin.isHidden = !(data.room?.isPinned ?? true)
-        ivSilent.isHidden = !(data.room?.isSilent ?? true)
+        ivPin.isHidden = !(data.room?.isPinned ?? false)
+        ivSilent.isHidden = !(data.room?.isSilent ?? false)
         
         lblLastMessage.text = data.recentChatMessage?.content ?? ""
         
@@ -223,10 +223,10 @@ class ChatRoomCell: UITableViewCell {
             }
         }
 
-        if data.recentMessageBundleCount ?? 0 > 0 {
+        if data.unreadNumber ?? 0 > 0 {
             viewUnreadNumberContainer.backgroundColor = .red
             lblUnreadMessageNumber.isHidden = false
-            lblUnreadMessageNumber.text = (data.recentMessageBundleCount ?? 0).description
+            lblUnreadMessageNumber.text = (data.unreadNumber ?? 0).description
         } else {
             viewUnreadNumberContainer.backgroundColor = .clear
             lblUnreadMessageNumber.isHidden = true

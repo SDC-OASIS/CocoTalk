@@ -58,12 +58,11 @@ class MessageCollectionViewCell: UICollectionViewCell {
     
     /// 안 읽은 사람 수
     private let lblUnreadMemberCount = UILabel().then {
-        $0.text = "99"
         $0.font = .systemFont(ofSize: 10, weight: .bold)
         $0.textColor = UIColor(red: 252/255, green: 235/255, blue: 88/255, alpha: 1)
         $0.numberOfLines = 0
     }
-
+    
     /// 날짜뷰
     private let lblDate = UILabel().then {
         $0.font = .systemFont(ofSize: 10, weight: .regular)
@@ -90,7 +89,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     var isEmoji: Bool?
     var isVideo: Bool?
     var isPhoto: Bool?
-
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -108,12 +107,13 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        ivTail.image = nil
         ivProfile.image = nil
         lblMessage.text = ""
         lblName.text = ""
         lblDate.text = ""
-//        lblUnreadMemberCount.text = ""
+        hasTail = false
+        withDate = false
+        lblUnreadMemberCount.text = ""
         
         super.prepareForReuse()
     }
@@ -217,22 +217,32 @@ class MessageCollectionViewCell: UICollectionViewCell {
            !profileImgUrl.isEmpty {
             let url = URL(string: profileImgUrl)
             ivProfile.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))
+        } else {
+            ivProfile.image = UIImage(named: "profile_noimg_thumbnail_01")
         }
         
         messageId = data.id ?? ""
-        #warning("이름 설정하자")
         lblName.text = data.username ?? ""
         lblMessage.text = data.content ?? ""
         isMe = data.isMe ?? false
         hasTail = data.hasTail ?? false
         ivTail.image = (isMe ?? false) ? UIImage(named: "tail_right") : UIImage(named: "tail_left")
         
-#warning("날짜 설정 다시하기")
+        if let count = data.unreadMemberCount {
+            if count > 0 {
+                lblUnreadMemberCount.text = "\(count)"
+            } else {
+                lblUnreadMemberCount.text = ""
+            }
+        }
+        
         if let hasData = data.hasDate,
            hasData,
            let sentAt = data.sentAt,
            let dateLabel = sentAt.parseDateStringForMessage() {
             lblDate.text = dateLabel
         }
+        
+        setNeedsLayout()
     }
 }

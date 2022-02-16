@@ -47,13 +47,21 @@ struct ModelMessage: Codable {
     /// 송신 날짜
     var date: Date?
     
+    /// 내가 보낸 톡인지
     var isMe: Bool?
     
+    /// 꼬리 붙임 여부
     var hasTail: Bool?
     
+    /// 날짜 표시 여부
     var hasDate: Bool?
     
+    /// 유저 네임
     var username: String?
     
+    /// 프로필 이미지 URL
     var profileImageURL: String?
+    
+    /// 안 읽은 사람 수
+    var unreadMemberCount: Int?
 }

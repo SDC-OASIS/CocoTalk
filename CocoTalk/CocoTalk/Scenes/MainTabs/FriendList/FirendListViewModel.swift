@@ -155,10 +155,6 @@ extension FriendListViewModel {
     }
     
     func createChatRoom(_ memberId: Int) {
-//        let token: String? = KeychainWrapper.standard[.accessToken]
-//        guard let token = token else {
-//            return
-//        }
         guard let myProfile = UserDefaults.getMyData(),
               let member = userRepsository.findUserById(memberId) else {
             dependency.isFailed.accept(true)

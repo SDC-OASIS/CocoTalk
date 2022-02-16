@@ -154,18 +154,50 @@ extension ChatRoomListViewController {
                     return
                 }
                 self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
             }).disposed(by: bag)
     }
     
 #warning("방 리스트 바인드")
 #warning("다른 뷰에서 새 메시지 바인드")
+    // MARK: - Bind socket
     private func bindSocket() {
         /// 새 채팅방 생성
         guard let listSocket = viewModel.dependency.listSocket.value else {
             return
         }
         
-        listSocket.receviedNewRoom
+        listSocket.receivedMessage
+            .subscribe(onNext: { [weak self] message in
+                guard let self = self,
+                      let message = message else {
+                    return
+                }
+                let oldVal = self.viewModel.output.rooms.value
+                var newVal = oldVal
+                
+                let roomId = message.message?.roomId
+                let room = newVal.filter { $0.room?.id == roomId }.first
+                
+                if room == nil {
+                    self.viewModel.fetch()
+                    return
+                } else {
+                    for i in 0..<newVal.count {
+                        if newVal[i].room?.id == roomId {
+                            newVal[i].recentChatMessage = message.message
+                            newVal[i].recentMessageBundleCount = message.bundleInfo?.currentMessageBundleCount
+                            newVal[i].unreadNumber = (newVal[i].unreadNumber ?? 0) + 1
+                            break
+                        }
+                    }
+                }
+                
+                ChatRoomRepository.items = newVal
+                self.viewModel.output.rooms.accept(ChatRoomRepository.chatRooms)
+            }).disposed(by: bag)
+        
+        listSocket.receivedNewRoom
             .subscribe(onNext: { [weak self] newRoom in
                 guard let self = self else {
                     return
