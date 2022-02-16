@@ -1,6 +1,15 @@
 package com.cocotalk.push.service;
 
+import com.cocotalk.push.dto.common.ClientType;
 import com.cocotalk.push.dto.fcm.FCMMessage;
+import com.cocotalk.push.dto.fcm.common.Data;
+import com.cocotalk.push.dto.fcm.common.Message;
+import com.cocotalk.push.dto.fcm.ios.Alert;
+import com.cocotalk.push.dto.fcm.ios.Apns;
+import com.cocotalk.push.dto.fcm.ios.Aps;
+import com.cocotalk.push.dto.fcm.web.Webpush;
+import com.cocotalk.push.dto.kafka.PushTopicDto;
+import com.cocotalk.push.dto.kafka.RoomType;
 import com.cocotalk.push.entity.Device;
 import com.cocotalk.push.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,15 +18,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.List;
 
-import static com.cocotalk.push.dto.common.response.ResponseStatus.BAD_REQUEST;
-import static com.cocotalk.push.dto.common.response.ResponseStatus.SUBSCRIBE_ERROR;
+import static com.cocotalk.push.dto.common.response.ResponseStatus.*;
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.c;
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.title;
 
 /**
  *
@@ -31,20 +43,37 @@ public class FCMService {
 
     @Value("${fcm.api-url}")
     private String apiUrl;
-    private final ObjectMapper mapper;
-    private final WebClient webClient;
+    @Value("${fcm.frontend-url}")
+    private String frontUrl;
 
+    private FCMMessage makeIOSMessage(String targetToken, PushTopicDto info) {
 
-    private FCMMessage makeMessage(String targetToken, String title, String body) {
+        // 룸 타입에 따라 subtitle 설정
+        String subTitle;
+        if(RoomType.PRIVATE.equals(info.getRoomType())){
+            subTitle = "";
+        } else{
+            subTitle = info.getRoomname();
+        }
+
+        // FCMMessage 작성
         FCMMessage fcmMessage = FCMMessage.builder()
-                .message(FCMMessage.Message.builder()
+                .message(Message.builder()
                         .token(targetToken)
-                        .notification(FCMMessage.Notification.builder()
-                                .title(title)
-                                .body(body)
-                                .image(null)
-                                .build()
-                        )
+                        .data(Data.builder()
+                                .roomId(info.getRoomId())
+                                .build())
+                        .apns(Apns.builder()
+                                .payload(Apns.Payload.builder()
+                                        .aps(Aps.builder()
+                                                .alert(Alert.builder()
+                                                        .title(info.getUsername())
+                                                        .subtitle(subTitle)
+                                                        .body(info.getMessage())
+                                                        .build())
+                                                .build())
+                                        .build())
+                                .build())
                         .build()
                 )
                 .validate_only(false)
@@ -52,12 +81,50 @@ public class FCMService {
         return fcmMessage;
     }
 
-    public void sendByDevices(Flux<Device> targets, String title, String body) throws IOException {
+    private FCMMessage makeWebMessage(String targetToken, PushTopicDto info) {
+
+        // 룸 타입에 따라 title 설정
+        String title;
+        if(RoomType.PRIVATE.equals(info.getRoomType())){
+            title = info.getUsername();
+        } else{
+            title = "["+info.getRoomname()+"] " + info.getUsername();
+        }
+
+        // FCMMessage 작성
+        FCMMessage fcmMessage = FCMMessage.builder()
+                .message(Message.builder()
+                        .token(targetToken)
+                        .webpush(Webpush.builder()
+                                .data(Webpush.Data.builder()
+                                        .title(title)
+                                        .body(info.getMessage())
+                                        .url(frontUrl)
+                                        .build())
+                                .build())
+                        .build())
+                .validate_only(false)
+                .build();
+        return fcmMessage;
+    }
+
+    private FCMMessage makeMessage(ClientType type, String targetToken, PushTopicDto info) {
+        if(ClientType.MOBILE.equals(type)){
+            return makeIOSMessage(targetToken, info);
+        } else{
+            return makeWebMessage(targetToken, info);
+        }
+    }
+
+    public void sendByDevices(Flux<Device> targets, PushTopicDto info) throws IOException {
         String authorization = "Bearer " + getAccessToken();
         long startTime = System.currentTimeMillis();
-
+        WebClient webClient = WebClient.create();
         Flux<FCMMessage> fcmMessageFlux = targets
-                .map(target -> makeMessage(target.getToken(), title, body))
+                .map(target -> {
+                  ClientType type = ClientType.values()[target.getType()];
+                    return makeMessage(type, target.getToken(), info);
+                })
                 .doOnError((e) ->{
                     System.err.println("Error : " + e.getMessage());
                     throw new CustomException(BAD_REQUEST, e);
@@ -71,6 +138,9 @@ public class FCMService {
                 .header(org.springframework.http.HttpHeaders.AUTHORIZATION, authorization)
                 .bodyValue(fcmTokenMessage)
                 .retrieve()
+                .onStatus(
+                        HttpStatus::is4xxClientError,
+                        response -> response.bodyToMono(String.class).map(Exception::new))
                 .bodyToFlux(String.class)
                 .subscribe(
                         res -> log.info("{}", res),
