@@ -83,6 +83,18 @@ extension SceneDelegate {
                     self.window?.makeKeyAndVisible()
                 }
             }).disposed(by: bag)
+        
+        viewModel.dependency.isValidToken
+            .subscribe(onNext: { [weak self] isValid in
+                guard let self = self,
+                      let isValid = isValid else {
+                    return
+                }
+                
+                if !isValid {
+                    self.viewModel.reissueToken()
+                }
+            }).disposed(by: bag)
     }
 }
 

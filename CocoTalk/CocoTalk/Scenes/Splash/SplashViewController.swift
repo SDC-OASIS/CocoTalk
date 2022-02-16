@@ -40,7 +40,8 @@ class SplashViewController: UIViewController {
         super.viewDidAppear(animated)
         if viewModel.dependency.isSignedIn {
             initSockets()
-            viewModel.verifyToken()
+            move2Home()
+//            viewModel.verifyToken()
         } else {
             move2signInVC()
         }
@@ -66,18 +67,32 @@ class SplashViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.dependency.shouldSignout
-            .subscribe(onNext: { [weak self] shouldSignout in
-                guard let self = self,
-                      let shouldSignout = shouldSignout else {
-                          return
-                      }
-                if !shouldSignout {
-                    self.move2Home()
-                } else {
-                    self.move2signInVC()
-                }
-            }).disposed(by: bag)
+//        viewModel.dependency.shouldSignout
+//            .subscribe(onNext: { [weak self] shouldSignout in
+//                guard let self = self,
+//                      let shouldSignout = shouldSignout else {
+//                          return
+//                      }
+//                if !shouldSignout {
+//                    self.move2Home()
+//                } else {
+//                    self.move2signInVC()
+//                }
+//            }).disposed(by: bag)
+//
+//        viewModel.dependency.isValidToken
+//            .subscribe(onNext: { [weak self] isValid in
+//                guard let self = self,
+//                      let isValid = isValid else {
+//                    return
+//                }
+//
+//                if !isValid {
+//                    self.viewModel.reissueToken()
+//                } else {
+//                    self.move2Home()
+//                }
+//            }).disposed(by: bag)
     }
 }
 
