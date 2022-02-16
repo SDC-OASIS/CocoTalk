@@ -64,20 +64,20 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
 //                }
 //            }
 //        }
-        channelLogger.loggingMessage(message);
+//        channelLogger.loggingMessage(message);
         return message;
     }
 
     @Override
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
-        channelLogger.loggingMessage(message);
+//        channelLogger.loggingMessage(message);
     }
 
     @Override
     public void afterSendCompletion(Message<?> message, MessageChannel channel, boolean sent, Exception ex) {
-        channelLogger.loggingMessage(message);
-        log.info(String.format("<----------------------------------- %s ----------------------------------->",
-                Thread.currentThread().getStackTrace()[1].getMethodName()));
+//        channelLogger.loggingMessage(message);
+//        log.info(String.format("<----------------------------------- %s ----------------------------------->",
+//                Thread.currentThread().getStackTrace()[1].getMethodName()));
     }
 
     @Override
@@ -88,14 +88,14 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-        channelLogger.loggingMessage(message);
+//        channelLogger.loggingMessage(message);
         return message;
     }
 
     @Override
     public void afterReceiveCompletion(Message<?> message, MessageChannel channel, Exception ex) {
-        channelLogger.loggingMessage(message);
-        log.info(String.format("<----------------------------------- %s ----------------------------------->",
-                Thread.currentThread().getStackTrace()[1].getMethodName()));
+//        channelLogger.loggingMessage(message);
+//        log.info(String.format("<----------------------------------- %s ----------------------------------->",
+//                Thread.currentThread().getStackTrace()[1].getMethodName()));
     }
 }
