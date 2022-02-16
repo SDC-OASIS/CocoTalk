@@ -1,5 +1,6 @@
 package com.cocotalk.chat.service.kafka;
 
+import com.cocotalk.chat.domain.entity.room.RoomType;
 import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.cocotalk.chat.dto.kafka.PushTopicDto;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
@@ -12,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author 김민정
@@ -45,23 +49,23 @@ public class KafkaProducer {
         }
     }
 
-    public void sendToPush(ChatMessageRequest chatMessageRequest) {
+    public void sendToPush(ChatMessageRequest request) {
+        //자기 자신이 한 채팅에는 push를 보내지 않음
+        List<Long> pushReceivers = new LinkedList<>(request.getReceiverIds());
+        pushReceivers.remove(request.getUserId());
 
-        //방 type에 따라 title 결정
-        String title;
-        if(chatMessageRequest.getRoomType() == 0) {
-            title = chatMessageRequest.getUsername();
-        } else {
-            title = "["+chatMessageRequest.getRoomname()+"] " + chatMessageRequest.getUsername();
-        }
         PushTopicDto pushTopicDto = PushTopicDto.builder()
-                .userIdList(chatMessageRequest.getReceiverIds())
-                .title(title)
-                .body(chatMessageRequest.getContent())
+                .userIdList(pushReceivers)
+                .roomId(request.getRoomId().toString())
+                .roomname(request.getRoomname())
+                .message(request.getContent())
+                .roomType(RoomType.values()[request.getRoomType()])
+                .username(request.getUsername())
+                .bedge(999)
                 .build();
         try {
             kafkaTemplate.send(pushTopic, mapper.writeValueAsString(pushTopicDto));
-            log.info(String.format("Produce message ("+pushTopic+") : %s", mapper.writeValueAsString(pushTopicDto)));
+            log.info(String.format("Produce message ("+pushTopic+") : %s", pushTopicDto));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             log.error("[KafkaProducer/sendToPush] : 메시지를 파싱하는 도중 문제가 발생했습니다.");
