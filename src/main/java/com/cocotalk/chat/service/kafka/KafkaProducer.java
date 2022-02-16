@@ -61,7 +61,6 @@ public class KafkaProducer {
                 .message(request.getContent())
                 .roomType(RoomType.values()[request.getRoomType()])
                 .username(request.getUsername())
-                .bedge(999)
                 .build();
         try {
             kafkaTemplate.send(pushTopic, mapper.writeValueAsString(pushTopicDto));
