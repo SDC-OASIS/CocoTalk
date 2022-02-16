@@ -48,6 +48,10 @@ dependencies {
     implementation 'com.sun.xml.bind:jaxb-core:3.0.2'
     implementation 'com.sun.xml.bind:jaxb-impl:3.0.2'
 
+    // APM
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }
 
 dependencyManagement {
