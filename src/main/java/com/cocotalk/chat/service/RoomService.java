@@ -65,7 +65,7 @@ public class RoomService {
     public static final CustomException EXCEEDED_ROOM_MEMBER =
             new CustomException(CustomError.BAD_REQUEST, "초대한 유저보다 추가하려는 유저 수가 많습니다.");
 
-    public RoomVo create(RoomRequest request) { // C
+    public NewRoomVo create(RoomRequest request) { // C
         LocalDateTime now = LocalDateTime.now();
 
         // (1) 채팅방 멤버 중복 제거
@@ -110,7 +110,14 @@ public class RoomService {
         // (4) 방 생성시 메시지 번들도 함께 생성
         MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
         createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
-        return roomMapper.toVo(roomRepository.save(createdRoom));
+        RoomVo roomVo = roomMapper.toVo(roomRepository.save(createdRoom));
+        BundleInfoVo bundleInfoVo = BundleInfoVo.builder()
+                .currentMessageBundleCount(messageBundleVo.getCount())
+                .currentMessageBundleId(messageBundleVo.getId())
+                .nextMessageBundleId(messageBundleVo.getId())
+                .build();
+
+        return NewRoomVo.builder().roomVo(roomVo).bundleInfoVo(bundleInfoVo).build();
     }
 
     public RoomVo save(RoomVo roomVo) {

@@ -47,11 +47,12 @@ public class ChatController {
      */
     @MessageMapping("/new")
     public void createRoom(@Payload RoomRequest roomRequest) {
-        RoomVo roomVo = roomService.create(roomRequest); // (1) 메시지 수신 후 방 생성
+        NewRoomVo newRoomVo = roomService.create(roomRequest); // (1) 메시지 수신 후 방 생성
+        RoomVo roomVo = newRoomVo.getRoomVo();
         int size = roomVo.getMembers().size();
         for(int i = 0; i < size; ++i) { // (2) 방 생성 정보를 채팅방에 포함된 멤버들에게 pub
             Long userId = roomVo.getMembers().get(i).getUserId();
-            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", newRoomVo);
         }
     }
 

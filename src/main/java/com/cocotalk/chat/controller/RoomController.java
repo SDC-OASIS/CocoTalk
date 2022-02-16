@@ -30,29 +30,6 @@ public class RoomController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     /**
-     * 채팅방 생성 API [POST] /rooms
-     *
-     * @param userVo 요청한 유저의 정보
-     * @param request 새로운 채팅방 생성을 요청하는 모델
-     * @return ResponseEntity<CustomResponse<RoomVo>> 생성된 채팅방 정보가 포함됩니다.
-     * @exception com.cocotalk.chat.exception.CustomException 채팅방 멤버수가 2보다 작으면 BAD_REQUEST 예외가 발생합니다.
-     */
-    @PostMapping
-    @Operation(summary = "채팅방 생성")
-    @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<RoomVo>> create(@Parameter(hidden = true) UserVo userVo,
-                                                    @RequestBody @Valid RoomRequest request){
-        RoomVo data = roomService.create(request);
-        int size = data.getMembers().size();
-        for(int i = 0; i < size; ++i) {
-            long userId = data.getMembers().get(i).getUserId();
-            simpMessagingTemplate.convertAndSend("/topic/" + userId + "/room/new", data);
-        }
-        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.CREATED);
-    }
-
-
-    /**
      * 채팅방 조회 API [GET] /rooms
      *
      * @param userVo 채팅방 생성을 요청한 유저의 정보
