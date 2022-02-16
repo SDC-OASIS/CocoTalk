@@ -32,7 +32,7 @@ public class KafkaConsumer {
     public void consume(String message) throws IOException {
         PushTopicDto pushTopicDto = mapper.readValue(message, PushTopicDto.class);
         Flux<Device> devices =  deviceRepository.findByUserIdIn(pushTopicDto.getUserIdList());
-        fcmService.sendByDevices(devices, pushTopicDto.getTitle(), pushTopicDto.getBody());
+        fcmService.sendByDevices(devices, pushTopicDto);
         System.out.println(String.format("Consumed message : %s", message));
         System.out.println(String.format("[Parse] Consumed message : %s", pushTopicDto));
     }
