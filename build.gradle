@@ -16,6 +16,11 @@ ext {
 	set('springCloudVersion', "2021.0.0")
 }
 
+/*
+
+WebFlux에 MVC 관련 넣으면 문제생김. 항상 조심!
+
+ */
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -45,7 +50,6 @@ dependencies {
 
 	// APM
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 	dependencyManagement {

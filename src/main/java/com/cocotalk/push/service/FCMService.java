@@ -71,6 +71,7 @@ public class FCMService {
                                                         .subtitle(subTitle)
                                                         .body(info.getMessage())
                                                         .build())
+                                                .sound("chime.aiff")
                                                 .build())
                                         .build())
                                 .build())
@@ -144,7 +145,7 @@ public class FCMService {
                 .bodyToFlux(String.class)
                 .subscribe(
                         res -> log.info("{}", res),
-                        (e) -> {throw new CustomException(SUBSCRIBE_ERROR,e);}
+                        (e) -> {log.info(e.getMessage());}
                 )
         );
         log.info("end: " + (System.currentTimeMillis() - startTime) + "sec");
