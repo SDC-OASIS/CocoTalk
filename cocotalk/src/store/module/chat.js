@@ -1,6 +1,7 @@
 import createPersistedState from "vuex-persistedstate";
 // import axios from "../../utils/axios";
 import router from "../../router";
+import store from "@/store";
 
 const chat = {
   namespaced: true,
@@ -9,7 +10,7 @@ const chat = {
     roomStatus: {
       chatPage: "chat",
     },
-    chats: [],
+    // chats: [],
     chatInfo: {
       nextMessageBundleId: "",
       recentMessageBundleCount: 0,
@@ -51,9 +52,9 @@ const chat = {
     CHANGE_MAIN_PAGE(state, payload) {
       state.roomStatus.mainPage = payload;
     },
-    SET_CHATLIST(state, payload) {
-      state.chats = payload;
-    },
+    // SET_CHATLIST(state, payload) {
+    //   state.chats = payload;
+    // },
     SET_CONNECTION(state, payload) {
       state.socket.client = payload;
     },
@@ -89,12 +90,6 @@ const chat = {
         await router.push({ name: "chatsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
       }
     },
-    // createChat(context, payload) {
-    //   axios.post("chat/rooms", payload).then((res) => {
-    //     console.log("채팅방생성");
-    //     console.log(res);
-    //   });
-    // },
     updateMessageBundleId(context, payload) {
       context.commit("UPDATE_MESSAGE_BUNDLE_ID", payload);
     },
@@ -106,7 +101,8 @@ const chat = {
       console.log("새로운 채팅방 오픈");
       context.commit("GO_CHAT", newRoomInfo);
       context.commit("NEW_ROOM_INFO", newRoomInfo.newRoom);
-      router.push({ name: "chatsChat", params: { chat: "chat", roomId: newRoomInfo.roomId } }).catch(() => {});
+      // store.dispatch("socket/clearNewPrivateRoom");
+      router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: newRoomInfo.roomId } }).catch(() => {});
     },
   },
   modules: {},
