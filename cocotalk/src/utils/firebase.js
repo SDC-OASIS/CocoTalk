@@ -39,16 +39,12 @@ function getToken() {
           .deleteToken()
           .then((res) => {
             console.log("FCMTokeon is Deleted", res);
+            resolve(message.getToken());
           })
-          .catch(() => console.log("제거할 FCM TOKEN이 없습니다"));
-      })
-      .catch(() => {
-        console.log("제거할 FCM TOKEN이 없습니다!");
-      })
-      .then(() => {
-        resolve(message.getToken());
+          .catch(() => console.log("Delete할 FCMTokeon이 없습니다"));
       })
       .catch((err) => {
+        console.log("[GET TOKEN]", err);
         reject(err);
       });
   });
