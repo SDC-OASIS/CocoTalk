@@ -74,21 +74,23 @@
         </div>
       </div>
     </div>
-    <!-- 파일 업로드 로딩 -->
-    <div v-if="isLoading" class="loading">
-      <div>파일이 업로드 중입니다...</div>
-      <img src="@/assets/spinner-green.gif" />
-    </div>
     <div class="message-input-container row">
+      <!-- 파일 업로드 로딩 -->
+      <div v-if="true" class="loading">
+        <div>파일이 업로드 중입니다...</div>
+        <img src="@/assets/spinner-green.gif" />
+      </div>
       <!-- <input v-model.trim="message" type="textarea" @keypress.enter="send" /> -->
-      <textarea v-model.trim="message" @keypress.enter="send(0, mesage)"></textarea>
+      <textarea v-model.trim="message" @keypress.enter.prevent="send(0, message)"></textarea>
       <div @click="send(0, message)">
         <Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
       </div>
       <!-- 파일 업로드 버튼 START -->
       <div class="image-upload">
         <label for="file-input">
-          <span class="iconify" data-icon="ant-design:paper-clip-outlined"></span>
+          <div>
+            <span class="iconify" data-icon="ant-design:paper-clip-outlined"></span>
+          </div>
         </label>
         <input id="file-input" type="file" @change="handleFileChange" />
       </div>
@@ -341,7 +343,8 @@ export default {
             };
             this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
             this.$store.dispatch("chat/updateMessageBundleCount", receivedMessage.bundleInfo.currentMessageBundleCount, { root: true });
-            this.scrollBottom();
+            let scrollBottom = this.scrollBottom;
+            setTimeout(() => scrollBottom(), 100);
             // 만약 처음 생성된방이라면
             if (this.newPrivateRoomRefresh) {
               this.getChat();
@@ -569,6 +572,7 @@ export default {
       let payload = { chatFile: e.target.files[0], roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
+      console.log("로딩 중 : ", this.isLoading);
       this.$store
         .dispatch("chat/updateFile", payload)
         .then(({ data }) => {
@@ -577,6 +581,7 @@ export default {
           // 파일 메시지를 보내는 함수입니다. 일단 사진이라고 가정합니다.
           this.send(4, fileUrl);
           this.isLoading = false;
+          console.log("로딩 중 : ", this.isLoading);
         })
         .catch((e) => {
           console.log(e);
@@ -759,7 +764,7 @@ export default {
   display: none;
 }
 
-.image-upload :hover {
+.image-upload div :hover {
   background-color: #d4d4d3 !important;
   border-radius: 15%;
   cursor: pointer;
@@ -771,7 +776,7 @@ export default {
 }
 
 .image-upload .iconify {
-  padding: 3px 3px 3px 0px;
+  padding: 2px;
   margin-top: 30%;
   width: 30px;
   height: 30px;
@@ -797,21 +802,25 @@ export default {
   display: inline-block;
   left: 5px;
 }
+
 .loading {
-  position: relative;
+  position: absolute;
+  bottom: 10px;
+  /* left: 10px; */
+  right: 50px;
+  text-align: right;
+  width: 100%;
 }
 
 .loading div {
   font-family: IBMPlexSansKR !important;
   font-weight: bold;
-  position: absolute;
-  top: 15px;
-  right: 70px;
   display: inline-block;
 }
 .loading img {
   position: absolute;
-  right: 10px;
+  /* right: 10px; */
   width: 50px;
+  bottom: -10px;
 }
 </style>
