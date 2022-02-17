@@ -1,5 +1,6 @@
 package com.cocotalk.chat.service;
 
+import com.cocotalk.chat.domain.entity.message.MessageType;
 import com.cocotalk.chat.domain.entity.room.Room;
 import com.cocotalk.chat.domain.entity.room.RoomMember;
 import com.cocotalk.chat.domain.entity.room.RoomType;
@@ -65,13 +66,13 @@ public class RoomService {
     public static final CustomException EXCEEDED_ROOM_MEMBER =
             new CustomException(CustomError.BAD_REQUEST, "초대한 유저보다 추가하려는 유저 수가 많습니다.");
 
-    public NewRoomVo create(RoomRequest request) { // C
+    public RoomVo create(RoomRequest request) { // C
         LocalDateTime now = LocalDateTime.now();
 
         // (1) 채팅방 멤버 중복 제거
         List<RoomMemberRequest> members = request.getMembers().stream().distinct().collect(Collectors.toList());
 
-        if (request.getType() == RoomType.PRIVATE.ordinal()) { 
+        if (request.getType() == RoomType.PRIVATE.ordinal()) {
             if (members.size() != 2) { // (2) 개인 채팅방은 멤버수 2명
                 throw WRONG_PRIVATE_MEMBER_SIZE;
             } else {
@@ -110,14 +111,7 @@ public class RoomService {
         // (4) 방 생성시 메시지 번들도 함께 생성
         MessageBundleVo messageBundleVo = messageBundleService.create(createdRoom.getId());
         createdRoom.getMessageBundleIds().add(messageBundleVo.getId());
-        RoomVo roomVo = roomMapper.toVo(roomRepository.save(createdRoom));
-        BundleInfoVo bundleInfoVo = BundleInfoVo.builder()
-                .currentMessageBundleCount(messageBundleVo.getCount())
-                .currentMessageBundleId(messageBundleVo.getId())
-                .nextMessageBundleId(messageBundleVo.getId())
-                .build();
-
-        return NewRoomVo.builder().roomVo(roomVo).bundleInfoVo(bundleInfoVo).build();
+        return roomMapper.toVo(roomRepository.save(createdRoom));
     }
 
     public RoomVo save(RoomVo roomVo) {
@@ -213,7 +207,7 @@ public class RoomService {
             members.add(leaver);
             saveRoom = true;
         } else { // 단체 채팅방에서는 members에서 삭제한다.
-            if (members.size() == 0) this.deleteById(roomId); // member 수가 0이된 단톡방은 삭제한다.
+            if (members.size() == 0) this.delete(roomVo); // member 수가 0이된 단톡방은 삭제한다.
             else saveRoom = true;
         }
 
@@ -254,12 +248,13 @@ public class RoomService {
         return roomMapper.toVo(room);
     }
 
-    public RoomWithMessageListVo<ChatMessageVo> findRoomAndMessage(ObjectId roomId,
-                                     @RequestParam int count) { // room 정보와 첫 메시지 페이지를 함께 찾아줍니다
-        RoomVo roomVo = roomMapper.toVo(this.find(roomId));
+    public RoomWithMessageListVo<ChatMessageVo> findRoomAndMessage(RoomVo roomVo,
+                                                                   RoomMemberVo roomMemberVo,
+                                                                   @RequestParam int count) { // room 정보와 첫 메시지 페이지를 함께 찾아줍니다
         List<ObjectId> messageBundleIds = roomVo.getMessageBundleIds();
         List<ChatMessageVo> chatMessageVos = chatMessageService.findMessagePage(
-                roomId,
+                roomVo,
+                roomMemberVo,
                 messageBundleIds.get(messageBundleIds.size() - 1),
                 count,
                 messagePagingSize);
@@ -305,7 +300,10 @@ public class RoomService {
                         // (8) 현재 메시지 번들에서 읽지 않은 메시지 수 계산
                         long partUnread = messageBundleVo.getMessageIds().parallelStream()
                                 .map(chatMessageService::find)
-                                .filter(chatMessage -> chatMessage.getType() == 0 && chatMessage.getSentAt().isAfter(me.getAwayAt())) // 인자보다 미래시간일때 true 반환
+                                .filter(chatMessage ->
+                                        chatMessage.getType() != MessageType.INVITE.ordinal() &&
+                                        chatMessage.getType() != MessageType.LEFT.ordinal())
+                                .filter(chatMessage -> chatMessage.getSentAt().isAfter(me.getAwayAt())) // 인자보다 미래시간일때 true 반환
                                 .count();
                         if(partUnread == 0) {
                             break; // 더 이상 안 읽은 메시지가 없음
@@ -341,8 +339,7 @@ public class RoomService {
         return roomMapper.toVo(room);
     }
 
-    public RoomVo modify(ObjectId roomId, RoomRequest request) { // U
-        Room oldRoom = this.find(roomId);
+    public RoomVo modify(RoomVo oldRoom, RoomRequest request) { // U
         Room newRoom = roomMapper.toEntity(request);
         newRoom.setId(oldRoom.getId());
         return roomMapper.toVo(roomRepository.save(newRoom));
@@ -399,11 +396,5 @@ public class RoomService {
     public String delete(RoomVo roomVo) {
         roomRepository.delete(roomMapper.toEntity(roomVo));
         return String.format("roomId = \"%s\" 가 정상적으로 삭제되었습니다.", roomVo.getId());
-    }
-
-    public String deleteById(ObjectId roomId) {
-        Room room = this.find(roomId);
-        roomRepository.delete(room);
-        return String.format("roomId = \"%s\" 가 정상적으로 삭제되었습니다.", roomId);
     }
 }

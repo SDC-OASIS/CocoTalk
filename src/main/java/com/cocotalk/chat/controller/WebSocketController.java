@@ -26,5 +26,4 @@ public class WebSocketController {
             log.info("[crash/request] : " + "/topic/" + request.getUserId() + "/crash/" + type +" :  " +request.getFcmToken());
         }
     }
-
 }

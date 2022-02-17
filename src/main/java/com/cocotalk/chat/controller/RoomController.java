@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,6 @@ import java.util.List;
 @RequestMapping(value = "/rooms")
 public class RoomController {
     private final RoomService roomService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
 
     /**
      * 채팅방 조회 API [GET] /rooms
@@ -65,8 +64,9 @@ public class RoomController {
      */
     @GetMapping("/{id}")
     @Operation(summary = "채팅방 id로 조회")
-    public ResponseEntity<CustomResponse<RoomVo>> findById(@PathVariable ObjectId id){
-        RoomVo data = roomService.findById(id);
+    public ResponseEntity<CustomResponse<RoomVo>> findById(HttpServletRequest httpServletRequest,
+                                                           @PathVariable ObjectId id){
+        RoomVo data = (RoomVo)httpServletRequest.getAttribute("roomVo");
         return new ResponseEntity<>(new CustomResponse(data), HttpStatus.OK);
     }
 
@@ -79,9 +79,12 @@ public class RoomController {
      */
     @GetMapping("/{id}/tail")
     @Operation(summary = "채팅방 id과 messageBundleCount로 채팅방과 첫 메시지 페이지 조회")
-    public ResponseEntity<CustomResponse<RoomWithMessageListVo<ChatMessageVo>>> findRoomAndMessages(@PathVariable ObjectId id,
-                                                                 @RequestParam int count) {
-        RoomWithMessageListVo<ChatMessageVo> data = roomService.findRoomAndMessage(id, count);
+    public ResponseEntity<CustomResponse<RoomWithMessageListVo<ChatMessageVo>>> findRoomAndMessages(HttpServletRequest httpServletRequest,
+                                                                                                    @PathVariable ObjectId id,
+                                                                                                    @RequestParam int count) {
+        RoomVo roomVo = (RoomVo) httpServletRequest.getAttribute("roomVo");
+        RoomMemberVo roomMemberVo = (RoomMemberVo) httpServletRequest.getAttribute("roomMemberVo");
+        RoomWithMessageListVo<ChatMessageVo> data = roomService.findRoomAndMessage(roomVo, roomMemberVo, count);
         return new ResponseEntity<>(new CustomResponse(data), HttpStatus.OK);
     }
 
@@ -108,8 +111,11 @@ public class RoomController {
      */
     @PutMapping("/{id}")
     @Operation(summary = "채팅방 id로 수정")
-    public ResponseEntity<CustomResponse<RoomVo>> modify(@PathVariable ObjectId id, @RequestBody @Valid RoomRequest request){
-        RoomVo data = roomService.modify(id, request);
+    public ResponseEntity<CustomResponse<RoomVo>> modify(HttpServletRequest httpServletRequest,
+                                                         @PathVariable ObjectId id,
+                                                         @RequestBody @Valid RoomRequest request){
+        RoomVo roomVo = (RoomVo)httpServletRequest.getAttribute("roomVo");
+        RoomVo data = roomService.modify(roomVo, request);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.CREATED);
     }
 
@@ -121,8 +127,9 @@ public class RoomController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "채팅방 id로 삭제")
-    public ResponseEntity<CustomResponse<String>> modify(@PathVariable ObjectId id){
-        String data = roomService.deleteById(id);
+    public ResponseEntity<CustomResponse<String>> delete(HttpServletRequest httpServletRequest, @PathVariable ObjectId id){
+        RoomVo roomVo = (RoomVo)httpServletRequest.getAttribute("roomVo");
+        String data = roomService.delete(roomVo);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.CREATED);
     }
 }

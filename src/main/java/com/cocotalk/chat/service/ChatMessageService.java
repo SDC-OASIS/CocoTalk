@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -85,7 +86,7 @@ public class ChatMessageService {
         return new MessageVo<>(inviteMessageVo, bundleInfoVo);
     }
 
-    public List<ChatMessageVo> findMessagePage(ObjectId roomId, ObjectId bundleId, int count, int size) {
+    public List<ChatMessageVo> findMessagePage(RoomVo roomVo, RoomMemberVo roomMemberVo, ObjectId bundleId, int count, int size) {
         List<ObjectId> messageIds = new ArrayList<>();
         if(count >= size) { // (1) 메시지 번들 카운트가 페이징 사이즈보다 크다면
             int start = count - size; // (2) bundleId 메시지 번들에서 start부터 start + size까지 slice
@@ -93,7 +94,7 @@ public class ChatMessageService {
         } else {
             int diff = size - count; // (3) 페이징 사이즈가 메시지 번들 카운트보다 크다면
             int start = messageBundleLimit - diff; // (4) 그 직전 번들에서 차이만큼 더 가져온다
-            MessageBundleVo beforeBundleVo = messageBundleService.findBeforeBundleAndSlice(roomId, bundleId, start, diff);
+            MessageBundleVo beforeBundleVo = messageBundleService.findBeforeBundleAndSlice(roomVo.getId(), bundleId, start, diff);
             if(beforeBundleVo.getMessageIds() != null) {
                 messageIds.addAll(beforeBundleVo.getMessageIds());
             }
@@ -101,7 +102,10 @@ public class ChatMessageService {
                 messageIds.addAll(messageBundleService.findSlice(bundleId, 0, count).getMessageIds()); // 예외 처리 필요?
             }
         }
-        return messageIds.stream().map(this::find).collect(Collectors.toList());
+        return StreamSupport.stream(chatMessageRepository.findAllById(messageIds).spliterator(), false)
+                .filter(chatMessageVo -> chatMessageVo.getSentAt().isAfter(roomMemberVo.getJoinedAt()))
+                .map(messageMapper::toVo)
+                .collect(Collectors.toList());
     }
 
     public ChatMessageVo modifyChatMessage(ChatMessageVo chatMessageVo) {
