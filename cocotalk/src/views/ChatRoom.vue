@@ -81,7 +81,7 @@
     </div>
     <div class="message-input-container row">
       <!-- <input v-model.trim="message" type="textarea" @keypress.enter="send" /> -->
-      <textarea v-model.trim="message" @keypress.enter="send(0, mesage)"></textarea>
+      <textarea v-model.trim="message" @keypress.enter.prevent="send(0, message)"></textarea>
       <div @click="send(0, message)">
         <Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
       </div>
@@ -338,7 +338,8 @@ export default {
             };
             this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
             this.$store.dispatch("chat/updateMessageBundleCount", receivedMessage.bundleInfo.currentMessageBundleCount, { root: true });
-            this.scrollBottom();
+            let scrollBottom = this.scrollBottom;
+            setTimeout(() => scrollBottom(), 100);
             // 만약 처음 생성된방이라면
             if (this.newPrivateRoomRefresh) {
               this.getChat();
@@ -566,6 +567,7 @@ export default {
       let payload = { chatFile: e.target.files[0], roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
+      console.log("로딩 중 : ", this.isLoading);
       this.$store
         .dispatch("chat/updateFile", payload)
         .then(({ data }) => {
@@ -574,6 +576,7 @@ export default {
           // 파일 메시지를 보내는 함수입니다. 일단 사진이라고 가정합니다.
           this.send(4, fileUrl);
           this.isLoading = false;
+          console.log("로딩 중 : ", this.isLoading);
         })
         .catch((e) => {
           console.log(e);
