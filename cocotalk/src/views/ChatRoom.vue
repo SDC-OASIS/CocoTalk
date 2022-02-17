@@ -1,14 +1,14 @@
 <template>
-  <div class="chat">
+  <div v-if="this.stompChatRoomConnected" class="chat">
     <!-- 채팅방 Header -->
     <div class="chat-header row align-center">
       <div class="row align-center">
         <div @click="exitChat">
           <span class="iconify exit-chat" data-icon="eva:arrow-ios-back-outline"></span>
         </div>
-        <span class="bold" style="font-size: 18px">999+</span>
+        <span class="bold" style="font-size: 18px">{{ totalUnreadMessageCnt }}</span>
       </div>
-      <span class="bold" style="font-size: 18px">{{ this.roomInfo.roomname }}</span>
+      <span class="bold chat-room-title" style="font-size: 18px">{{ this.roomInfo.roomname }}</span>
       <div class="box">
         <span>
           <span class="iconify" data-icon="ant-design:search-outlined" style="cursor: pointer; color: black; padding-right: 10px"></span>
@@ -34,7 +34,7 @@
                 <div class="row">
                   <div class="bubble box">{{ chatMessage.content }}</div>
                   <div style="position: relative; width: 70px">
-                    <div class="unread-number">2</div>
+                    <div class="unread-number">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
                     <div class="sent-time">오후2:00</div>
                   </div>
                 </div>
@@ -45,7 +45,7 @@
               <div class="chat-message">
                 <div class="row">
                   <div style="position: relative; width: 55px">
-                    <div class="unread-number-me">2</div>
+                    <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
                     <div class="sent-time-me">오후2:00</div>
                   </div>
                   <div class="bubble-me box">{{ chatMessage.content }}</div>
@@ -74,7 +74,7 @@
       </div>
       <!-- 파일 업로드 버튼 END -->
     </div>
-    <Sidebar />
+    <Sidebar v-if="sidebar" :members="roomInfo.members" />
   </div>
 </template>
 
@@ -111,31 +111,52 @@ export default {
   },
   created() {
     console.log("===========[채팅페이지]============");
-    this.$store.dispatch(
-      "chat/changePage",
-      {
-        mainPage: this.roomStatus.mainPage,
-        roomId: this.$route.params.roomId,
-      },
-      { root: true },
-    );
-    this.chatRoomConnect();
-    if (!this.createChatRoomStatus) {
-      this.getChat();
+    this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, roomId: this.$route.params.roomId }, { root: true });
+    this.$store.dispatch("modal/setSidebar", true, { root: true });
+    if (this.newPrivateRoomStatus && !this.triggerMessage) {
+      console.log("============[개인톡방생성페이지]=============");
+      this.newPrivateRoom();
+    } else {
+      console.log("=====커넥션을 시작합니다=====");
+      this.chatRoomConnect();
+      if (!this.createChatRoomStatus && !this.triggerMessage) {
+        this.getChat();
+      }
     }
   },
   computed: {
     ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo", "newRoomInfo"]),
     ...mapState("userStore", ["userInfo"]),
-    ...mapState("modal", ["roomNameEditModal"]),
-    ...mapState("socket", ["stompChatRoomClient", "stompChatRoomConnected", "createChatRoomStatus"]),
+    ...mapState("modal", ["roomNameEditModal", "sidebar"]),
+    ...mapState("socket", [
+      "stompChatRoomClient",
+      "stompChatRoomConnected",
+      "createChatRoomStatus",
+      "newPrivateRoomStatus",
+      "newPrivateRoomFriendInfo",
+      "triggerMessage",
+      "chats",
+      "newPrivateRoomRefresh",
+    ]),
+    totalUnreadMessageCnt() {
+      let cnt = 0;
+      this.chats.forEach((e) => {
+        cnt += e.unreadNumber;
+      });
+      return cnt;
+    },
   },
   watch: {
     // 채팅방을 켜둔상태에서 다른 채팅방으로 이동할 경우
     "$route.params.roomId": function () {
       // 이전 채팅방 disconnect
-      const headers = { action: "leave" };
-      this.stompChatRoomClient.disconnect(() => {}, headers);
+      this.$store.dispatch("modal/setSidebar", true, { root: true });
+
+      if (!this.newPrivateRoomStatus) {
+        const headers = { action: "leave" };
+        console.log("이전 방 나가기");
+        this.stompChatRoomClient.disconnect(() => {}, headers);
+      }
       // vuex에 이동한 url저장
       this.$store.dispatch(
         "chat/changePage",
@@ -146,10 +167,15 @@ export default {
         },
         { root: true },
       );
-      this.moreMessages = 0; //채팅방 히스트로릴 불러올 때 = true
+      this.moreMessages = 0; //채팅방 히스트로리 불러올 때 = true
       this.chatMessages = [];
-      this.getChat();
-      this.chatRoomConnect();
+      if (this.newPrivateRoomStatus && !this.triggerMessage) {
+        console.log("============[개인톡방생성페이지]=============");
+        this.newPrivateRoom();
+      } else {
+        console.log("=====커넥션을 시작합니다=====");
+        this.chatRoomConnect();
+      }
       // 스크롤 최하단으로 이동
       this.$nextTick(() => {
         let chatMessages = this.$refs.scrollRef;
@@ -167,7 +193,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus"]),
+    ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus", "setNewPrivateRoomStatus", "setNewPrivateRoomRefresh"]),
 
     // 1.채팅내역 불러오기
     // 1-1. 일반 채팅방 입장
@@ -176,33 +202,38 @@ export default {
       axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
         console.log("채팅내역 가져오기");
         let chatData = res.data.data;
-        this.roomInfo = chatData.room;
-        this.chatMessages = chatData.messageList;
-        chatData.room.messageBundleIds = chatData.room.messageBundleIds.slice(1, -1).split(", ");
-        // 새로 받은 최신 bundleId 업데이트
-        const payload = {
-          nextMessageBundleId: this.roomInfo.messageBundleIds[this.roomInfo.messageBundleIds.length - 1],
-        };
-        this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
-        // 이후 메세지 보낼때 필요한 룸멤버의 아이디 값 계산
-        this.roomInfo.members.forEach((e) => {
-          this.roomMemberIds.push(e.userId);
-          if (e.profile) {
-            e.profile = JSON.parse(e.profile);
+        if (chatData) {
+          if (this.triggerMessage) {
+            this.sendTriggerMessage();
           }
-        });
-        console.log(this.chatMessages);
-        console.log(this.roomInfo);
-        this.moreMessages = 1; // 첫입장 후 스크롤 최상단 위치시 채팅내역 불러올 수 있게 변경
-        this.$nextTick(() => {
-          let chatMessages = this.$refs.scrollRef;
-          chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-          this.previousScrollHeight = chatMessages.scrollHeight;
-          this.bottomScrollTop = chatMessages.scrollTop;
-          // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
-          // this.moreMessages = 1;
-          this.$el.addEventListener("scroll", this.handleScroll);
-        });
+          this.roomInfo = chatData.room;
+          this.chatMessages = chatData.messageList;
+          chatData.room.messageBundleIds = chatData.room.messageBundleIds.slice(1, -1).split(", ");
+          // 새로 받은 최신 bundleId 업데이트
+          const payload = {
+            nextMessageBundleId: this.roomInfo.messageBundleIds[this.roomInfo.messageBundleIds.length - 1],
+          };
+          this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
+          // 이후 메세지 보낼때 필요한 룸멤버의 아이디 값 계산
+          this.roomInfo.members.forEach((e) => {
+            this.roomMemberIds.push(e.userId);
+            if (e.profile) {
+              e.profile = JSON.parse(e.profile);
+            }
+          });
+          console.log(this.chatMessages);
+          console.log(this.roomInfo);
+          this.moreMessages = 1; // 첫입장 후 스크롤 최상단 위치시 채팅내역 불러올 수 있게 변경
+          this.$nextTick(() => {
+            let chatMessages = this.$refs.scrollRef;
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight });
+            this.previousScrollHeight = chatMessages.scrollHeight;
+            this.bottomScrollTop = chatMessages.scrollTop;
+            // 처음입장후 하단에 스크롤 배치가 끝났으므로 이후 최상단 스크롤은 요청
+            // this.moreMessages = 1;
+            this.$el.addEventListener("scroll", this.handleScroll);
+          });
+        }
       });
     },
     // 1-2. 채팅방 생성시 자동 입장
@@ -231,6 +262,26 @@ export default {
       });
       return this.roomInfo.members[idx];
     },
+    unreadMemberCnt(sentAt) {
+      console.log("=======카톡안읽은 사람 숫자 연산 =========");
+      if (this.roomInfo.members) {
+        let cnt = this.roomInfo.members.length;
+        this.roomInfo.members.forEach((e) => {
+          console.log(e.username + "접속시간:" + e.enteredAt + "나간시간:" + e.awayAt);
+          // 현재접속중인 사람은 읽음
+          if (e.enteredAt > e.awayAt) {
+            cnt = cnt - 1;
+          }
+          // 미접속자중 메세지가 온때보다 늦게나간 사람은 읽음
+          else if (e.awayAt > sentAt) {
+            cnt = cnt - 1;
+          }
+        });
+        if (cnt) {
+          return cnt;
+        }
+      }
+    },
 
     // 3.채팅방 소켓 연결
     chatRoomConnect: function () {
@@ -243,12 +294,20 @@ export default {
           // 소켓 연결 성공
           this.connected = true;
           console.log("소켓 연결 성공", frame);
+          if (!this.createChatRoomStatus && !this.triggerMessage) {
+            this.getChat();
+          }
           if (this.createChatRoomStatus) {
             this.getNewChat();
           }
+          if (this.triggerMessage) {
+            this.sendTriggerMessage();
+          }
+          this.setStompChatRoomConnected(true);
           // 채팅 메세지 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
             console.log("구독으로 받은 메시지 입니다.");
+            console.log("현재갠톡방상성상태:" + this.newPrivateRoomStatus);
             const receivedMessage = JSON.parse(res.body);
             this.chatMessages.push(receivedMessage.message);
             console.log(receivedMessage);
@@ -259,10 +318,16 @@ export default {
             this.$store.dispatch("chat/updateMessageBundleId", payload, { root: true });
             this.$store.dispatch("chat/updateMessageBundleCount", receivedMessage.bundleInfo.currentMessageBundleCount, { root: true });
             this.scrollBottom();
+            // 만약 처음 생성된방이라면
+            if (this.newPrivateRoomRefresh) {
+              this.getChat();
+              console.log(this.newPrivateRoomRefresh);
+              this.setNewPrivateRoomRefresh(false);
+            }
           });
           // 채팅 메세지 룸정보 업데이트 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/room`, (res) => {
-            console.log("구독으로 받은 채팅방 정보입니다.");
+            console.log("구독으로 받은 채팅방 정보입니다dd.");
             this.roomInfo = JSON.parse(res.body);
             this.roomInfo.members.forEach((e) => {
               this.roomMemberIds = [];
@@ -271,7 +336,7 @@ export default {
                 e.profile = JSON.parse(e.profile);
               }
             });
-            console.log(this.roomInfo);
+            console.log(this.roomInfo.members);
           });
           // 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
           // const msg = {
@@ -295,21 +360,51 @@ export default {
     },
     // 메세지 전송 클릭시 소켓이 연결되어 있고 입력한 메세지가 있다면 전송합니다.
     send() {
-      if (this.stompChatRoomClient && this.stompChatRoomClient.connected && this.message) {
-        const msg = {
-          type: 0,
-          content: this.message,
-          roomId: this.roomStatus.roomId,
-          roomType: this.roomInfo.type,
-          roomname: this.roomInfo.roomname,
-          userId: this.userInfo.id,
-          username: this.userInfo.username,
-          receiverIds: this.roomMemberIds,
-          messageBundleId: this.chatInfo.nextMessageBundleId,
-        };
-        this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
+      if (this.newPrivateRoomStatus) {
+        this.sendToCreatePrivateRoom();
+      } else {
+        if (this.stompChatRoomClient && this.stompChatRoomClient.connected && this.message) {
+          const msg = {
+            type: 0,
+            content: this.message,
+            roomId: this.roomStatus.roomId,
+            roomType: this.roomInfo.type,
+            roomname: this.roomInfo.roomname,
+            userId: this.userInfo.id,
+            username: this.userInfo.username,
+            receiverIds: this.roomMemberIds,
+            messageBundleId: this.chatInfo.nextMessageBundleId,
+          };
+          this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
+        }
+        this.message = "";
       }
-      this.message = "";
+    },
+    sendToCreatePrivateRoom() {
+      console.log("개인톡방생성 버튼 클릭");
+      let members = [];
+      let member = {
+        userId: this.newPrivateRoomFriendInfo.id,
+        username: this.newPrivateRoomFriendInfo.username,
+        profile: JSON.stringify(this.newPrivateRoomFriendInfo.profile),
+      };
+      members.push(member);
+
+      let userInfo = {
+        userId: this.userInfo.id,
+        username: this.userInfo.username,
+        profile: JSON.stringify(this.userInfo.profile),
+      };
+      members.push(userInfo);
+      const payload = {
+        roomname: this.newPrivateRoomFriendInfo.username,
+        img: this.newPrivateRoomFriendInfo.profile.profile,
+        type: 0,
+        members: members,
+      };
+      console.log(payload);
+      this.$store.dispatch("socket/setTriggerMessage", this.message, { root: true });
+      this.$store.dispatch("socket/createPrivateChat", payload, { root: true });
     },
     // 처음 방이 생성된 경우 자동으로 초대메세지를 전송합니다.
     sendInviteMessage() {
@@ -339,21 +434,57 @@ export default {
       }
       this.setCreateChatRoomStatus(false);
     },
+    sendTriggerMessage() {
+      if (this.stompChatRoomClient && this.stompChatRoomClient.connected && this.triggerMessage) {
+        console.log("=====트리거메세지 전송=====");
+        let membersIds = [];
+        let members = this.newRoomInfo.members;
+        members.forEach((e) => {
+          membersIds.push(e.userId);
+        });
+        this.roomInfo = this.newRoomInfo;
+        const msg = {
+          type: 0,
+          content: this.triggerMessage,
+          roomId: this.roomStatus.roomId,
+          roomType: this.roomInfo.type,
+          roomname: this.roomInfo.roomname,
+          userId: this.userInfo.id,
+          username: this.userInfo.username,
+          receiverIds: membersIds,
+          messageBundleId: this.chatInfo.nextMessageBundleId,
+        };
+        this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
+        this.setNewPrivateRoomRefresh(true);
+      }
+      this.message = "";
+      this.$store.dispatch("socket/clearNewPrivateRoom");
+    },
+    newPrivateRoom() {
+      console.log("====개인톡방 오픈합니다====");
+      console.log(this.newPrivateRoomFriendInfo);
+      const roomInfo = {
+        roomname: this.newPrivateRoomFriendInfo.username,
+      };
+      this.roomInfo = roomInfo;
+    },
 
     openProfileModal(userProfileInfo) {
       this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
     },
     openSidebar() {
+      this.$store.dispatch("modal/setSidebar", true, { root: true });
+
       const sidebar = document.querySelector(".sidebar-container");
       const sidebarBack = document.querySelector(".sidebar-background");
       sidebarBack.style.display = "block";
       sidebar.style.right = "0px";
     },
     exitChat() {
-      const headers = {
-        action: "leave",
-      };
-      this.stompChatRoomClient.disconnect(() => {}, headers);
+      if (!this.newPrivateRoomStatus) {
+        const headers = { action: "leave" };
+        this.stompChatRoomClient.disconnect(() => {}, headers);
+      }
       this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, chat: "chat", roomId: false }, { root: true });
     },
 
@@ -381,7 +512,8 @@ export default {
         })
         .then((res) => {
           // 메세지목록에 추가 + 스크롤 기존 위치 지정
-          if (res.data.data.length) {
+          // 최상단 도착시 추가안되도록 막음
+          if (res.data.data.length && res.data.data[0].id != this.chatMessages[0].id) {
             this.chatMessages.unshift(...res.data.data);
             this.$nextTick(() => {
               let chatMessages = this.$refs.scrollRef;
@@ -446,6 +578,14 @@ export default {
     height: 70vh;
   }
 }
+.chat-room-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 300px;
+
+  padding-top: 0px;
+}
 .chat-messages-outer-container::-webkit-scrollbar {
   position: absolute;
   background-color: #d8eec0;
@@ -504,6 +644,7 @@ export default {
   left: 1px;
   width: 70px;
   height: 15px;
+  font-weight: bold;
 }
 .unread-number-me {
   color: #749f58;
@@ -513,6 +654,7 @@ export default {
   right: 1px;
   width: 12px;
   height: 15px;
+  font-weight: bold;
 }
 .sent-time {
   position: absolute;

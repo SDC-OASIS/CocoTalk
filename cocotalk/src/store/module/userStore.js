@@ -101,7 +101,10 @@ const userStore = {
       context.commit("CLEAR_ISLOGIN");
       context.commit("GO_LOGINPAGE");
       store.dispatch("chat/clearPage");
-
+      // const headers = { action: "leave" };
+      // this.stompChatListClient.disconnect(() => {}, headers);
+      const headers = { action: "leave" };
+      store.state.socket.stompChatListClient.disconnect(() => {}, headers);
       //TODO: backend에 명시적으로 logout 요청하기
     },
     getUser: function (context) {

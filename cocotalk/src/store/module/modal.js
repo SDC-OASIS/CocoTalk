@@ -18,6 +18,7 @@ const modal = {
       status: "close",
       userProfileInfo: Object,
     },
+    sidebar: "close",
   },
   mutations: {
     GET_SCREEN(state, payload) {
@@ -56,6 +57,9 @@ const modal = {
     CLOSE_ROOM_NAME_EDIT_MODAL(state) {
       state.roomNameEditModal.status = "close";
     },
+    SET_SIDEBAR(state, status) {
+      state.sidebar = status;
+    },
   },
   actions: {
     getScreen: function (context, payload) {
@@ -92,6 +96,9 @@ const modal = {
     },
     closeRoomNameEditModal: function (context) {
       context.commit("CLOSE_ROOM_NAME_EDIT_MODAL");
+    },
+    setSidebar: function (context, status) {
+      context.commit("SET_SIDEBAR", status);
     },
   },
   modules: {},

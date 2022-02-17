@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <div class="chat-list-roomname row" style="">
+    <div class="chat-list-roomname row">
       <div>{{ chatInfo.room.roomname }}</div>
       <div class="member-cnt">{{ chatInfo.room.members.length }}</div>
     </div>
@@ -30,6 +30,9 @@ export default {
   overflow: hidden;
   width: 140px;
   height: 22px;
+}
+.chat-list-rommname > div {
+  width: 140px;
 }
 .chat-list-info-message {
   text-overflow: ellipsis;

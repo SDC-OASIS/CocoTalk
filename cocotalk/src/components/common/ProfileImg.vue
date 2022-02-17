@@ -78,12 +78,6 @@ export default {
     replaceImg(e) {
       e.target.src = "https://ifh.cc/g/pLtMj2.png";
     },
-    // d(e) {
-    //   let element = e.target.getAttributeNS("http://www.ws.org/1999/xlink", "href");
-    //   // element = "https://ifh.cc/g/pLtMj2.png";
-    //   console.log(element);
-    //   console.log(e);
-    // },
   },
   mounted() {
     if (this.radius > 0) {

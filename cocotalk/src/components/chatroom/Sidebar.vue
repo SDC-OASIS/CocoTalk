@@ -33,11 +33,11 @@
               <i class="far fa-plus-square" style="font-size: 50px"></i>
               <span style="padding: 0 10px"> 대화상대 초대 </span>
             </div>
-            <div class="friend-container row" v-for="(friend, idx) in friends" :key="idx">
-              <div @click="openProfileModal(friend)">
-                <profile-img :imgUrl="friend.profile" width="50px" />
+            <div class="friend-container row" v-for="(member, idx) in members" :key="idx">
+              <div @click="openProfileModal(member)">
+                <profile-img :imgUrl="member.profile.profile" width="50px" @status="checkStatus" />
               </div>
-              <div class="friend-name" :id="'check' + idx">{{ friend.userName }}</div>
+              <div class="friend-name" :id="'check' + idx">{{ member.username }}</div>
             </div>
           </div>
         </div>
@@ -66,8 +66,12 @@ export default {
   components: {
     ProfileImg,
   },
+  props: {
+    members: [],
+  },
   computed: {
-    ...mapState("chat", ["friends"]),
+    ...mapState("friend", ["friends"]),
+    ...mapState("modal", ["sidebar"]),
   },
   methods: {
     closeSidebar() {
@@ -78,6 +82,11 @@ export default {
     },
     openProfileModal(userProfileInfo) {
       this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
+    },
+    checkStatus(status) {
+      if (!status) {
+        this.closeSidebar();
+      }
     },
   },
 };

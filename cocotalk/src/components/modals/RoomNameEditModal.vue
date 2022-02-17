@@ -96,7 +96,6 @@ export default {
     },
     setroomName() {
       console.log("채팅방 이름 설정");
-      console.log(this.roomNameEditModal);
       let selectedNames = "";
       this.roomNameEditModal.selectedFriends.forEach((e) => {
         selectedNames += e.username + ", ";
