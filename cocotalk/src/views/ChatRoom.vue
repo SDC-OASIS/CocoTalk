@@ -103,16 +103,8 @@ export default {
   },
   created() {
     console.log("===========[채팅페이지]============");
+    this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, roomId: this.$route.params.roomId }, { root: true });
     this.$store.dispatch("modal/setSidebar", true, { root: true });
-
-    this.$store.dispatch(
-      "chat/changePage",
-      {
-        mainPage: this.roomStatus.mainPage,
-        roomId: this.$route.params.roomId,
-      },
-      { root: true },
-    );
     if (this.newPrivateRoomStatus && !this.triggerMessage) {
       console.log("============[개인톡방생성페이지]=============");
       this.newPrivateRoom();
@@ -384,9 +376,9 @@ export default {
       console.log("개인톡방생성 버튼 클릭");
       let members = [];
       let member = {
-        userId: this.newPrivateRoomFriendInfo.friend.id,
-        username: this.newPrivateRoomFriendInfo.friend.username,
-        profile: JSON.stringify(this.newPrivateRoomFriendInfo.friend.profile),
+        userId: this.newPrivateRoomFriendInfo.id,
+        username: this.newPrivateRoomFriendInfo.username,
+        profile: JSON.stringify(this.newPrivateRoomFriendInfo.profile),
       };
       members.push(member);
 
@@ -397,8 +389,8 @@ export default {
       };
       members.push(userInfo);
       const payload = {
-        roomname: this.newPrivateRoomFriendInfo.friend.username,
-        img: this.newPrivateRoomFriendInfo.friend.profile.profile,
+        roomname: this.newPrivateRoomFriendInfo.username,
+        img: this.newPrivateRoomFriendInfo.profile.profile,
         type: 0,
         members: members,
       };
@@ -464,7 +456,7 @@ export default {
       console.log("====개인톡방 오픈합니다====");
       console.log(this.newPrivateRoomFriendInfo);
       const roomInfo = {
-        roomname: this.newPrivateRoomFriendInfo.friend.username,
+        roomname: this.newPrivateRoomFriendInfo.username,
       };
       this.roomInfo = roomInfo;
     },
