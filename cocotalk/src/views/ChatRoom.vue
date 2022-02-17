@@ -76,7 +76,7 @@
     </div>
     <div class="message-input-container row">
       <!-- 파일 업로드 로딩 -->
-      <div v-if="true" class="loading">
+      <div v-if="isLoading" class="loading">
         <div>파일이 업로드 중입니다...</div>
         <img src="@/assets/spinner-green.gif" />
       </div>
