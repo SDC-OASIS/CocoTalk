@@ -74,12 +74,12 @@
         </div>
       </div>
     </div>
-    <!-- 파일 업로드 로딩 -->
-    <div v-if="isLoading" class="loading">
-      <div>파일이 업로드 중입니다...</div>
-      <img src="@/assets/spinner-green.gif" />
-    </div>
     <div class="message-input-container row">
+      <!-- 파일 업로드 로딩 -->
+      <div v-if="true" class="loading">
+        <div>파일이 업로드 중입니다...</div>
+        <img src="@/assets/spinner-green.gif" />
+      </div>
       <!-- <input v-model.trim="message" type="textarea" @keypress.enter="send" /> -->
       <textarea v-model.trim="message" @keypress.enter.prevent="send(0, message)"></textarea>
       <div @click="send(0, message)">
@@ -88,7 +88,9 @@
       <!-- 파일 업로드 버튼 START -->
       <div class="image-upload">
         <label for="file-input">
-          <span class="iconify" data-icon="ant-design:paper-clip-outlined"></span>
+          <div>
+            <span class="iconify" data-icon="ant-design:paper-clip-outlined"></span>
+          </div>
         </label>
         <input id="file-input" type="file" @change="handleFileChange" />
       </div>
@@ -759,7 +761,7 @@ export default {
   display: none;
 }
 
-.image-upload :hover {
+.image-upload div :hover {
   background-color: #d4d4d3 !important;
   border-radius: 15%;
   cursor: pointer;
@@ -771,7 +773,7 @@ export default {
 }
 
 .image-upload .iconify {
-  padding: 3px 3px 3px 0px;
+  padding: 2px;
   margin-top: 30%;
   width: 30px;
   height: 30px;
@@ -797,21 +799,25 @@ export default {
   display: inline-block;
   left: 5px;
 }
+
 .loading {
-  position: relative;
+  position: absolute;
+  bottom: 10px;
+  /* left: 10px; */
+  right: 50px;
+  text-align: right;
+  width: 100%;
 }
 
 .loading div {
   font-family: IBMPlexSansKR !important;
   font-weight: bold;
-  position: absolute;
-  top: 15px;
-  right: 70px;
   display: inline-block;
 }
 .loading img {
   position: absolute;
-  right: 10px;
+  /* right: 10px; */
   width: 50px;
+  bottom: -10px;
 }
 </style>
