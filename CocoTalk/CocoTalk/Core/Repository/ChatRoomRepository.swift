@@ -86,6 +86,17 @@ class ChatRoomRepository {
             }
     }
     
+    func fetchPrevMessages(with token: String, roomId: String, bundleId: String, count: Int) -> Observable<APIResult_1<[ModelSubChatMessage]>> {
+        return provider.rx.request(.fetchPrevMessages(token, roomId: roomId, bundleId: bundleId, count: count))
+            .retry(3)
+            .asObservable()
+            .map { try JSONDecoder().decode(APIResult_1<[ModelSubChatMessage]>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+                return Observable.error(error)
+            }
+    }
+    
     func insert(_ newItem: ItemType) -> Bool {
         return true
     }

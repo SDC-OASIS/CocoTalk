@@ -18,10 +18,13 @@ protocol ChatRoomInput {
 
 protocol ChatRoomDependency {
     var isLoading: BehaviorRelay<Bool> { get }
+    var hasFirstMessage: BehaviorRelay<Bool> { get }
     var socket: BehaviorRelay<WebSocketHelper?> { get }
     var userId2RoomMember: BehaviorRelay<[Int:RoomMember]> { get }
     var rawMessages: BehaviorRelay<[ModelMessage]> { get }
+    var prevMessages: BehaviorRelay<[ModelMessage]> { get }
     var bundleInfo: BehaviorRelay<ModelMessageBundle?> { get }
+    var currentOldestMessageId: BehaviorRelay<String?> { get }
 }
 
 protocol ChatRoomOutput {
@@ -53,16 +56,30 @@ class ChatRoomViewModel {
     
     struct Dependency: ChatRoomDependency {
         var isLoading = BehaviorRelay<Bool>(value: false)
+        var hasFirstMessage = BehaviorRelay<Bool>(value: false)
         var socket = BehaviorRelay<WebSocketHelper?>(value: nil)
         var userId2RoomMember = BehaviorRelay<[Int:RoomMember]>(value: [:])
         var rawMessages = BehaviorRelay<[ModelMessage]>(value: [])
+        var prevMessages = BehaviorRelay<[ModelMessage]>(value: [])
         var bundleInfo = BehaviorRelay<ModelMessageBundle?>(value: nil)
+        var currentOldestMessageId = BehaviorRelay<String?>(value: nil)
     }
     
     struct Output: ChatRoomOutput {
         var messages = BehaviorRelay<[ModelMessage]>(value: [])
         var members = BehaviorRelay<[RoomMember]>(value: [])
         var roomInfo = BehaviorRelay<ModelRoom?>(value: nil)
+    }
+    
+    // MARK: - Count messages in the same bundle.
+    func countMessageInBundle(bundleId: String) -> Int {
+        var count = 0
+        for message in dependency.rawMessages.value {
+            if message.messageBundleId == bundleId {
+                count += 1
+            }
+        }
+        return  20-count
     }
     
     // MARK: - Calculate read count
@@ -75,31 +92,22 @@ class ChatRoomViewModel {
         for member in members {
             let enteredAt = (member.enteredAt?.parseDate() ?? Date(timeIntervalSince1970: 0)).timeIntervalSince1970
             let awayAt = (member.awayAt?.parseDate() ?? Date(timeIntervalSince1970: 0)).timeIntervalSince1970
-            
-            print("-----------------------------------")
-            print("username: \(member.username ?? "")")
+
             if enteredAt > awayAt { // 현재 접속중
-                print("🟢 채팅방 안 입니다.")
                 count -= 1
             } else if awayAt > sentAt { // 읽은 사람이 나간 경우
-                print("🔴 채팅방 밖 입니다.")
                 count -= 1
             }
-            print("enteredAt: \(member.enteredAt?.parseDate())")
-            print("awayAt: \(member.awayAt?.parseDate())")
-            print("sentAt: \(messageSentAt.parseDate())")
         }
-        print("totalCount: \(members.count)\tunreadCount: \(count)")
-        print("==================================")
         return count
     }
+    
     
     // MARK: - Process Messages
     func getProcessedMessages() -> [ModelMessage] {
         var processedMessages = dependency.rawMessages.value
         
         for (index, message) in processedMessages.enumerated() {
-            print("processing... \(message.content ?? "")")
             var newMessage = message
             
             if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
@@ -156,8 +164,8 @@ class ChatRoomViewModel {
         return processedMessages
     }
     
-    // MARK: - Build message
-    private func buildMessage(_ room: ModelRoom) -> ModelPubChatMessage? {
+    // MARK: - Build ModelPubChatMessage with ModelRoom
+    func buildMessage(_ room: ModelRoom) -> ModelPubChatMessage? {
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
            let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
             
@@ -191,35 +199,32 @@ class ChatRoomViewModel {
         return nil
     }
     
-    // MARK: - Convert Message
-    func convertMessage(_ message: ModelMessageVO) -> ModelMessage? {
-        guard let subMessage = message.message else {
-            return nil
-        }
-        
-        dependency.bundleInfo.accept(message.bundleInfo)
-        
+    // MARK: - Build ModelMessage with ModelSubChatMessage
+    func buildMessage(_ subMessage: ModelSubChatMessage) -> ModelMessage? {
+        let username = dependency.userId2RoomMember.value[subMessage.userId ?? 0]?.username ?? ""
         return ModelMessage(id: subMessage.id,
-                            roomId: subMessage.roomId,
+                            roomId: rooomId,
                             messageBundleId: subMessage.messageBundleId,
                             userId: subMessage.userId,
                             content: subMessage.content,
                             type: subMessage.type,
                             sentAt: subMessage.sentAt,
-                            mediaUrls: [],
-                            senderId: nil,
-                            date: nil,
-                            isMe: nil,
-                            hasTail: nil,
-                            hasDate: nil,
-                            username: nil,
-                            profileImageURL: nil)
+                            username: username)
+    }
+    
+    // MARK: - Convert Message
+    func convertMessage(_ message: ModelMessageVO) -> ModelMessage? {
+        guard let subMessage = message.message else {
+            return nil
+        }
+        dependency.bundleInfo.accept(message.bundleInfo)
+        return buildMessage(subMessage)
     }
 }
 
 extension ChatRoomViewModel {
-    // MARK: - Fetch Message
-    func getMessages() {
+    // MARK: - Initial Message Fetch
+    func initailMessageFetch() {
         let token: String? = KeychainWrapper.standard[.accessToken]
         guard let token = token else {
             return
@@ -235,10 +240,13 @@ extension ChatRoomViewModel {
         chatRoomRepository.fetchInitialMessages(with: token, roomId: rooomId, count: count)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self,
-                      let data = response.data else {
+                      let data = response.data,
+                      let messages = data.messageList,
+                      messages.count > 0 else {
                     return
                 }
-                self.dependency.rawMessages.accept(data.messageList ?? [])
+                self.dependency.currentOldestMessageId.accept(messages[0].id)
+                self.dependency.rawMessages.accept(messages)
             })
             .disposed(by: bag)
     }
@@ -253,6 +261,7 @@ extension ChatRoomViewModel {
         dependency.isLoading.accept(true)
         chatRoomRepository.fetchRoomInfo(with: token, roomId: self.rooomId)
             .subscribe(onNext: { [weak self] response in
+                self?.dependency.isLoading.accept(false)
                 guard let self = self,
                       let room = response.data else {
                     return
@@ -275,6 +284,50 @@ extension ChatRoomViewModel {
         if let message = buildMessage(roomInfo) {
               socket.sendMessage(message)
         }
+    }
+    
+    // MARK: - Fetch preveious messages
+    func fetchPreviousMessages() {
+        let token: String? = KeychainWrapper.standard[.accessToken]
+        guard let token = token else {
+            return
+        }
+        
+        let rawMessages = dependency.rawMessages.value
+        guard rawMessages.count > 0 else {
+            return
+        }
+        dependency.isLoading.accept(true)
+        
+        // 최상단 메시지의 번들 id
+        let oldestBundleId = rawMessages[0].messageBundleId ?? ""
+        // 카운트
+        let bundleCount = countMessageInBundle(bundleId: oldestBundleId)
+        // roomId
+        let roomId = output.roomInfo.value?.id ?? ""
+        chatRoomRepository.fetchPrevMessages(with: token, roomId: roomId, bundleId: oldestBundleId, count: bundleCount)
+            .subscribe(onNext: { [weak self] response in
+                self?.dependency.isLoading.accept(false)
+                guard let self = self,
+                      let messages = response.data,
+                      messages.count > 0,
+                      self.dependency.rawMessages.value.count > 0  else {
+                          self?.dependency.prevMessages.accept([])
+                          return
+                      }
+                
+                if let id = messages[0].id,
+                   let prevOldestId = self.dependency.currentOldestMessageId.value,
+                   id == prevOldestId {
+                    self.dependency.hasFirstMessage.accept(true)
+                    return
+                }
+                
+                let modelMessages = messages.compactMap { self.buildMessage($0) }
+                
+                self.dependency.currentOldestMessageId.accept(messages[0].id)
+                self.dependency.prevMessages.accept(modelMessages)
+            }).disposed(by: bag)
     }
     
 }

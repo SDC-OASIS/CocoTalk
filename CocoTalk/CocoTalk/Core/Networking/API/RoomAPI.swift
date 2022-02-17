@@ -9,6 +9,7 @@ import Foundation
 import Moya
 
 enum RoomAPI {
+    case fetchPrevMessages(_ token: String, roomId: String, bundleId: String, count: Int)
     case fetchInitialMessages(_ token: String, roomId: String, count: Int)
     case fetchRoomInfo(_ token: String, roomId: String)
     case fetchRooms(_ token: String)
@@ -30,6 +31,8 @@ extension RoomAPI: TargetType {
             return "/chat/rooms/\(roomId)"
         case .fetchInitialMessages(_, let roomId,_):
             return "/chat/rooms/\(roomId)/tail/"
+        case .fetchPrevMessages(_,_,_,_):
+            return "/chat/messages"
         }
     }
     
@@ -42,6 +45,8 @@ extension RoomAPI: TargetType {
         case .fetchRoomInfo(_,_):
             return .get
         case .fetchInitialMessages(_,_,_):
+            return .get
+        case .fetchPrevMessages(_,_,_,_):
             return .get
         }
     }
@@ -56,6 +61,9 @@ extension RoomAPI: TargetType {
             return .requestPlain
         case .fetchInitialMessages(_,_,let count):
             return .requestParameters(parameters: ["count": count], encoding: URLEncoding.queryString)
+        case .fetchPrevMessages(_, let roomId, let bundleId, let count):
+            return .requestParameters(parameters: ["roomId": roomId, "bundleId": bundleId, "count": "\(count)"],
+                                      encoding: URLEncoding.queryString)
         }
     }
     
@@ -70,6 +78,8 @@ extension RoomAPI: TargetType {
         case .fetchRoomInfo(let token,_):
             parameters["X-ACCESS-TOKEN"] = token
         case .fetchInitialMessages(let token,_,_):
+            parameters["X-ACCESS-TOKEN"] = token
+        case .fetchPrevMessages(let token,_,_,_):
             parameters["X-ACCESS-TOKEN"] = token
         }
         

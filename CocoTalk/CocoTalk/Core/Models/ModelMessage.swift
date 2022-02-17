@@ -9,19 +9,19 @@ import Foundation
 
 struct ModelMessage: Codable {    
     /// 메시지 id
-    var id: String?
+    var id: String? = nil
     
     /// 채팅방 id
-    var roomId: String?
+    var roomId: String? = nil
     
     /// 메시지 번들 id
-    var messageBundleId: String?
+    var messageBundleId: String? = nil
     
     /// user id
-    var userId: Int?
+    var userId: Int? = nil
     
     /// 메시지 텍스트
-    var content: String?
+    var content: String? = nil
     
     /// 메시지 타입
     /// - 0: 단순 메시지
@@ -31,37 +31,37 @@ struct ModelMessage: Codable {
     /// - 4: 사진
     /// - 5: 동영상
     /// - 6: 그 외 파일
-    var type: Int?
+    var type: Int? = nil
     
     /// 보낸 시각
-    var sentAt: String?
+    var sentAt: String? = nil
     
     /// 미디어 리소스 주소
-    var mediaUrls: [String]?
+    var mediaUrls: [String]? = nil
     
     /// 송신자
     ///
     /// nil: 안내 메시지
-    var senderId: Int?
+    var senderId: Int? = nil
     
     /// 송신 날짜
-    var date: Date?
+    var date: Date? = nil
     
     /// 내가 보낸 톡인지
-    var isMe: Bool?
+    var isMe: Bool? = nil
     
     /// 꼬리 붙임 여부
-    var hasTail: Bool?
+    var hasTail: Bool? = nil
     
     /// 날짜 표시 여부
-    var hasDate: Bool?
+    var hasDate: Bool? = nil
     
     /// 유저 네임
-    var username: String?
+    var username: String? = nil
     
     /// 프로필 이미지 URL
-    var profileImageURL: String?
+    var profileImageURL: String? = nil
     
     /// 안 읽은 사람 수
-    var unreadMemberCount: Int?
+    var unreadMemberCount: Int? = nil
 }
