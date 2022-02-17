@@ -63,6 +63,12 @@ const userStore = {
     SET_USER(state, payload) {
       state.userInfo = payload;
     },
+    UPDATE_PROFILE(state, payload) {
+      state.userInfo.profile.profile = payload;
+    },
+    UPDATE_BACKGROUND(state, payload) {
+      state.userInfo.profile.background = payload;
+    },
     GO_MAINPAGE() {
       router.push({ name: "friends" }).catch(() => {});
     },
@@ -150,7 +156,8 @@ const userStore = {
       frm.append("profileImgThumb", payload);
 
       await axios.put("user/profile/img", frm, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
-        console.log(res.data);
+        console.log(JSON.parse(res.data.data.profile).profile);
+        context.commit("UPDATE_PROFILE", JSON.parse(res.data.data.profile).profile);
       });
     },
     updateBG: async function (context, payload) {
@@ -158,6 +165,7 @@ const userStore = {
       frm.append("bgImg", payload);
       await axios.put("user/profile/bg", frm, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
         console.log(res.data);
+        context.commit("UPDATE_BACKGROUND", JSON.parse(res.data.data.profile).background);
       });
     },
   }, //actions END
