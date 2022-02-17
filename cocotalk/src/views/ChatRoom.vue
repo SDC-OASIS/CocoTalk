@@ -64,7 +64,7 @@
                 <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
                 <div class="sent-time-me">오후2:00</div>
               </div>
-              <img class="img-message" :src="chatMessage.content" />
+              <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" />
               <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
                 <div class="sent-time-me">오후2:00</div>
                 <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
@@ -218,7 +218,32 @@ export default {
   },
   methods: {
     ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus", "setNewPrivateRoomStatus", "setNewPrivateRoomRefresh", "setInviteRoomInfo"]),
+    openClick(url) {
+      var img = new Image();
+      img.src = url;
+      var img_width = img.width;
+      var win_width = img.width + 25;
+      var img_height = img.height;
 
+      var curX = window.screenLeft;
+      var curY = window.screenTop;
+      var curWidth = document.body.clientWidth;
+      var curHeight = document.body.clientHeight;
+
+      var nLeft = curX + curWidth / 2 - img_width / 2;
+      var nTop = curY + curHeight / 2 - img_height / 2;
+
+      var strOption = "";
+      strOption += "left=" + nLeft + "px,";
+      strOption += "top=" + nTop + "px,";
+      strOption += "width=" + img_width + "px,";
+      strOption += "height=" + img_height + "px,";
+      strOption += "toolbar=no,menubar=no,location=no,scrollbars=yes,";
+      strOption += "resizable=yes,status=yes";
+      var OpenWindow = window.open("/", "popup", strOption);
+      // var OpenWindow = window.open("/", "popup", `width=${img_width}, height=${img_height}, left=${left}, top=${tops}`);
+      OpenWindow.document.write(`<style>body{margin:0px;}</style><img src='${url}' width='$${win_width}'>`);
+    },
     // 1.채팅내역 불러오기
     // 1-1. 일반 채팅방 입장
     getChat() {
