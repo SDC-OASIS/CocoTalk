@@ -217,9 +217,11 @@ const socket = {
     },
     startPrivateChat(context, friend) {
       console.log("개인톡방 체크");
-      // store.dispatch("modal/closeProfileModal");
-
-      axios.get(`chat/rooms/private/${friend.friend.id}`).then((res) => {
+      store.dispatch("modal/closeProfileModal");
+      if (!friend.id) {
+        friend.id = friend.userId;
+      }
+      axios.get(`chat/rooms/private/${friend.id}`).then((res) => {
         console.log("개인톡방 있나요?");
         if (res.data.data.id) {
           context.commit("setNewPrivateRoomStatus", false);

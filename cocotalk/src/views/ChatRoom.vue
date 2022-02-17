@@ -66,7 +66,7 @@
         <Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
       </div>
     </div>
-    <Sidebar :members="roomInfo.members" />
+    <Sidebar v-if="sidebar" :members="roomInfo.members" />
   </div>
 </template>
 
@@ -103,6 +103,8 @@ export default {
   },
   created() {
     console.log("===========[채팅페이지]============");
+    this.$store.dispatch("modal/setSidebar", true, { root: true });
+
     this.$store.dispatch(
       "chat/changePage",
       {
@@ -125,7 +127,7 @@ export default {
   computed: {
     ...mapState("chat", ["roomStatus", "friends", "chattings", "chatInfo", "newRoomInfo"]),
     ...mapState("userStore", ["userInfo"]),
-    ...mapState("modal", ["roomNameEditModal"]),
+    ...mapState("modal", ["roomNameEditModal", "sidebar"]),
     ...mapState("socket", [
       "stompChatRoomClient",
       "stompChatRoomConnected",
@@ -148,6 +150,8 @@ export default {
     // 채팅방을 켜둔상태에서 다른 채팅방으로 이동할 경우
     "$route.params.roomId": function () {
       // 이전 채팅방 disconnect
+      this.$store.dispatch("modal/setSidebar", true, { root: true });
+
       if (!this.newPrivateRoomStatus) {
         const headers = { action: "leave" };
         console.log("이전 방 나가기");
@@ -469,6 +473,8 @@ export default {
       this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
     },
     openSidebar() {
+      this.$store.dispatch("modal/setSidebar", true, { root: true });
+
       const sidebar = document.querySelector(".sidebar-container");
       const sidebarBack = document.querySelector(".sidebar-background");
       sidebarBack.style.display = "block";
