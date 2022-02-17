@@ -35,7 +35,7 @@
             </div>
             <div class="friend-container row" v-for="(member, idx) in members" :key="idx">
               <div @click="openProfileModal(member)">
-                <profile-img :imgUrl="member.profile.profile" width="50px" />
+                <profile-img :imgUrl="member.profile.profile" width="50px" @status="checkStatus" />
               </div>
               <div class="friend-name" :id="'check' + idx">{{ member.username }}</div>
             </div>
@@ -71,6 +71,7 @@ export default {
   },
   computed: {
     ...mapState("friend", ["friends"]),
+    ...mapState("modal", ["sidebar"]),
   },
   methods: {
     closeSidebar() {
@@ -81,6 +82,11 @@ export default {
     },
     openProfileModal(userProfileInfo) {
       this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
+    },
+    checkStatus(status) {
+      if (!status) {
+        this.closeSidebar();
+      }
     },
   },
 };

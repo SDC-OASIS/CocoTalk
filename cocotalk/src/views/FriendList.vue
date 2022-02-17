@@ -73,7 +73,7 @@ export default {
     startPrivateChat(friend) {
       console.log("더블클릭:");
       console.log(friend);
-      this.$store.dispatch("socket/startPrivateChat", friend, { root: true });
+      this.$store.dispatch("socket/startPrivateChat", friend.friend, { root: true });
     },
   },
 };
