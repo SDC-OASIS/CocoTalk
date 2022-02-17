@@ -10,6 +10,9 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import RxCocoa
+import IQKeyboardManagerSwift
+import RxGesture
 
 class ChatRoomViewController: UIViewController {
     
@@ -17,7 +20,7 @@ class ChatRoomViewController: UIViewController {
     /// MessageCollectionView
     private var collectionView: UICollectionView!
     
-    private let bottomView = ChatRoomTextFieldView().then {
+    private let bottomView = UIView().then {
         $0.backgroundColor = .white
     }
     
@@ -26,17 +29,20 @@ class ChatRoomViewController: UIViewController {
         $0.backgroundColor = UIColor(red: 248/255, green: 248/255, blue: 248/255, alpha: 1)
         $0.layer.borderColor = UIColor(red: 222/255, green: 222/255, blue: 222/255, alpha: 1).cgColor
         $0.layer.borderWidth = 1
-        $0.layer.cornerRadius = 20
+        $0.layer.cornerRadius = 18
         $0.clipsToBounds = true
     }
     
     /// 텍스트필드
     private let textField = UITextField().then {
+        $0.font = .systemFont(ofSize: 15)
         $0.autocorrectionType = .no
         $0.inputAccessoryView = UIView()
     }
     
     /// 전송 버튼
+    private let uiViewSend = UIView()
+    
     private let ivSend = UIImageView().then {
         $0.image = UIImage(named: "send")
     }
@@ -44,7 +50,11 @@ class ChatRoomViewController: UIViewController {
     /// 플러스 버튼
     private let ivMedia = UIImageView().then {
         $0.image = UIImage(named: "media")
+        $0.isUserInteractionEnabled = false
     }
+    
+    /// 리프레쉬 UI
+    private let refreshControl = UIRefreshControl()
     
     // MARK: - Properties
     let bag = DisposeBag()
@@ -77,6 +87,10 @@ class ChatRoomViewController: UIViewController {
         view.backgroundColor = UIColor(red: 171/255, green: 194/255, blue: 209/255, alpha: 1)
         navigationController?.isNavigationBarHidden = false
         
+        textField.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         setBackButton()
         configureView()
         configureSubviews()
@@ -94,17 +108,62 @@ class ChatRoomViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = false
         setNavigationAppearance()
         connectSocket()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         resetNavigationAppearance()
         disconnectSocket()
     }
     
     // MARK: - Helper
+    @objc
+    private func keyboardWillShow(_ sender: Notification) {
+        if let keyboardFrame: NSValue = sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let height = keyboardFrame.cgRectValue.origin.y - textFieldView.frame.height - 10
+            resetKeyboardPosition(height: height, isEditing: true)
+        }
+    }
+    
+    @objc
+    private func keyboardWillHide(_ sender: Notification) {
+        resetKeyboardPosition(isEditing: false)
+    }
+    
+    // MARK: resetKeyboardPosition
+    private func resetKeyboardPosition(height: CGFloat? = nil, isEditing: Bool) {
+        // bottomView.frame.origin.y = height
+        if isEditing {
+            let height: CGFloat = height ?? view.frame.size.height - bottomView.frame.height
+            bottomView.snp.remakeConstraints {
+                $0.top.equalTo(height)
+                $0.bottom.equalToSuperview()
+                $0.leading.trailing.equalToSuperview()
+            }
+        }
+        else {
+            textField.endEditing(!isEditing)
+            bottomView.snp.remakeConstraints {
+                $0.bottom.equalToSuperview()
+                $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(50)
+                $0.leading.trailing.equalToSuperview()
+            }
+        }
+
+        collectionView.snp.remakeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(bottomView.snp.top)
+        }
+        view.layoutIfNeeded()
+    }
+    
+    // MARK: connectSocket
     private func connectSocket() {
         var socket: WebSocketHelper
         if let dependecySocket = viewModel.dependency.socket.value {
@@ -123,21 +182,25 @@ class ChatRoomViewController: UIViewController {
         bindSocket()
     }
     
+    // MARK: disconnectSocket
     private func disconnectSocket() {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.removeChatSocket()
         viewModel.dependency.socket.accept(nil)
     }
     
+    // MARK: fetch (첫 메시지 불러오기)
     private func fetch() {
-        viewModel.getMessages()
+        viewModel.initailMessageFetch()
         viewModel.fetchRoomInfo()
     }
     
+    // MARK: setBackButton
     private func setBackButton() {
         self.navigationController?.navigationBar.tintColor = .black
     }
     
+    // MARK: resetNavigationAppearance
     private func resetNavigationAppearance() {
         navigationController?.isNavigationBarHidden = true
         navigationController?.tabBarController?.tabBar.isHidden = false
@@ -145,6 +208,7 @@ class ChatRoomViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
     }
     
+    // MARK: setNavigationAppearance
     private func setNavigationAppearance() {
         navigationController?.isNavigationBarHidden = false
         navigationController?.tabBarController?.tabBar.isHidden = true
@@ -160,10 +224,20 @@ class ChatRoomViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = navAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
     }
+    
+    // MARK: handleRefresh
+    @objc func handleRefresh(refreshControl: UIRefreshControl) {
+        if !viewModel.dependency.isLoading.value,
+           !viewModel.dependency.hasFirstMessage.value {
+            viewModel.fetchPreviousMessages()
+        }
+    }
+    
 }
 
 // MARK: - BaseViewController
 extension ChatRoomViewController {
+    // MARK: configureView
     func configureView() {
         let flowLayout = MessageCollectionViewLayout()
         flowLayout.delegate = self
@@ -176,18 +250,32 @@ extension ChatRoomViewController {
         
         view.addSubview(collectionView)
         
+        refreshControl.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: UIControl.Event.valueChanged)
+        collectionView.addSubview(refreshControl)
+        
         textFieldView.addSubview(textField)
-        textFieldView.addSubview(ivSend)
+        
         bottomView.addSubview(ivMedia)
         bottomView.addSubview(textFieldView)
+        
+        uiViewSend.addSubview(ivSend)
+        bottomView.addSubview(uiViewSend)
         view.addSubview(bottomView)
     }
     
+    // MARK: configureSubviews
     func configureSubviews() {
         ivSend.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(4)
-            $0.trailing.equalToSuperview().inset(4)
-            $0.width.height.equalTo(32)
+            $0.top.equalTo(textFieldView).offset(4)
+            $0.trailing.equalTo(textFieldView).inset(4)
+            $0.width.height.equalTo(28)
+        }
+        
+        uiViewSend.snp.makeConstraints {
+            $0.top.equalTo(bottomView).offset(-10)
+            $0.trailing.equalTo(view)
+            $0.bottom.equalTo(textFieldView).offset(10)
+            $0.leading.equalTo(textField.snp.trailing).inset(10)
         }
         
         textField.snp.makeConstraints {
@@ -199,9 +287,8 @@ extension ChatRoomViewController {
         textFieldView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(50)
             $0.trailing.equalToSuperview().inset(10)
-            $0.top.equalToSuperview().offset(8)
-            $0.bottom.lessThanOrEqualToSuperview()
-            $0.height.equalTo(40)
+            $0.top.equalToSuperview().offset(4)
+            $0.height.equalTo(36)
         }
         
         ivMedia.snp.makeConstraints {
@@ -212,7 +299,7 @@ extension ChatRoomViewController {
         
         bottomView.snp.makeConstraints {
             $0.bottom.equalToSuperview()
-            $0.height.equalTo(70)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(50)
             $0.leading.trailing.equalToSuperview()
         }
         
@@ -228,10 +315,11 @@ extension ChatRoomViewController {
     func bind() {
         bindViewModel()
         bindTextField()
+        bindCollectionView()
         bindButton()
     }
     
-    // MARK: - BindViewModel
+    // MARK: Bind ViewModel
     private func bindViewModel() {
         viewModel.dependency.rawMessages
             .subscribe(onNext: { [weak self] rawMessages in
@@ -243,15 +331,17 @@ extension ChatRoomViewController {
             }).disposed(by: bag)
         
         viewModel.output.messages
-            .subscribe(onNext: { [weak self] messages in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else {
                     return
                 }
                 print("🚧 메시지 리스트 수신")
                 self.collectionView.reloadData()
                 self.collectionView.layoutIfNeeded()
-                DispatchQueue.main.async {
-                    self.collectionView.scrollToBottom(animated: false)
+                if self.viewModel.dependency.rawMessages.value.last?.userId == self.myId {
+                    DispatchQueue.main.async {
+                        self.collectionView.scrollToBottom(animated: false)
+                    }
                 }
             }).disposed(by: bag)
         
@@ -263,11 +353,6 @@ extension ChatRoomViewController {
                 print("🚧 룸 정보 수정됨")
                 let processedMessages = self.viewModel.getProcessedMessages()
                 self.viewModel.output.messages.accept(processedMessages)
-//                self.collectionView.reloadData()
-//                self.collectionView.layoutIfNeeded()
-//                DispatchQueue.main.async {
-//                    self.collectionView.scrollToBottom(animated: false)
-//                }
             }).disposed(by: bag)
         
         viewModel.output.members
@@ -281,8 +366,37 @@ extension ChatRoomViewController {
                 }
                 self.viewModel.dependency.userId2RoomMember.accept(newValue)
             }).disposed(by: bag)
+        
+        viewModel.dependency.prevMessages
+            .subscribe(onNext: { [weak self] prevMessages in
+                self?.refreshControl.endRefreshing()
+                guard let self = self,
+                      prevMessages.count > 0 else {
+                    return
+                }
+                let oldVal = self.viewModel.dependency.rawMessages.value
+                var newVal = oldVal
+                let count = prevMessages.count - 1
+                for i in 0...count {
+                    newVal.insert(prevMessages[count-i], at: 0)
+                }
+                self.viewModel.dependency.rawMessages.accept(newVal)
+            }).disposed(by: bag)
     }
     
+    // MARK: Bind CollectionView
+    private func bindCollectionView() {
+        collectionView.rx.tapGesture()
+            .when(.ended)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.resetKeyboardPosition(isEditing: false)
+            }).disposed(by: bag)
+    }
+    
+    // MARK: Bind textfield
     private func bindTextField() {
         textField.rx.text
             .orEmpty
@@ -290,12 +404,18 @@ extension ChatRoomViewController {
                 guard let self = self else {
                     return
                 }
+                if text.count > 0 {
+                    self.ivSend.isHidden = false
+                } else {
+                    self.ivSend.isHidden = true
+                }
                 self.viewModel.input.text.accept(text)
             }).disposed(by: bag)
     }
     
+    // MARK: Bind button
     private func bindButton() {
-        ivSend.rx.tapGesture()
+        uiViewSend.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else {
@@ -304,10 +424,11 @@ extension ChatRoomViewController {
                 self.viewModel.sendMessage()
                 self.textField.text = ""
                 self.viewModel.input.text.accept("")
+                self.ivSend.isHidden = true
             }).disposed(by: bag)
     }
     
-    // MARK: - BindSocket
+    // MARK: Bind Socket
     private func bindSocket() {
         
         guard let socket = viewModel.dependency.socket.value else {
@@ -367,6 +488,7 @@ extension ChatRoomViewController: UICollectionViewDelegate, UICollectionViewData
 }
 
 
+// MARK: - MessageCollectionViewLayoutDelegate
 extension ChatRoomViewController: MessageCollectionViewLayoutDelegate {
     func collectionView(_ collectionView: UICollectionView, heightForCellAtIndexPath indexPath: IndexPath) -> CGFloat {
         let width = collectionView.bounds.width
@@ -376,5 +498,20 @@ extension ChatRoomViewController: MessageCollectionViewLayoutDelegate {
         dummyCell.layoutIfNeeded()
         let estimateSize = dummyCell.systemLayoutSizeFitting(CGSize(width: width, height: estimatedHeight))
         return estimateSize.height
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension ChatRoomViewController: UITextFieldDelegate {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print("hello")
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return false
     }
 }
