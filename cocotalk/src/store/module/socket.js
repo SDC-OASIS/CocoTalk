@@ -17,6 +17,7 @@ const socket = {
     newPrivateRoomStatus: false,
     newPrivateRoomFriendInfo: {},
     newPrivateRoomRefresh: false,
+    inviteRoomInfo: {},
     triggerMessage: null,
     chats: [],
   },
@@ -45,11 +46,17 @@ const socket = {
     setNewPrivateRoomFriendInfo(state, payload) {
       state.newPrivateRoomFriendInfo = payload;
     },
+    setInviteRoomInfo(state, payload) {
+      state.inviteRoomInfo = payload;
+    },
     setChatList(state, payload) {
       state.chats = payload;
     },
     UPDATE_CHAT_LIST(state, { idx, lastMessage }) {
       state.chats[idx].recentChatMessage = lastMessage;
+    },
+    UPDATE_ROOM_INFO(state, { idx, newRoomInfo }) {
+      state.chats[idx].room = newRoomInfo;
     },
     ADD_UNREAD_MESSAGES(state, idx) {
       state.chats[idx].unreadNumber++;
@@ -148,13 +155,19 @@ const socket = {
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/room`, (res) => {
             console.log("구독으로 받은 업데이트된 룸정보입니다.");
             console.log(res);
+            const newRoomInfo = JSON.parse(res.body);
+            const idx = context.state.chats.findIndex(function (item) {
+              return item.room.id == newRoomInfo.id;
+            });
+            context.commit("UPDATE_ROOM_INFO", { idx, newRoomInfo });
           });
 
           //[채팅목록 새로 생성된 채팅방정보 채널 subscribe] == 구현중 ==
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/room/new`, (res) => {
             console.log("구독으로 받은 새로 생성된 룸정보입니다.");
-            let newRoom = JSON.parse(res.body).roomVo;
-            let bundleInfo = JSON.parse(res.body).bundleInfoVo;
+            console.log(JSON.parse(res.body));
+            let newRoom = JSON.parse(res.body);
+            // let bundleInfo = JSON.parse(res.body).bundleInfoVo;
             console.log(newRoom);
             newRoom.messageBundleIds = newRoom.messageBundleIds.slice(1, -1).split(", ");
             newRoom.members.forEach((e) => {
@@ -165,7 +178,7 @@ const socket = {
             console.log(newRoom);
             let chatRoom = {
               recentChatMessage: {},
-              recentMessageBundleCount: bundleInfo.currentMessageBundleCount, //count 값 갱신해주기
+              recentMessageBundleCount: 1, //count 값 갱신해주기
               room: newRoom,
               unreadNumber: 0,
             };
@@ -177,10 +190,10 @@ const socket = {
               let newRoomInfo = {
                 roomId: newRoom.id,
                 nextMessageBundleId: newRoom.messageBundleIds[0],
-                recentMessageBundleCount: bundleInfo.currentMessageBundleCount,
+                recentMessageBundleCount: 1,
                 newRoom: newRoom,
               };
-              store.dispatch("chat/updateMessageBundleCount", bundleInfo.currentMessageBundleCount, { root: true });
+              store.dispatch("chat/updateMessageBundleCount", 1, { root: true });
               store.dispatch("chat/goNewChat", newRoomInfo, { root: true });
             }
           });
@@ -250,6 +263,82 @@ const socket = {
     },
     clearNewPrivateRoom(context) {
       context.commit("CLEAR_NEW_PRIVATE_ROOM");
+    },
+    // 채팅방 내부에서 친구초대
+    inviteFriend(context, friends) {
+      console.log("친구초대시작합니다.");
+      console.log("방정보");
+      console.log(context.state.inviteRoomInfo);
+      console.log("friends");
+      console.log(friends);
+      // 기존멤버 데이터 형식 맞추기
+      let previousMembers = [];
+      let previousMemberIds = [];
+      context.state.inviteRoomInfo.members.forEach((e) => {
+        let previousMember = {
+          userId: e.userId,
+          username: e.username,
+          profile: JSON.stringify(e.profile),
+        };
+        previousMembers.push(previousMember);
+        previousMemberIds.push(e.userId);
+      });
+      // 초대된 친구 데이터 형식 맞추기
+      let invitees = [];
+      let inviteeIds = [];
+      let inviteesName = [];
+      friends.forEach((e) => {
+        if (!previousMemberIds.includes(e.id)) {
+          let invitee = {
+            userId: e.id,
+            username: e.username,
+            profile: JSON.stringify(e.profile),
+          };
+          invitees.push(invitee);
+          inviteeIds.push(invitee.userId);
+          inviteesName.push(invitee.username);
+        }
+      });
+      console.log(invitees);
+      console.log(previousMembers);
+      let members = [...invitees, ...previousMembers];
+      // const setMembers = [...new Map(members.map((item) => [item.userId, item])).values()];
+      console.log(members);
+      console.log("=====필터: 이미 채팅방에 참여한 멤버 거르기 완료=====");
+
+      if (context.state.stompChatRoomClient && context.state.stompChatRoomClient.connected) {
+        console.log(context.state.inviteRoomInfo);
+        let invitedFriendsNames = [];
+        // let invitedFriendsIds = [];
+        // let invitedFriends = friends;
+        invitees.forEach((e) => {
+          if (e.userId != store.getters["userStore/userInfo"].id) {
+            invitedFriendsNames.push(e.username + "님");
+          }
+        });
+        let roomname = [];
+        let receiverIds = [];
+        members.forEach((e) => {
+          roomname.push(e.username);
+          receiverIds.push(e.userId);
+        });
+        const message = `${store.getters["userStore/userInfo"].username}님이 ${inviteesName.sort().join(",")}을 초대했습니다.`;
+        const msg = {
+          roomId: context.state.inviteRoomInfo.id,
+          roomType: 1,
+          roomname: roomname.sort().join(","),
+          userId: store.getters["userStore/userInfo"].id,
+          username: store.getters["userStore/userInfo"].username,
+          receiverIds: previousMemberIds,
+          type: 1,
+          content: message,
+          invitees: invitees,
+          messageBundleId: context.state.inviteRoomInfo.messageBundleIds[context.state.inviteRoomInfo.messageBundleIds.length - 1],
+        };
+        console.log(msg);
+        context.state.stompChatRoomClient.send(`/simple/chatroom/${context.state.inviteRoomInfo.id}/message/invite`, JSON.stringify(msg));
+      }
+      this.message = "";
     },
   },
   modules: {},

@@ -134,6 +134,7 @@ export default {
     console.log("===========[채팅페이지]============");
     this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, roomId: this.$route.params.roomId }, { root: true });
     this.$store.dispatch("modal/setSidebar", true, { root: true });
+
     if (this.newPrivateRoomStatus && !this.triggerMessage) {
       console.log("============[개인톡방생성페이지]=============");
       this.newPrivateRoom();
@@ -214,7 +215,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus", "setNewPrivateRoomStatus", "setNewPrivateRoomRefresh"]),
+    ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus", "setNewPrivateRoomStatus", "setNewPrivateRoomRefresh", "setInviteRoomInfo"]),
 
     // 1.채팅내역 불러오기
     // 1-1. 일반 채팅방 입장
@@ -228,6 +229,8 @@ export default {
             this.sendTriggerMessage();
           }
           this.roomInfo = chatData.room;
+          this.setInviteRoomInfo(this.roomInfo);
+
           this.chatMessages = chatData.messageList;
           chatData.room.messageBundleIds = chatData.room.messageBundleIds.slice(1, -1).split(", ");
           // 새로 받은 최신 bundleId 업데이트
