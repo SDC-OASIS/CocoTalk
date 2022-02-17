@@ -119,11 +119,13 @@ public class FCMService {
 
     public void sendByDevices(Flux<Device> targets, PushTopicDto info) throws IOException {
         String authorization = "Bearer " + getAccessToken();
+        log.info("[sendByDevices/authorization] : " + authorization);
         long startTime = System.currentTimeMillis();
         WebClient webClient = WebClient.create();
         Flux<FCMMessage> fcmMessageFlux = targets
                 .map(target -> {
                   ClientType type = ClientType.values()[target.getType()];
+                  log.info("["+target.getUserId()+"/"+type+"] : " +target.getToken());
                     return makeMessage(type, target.getToken(), info);
                 })
                 .doOnError((e) ->{
@@ -145,7 +147,7 @@ public class FCMService {
                 .bodyToFlux(String.class)
                 .subscribe(
                         res -> log.info("{}", res),
-                        (e) -> {log.info(e.getMessage());}
+                        (e) -> {log.info("[webClient] ::" + e.getMessage());}
                 )
         );
         log.info("end: " + (System.currentTimeMillis() - startTime) + "sec");
