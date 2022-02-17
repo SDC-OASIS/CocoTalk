@@ -25,7 +25,7 @@
       <!-- 친구목록 -->
       <div class="friend-list-container">
         <div class="friend-cnt">친구 - {{ friendsCnt }}</div>
-        <div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx">
+        <div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx" @dblclick="startPrivateChat(friend)">
           <div @click="openProfileModal(friend.friend)">
             <profile-img :imgUrl="friend.friend.profile.profile" width="40px" />
           </div>
@@ -69,6 +69,11 @@ export default {
     },
     openAddFriendModal() {
       this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
+    },
+    startPrivateChat(friend) {
+      console.log("더블클릭:");
+      console.log(friend);
+      this.$store.dispatch("socket/startPrivateChat", friend, { root: true });
     },
   },
 };

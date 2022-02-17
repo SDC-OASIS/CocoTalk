@@ -62,7 +62,7 @@
 
 <script>
 import { mapState } from "vuex";
-import axios from "@/utils/axios";
+// import axios from "@/utils/axios";
 import ProfileImg from "@/components/common/ProfileImg.vue";
 import ChatListInfo from "@/components/chats/ChatListInfo.vue";
 
@@ -74,133 +74,30 @@ export default {
   },
   data() {
     return {
-      chats: [],
+      // chats: [],
     };
   },
   created() {
     console.log("========[채팅목록페이지]=========");
     this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
-    this.getChatList();
-    this.chatListSubscribe();
+    // this.$store.dispatch("socket/chatListConnect");
+    // this.getChatList();
+    // this.chatListSubscribe();
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
     ...mapState("userStore", ["userInfo"]),
-    ...mapState("socket", ["stompChatListClient", "stompChatListConnected", "createChatRoomStatus"]),
+    ...mapState("socket", ["stompChatListClient", "stompChatListConnected", "createChatRoomStatus", "chats"]),
   },
   methods: {
-    chatListSubscribe() {
-      //[채팅목록 마지막 메세지 subscribe]
-      this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/message`, (res) => {
-        console.log("구독으로 받은 메시지목록의 마지막 메세지 정보 입니다.");
-        const data = JSON.parse(res.body);
-        let lastMessage = data.message;
-        let bundleInfo = data.bundleInfo;
-        console.log(data);
-        const idx = this.chats.findIndex(function (item) {
-          return item.room.id == lastMessage.roomId;
-        });
-        // 1.마지막 메세지 갱신
-        this.chats[idx].recentChatMessage = lastMessage;
-        // 현재 입장한 방이 아니라면 안읽은 메세지수에 더해줌
-        if (this.chats[idx].room.id != this.roomStatus.roomId) {
-          this.chats[idx].unreadNumber++;
-        }
-        // 2.채팅방 목록에 있는 방의 메세지인 경우
-        if (idx) {
-          const updateData = this.chats[idx];
-          console.log(updateData);
-          this.chats.splice(idx, 1);
-          this.chats.unshift(updateData);
-        }
-        // 채팅방별 최신 메세지의 번들 수 갱신
-        this.chats[idx].recentMessageBundleCount = bundleInfo.currentMessageBundleCount;
-        // this.$store.dispatch("chat/updateMessageBundleCount", recentMessageBundleCount, { root: true });
-        console.log(lastMessage);
-        console.log(bundleInfo);
-
-        // 3.채팅방 목록에 없는 방의 메세지인 경우 (나가기한 1대1 채팅) == 구현중 ==
-      });
-
-      //[채팅목록 채팅방정보 채널 subscribe] == 구현중 ==
-      this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room`, (res) => {
-        console.log("구독으로 받은 업데이트된 룸정보입니다.");
-        console.log(res);
-      });
-
-      //[채팅목록 새로 생성된 채팅방정보 채널 subscribe] == 구현중 ==
-      this.stompChatListClient.subscribe(`/topic/${this.userInfo.id}/room/new`, (res) => {
-        console.log("구독으로 받은 새로 생성된 룸정보입니다.");
-        console.log(JSON.parse(res.body));
-        let newRoom = JSON.parse(res.body);
-
-        newRoom.messageBundleIds = newRoom.messageBundleIds.slice(1, -1).split(", ");
-        newRoom.members.forEach((e) => {
-          if (e.profile) {
-            e.profile = JSON.parse(e.profile);
-          }
-        });
-        console.log(newRoom);
-        let chatRoom = {
-          recentChatMessage: {},
-          recentMessageBundleCount: 0,
-          room: newRoom,
-          unreadNumber: 0,
-        };
-        this.chats.unshift(chatRoom);
-
-        console.log("===방생성중[crateChatRoomStatus:" + this.createChatRoomStatus + "]===");
-        if (this.createChatRoomStatus) {
-          this.goNewChat(newRoom);
-        }
-      });
-    },
-    getChatList() {
-      axios.get("chat/rooms/list").then((res) => {
-        console.log("채팅방목록 가져오기");
-        const chatList = res.data.data;
-        if (chatList) {
-          chatList.forEach((e) => {
-            e.room.messageBundleIds = e.room.messageBundleIds.slice(1, -1).split(", ");
-            e.room.members.forEach((e) => {
-              if (e.profile) {
-                e.profile = JSON.parse(e.profile);
-              }
-            });
-          });
-          this.chats = chatList;
-        }
-        console.log(chatList);
-      });
-    },
     openChatCreationModal() {
       this.$store.dispatch("modal/openChatCreationModal", "open", { root: true });
     },
     goChat(chat) {
-      // 현재 swagger로 채팅방생성중이기때문에 첫메세지가 없는 경우가 있어 nextMessageBundleId 업데이트.
-      // 채팅방내부에서 채팅내역불러와서 갱신해주기 때문에 이후에는 필요없음
-      let payload = {
-        roomId: chat.room.id,
-        nextMessageBundleId: chat.room.messageBundleIds[chat.room.messageBundleIds.length - 1],
-        recentMessageBundleCount: chat.recentMessageBundleCount,
-      };
-      this.$store.dispatch("chat/goChat", payload, { root: true });
-      const idx = this.chats.findIndex(function (item) {
-        return item.room.id == chat.room.id;
-      });
-      // 읽지 않은 메세지수 0으로 만들기
-      this.chats[idx].unreadNumber = 0;
+      console.log("goChat");
+      this.$store.dispatch("socket/goChat", chat, { root: true });
     },
-    goNewChat(newRoom) {
-      // 새로생성된 채팅방으로 가기
-      let newRoomInfo = {
-        roomId: newRoom.id,
-        nextMessageBundleId: newRoom.messageBundleIds[0],
-        recentMessageBundleCount: null,
-        newRoom: newRoom,
-      };
-      this.$store.dispatch("chat/goNewChat", newRoomInfo, { root: true });
-    },
+
     messageSentTime(time) {
       return this.$moment(time).format("LT");
     },

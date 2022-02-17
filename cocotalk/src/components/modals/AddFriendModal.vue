@@ -80,7 +80,6 @@ export default {
       if (this.friendId) {
         axios.get(`user/friends/cid/${this.friendId}`).then((res) => {
           console.log("친구정보 가져오기");
-          console.log(res);
           let friendInfo = res.data.data;
           if (friendInfo.friend.id) {
             friendInfo.friend.profile = JSON.parse(friendInfo.friend.profile);
