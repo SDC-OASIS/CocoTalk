@@ -57,12 +57,12 @@ public class MessageController {
 
     /**
      * 채팅방에 file 업로드 [GET] /messages/file
-     * @param userVo 파일 업로드를 요청한 유저의 정보
+     * @param roomId 파일 업로드를 요청한 방 id
      * @param roomId 채팅방의 id
      * @param file 업로드 요청할 파일
      * @return ResponseEntity<CustomResponse<List<ChatMessageVo>>> 페이징한 채팅방의 메시지 정보가 포함됩니다.
      */
-    @PostMapping("/file")
+    @PostMapping(value = "/file", consumes = {"multipart/form-data"})
     @Operation(summary = "채팅방 파일 업로드")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<String>> uploadFileToRoom(HttpServletRequest httpServletRequest,
