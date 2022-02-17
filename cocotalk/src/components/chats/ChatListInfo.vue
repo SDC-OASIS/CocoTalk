@@ -4,7 +4,11 @@
       <div>{{ chatInfo.room.roomname }}</div>
       <div class="member-cnt">{{ chatInfo.room.members.length }}</div>
     </div>
-    <div class="chat-list-info-message">{{ chatInfo.recentChatMessage.content }}</div>
+    <!-- 채팅방 최근 메시지 -->
+    <div v-if="chatInfo.recentChatMessage.type < 4" class="chat-list-info-message">{{ chatInfo.recentChatMessage.content }}</div>
+    <div v-else-if="chatInfo.recentChatMessage.type == 4" class="chat - list - info - message">사진을 보냈습니다.</div>
+    <div v-else-if="chatInfo.recentChatMessage.type == 5" class="chat - list - info - message">동영상을 보냈습니다.</div>
+    <div v-else-if="chatInfo.recentChatMessage.type == 6" class="chat - list - info - message">파일을 보냈습니다.</div>
   </div>
 </template>
 
