@@ -18,6 +18,7 @@ const modal = {
       status: "close",
       userProfileInfo: Object,
     },
+    inviteFriendModal: "close",
     sidebar: "close",
   },
   mutations: {
@@ -57,13 +58,19 @@ const modal = {
     CLOSE_ROOM_NAME_EDIT_MODAL(state) {
       state.roomNameEditModal.status = "close";
     },
+    OPEN_INVITE_FRIEND_MODAL(state) {
+      state.inviteFriendModal = "open";
+    },
+    CLOSE_INVITE_FRIEND_MODAL(state) {
+      state.inviteFriendModal = "close";
+    },
     SET_SIDEBAR(state, status) {
       state.sidebar = status;
     },
   },
   actions: {
-    getScreen: function (context, payload) {
-      context.commit("GET_SCREEN", payload);
+    getScreen: function (context) {
+      context.commit("GET_SCREEN");
     },
     openAlert: function (context, payload) {
       context.commit("OPEN_ALERT", payload);
@@ -96,6 +103,13 @@ const modal = {
     },
     closeRoomNameEditModal: function (context) {
       context.commit("CLOSE_ROOM_NAME_EDIT_MODAL");
+    },
+    openInviteFriendModal: function (context) {
+      console.log("친구초대모달 오픈");
+      context.commit("OPEN_INVITE_FRIEND_MODAL");
+    },
+    closeInviteFriendModal: function (context) {
+      context.commit("CLOSE_INVITE_FRIEND_MODAL");
     },
     setSidebar: function (context, status) {
       context.commit("SET_SIDEBAR", status);

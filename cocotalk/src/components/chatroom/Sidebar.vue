@@ -29,7 +29,7 @@
           <!-- 대화상대 -->
           <div>
             <div class="sidebar-title">대화상대</div>
-            <div class="add-member row">
+            <div class="add-member row" @click="inviteFriend">
               <i class="far fa-plus-square" style="font-size: 50px"></i>
               <span style="padding: 0 10px"> 대화상대 초대 </span>
             </div>
@@ -87,6 +87,10 @@ export default {
       if (!status) {
         this.closeSidebar();
       }
+    },
+    inviteFriend() {
+      console.log("====친구를 초대합니다====");
+      this.$store.dispatch("modal/openInviteFriendModal");
     },
   },
 };
@@ -179,8 +183,13 @@ hr {
 .add-member {
   padding: 10px 20px;
   font-size: 20px;
-  color: #b4d89d;
+  color: #88a873;
   align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+.add-member:hover {
+  background-color: #e7f7dd;
 }
 .friend-container {
   padding: 7px 20px;
