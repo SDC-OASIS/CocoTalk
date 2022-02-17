@@ -19,6 +19,10 @@ const modal = {
       userProfileInfo: Object,
     },
     inviteFriendModal: "close",
+    privateToTeamModal: {
+      status: "close",
+      selectedFriends: Object,
+    },
     sidebar: "close",
   },
   mutations: {
@@ -63,6 +67,13 @@ const modal = {
     },
     CLOSE_INVITE_FRIEND_MODAL(state) {
       state.inviteFriendModal = "close";
+    },
+    OPEN_PRIVATE_TO_TEAM_MODAL(state, payload) {
+      state.privateToTeamModal.status = "open";
+      state.privateToTeamModal.selectedFriends = payload;
+    },
+    CLOSE_PRIVATE_TO_TEAM_MODAL(state) {
+      state.privateToTeamModal.status = "close";
     },
     SET_SIDEBAR(state, status) {
       state.sidebar = status;
@@ -110,6 +121,13 @@ const modal = {
     },
     closeInviteFriendModal: function (context) {
       context.commit("CLOSE_INVITE_FRIEND_MODAL");
+    },
+    openPrivateToTeamModal: function (context, payload) {
+      console.log("갠톡에서 단톡으로 바꾸기");
+      context.commit("OPEN_PRIVATE_TO_TEAM_MODAL", payload);
+    },
+    closePrivateToTeamModal: function (context) {
+      context.commit("CLOSE_PRIVATE_TO_TEAM_MODAL");
     },
     setSidebar: function (context, status) {
       context.commit("SET_SIDEBAR", status);

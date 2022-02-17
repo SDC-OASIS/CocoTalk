@@ -117,8 +117,10 @@ export default {
       console.log("갠톡방이니 단톡을 생성하자");
       console.log("채팅방 멤버 선택완료");
       console.log(this.selectedFriends);
+      // let newMembets = []
+
       this.$store.dispatch("modal/closeInviteFriendModal");
-      this.$store.dispatch("modal/openRoomNameEditModal", this.selectedFriends, { root: true });
+      this.$store.dispatch("modal/openPrivateToTeamModal", this.selectedFriends, { root: true });
     },
   },
 

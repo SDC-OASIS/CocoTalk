@@ -13,7 +13,9 @@
       <add-friend-modal v-if="addFriendModal == 'open'" />
       <chat-creation-modal v-if="ChatCreationModal == 'open'" />
       <invite-friend-modal v-if="inviteFriendModal == 'open'" />
+      <private-to-team-modal v-if="privateToTeamModal.status == 'open'" />
       <room-name-edit-modal v-if="roomNameEditModal.status == 'open'" />
+      <profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
       <profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
     </div>
   </div>
@@ -25,6 +27,7 @@ import Navbar from "@/components/Navbar.vue";
 import Alert from "@/components/modals/Alert.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
 import InviteFriendModal from "@/components/modals/InviteFriendModal.vue";
+import PrivateToTeamModal from "@/components/modals/PrivateToTeamModal.vue";
 import AddFriendModal from "@/components/modals/AddFriendModal.vue";
 import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
 import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
@@ -44,6 +47,7 @@ export default {
     ProfileModal,
     Alert,
     InviteFriendModal,
+    PrivateToTeamModal,
   },
   created() {
     this.setStompChatListDisconnect();
@@ -56,7 +60,7 @@ export default {
   },
   computed: {
     ...mapState("socket", ["stompChatListConnected"]),
-    ...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal", "inviteFriendModal"]),
+    ...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal", "inviteFriendModal", "privateToTeamModal"]),
   },
   methods: {
     ...mapMutations("socket", ["setStompChatListConnected", "setStompChatListDisconnect"]),
