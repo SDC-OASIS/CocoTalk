@@ -1,6 +1,6 @@
 import createPersistedState from "vuex-persistedstate";
-// import axios from "../../utils/axios";
 import router from "../../router";
+import axios from "@/utils/axios";
 import store from "@/store";
 
 const chat = {
@@ -103,6 +103,15 @@ const chat = {
       context.commit("NEW_ROOM_INFO", newRoomInfo.newRoom);
       // store.dispatch("socket/clearNewPrivateRoom");
       router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: newRoomInfo.roomId } }).catch(() => {});
+    },
+    updateFile: async function (context, payload) {
+      var frm = new FormData();
+      frm.append("file", payload.chatFile);
+      frm.append("roomId", payload.roomId);
+      for (let e of frm.entries()) {
+        console.log(e);
+      }
+      return await axios.post("chat/messages/file", frm, { headers: { "Content-Type": "multipart/form-data" } });
     },
   },
   modules: {},
