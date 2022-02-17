@@ -65,6 +65,14 @@
       <div @click="send">
         <Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
       </div>
+      <!-- 파일 업로드 버튼 START -->
+      <div class="image-upload">
+        <label for="file-input">
+          <span class="iconify" data-icon="ant-design:paper-clip-outlined"></span>
+        </label>
+        <input id="file-input" type="file" @change="handleFileChange" />
+      </div>
+      <!-- 파일 업로드 버튼 END -->
     </div>
     <Sidebar />
   </div>
@@ -396,6 +404,20 @@ export default {
         });
       }
     },
+    handleFileChange(e) {
+      console.log("[Chat] Uploading files........");
+      let payload = { chatFile: e.target.files[0], roomId: this.roomId };
+      document.getElementById("file-input").value = ""; // input 초기화
+      this.$store
+        .dispatch("chat/updateFile", payload)
+        .then(({ data }) => {
+          let fileUrl = data.data;
+          console.log("[Chat] Uploaded file", fileUrl);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
   },
 };
 </script>
@@ -551,5 +573,33 @@ export default {
   background-color: #bad1ac;
   padding: 5px 0;
   text-align: center;
+}
+
+.image-upload {
+  width: 50px;
+  height: 50px;
+  margin-right: 3px;
+  text-align: center;
+}
+.image-upload > input {
+  display: none;
+}
+
+.image-upload :hover {
+  background-color: #d4d4d3 !important;
+  border-radius: 15%;
+  cursor: pointer;
+}
+
+.image-upload label {
+  margin: 0px;
+  padding: 0px;
+}
+
+.image-upload .iconify {
+  padding: 3px 3px 3px 0px;
+  margin-top: 30%;
+  width: 30px;
+  height: 30px;
 }
 </style>

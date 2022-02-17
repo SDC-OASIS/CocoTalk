@@ -29,22 +29,30 @@ firebase.initializeApp(config);
 
 const message = firebase.messaging();
 
-function getToken() {
+async function deleteToken() {
+  return new Promise((resolve) => {
+    message
+      .deleteToken()
+      .then((res) => {
+        resolve(res);
+      })
+      .catch(() => {
+        resolve(false);
+      });
+  });
+}
+async function getToken() {
+  let isDelete = await deleteToken();
+  console.log("isDelete", isDelete);
   return new Promise((resolve, reject) => {
     message
       .requestPermission()
       .then(() => {
         console.log("Notification permission granted.");
-        message
-          .deleteToken()
-          .then((res) => {
-            console.log("FCMTokeon is Deleted", res);
-            resolve(message.getToken());
-          })
-          .catch(() => console.log("Delete할 FCMTokeon이 없습니다"));
+        resolve(message.getToken());
       })
       .catch((err) => {
-        console.log("[GET TOKEN]", err);
+        console.log("[GET FCM TOKEN]", err);
         reject(err);
       });
   });
