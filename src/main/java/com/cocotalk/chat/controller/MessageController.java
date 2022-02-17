@@ -1,12 +1,12 @@
 package com.cocotalk.chat.controller;
 
 import com.cocotalk.chat.domain.vo.ChatMessageVo;
-import com.cocotalk.chat.domain.vo.UserVo;
+import com.cocotalk.chat.domain.vo.RoomMemberVo;
+import com.cocotalk.chat.domain.vo.RoomVo;
 import com.cocotalk.chat.dto.response.CustomResponse;
 import com.cocotalk.chat.service.ChatMessageService;
 import com.cocotalk.chat.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -44,10 +45,13 @@ public class MessageController {
     @GetMapping
     @Operation(summary = "채팅방 메시지 페이징")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<List<ChatMessageVo>>> findRoomList(@RequestParam ObjectId roomId,
+    public ResponseEntity<CustomResponse<List<ChatMessageVo>>> findRoomList(HttpServletRequest httpServletRequest,
+                                                                            @RequestParam ObjectId roomId,
                                                                             @RequestParam ObjectId bundleId,
-                                                                            @RequestParam int count){
-        List<ChatMessageVo> data = chatMessageService.findMessagePage(roomId, bundleId, count, messagePagingSize);
+                                                                            @RequestParam int count) {
+        RoomVo roomVo = (RoomVo) httpServletRequest.getAttribute("roomVo");
+        RoomMemberVo roomMemberVo = (RoomMemberVo) httpServletRequest.getAttribute("roomMemberVo");
+        List<ChatMessageVo> data = chatMessageService.findMessagePage(roomVo, roomMemberVo, bundleId, count, messagePagingSize);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
@@ -61,10 +65,12 @@ public class MessageController {
     @PostMapping("/file")
     @Operation(summary = "채팅방 파일 업로드")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<String>> findRoomList(@Parameter(hidden = true) UserVo userVo,
+    public ResponseEntity<CustomResponse<String>> uploadFileToRoom(HttpServletRequest httpServletRequest,
                                                                             @RequestParam ObjectId roomId,
                                                                             @RequestParam MultipartFile file){
-        String data = s3Service.uploadMessageFile(file, roomId.toString(), userVo.getId());
+        RoomVo roomVo = (RoomVo) httpServletRequest.getAttribute("roomVo");
+        RoomMemberVo roomMemberVo = (RoomMemberVo) httpServletRequest.getAttribute("roomMemberVo");
+        String data = s3Service.uploadMessageFile(file, roomVo.getId().toHexString(), roomMemberVo.getUserId());
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 }

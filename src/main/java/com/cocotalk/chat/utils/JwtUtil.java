@@ -38,17 +38,17 @@ public class JwtUtil {
         return request.getHeader("X-REFRESH-TOKEN");
     }
 
-    public static TokenPayload getPayload() {
-        String accessToken = getAccessToken();
+    public static TokenPayload getPayload(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecret))
                 .build()
-                .parseClaimsJws(accessToken)
+                .parseClaimsJws(token)
                 .getBody();
         try {
             TokenPayload payload = objectMapper.readValue(claims.getSubject(), TokenPayload.class);
             return payload;
         } catch (JacksonException e) {
+            e.printStackTrace();
             log.error("[JwtUtil/getPayload] : Jwt Payload를 파싱하는 도중 문제가 발생했습니다.");
             throw new CustomException(CustomError.JSON_PARSE, e);
         }

@@ -55,11 +55,11 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         String token = req.getHeader(TOKEN_HEADER_NAME);
         if (!StringUtils.hasLength(token)) throw new CustomException(CustomError.NOT_LOGIN);
 
+        TokenPayload payload = JwtUtil.getPayload(token);
+
         HttpHeaders headers = new HttpHeaders();
         headers.set(TOKEN_HEADER_NAME, token);
         HttpEntity<HttpHeaders> request = new HttpEntity<>(headers);
-
-        TokenPayload payload = JwtUtil.getPayload();
 
         UriComponentsBuilder uriComponentsBuilder =
                 UriComponentsBuilder.fromHttpUrl(USER_SERVICE_URL);
