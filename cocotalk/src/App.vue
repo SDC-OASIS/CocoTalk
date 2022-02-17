@@ -29,4 +29,5 @@ export default {
 
 <style>
 @import "./css/common.css";
+@import "./css/font.css";
 </style>

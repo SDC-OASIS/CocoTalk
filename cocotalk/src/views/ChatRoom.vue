@@ -24,7 +24,7 @@
         <!-- <infinite-loading v-if="limit" direction="top" @infinite="getMessageHistory" spinner="waveDots"></infinite-loading> -->
         <div class="chat-messages" v-for="(chatMessage, idx) in chatMessages" :key="idx">
           <div v-if="chatMessage.type == 0">
-            <!-- 상대가 한 말 -->
+            <!-- 상대방이 보낸 메시지 -->
             <div v-if="chatMessage.userId != userInfo.id" class="row">
               <div @click="openProfileModal(getMemberInfo(chatMessage.userId))" style="cursor: pointer">
                 <ProfileImg :imgUrl="profileImg(chatMessage.userId)" width="40px" />
@@ -40,7 +40,7 @@
                 </div>
               </div>
             </div>
-            <!-- 내가 한 말 -->
+            <!-- 내가 보낸 메시지 -->
             <div v-else class="row" style="justify-content: right">
               <div class="chat-message">
                 <div class="row">
@@ -53,16 +53,36 @@
               </div>
             </div>
           </div>
+          <!-- 초대 메시지 -->
           <div v-else-if="chatMessage.type == 1" class="invite-message">
             <div>{{ chatMessage.content }}</div>
+          </div>
+          <!-- 사진 메시지 -->
+          <div v-else-if="chatMessage.type == 4" :class="{ 'my-file-message': chatMessage.userId == userInfo.id }">
+            <div>
+              <div v-if="chatMessage.userId == userInfo.id" class="my-file-message-info">
+                <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+                <div class="sent-time-me">오후2:00</div>
+              </div>
+              <img class="img-message" :src="chatMessage.content" />
+              <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
+                <div class="sent-time-me">오후2:00</div>
+                <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- 파일 업로드 로딩 -->
+    <div v-if="isLoading" class="loading">
+      <div>파일이 업로드 중입니다...</div>
+      <img src="@/assets/spinner-green.gif" />
+    </div>
     <div class="message-input-container row">
       <!-- <input v-model.trim="message" type="textarea" @keypress.enter="send" /> -->
-      <textarea v-model.trim="message" @keypress.enter="send"></textarea>
-      <div @click="send">
+      <textarea v-model.trim="message" @keypress.enter="send(0, mesage)"></textarea>
+      <div @click="send(0, message)">
         <Button text="전송" width="50px" height="30px" style="margin-top: 15px; margin-left: 16px" />
       </div>
       <!-- 파일 업로드 버튼 START -->
@@ -101,6 +121,7 @@ export default {
       moreMessages: 0,
       nowScroll: 0,
       bottomScrollTop: 0,
+      isLoading: false,
     };
   },
   components: {
@@ -358,25 +379,28 @@ export default {
       );
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
     },
-    // 메세지 전송 클릭시 소켓이 연결되어 있고 입력한 메세지가 있다면 전송합니다.
-    send() {
+    // 메세지를 전송합니다.
+    send(messageType, messageContent) {
       if (this.newPrivateRoomStatus) {
         this.sendToCreatePrivateRoom();
       } else {
-        if (this.stompChatRoomClient && this.stompChatRoomClient.connected && this.message) {
-          const msg = {
-            type: 0,
-            content: this.message,
-            roomId: this.roomStatus.roomId,
-            roomType: this.roomInfo.type,
-            roomname: this.roomInfo.roomname,
-            userId: this.userInfo.id,
-            username: this.userInfo.username,
-            receiverIds: this.roomMemberIds,
-            messageBundleId: this.chatInfo.nextMessageBundleId,
-          };
-          this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
-        }
+        // 빈 채팅은 보내지 않습니다.
+        if (messageType == 0 && (!this.message || this.message.length == 0)) return;
+        // 소켓이 연결되어 있어야 전송합니다.
+        if (!this.stompChatRoomClient || !this.stompChatRoomClient.connected) return;
+        const msg = {
+          type: messageType,
+          content: messageContent,
+          roomId: this.roomStatus.roomId,
+          roomType: this.roomInfo.type,
+          roomname: this.roomInfo.roomname,
+          userId: this.userInfo.id,
+          username: this.userInfo.username,
+          receiverIds: this.roomMemberIds,
+          messageBundleId: this.chatInfo.nextMessageBundleId,
+        };
+        this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
+
         this.message = "";
       }
     },
@@ -536,15 +560,20 @@ export default {
         });
       }
     },
+    // 파일을 업로드 할 때 마다 실행됩나다
     handleFileChange(e) {
       console.log("[Chat] Uploading files........");
       let payload = { chatFile: e.target.files[0], roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
+      this.isLoading = true;
       this.$store
         .dispatch("chat/updateFile", payload)
         .then(({ data }) => {
           let fileUrl = data.data;
           console.log("[Chat] Uploaded file", fileUrl);
+          // 파일 메시지를 보내는 함수입니다. 일단 사진이라고 가정합니다.
+          this.send(4, fileUrl);
+          this.isLoading = false;
         })
         .catch((e) => {
           console.log(e);
@@ -743,5 +772,43 @@ export default {
   margin-top: 30%;
   width: 30px;
   height: 30px;
+}
+.img-message {
+  max-width: 60%;
+  border-radius: 5%;
+}
+
+.my-file-message {
+  text-align: end;
+}
+
+.my-file-message-info {
+  position: relative;
+  width: 55px;
+  display: inline-block;
+  right: 10px;
+}
+.others-file-message-info {
+  position: relative;
+  width: 55px;
+  display: inline-block;
+  left: 5px;
+}
+.loading {
+  position: relative;
+}
+
+.loading div {
+  font-family: IBMPlexSansKR !important;
+  font-weight: bold;
+  position: absolute;
+  top: 15px;
+  right: 70px;
+  display: inline-block;
+}
+.loading img {
+  position: absolute;
+  right: 10px;
+  width: 50px;
 }
 </style>
