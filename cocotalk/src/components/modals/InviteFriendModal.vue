@@ -10,7 +10,10 @@
             <span>대화상대 선택</span>
             <span style="color: #aaaaaa; padding: 0 10px">{{ selectedFriendsCnt }}</span>
           </div>
-          <div @click="inviteFriend">
+          <div v-if="inviteRoomInfo.type > 0" @click="inviteFriend">
+            <Button text="확인" width="60px" height="30px" />
+          </div>
+          <div v-if="inviteRoomInfo.type == 0" @click="createNewRoom">
             <Button text="확인" width="60px" height="30px" />
           </div>
         </div>
@@ -67,6 +70,7 @@ export default {
 
   computed: {
     ...mapState("friend", ["friends"]),
+    ...mapState("socket", ["inviteRoomInfo"]),
     selectedFriendsCnt() {
       console.log(this.selectedFriends);
       if (this.selectedFriends.length) {
@@ -106,8 +110,15 @@ export default {
       console.log("초대 멤버 선택완료");
       console.log(this.selectedFriends);
       this.$store.dispatch("socket/inviteFriend", this.selectedFriends, { root: true });
-
-      // this.$store.dispatch("modal/openRoomNameEditModal", this.selectedFriends, { root: true });
+      this.$store.dispatch("modal/setSidebar", false, { root: true });
+      this.$store.dispatch("modal/closeInviteFriendModal");
+    },
+    createNewRoom() {
+      console.log("갠톡방이니 단톡을 생성하자");
+      console.log("채팅방 멤버 선택완료");
+      console.log(this.selectedFriends);
+      this.$store.dispatch("modal/closeInviteFriendModal");
+      this.$store.dispatch("modal/openRoomNameEditModal", this.selectedFriends, { root: true });
     },
   },
 
