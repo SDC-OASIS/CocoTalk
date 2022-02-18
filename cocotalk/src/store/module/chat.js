@@ -21,6 +21,9 @@ const chat = {
     roomStatus(state) {
       return state.roomStatus;
     },
+    chatInfo(state) {
+      return state.chatInfo;
+    },
   },
   mutations: {
     CHANGE_PAGE(state, payload) {
@@ -28,9 +31,7 @@ const chat = {
       // roomId가 존재하지 않는 경우 == 채팅방이 닫혀있는 경우
       if (!payload.roomId) {
         state.roomStatus.roomId = "";
-        router.push({ name: payload.mainPage }).catch((err) => {
-          console.log(err);
-        });
+        router.push({ name: payload.mainPage });
       }
       // roomId가 존재하는 경우 == 채팅방이 열려있는 경우
       else {
@@ -52,9 +53,15 @@ const chat = {
     CHANGE_MAIN_PAGE(state, payload) {
       state.roomStatus.mainPage = payload;
     },
-    // SET_CHATLIST(state, payload) {
-    //   state.chats = payload;
-    // },
+    DELETE_ROOMID(state, payload) {
+      state.roomStatus.mainPage = payload;
+      const data = {
+        mainPage: payload.mainPage,
+        chatPage: "chat",
+        roomId: "",
+      };
+      state.roomStatus = data;
+    },
     SET_CONNECTION(state, payload) {
       state.socket.client = payload;
     },
@@ -79,6 +86,9 @@ const chat = {
     clearPage: function (context) {
       context.commit("CLEAR_PAGE");
     },
+    deleteRoomId: function (context, payload) {
+      context.commit("DELETE_ROOMID", payload);
+    },
     // 채팅방목록에서 채팅방 클릭해 채팅방 열기
     async goChat(context, payload) {
       console.log("채팅시작");
@@ -94,7 +104,6 @@ const chat = {
       context.commit("UPDATE_MESSAGE_BUNDLE_ID", payload);
     },
     updateMessageBundleCount(context, recentMessageBundleCount) {
-      console.log("확인하라요:" + recentMessageBundleCount);
       context.commit("UPDATE_MESSAGE_BUNDLE_COUNT", recentMessageBundleCount);
     },
     goNewChat(context, newRoomInfo) {

@@ -1,7 +1,8 @@
 <template>
   <div class="box">
     <div class="chat-list-roomname row">
-      <div>{{ chatInfo.room.roomname }}</div>
+      <div v-if="chatInfo.room.type == 0">{{ privateRoomname }}</div>
+      <div v-else>{{ chatInfo.room.roomname }}</div>
       <div class="member-cnt">{{ chatInfo.room.members.length }}</div>
     </div>
     <!-- 채팅방 최근 메시지 -->
@@ -13,10 +14,24 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "ChatListInfo",
   props: {
     chatInfo: Object,
+  },
+  computed: {
+    ...mapState("userStore", ["userInfo"]),
+    privateRoomname() {
+      let roomname;
+      this.chatInfo.room.members.forEach((e) => {
+        if (e.userId != this.userInfo.id) {
+          roomname = e.username;
+        }
+      });
+      return roomname;
+    },
   },
 };
 </script>

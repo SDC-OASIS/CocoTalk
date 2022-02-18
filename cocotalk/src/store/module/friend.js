@@ -31,7 +31,6 @@ const friend = {
         if (friends.length) {
           friends.forEach((e) => {
             e.friend.profile = JSON.parse(e.friend.profile);
-            console.log("친구프로필데이터 파싱완료");
           });
         }
         context.commit("GET_FRIENDS", friends);

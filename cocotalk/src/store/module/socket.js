@@ -17,6 +17,8 @@ const socket = {
     newPrivateRoomStatus: false,
     newPrivateRoomFriendInfo: {},
     newPrivateRoomRefresh: false,
+    awakePrivateRoomStatus: false,
+    awakePrivateRoomInfo: {},
     inviteRoomInfo: {},
     triggerMessage: null,
     chats: [],
@@ -84,8 +86,13 @@ const socket = {
       state.newPrivateRoomStatus = false;
     },
     setNewPrivateRoomRefresh(state, payload) {
-      console.log("바뀌라고!!!");
       state.newPrivateRoomRefresh = payload;
+    },
+    setAwakePrivateRoomStatus(state, payload) {
+      state.awakePrivateRoomStatus = payload;
+    },
+    setAwakePrivateRoomInfo(state, friend) {
+      state.awakePrivateRoomInfo = friend;
     },
   },
   actions: {
@@ -126,14 +133,15 @@ const socket = {
             const data = JSON.parse(res.body);
             let lastMessage = data.message;
             let bundleInfo = data.bundleInfo;
-            console.log(data);
             const idx = context.state.chats.findIndex(function (item) {
               return item.room.id == lastMessage.roomId;
             });
             // 1.마지막 메세지 갱신
+            if (context.state.chats[idx].room.type == 0 && lastMessage.type == 2) return;
+            console.log(data);
             context.commit("UPDATE_CHAT_LIST", { idx, lastMessage });
-            // 현재 입장한 방이 아니고 초대메세지가 아니라면 안읽은 메세지수에 더해줌
-            if (context.state.chats[idx].room.id != store.getters["chat/roomStatus"].roomId && lastMessage.type != 1) {
+            // 현재 입장한 방이 아니고 초대메세지와 퇴장메세지가 아니라면 안읽은 메세지수에 더해줌
+            if (context.state.chats[idx].room.id != store.getters["chat/roomStatus"].roomId && lastMessage.type != 1 && lastMessage.type != 2) {
               context.commit("ADD_UNREAD_MESSAGES", idx);
             }
             // 채팅방 목록 최상단에 있지않은 경우
@@ -240,6 +248,16 @@ const socket = {
           context.commit("setNewPrivateRoomStatus", false);
           console.log("방있어요");
           console.log(res.data.data.id);
+
+          res.data.data.members.forEach((e) => {
+            if (e.userId == store.getters["userStore/userInfo"].id && !e.joining) {
+              console.log("얍얍!!!!!!!");
+              context.commit("setAwakePrivateRoomStatus", true);
+              res.data.data.messageBundleIds = res.data.data.messageBundleIds.slice(1, -1).split(", ");
+              context.commit("setAwakePrivateRoomInfo", res.data.data);
+            }
+          });
+
           router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: res.data.data.id } }).catch(() => {});
         } else {
           console.log("방없어요");
@@ -271,6 +289,9 @@ const socket = {
       console.log(context.state.inviteRoomInfo);
       console.log("friends");
       console.log(friends);
+      if (!friends.length) {
+        return;
+      }
       // 기존멤버 데이터 형식 맞추기
       let previousMembers = [];
       let previousMemberIds = [];
@@ -324,7 +345,7 @@ const socket = {
         });
         const message = `${store.getters["userStore/userInfo"].username}님이 ${inviteesName.sort().join(",")}을 초대했습니다.`;
         const msg = {
-          roomId: context.state.inviteRoomInfo.id,
+          roomId: store.getters["chat/roomStatus"].roomId,
           roomType: 1,
           roomname: roomname.sort().join(","),
           userId: store.getters["userStore/userInfo"].id,
@@ -333,12 +354,41 @@ const socket = {
           type: 1,
           content: message,
           invitees: invitees,
-          messageBundleId: context.state.inviteRoomInfo.messageBundleIds[context.state.inviteRoomInfo.messageBundleIds.length - 1],
+          messageBundleId: store.getters["chat/chatInfo"].nextMessageBundleId,
         };
         console.log(msg);
         context.state.stompChatRoomClient.send(`/simple/chatroom/${context.state.inviteRoomInfo.id}/message/invite`, JSON.stringify(msg));
       }
-      this.message = "";
+    },
+    exitChat(context, roomInfo) {
+      if (context.state.stompChatRoomClient && context.state.stompChatRoomClient.connected) {
+        console.log(roomInfo);
+        let membersIds = [];
+        roomInfo.members.forEach((e) => {
+          if (e.userId != store.getters["userStore/userInfo"].id) {
+            membersIds.push(e.userId);
+          }
+        });
+        this.roomInfo = this.newRoomInfo;
+        const message = `${store.getters["userStore/userInfo"].username}님이 나갔습니다.`;
+        const msg = {
+          type: 2,
+          content: message,
+          roomId: roomInfo.id,
+          roomname: roomInfo.roomname,
+          userId: store.getters["userStore/userInfo"].id,
+          username: store.getters["userStore/userInfo"].username,
+          receiverIds: membersIds,
+          messageBundleId: store.getters["chat/chatInfo"].nextMessageBundleId,
+        };
+        console.log(msg);
+        context.state.stompChatRoomClient.send(`/simple/chatroom/${roomInfo.id}/message/leave`, JSON.stringify(msg));
+        const idx = context.state.chats.findIndex(function (item) {
+          return item.room.id == roomInfo.id;
+        });
+        context.commit("DELETE_UADATED_CHATROOM", idx);
+        router.push({ name: store.getters["chat/roomStatus"].mainPage });
+      }
     },
   },
   modules: {},

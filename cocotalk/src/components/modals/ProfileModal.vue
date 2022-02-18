@@ -127,7 +127,6 @@ export default {
       this.$store.dispatch("modal/setSidebar", false, { root: true });
     },
     selectImage() {
-      console.log("이미지바꾸기시작");
       this.profileEditStatus = true;
     },
     backgroundImg() {

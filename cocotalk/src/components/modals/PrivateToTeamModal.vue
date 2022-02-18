@@ -145,9 +145,7 @@ export default {
       this.payload = payload;
     },
     createChatRoom() {
-      console.log("클릭");
       this.payload.roomname = this.roomName;
-      console.log(this.payload);
       this.$store.dispatch("modal/setSidebar", false, { root: true });
       this.$store.dispatch("modal/closePrivateToTeamModal");
       this.$store.dispatch("socket/createChat", this.payload, { root: true });
