@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -60,7 +61,7 @@ public class MessageController {
      * 채팅방에 file 업로드 [GET] /messages/file
      * @param roomId 파일 업로드를 요청한 방 id
      * @param roomId 채팅방의 id
-     * @param file 업로드 요청할 파일
+     * @param request 업로드 요청할 파일 정보가 담긴 요청 모델
      * @return ResponseEntity<CustomResponse<List<ChatMessageVo>>> 페이징한 채팅방의 메시지 정보가 포함됩니다.
      */
     @PostMapping(value = "/file", consumes = {"multipart/form-data"})
@@ -68,7 +69,7 @@ public class MessageController {
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<String>> uploadFileToRoom(HttpServletRequest httpServletRequest,
                                                                             @RequestParam ObjectId roomId,
-                                                                   @RequestBody FileUploadRequest request){
+                                                                   @Valid FileUploadRequest request){
         RoomVo roomVo = (RoomVo) httpServletRequest.getAttribute("roomVo");
         RoomMemberVo roomMemberVo = (RoomMemberVo) httpServletRequest.getAttribute("roomMemberVo");
         // 이미지가 있으면 S3에 업로드
