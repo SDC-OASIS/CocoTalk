@@ -888,7 +888,7 @@ export default {
   cursor: pointer;
   color: green;
 }
-rgb(197, 230, 197) .loading {
+.loading {
   position: absolute;
   bottom: 10px;
   /* left: 10px; */
