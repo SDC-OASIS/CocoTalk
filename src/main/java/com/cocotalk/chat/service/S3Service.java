@@ -47,10 +47,12 @@ public class S3Service {
     private String uploadFile(MultipartFile file, String filePath) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
             // text 파일일 경우 UTF-8로 인코딩
             if(file.getContentType().equals("text/plain")) {
-                metadata.setContentEncoding("UTF-8");
+                metadata.setContentType("text/plain;charset=utf-8");
+            }
+            else{
+                metadata.setContentType(file.getContentType());
             }
             log.info("metadata:" +metadata);
             log.info("file metadata: "+file.getContentType());
