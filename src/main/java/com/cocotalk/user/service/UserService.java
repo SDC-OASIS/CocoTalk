@@ -9,14 +9,19 @@ import com.cocotalk.user.dto.request.profile.ImgUpdateRequest;
 import com.cocotalk.user.dto.request.profile.MessageUpdateRequest;
 import com.cocotalk.user.exception.CustomError;
 import com.cocotalk.user.exception.CustomException;
-import com.cocotalk.user.repository.FriendRepository;
 import com.cocotalk.user.repository.UserRepository;
 import com.cocotalk.user.utils.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +31,13 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-    private final FriendRepository friendRepository;
     private final S3Service s3Service;
+
+    @Value("${oci.chat.url}")
+    private String chatServerUrl;
+
+    private static final RestTemplate restTemplate = new RestTemplate();
+    private static final String TOKEN_HEADER_NAME = "X-ACCESS-TOKEN";
 
     public static final CustomException INVALID_USER_ID =
             new CustomException(CustomError.BAD_REQUEST, "해당 userId를 갖는 유저가 존재하지 않습니다.");
@@ -74,7 +84,14 @@ public class UserService {
     }
 
     @Transactional
-    public UserVo modify(User user, UserModifyRequest request) {
+    public UserVo modify(User user, UserModifyRequest request, String token) {
+        if(!user.getUsername().equals(request.getUsername())) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(TOKEN_HEADER_NAME, token);
+            headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));
+            HttpEntity<String> entity = new HttpEntity<>(request.getUsername(), headers);
+            restTemplate.put(chatServerUrl + "/rooms/username", entity, Long.class); // 채팅방 내부 정보 변경
+        }
         user.modify(request);
         userRepository.save(user);
         return userMapper.toVo(user);
@@ -88,7 +105,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserVo updateProfileImg(User user, ImgUpdateRequest request) {
+    public UserVo updateProfileImg(User user, ImgUpdateRequest request, String token) {
 
         s3Service.deleteProfileImg(user.getId());
 
@@ -111,13 +128,19 @@ public class UserService {
         // objcet -> json
         String profile =  ProfilePayload.toJSON(profilePayload);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TOKEN_HEADER_NAME, token);
+        headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));
+        HttpEntity<String> entity = new HttpEntity<>(profile, headers);
+        restTemplate.put(chatServerUrl + "/rooms/profile", entity, Long.class);  // 채팅방 내부 정보 변경
+
         user.setProfile(profile);
         userRepository.save(user);
         return userMapper.toVo(user);
     }
 
     @Transactional
-    public UserVo updateProfileBg(User user, BgUpdateRequest request) {
+    public UserVo updateProfileBg(User user, BgUpdateRequest request, String token) {
 
         s3Service.deleteProfileBg(user.getId());
 
@@ -132,14 +155,21 @@ public class UserService {
 
         // objcet -> json
         String profile =  ProfilePayload.toJSON(profilePayload);
-        user.setProfile(profile);
 
+        user.setProfile(profile);
         userRepository.save(user);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TOKEN_HEADER_NAME, token);
+        headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));
+        HttpEntity<String> entity = new HttpEntity<>(profile, headers);
+        restTemplate.put(chatServerUrl + "/rooms/profile", entity, Long.class); // 채팅방 내부 정보 변경
+
         return userMapper.toVo(user);
     }
 
     @Transactional
-    public UserVo updateProfileMsg(User user, MessageUpdateRequest request) {
+    public UserVo updateProfileMsg(User user, MessageUpdateRequest request, String token) {
         log.info("[updateProfileMsg/request] : " + request);
         //json -> object
         ProfilePayload profilePayload = ProfilePayload.toObject(user.getProfile());
@@ -147,9 +177,16 @@ public class UserService {
 
         // objcet -> json
         String profile =  ProfilePayload.toJSON(profilePayload);
-        user.setProfile(profile);
 
+        user.setProfile(profile);
         userRepository.save(user);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TOKEN_HEADER_NAME, token);
+        headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));
+        HttpEntity<String> entity = new HttpEntity<>(profile, headers);
+        restTemplate.put(chatServerUrl + "/rooms/profile", entity, Long.class); // 채팅방 내부 정보 변경
+
         return userMapper.toVo(user);
     }
 }
