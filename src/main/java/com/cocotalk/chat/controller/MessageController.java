@@ -3,6 +3,7 @@ package com.cocotalk.chat.controller;
 import com.cocotalk.chat.domain.vo.ChatMessageVo;
 import com.cocotalk.chat.domain.vo.RoomMemberVo;
 import com.cocotalk.chat.domain.vo.RoomVo;
+import com.cocotalk.chat.dto.request.FileUploadRequest;
 import com.cocotalk.chat.dto.response.CustomResponse;
 import com.cocotalk.chat.service.ChatMessageService;
 import com.cocotalk.chat.service.S3Service;
@@ -67,10 +68,11 @@ public class MessageController {
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
     public ResponseEntity<CustomResponse<String>> uploadFileToRoom(HttpServletRequest httpServletRequest,
                                                                             @RequestParam ObjectId roomId,
-                                                                            @RequestParam MultipartFile file){
+                                                                   @RequestBody FileUploadRequest request){
         RoomVo roomVo = (RoomVo) httpServletRequest.getAttribute("roomVo");
         RoomMemberVo roomMemberVo = (RoomMemberVo) httpServletRequest.getAttribute("roomMemberVo");
-        String data = s3Service.uploadMessageFile(file, roomVo.getId().toHexString(), roomMemberVo.getUserId());
+        // 이미지가 있으면 S3에 업로드
+        String data = s3Service.uploadMessageFile(request.getMessageFile(), request.getMessageFileThumb(), roomVo.getId().toHexString(), roomMemberVo.getUserId());
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -28,10 +29,21 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadMessageFile(MultipartFile file, String roomId, Long userId) {
+    public String uploadMessageFile(MultipartFile file, MultipartFile thumbnail, String roomId, Long userId) {
+        String[] imgExtension = new String[]{"PNG", "JPEG", "JPG", "GIF", "TIF", "TIFF", "BMP", "RLE", "DIB", "RAW"};
+        //프로필 업로드
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-        String filePath = "chat/" + roomId + "/"+ userId +"_" + LocalDateTime.now() + "."+ extension;
-        return uploadFile(file, filePath);
+        String filePath = "chat/" + roomId + "/"+ userId +"_" + LocalDateTime.now();
+        String fileUrl = uploadFile(file,filePath+"."+extension);
+        //썸네일 업로드
+        if(thumbnail != null && !thumbnail.isEmpty()) {
+            if(Arrays.asList(imgExtension).contains(extension.toUpperCase())) { // 이미지 파일이면 썸네일 확장자 그대로 감
+                uploadFile(file, filePath+"_th."+extension);
+            } else { // 이미지 파일이 아니면 썸네일 확장자는 기본 jpg
+                uploadFile(file, filePath+"_th.jpg");
+            }
+        }
+        return fileUrl;
     }
 
     private String uploadFile(MultipartFile file, String filePath) {
