@@ -159,5 +159,7 @@ public class ChatController {
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
             kafkaProducer.sendToChat("/topic/" + userId + "/message", awakeMessageVo);
         }
+
+        kafkaProducer.sendToPush(awakeMessageRequest);
     }
 }
