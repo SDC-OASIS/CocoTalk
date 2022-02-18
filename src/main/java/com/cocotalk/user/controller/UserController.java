@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -128,8 +129,11 @@ public class UserController {
     @Operation(summary = "유저 수정")
     @PutMapping("/profile")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<UserVo>> modify(@Parameter(hidden = true) User user, @RequestBody @Valid UserModifyRequest request) {
-        UserVo data = userService.modify(user, request);
+    public ResponseEntity<CustomResponse<UserVo>> modify(HttpServletRequest httpServletRequest,
+                                                         @Parameter(hidden = true) User user,
+                                                         @RequestBody @Valid UserModifyRequest request) {
+        String token = httpServletRequest.getHeader("X-ACCESS-TOKEN");
+        UserVo data = userService.modify(user, request, token);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
@@ -155,9 +159,12 @@ public class UserController {
     @Operation(summary = "유저 프로필 사진 수정")
     @PutMapping(value = "/profile/img", consumes = {"multipart/form-data"})
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<UserVo>> updateProfile(@Parameter(hidden = true) User user, @Valid ImgUpdateRequest request) {
+    public ResponseEntity<CustomResponse<UserVo>> updateProfile(HttpServletRequest httpServletRequest,
+                                                                @Parameter(hidden = true) User user,
+                                                                @Valid ImgUpdateRequest request) {
         log.info("[PUT][/profile/img] updateProfile request:"+request);
-        UserVo data = userService.updateProfileImg(user, request);
+        String token = httpServletRequest.getHeader("X-ACCESS-TOKEN");
+        UserVo data = userService.updateProfileImg(user, request, token);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
@@ -170,9 +177,12 @@ public class UserController {
     @Operation(summary = "유저 백그라운드 사진 수정")
     @PutMapping(value = "/profile/bg", consumes = {"multipart/form-data"})
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<UserVo>> updateBackground(@Parameter(hidden = true) User user, @Valid BgUpdateRequest request) {
+    public ResponseEntity<CustomResponse<UserVo>> updateBackground(HttpServletRequest httpServletRequest,
+                                                                   @Parameter(hidden = true) User user,
+                                                                   @Valid BgUpdateRequest request) {
         log.info("[PUT][/profile/bg] updateBackground request:"+request);
-        UserVo data = userService.updateProfileBg(user, request);
+        String token = httpServletRequest.getHeader("X-ACCESS-TOKEN");
+        UserVo data = userService.updateProfileBg(user, request, token);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 
@@ -185,8 +195,11 @@ public class UserController {
     @Operation(summary = "유저 프로필 메시지 수정")
     @PutMapping(value = "/profile/message")
     @SecurityRequirement(name = "X-ACCESS-TOKEN")
-    public ResponseEntity<CustomResponse<UserVo>> updateProfileMsg(@Parameter(hidden = true) User user, @RequestBody MessageUpdateRequest request) {
-        UserVo data = userService.updateProfileMsg(user, request);
+    public ResponseEntity<CustomResponse<UserVo>> updateProfileMsg(HttpServletRequest httpServletRequest,
+                                                                   @Parameter(hidden = true) User user,
+                                                                   @RequestBody MessageUpdateRequest request) {
+        String token = httpServletRequest.getHeader("X-ACCESS-TOKEN");
+        UserVo data = userService.updateProfileMsg(user, request, token);
         return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 }
