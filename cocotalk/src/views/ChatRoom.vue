@@ -71,6 +71,22 @@
               </div>
             </div>
           </div>
+          <!-- 동영상 메시지 -->
+          <div v-else-if="chatMessage.type == 5" :class="{ 'my-file-message': chatMessage.userId == userInfo.id }">
+            <div>
+              <div v-if="chatMessage.userId == userInfo.id" class="my-file-message-info">
+                <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+                <div class="sent-time-me">오후2:00</div>
+              </div>
+              <video controls class="video-message" :src="chatMessage.content">해당 브라우저에서 지원하지 않습니다</video>
+              <!-- <video preload="metadata" :src="chatMessage.content | videoThumbNail"></video> -->
+              <!-- <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" /> -->
+              <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
+                <div class="sent-time-me">오후2:00</div>
+                <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -315,11 +331,11 @@ export default {
       return this.roomInfo.members[idx];
     },
     unreadMemberCnt(sentAt) {
-      console.log("=======카톡안읽은 사람 숫자 연산 =========");
+      // console.log("=======카톡안읽은 사람 숫자 연산 =========");
       if (this.roomInfo.members) {
         let cnt = this.roomInfo.members.length;
         this.roomInfo.members.forEach((e) => {
-          console.log(e.username + "접속시간:" + e.enteredAt + "나간시간:" + e.awayAt);
+          // console.log(e.username + "접속시간:" + e.enteredAt + "나간시간:" + e.awayAt);
           // 현재접속중인 사람은 읽음
           if (e.enteredAt > e.awayAt) {
             cnt = cnt - 1;
@@ -599,8 +615,7 @@ export default {
     },
     // 파일을 업로드 할 때 마다 실행됩나다
     handleFileChange(e) {
-      console.log(e);
-      console.log("[Chat] Uploading files........");
+      console.log("[Chat] Uploading files........", e.target.files[0]);
       let payload = { chatFile: e.target.files[0], chatFileThumb: e.target.files[0], roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
@@ -621,6 +636,11 @@ export default {
           this.isLoading = false;
           console.error(e);
         });
+    },
+  },
+  filters: {
+    videoThumbNail: function (value) {
+      return value + "#t=0.5";
     },
   },
 };
@@ -820,7 +840,10 @@ export default {
   max-width: 60%;
   border-radius: 5%;
 }
-
+.video-message {
+  max-width: 90%;
+  border-radius: 5%;
+}
 .my-file-message {
   text-align: end;
 }
