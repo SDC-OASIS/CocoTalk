@@ -135,6 +135,8 @@ public class RoomService {
     }
 
     public MessageWithRoomVo<InviteMessageVo> saveInviteMessage(ObjectId roomId, InviteMessageRequest request) {
+        LocalDateTime now = LocalDateTime.now(); // joinedAt 이후 메시지만 조회하기 위해서 미리 선언
+
         log.info("inviteMessageRequest : {}", request.toString());
         MessageVo<InviteMessageVo> messageVo = chatMessageService.createInviteMessage(request); // (1) 초대 메시지 저장
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
@@ -145,8 +147,6 @@ public class RoomService {
             roomVo.getMessageBundleIds().add(bundleInfoVo.getNextMessageBundleId());
 
         List<RoomMember> members = roomVo.getMembers();
-
-        LocalDateTime now = LocalDateTime.now();
 
         // (2) 초대 요청 모델로 채팅방 멤버 생성
         List<RoomMember> invitees = messageVo.getMessage().getInvitees().stream()

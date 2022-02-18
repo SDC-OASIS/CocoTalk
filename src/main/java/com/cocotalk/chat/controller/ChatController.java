@@ -4,8 +4,8 @@ import com.cocotalk.chat.domain.vo.*;
 import com.cocotalk.chat.dto.request.ChatMessageRequest;
 import com.cocotalk.chat.dto.request.InviteMessageRequest;
 import com.cocotalk.chat.dto.request.RoomRequest;
-import com.cocotalk.chat.service.kafka.KafkaProducer;
 import com.cocotalk.chat.service.RoomService;
+import com.cocotalk.chat.service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -90,12 +90,23 @@ public class ChatController {
         MessageVo<InviteMessageVo> inviteMessageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
 
-        kafkaProducer.sendToChat("/topic/" + roomId + "/message", inviteMessageVo);
+        // 채팅방 내부에 있던 기존 멤버들
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
-        int size = roomVo.getMembers().size();
+        kafkaProducer.sendToChat("/topic/" + roomId + "/message", inviteMessageVo);
+
+        // 채팅방 리스트에 있던 기존 멤버들
+        List<Long> remainMemberIds = inviteMessageRequest.getReceiverIds();
+        for(Long userId : remainMemberIds) {
+            kafkaProducer.sendToChat("/topic/" + userId + "/room", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/message", inviteMessageVo);
+        }
+
+        // 채팅방에 초대된 멤버들
+        int size = inviteMessageVo.getMessage().getInvitees().size();
         for(int i = 0; i < size; ++i) {
-            Long userId = roomVo.getMembers().get(i).getUserId();
-            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
+            Long inviteeId = inviteMessageVo.getMessage().getInvitees().get(i).getUserId();
+            kafkaProducer.sendToChat("/topic/" + inviteeId + "/room/new", roomVo);
+            kafkaProducer.sendToChat("/topic/" + inviteeId + "/message", inviteMessageVo);
         }
     }
 
@@ -110,15 +121,18 @@ public class ChatController {
                                @Payload ChatMessageRequest leaveMessageRequest,
                                SimpMessageHeaderAccessor headerAccessor) {
         MessageWithRoomVo<ChatMessageVo> messageWithRoomVo = roomService.saveLeaveMessage(roomId, leaveMessageRequest);
-        MessageVo<ChatMessageVo> messageVo = messageWithRoomVo.getMessageVo();
+        MessageVo<ChatMessageVo> leaveMessageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
 
-        kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
+        // 채팅방 내부에 있던 기존 멤버들
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
-        int size = roomVo.getMembers().size();
-        for(int i = 0; i < size; ++i) {
-            Long userId = roomVo.getMembers().get(i).getUserId();
-            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
+        kafkaProducer.sendToChat("/topic/" + roomId + "/message", leaveMessageVo);
+
+        // 채팅방 리스트에 있던 멤버들
+        List<Long> remainMemberIds = leaveMessageRequest.getReceiverIds();
+        for(Long userId : remainMemberIds) {
+            kafkaProducer.sendToChat("/topic/" + userId + "/room", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/message", leaveMessageVo);
         }
     }
 
@@ -132,15 +146,18 @@ public class ChatController {
     public void awake(@DestinationVariable ObjectId roomId,
                       @Payload ChatMessageRequest awakeMessageRequest) {
         MessageWithRoomVo<ChatMessageVo> messageWithRoomVo = roomService.saveAwakeMessage(roomId, awakeMessageRequest);
-        MessageVo<ChatMessageVo> messageVo = messageWithRoomVo.getMessageVo();
+        MessageVo<ChatMessageVo> awakeMessageVo = messageWithRoomVo.getMessageVo();
         RoomVo roomVo = messageWithRoomVo.getRoomVo();
 
-        kafkaProducer.sendToChat("/topic/" + roomId + "/message", messageVo);
+        // 채팅방 내부에 있던 기존 멤버
         kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
-        int size = roomVo.getMembers().size();
-        for(int i = 0; i < size; ++i) {
-            Long userId = roomVo.getMembers().get(i).getUserId();
+        kafkaProducer.sendToChat("/topic/" + roomId + "/message", awakeMessageVo);
+
+        // joining = false인 멤버
+        List<Long> leftMemberIds = awakeMessageRequest.getReceiverIds();
+        for(Long userId : leftMemberIds) {
             kafkaProducer.sendToChat("/topic/" + userId + "/room/new", roomVo);
+            kafkaProducer.sendToChat("/topic/" + userId + "/message", awakeMessageVo);
         }
     }
 }
