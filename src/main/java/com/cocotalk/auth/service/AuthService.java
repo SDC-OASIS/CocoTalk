@@ -164,6 +164,8 @@ public class AuthService {
             String storeRefreshToken = redisService.getRefreshToken(clientType, userId);
             if(!refreshToken.equals(storeRefreshToken)) {
                 log.error("[reissue] refreshToken is not equals as storeRefreshToken");
+                log.info("[reissue] request refresh token is "+ refreshToken);
+                log.info("[reissue] store   refresh token is "+ storeRefreshToken);
                 return ResponseEntity.status(HttpStatus.OK).body(new Response<>(UNAUTHORIZED));
             }
 

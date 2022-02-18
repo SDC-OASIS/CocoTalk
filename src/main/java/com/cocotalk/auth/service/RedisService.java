@@ -28,6 +28,7 @@ public class RedisService {
 
     public String getRefreshToken(ClientType clientType, long userId){
         String key =  "RT/"+clientType.toString()+"/"+userId;
+        log.info("[RedisService/getRefreshToken] key : "+key);
         return getData(key);
     }
 

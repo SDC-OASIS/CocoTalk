@@ -28,12 +28,15 @@ public class S3Service {
     private String bucket;
 
     public String uploadProfileImg(MultipartFile img, MultipartFile imgThumb, Long userId) {
-        //썸네일 업로드
-        String extensionThumb = StringUtils.getFilenameExtension(imgThumb.getOriginalFilename());
-        uploadFile(imgThumb, String.format("user_profile/" + userId + "/profile/" + LocalDateTime.now() + "_th."+ extensionThumb));
         //프로필 업로드
         String extension = StringUtils.getFilenameExtension(img.getOriginalFilename());
-        return uploadFile(img, String.format("user_profile/" + userId + "/profile/" + LocalDateTime.now() + "."+ extension));
+        String imgPath = "user_profile/" + userId + "/profile/" + LocalDateTime.now();
+        String originUrl = uploadFile(img,imgPath+"."+extension);
+        //썸네일 업로드
+        String thumbUrl = uploadFile(imgThumb, imgPath+"_th."+extension);
+        log.info("[S3Service/originUrl] : "+originUrl);
+        log.info("[S3Service/thumbUrl] : "+thumbUrl);
+        return originUrl;
     }
 
     private String uploadFile(MultipartFile file, String filePath) {
