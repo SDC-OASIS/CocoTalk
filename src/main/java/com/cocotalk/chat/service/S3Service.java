@@ -35,12 +35,10 @@ public class S3Service {
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         String filePath = "chat/" + roomId + "/"+ userId +"_" + LocalDateTime.now();
         String fileUrl = uploadFile(file,filePath+"."+extension);
-        //썸네일 업로드
+        //썸네일 업로드 // 이미지 파일이면 썸네일 확장자 그대로 감
         if(thumbnail != null && !thumbnail.isEmpty()) {
-            if(Arrays.asList(imgExtension).contains(extension.toUpperCase())) { // 이미지 파일이면 썸네일 확장자 그대로 감
+            if(Arrays.asList(imgExtension).contains(extension.toUpperCase())) { /
                 uploadFile(file, filePath+"_th."+extension);
-            } else { // 이미지 파일이 아니면 썸네일 확장자는 기본 jpg
-                uploadFile(file, filePath+"_th.jpg");
             }
         }
         return fileUrl;
@@ -50,9 +48,10 @@ public class S3Service {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
-            amazonS3.putObject(new PutObjectRequest(bucket, filePath, file.getInputStream(), null)
-                    .withCannedAcl(CannedAccessControlList.PublicRead))
-                    .setMetadata(metadata);
+            log.info("metadata",metadata);
+            log.info("file metadata",file.getContentType())
+            amazonS3.putObject(new PutObjectRequest(bucket, filePath, file.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
             log.info("[S3Service/uploadImage] : " + filePath + " is uploaded");
             return cloudFrontDomain+"/"+filePath;
         } catch (IOException e) {
