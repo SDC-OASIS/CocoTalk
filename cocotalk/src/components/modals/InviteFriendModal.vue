@@ -72,7 +72,6 @@ export default {
     ...mapState("friend", ["friends"]),
     ...mapState("socket", ["inviteRoomInfo"]),
     selectedFriendsCnt() {
-      console.log(this.selectedFriends);
       if (this.selectedFriends.length) {
         return this.selectedFriends.length;
       } else {
@@ -80,7 +79,6 @@ export default {
       }
     },
     searchFriendsCnt() {
-      console.log(this.searchFriends);
       if (this.searchFriends.length) {
         return this.searchFriends.length;
       } else {
@@ -111,14 +109,14 @@ export default {
       console.log(this.selectedFriends);
       this.$store.dispatch("socket/inviteFriend", this.selectedFriends, { root: true });
       this.$store.dispatch("modal/setSidebar", false, { root: true });
+      this.$store.dispatch("modal/setSidebar", true, { root: true });
+
       this.$store.dispatch("modal/closeInviteFriendModal");
     },
     createNewRoom() {
       console.log("갠톡방이니 단톡을 생성하자");
       console.log("채팅방 멤버 선택완료");
       console.log(this.selectedFriends);
-      // let newMembets = []
-
       this.$store.dispatch("modal/closeInviteFriendModal");
       this.$store.dispatch("modal/openPrivateToTeamModal", this.selectedFriends, { root: true });
     },
