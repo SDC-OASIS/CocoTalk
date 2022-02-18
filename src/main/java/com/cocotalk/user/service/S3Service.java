@@ -32,11 +32,12 @@ public class S3Service {
         //프로필 업로드
         String extension = StringUtils.getFilenameExtension(img.getOriginalFilename());
         String imgPath = "user_profile/" + userId + "/profile/" + LocalDateTime.now();
-        String originPath = uploadFile(img,imgPath+"."+extension);
+        String originUrl = uploadFile(img,imgPath+"."+extension);
         //썸네일 업로드
-        String imgThumbPath = imgPath+"_th";
-        uploadFile(imgThumb, imgThumbPath+"."+extension);
-        return originPath;
+        String thumbUrl = uploadFile(imgThumb, imgPath+"_th."+extension);
+        log.info("[S3Service/originUrl] : "+originUrl);
+        log.info("[S3Service/thumbUrl] : "+thumbUrl);
+        return originUrl;
     }
 
     public String uploadProfileBg(MultipartFile img, Long userId) {
