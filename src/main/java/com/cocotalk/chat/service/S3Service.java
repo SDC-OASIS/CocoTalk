@@ -48,8 +48,11 @@ public class S3Service {
 
     private String uploadFile(MultipartFile file, String filePath) {
         try {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
             amazonS3.putObject(new PutObjectRequest(bucket, filePath, file.getInputStream(), null)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
+                    .withCannedAcl(CannedAccessControlList.PublicRead))
+                    .setMetadata(metadata);
             log.info("[S3Service/uploadImage] : " + filePath + " is uploaded");
             return cloudFrontDomain+"/"+filePath;
         } catch (IOException e) {
