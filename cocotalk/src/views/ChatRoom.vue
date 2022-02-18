@@ -69,7 +69,23 @@
                 <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
                 <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
               </div>
-              <img class="img-message" :src="chatMessage.content" />
+              <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" />
+              <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
+                <div class="sent-time-me">오후2:00</div>
+                <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+              </div>
+            </div>
+          </div>
+          <!-- 동영상 메시지 -->
+          <div v-else-if="chatMessage.type == 5" :class="{ 'my-file-message': chatMessage.userId == userInfo.id }">
+            <div>
+              <div v-if="chatMessage.userId == userInfo.id" class="my-file-message-info">
+                <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+                <div class="sent-time-me">오후2:00</div>
+              </div>
+              <video controls class="video-message" :src="chatMessage.content">해당 브라우저에서 지원하지 않습니다</video>
+              <!-- <video preload="metadata" :src="chatMessage.content | videoThumbNail"></video> -->
+              <!-- <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" /> -->
               <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
                 <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
                 <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
@@ -239,6 +255,7 @@ export default {
     this.setAwakePrivateRoomInfo(null);
   },
   methods: {
+
     ...mapMutations("socket", [
       "setStompChatRoomClient",
       "setStompChatRoomConnected",
@@ -249,7 +266,32 @@ export default {
       "setAwakePrivateRoomStatus",
       "setAwakePrivateRoomInfo",
     ]),
+    // 이미지 클릭했을 때 원본 이미지로 보여주기
+    openClick(url) {
+      var img = new Image();
+      img.src = url;
+      var img_width = img.width;
+      var win_width = img.width + 25;
+      var img_height = img.height;
+      var curX = window.screenLeft;
+      var curY = window.screenTop;
+      var curWidth = document.body.clientWidth;
+      var curHeight = document.body.clientHeight;
 
+      var nLeft = curX + curWidth / 2 - img_width / 2;
+      var nTop = curY + curHeight / 2 - img_height / 2;
+
+      var strOption = "";
+      strOption += "left=" + nLeft + "px,";
+      strOption += "top=" + nTop + "px,";
+      strOption += "width=" + img_width + "px,";
+      strOption += "height=" + img_height + "px,";
+      strOption += "toolbar=no,menubar=no,location=no,scrollbars=yes,";
+      strOption += "resizable=yes,status=no";
+      var OpenWindow = window.open("/", "popup", strOption);
+      // var OpenWindow = window.open("/", "popup", `width=${img_width}, height=${img_height}, left=${left}, top=${tops}`);
+      OpenWindow.document.write(`<style>body{margin:0px;}</style><img src='${url}' width='$${win_width}'>`);
+    },
     // 1.채팅내역 불러오기
     // 1-1. 일반 채팅방 입장
     getChat() {
@@ -330,7 +372,7 @@ export default {
       return this.$moment(time).format("LT");
     },
     unreadMemberCnt(sentAt) {
-      console.log("=======카톡안읽은 사람 숫자 연산 =========");
+      // console.log("=======카톡안읽은 사람 숫자 연산 =========");
       if (this.roomInfo.members) {
         let cnt = this.roomInfo.members.length;
         this.roomInfo.members.forEach((e) => {
@@ -665,26 +707,39 @@ export default {
         });
       }
     },
+    getMessageType(chatFile) {
+      if (chatFile.type.includes("image")) return 4;
+      if (chatFile.type.includes("video")) return 5;
+      else return 6;
+    },
     // 파일을 업로드 할 때 마다 실행됩나다
     handleFileChange(e) {
-      console.log("[Chat] Uploading files........");
-      let payload = { chatFile: e.target.files[0], roomId: this.roomId };
+      console.log("[Chat] Uploading files........", e.target.files[0]);
+      let payload = { chatFile: e.target.files[0], chatFileThumb: e.target.files[0], roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
       console.log("로딩 중 : ", this.isLoading);
+      // 파일 타입 구하기
+      console.log("file type", payload.chatFile.type);
       this.$store
         .dispatch("chat/updateFile", payload)
         .then(({ data }) => {
           let fileUrl = data.data;
           console.log("[Chat] Uploaded file", fileUrl);
-          // 파일 메시지를 보내는 함수입니다. 일단 사진이라고 가정합니다.
-          this.send(4, fileUrl);
+          // 파일 메시지를 보내는 함수입니다.
+          this.send(this.getMessageType(payload.chatFile), fileUrl);
           this.isLoading = false;
           console.log("로딩 중 : ", this.isLoading);
         })
         .catch((e) => {
-          console.log(e);
+          this.isLoading = false;
+          console.error(e);
         });
+    },
+  },
+  filters: {
+    videoThumbNail: function (value) {
+      return value + "#t=0.5";
     },
   },
 };
@@ -884,7 +939,10 @@ export default {
   max-width: 60%;
   border-radius: 5%;
 }
-
+.video-message {
+  max-width: 90%;
+  border-radius: 5%;
+}
 .my-file-message {
   text-align: end;
 }
