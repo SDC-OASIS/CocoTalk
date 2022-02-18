@@ -120,6 +120,34 @@ public class RoomController {
     }
 
     /**
+     * 채팅방 멤버 이름 수정 API [PATCH] /rooms/username
+     *
+     * @param userVo 요청한 유저의 정보
+     * @return ResponseEntity<CustomResponse<Long>> 수정된 채팅방 수가 포함됩니다.
+     */
+    @PutMapping("/username")
+    @Operation(summary = "채팅방 멤버 이름 수정")
+    public ResponseEntity<CustomResponse<Long>> modifyUsername(@Parameter(hidden = true) UserVo userVo,
+                                                               @RequestBody String newUsername){
+        Long data = roomService.modifyUsername(userVo, newUsername);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.CREATED);
+    }
+
+    /**
+     * 채팅방 멤버 프로필 수정 API [PATCH] /rooms/profile
+     *
+     * @param userVo 요청한 유저의 정보
+     * @return ResponseEntity<CustomResponse<Long>> 수정된 채팅방 수가 포함됩니다.
+     */
+    @PutMapping("/profile")
+    @Operation(summary = "채팅방 멤버 프로필 수정")
+    public ResponseEntity<CustomResponse<Long>> modifyProfile(@Parameter(hidden = true) UserVo userVo,
+                                                              @RequestBody String newProfile){
+        Long data = roomService.modifyProfile(userVo, newProfile);
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.CREATED);
+    }
+
+    /**
      * 채팅방 삭제 API [DELETE] /rooms/{id}
      *
      * @param id 채팅방의 ObjectId

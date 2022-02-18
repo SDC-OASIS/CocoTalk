@@ -135,8 +135,6 @@ public class RoomService {
     }
 
     public MessageWithRoomVo<InviteMessageVo> saveInviteMessage(ObjectId roomId, InviteMessageRequest request) {
-        LocalDateTime now = LocalDateTime.now(); // joinedAt 이후 메시지만 조회하기 위해서 미리 선언
-
         log.info("inviteMessageRequest : {}", request.toString());
         MessageVo<InviteMessageVo> messageVo = chatMessageService.createInviteMessage(request); // (1) 초대 메시지 저장
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
@@ -147,6 +145,8 @@ public class RoomService {
             roomVo.getMessageBundleIds().add(bundleInfoVo.getNextMessageBundleId());
 
         List<RoomMember> members = roomVo.getMembers();
+
+        LocalDateTime now = messageVo.getMessage().getSentAt().minusNanos(1L); // joinedAt 이후 메시지만 조회되기 때문에 1나노초 빼줌
 
         // (2) 초대 요청 모델로 채팅방 멤버 생성
         List<RoomMember> invitees = messageVo.getMessage().getInvitees().stream()
@@ -217,14 +217,16 @@ public class RoomService {
     }
 
     public MessageWithRoomVo<ChatMessageVo> saveAwakeMessage(ObjectId roomId, ChatMessageRequest request) {
-        LocalDateTime now = LocalDateTime.now();
-
         log.info("awakeMessageRequest : {}", request.toString());
         MessageVo<ChatMessageVo> messageVo = chatMessageService.createChatMessage(request);
+
         BundleInfoVo bundleInfoVo = messageVo.getBundleInfo();
         Room room = this.find(roomId);
+
+        LocalDateTime now = messageVo.getMessage().getSentAt().minusNanos(1L); // joinedAt 이후 메시지만 조회되기 때문에 1나노초 빼줌
         // (1) Awake 메시지는 1:1 채팅방에서 나간 사람이 있을 경우 joining flag를 true로 바꿔줍니다.
         room.setMembers(room.getMembers().stream()
+                .filter(roomMember -> !roomMember.isJoining())
                 .map(roomMember -> {
                     roomMember.setJoinedAt(now);
                     roomMember.setEnteredAt(now);
@@ -344,6 +346,15 @@ public class RoomService {
         newRoom.setId(oldRoom.getId());
         return roomMapper.toVo(roomRepository.save(newRoom));
     }
+
+    public Long modifyUsername(UserVo userVo, String newUsername) {
+        return roomRepository.updateUsername(userVo.getId(), newUsername);
+    }
+
+    public Long modifyProfile(UserVo userVo, String newProfile) {
+        return roomRepository.updateProfile(userVo.getId(), newProfile);
+    }
+
 
     public RoomVo saveEnteredAt(ObjectId roomId, Long userId) { // 유저가 채팅방 소켓에 Connect된 시간 업데이트
         RoomVo roomVo = this.findById(roomId);
