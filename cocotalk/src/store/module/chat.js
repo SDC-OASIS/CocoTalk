@@ -106,7 +106,8 @@ const chat = {
     },
     updateFile: async function (context, payload) {
       var frm = new FormData();
-      frm.append("file", payload.chatFile);
+      frm.append("messageFile", payload.chatFile);
+      frm.append("messageFileThumb", payload.chatFileThumb);
       frm.append("roomId", payload.roomId);
       for (let e of frm.entries()) {
         console.log(e);

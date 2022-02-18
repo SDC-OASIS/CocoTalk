@@ -218,6 +218,7 @@ export default {
   },
   methods: {
     ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus", "setNewPrivateRoomStatus", "setNewPrivateRoomRefresh", "setInviteRoomInfo"]),
+    // 이미지 클릭했을 때 원본 이미지로 보여주기
     openClick(url) {
       var img = new Image();
       img.src = url;
@@ -239,7 +240,7 @@ export default {
       strOption += "width=" + img_width + "px,";
       strOption += "height=" + img_height + "px,";
       strOption += "toolbar=no,menubar=no,location=no,scrollbars=yes,";
-      strOption += "resizable=yes,status=yes";
+      strOption += "resizable=yes,status=no";
       var OpenWindow = window.open("/", "popup", strOption);
       // var OpenWindow = window.open("/", "popup", `width=${img_width}, height=${img_height}, left=${left}, top=${tops}`);
       OpenWindow.document.write(`<style>body{margin:0px;}</style><img src='${url}' width='$${win_width}'>`);
@@ -591,25 +592,34 @@ export default {
         });
       }
     },
+    getMessageType(chatFile) {
+      if (chatFile.type.includes("image")) return 4;
+      if (chatFile.type.includes("video")) return 5;
+      else return 6;
+    },
     // 파일을 업로드 할 때 마다 실행됩나다
     handleFileChange(e) {
+      console.log(e);
       console.log("[Chat] Uploading files........");
-      let payload = { chatFile: e.target.files[0], roomId: this.roomId };
+      let payload = { chatFile: e.target.files[0], chatFileThumb: e.target.files[0], roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
       console.log("로딩 중 : ", this.isLoading);
+      // 파일 타입 구하기
+      console.log("file type", payload.chatFile.type);
       this.$store
         .dispatch("chat/updateFile", payload)
         .then(({ data }) => {
           let fileUrl = data.data;
           console.log("[Chat] Uploaded file", fileUrl);
-          // 파일 메시지를 보내는 함수입니다. 일단 사진이라고 가정합니다.
-          this.send(4, fileUrl);
+          // 파일 메시지를 보내는 함수입니다.
+          this.send(this.getMessageType(payload.chatFile), fileUrl);
           this.isLoading = false;
           console.log("로딩 중 : ", this.isLoading);
         })
         .catch((e) => {
-          console.log(e);
+          this.isLoading = false;
+          console.error(e);
         });
     },
   },
