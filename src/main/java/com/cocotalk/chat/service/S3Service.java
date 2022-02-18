@@ -37,7 +37,7 @@ public class S3Service {
         String fileUrl = uploadFile(file,filePath+"."+extension);
         //썸네일 업로드 // 이미지 파일이면 썸네일 확장자 그대로 감
         if(thumbnail != null && !thumbnail.isEmpty()) {
-            if(Arrays.asList(imgExtension).contains(extension.toUpperCase())) { /
+            if(Arrays.asList(imgExtension).contains(extension.toUpperCase())) {
                 uploadFile(file, filePath+"_th."+extension);
             }
         }
@@ -49,7 +49,7 @@ public class S3Service {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
             log.info("metadata",metadata);
-            log.info("file metadata",file.getContentType())
+            log.info("file metadata",file.getContentType());
             amazonS3.putObject(new PutObjectRequest(bucket, filePath, file.getInputStream(), metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
             log.info("[S3Service/uploadImage] : " + filePath + " is uploaded");
