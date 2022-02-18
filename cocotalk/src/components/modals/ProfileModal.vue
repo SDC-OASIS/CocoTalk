@@ -104,10 +104,12 @@ export default {
     handleProfileFileChange(e) {
       this.file1_name = e.target.files[0].name;
       this.$store.dispatch("userStore/updateProfile", e.target.files[0]);
+      this.$store.dispatch("socket/getChatList");
     },
     handleBGFileChange(e) {
       this.file2_name = e.target.files[0].name;
       this.$store.dispatch("userStore/updateBG", e.target.files[0]);
+      this.$store.dispatch("socket/getChatList");
     },
     /////////////////
     closeProfileModal() {
@@ -154,6 +156,9 @@ export default {
   border-radius: 10px;
   position: relative;
   cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .exit {
   position: absolute;
@@ -197,6 +202,9 @@ export default {
   background-color: #22291c;
   border-radius: 10px;
   position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .profile-camera-container {

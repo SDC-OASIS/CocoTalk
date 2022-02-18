@@ -12,6 +12,7 @@
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
     "firebase": "^8.10.0",
+    "hangul-js": "^0.2.6",
     "moment": "^2.29.1",
     "sockjs-client": "^1.5.2",
     "vue": "^2.6.11",

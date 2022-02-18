@@ -463,7 +463,7 @@ export default {
         this.message = "";
       }
     },
-    async sendToAwake(messageContent) {
+    sendToAwake(messageContent) {
       let messageBundleId = this.chatInfo.nextMessageBundleId;
       // 내가 나간 개인톡방인경우
       if (this.awakePrivateRoomInfo) {
@@ -488,9 +488,10 @@ export default {
       this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/awake`, JSON.stringify(msg));
 
       this.message = "";
-      await this.setAwakePrivateRoomStatus(false);
-      await this.setAwakePrivateRoomInfo(null);
-      await this.getChat();
+      this.setAwakePrivateRoomStatus(false);
+      this.setAwakePrivateRoomInfo(null);
+      this.getChat();
+      console.log(this.roomInfo);
     },
     // sendToAwakeOut(messageContent) {
     //   const msg = {
