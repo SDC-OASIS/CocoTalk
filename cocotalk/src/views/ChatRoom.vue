@@ -71,7 +71,7 @@
               </div>
               <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" />
               <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
-                <div class="sent-time-me">오후2:00</div>
+                <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
                 <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
               </div>
             </div>
@@ -81,7 +81,7 @@
             <div>
               <div v-if="chatMessage.userId == userInfo.id" class="my-file-message-info">
                 <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
-                <div class="sent-time-me">오후2:00</div>
+                <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
               </div>
               <video controls class="video-message" :src="chatMessage.content">해당 브라우저에서 지원하지 않습니다</video>
               <!-- <video preload="metadata" :src="chatMessage.content | videoThumbNail"></video> -->
@@ -255,7 +255,6 @@ export default {
     this.setAwakePrivateRoomInfo(null);
   },
   methods: {
-
     ...mapMutations("socket", [
       "setStompChatRoomClient",
       "setStompChatRoomConnected",
@@ -715,7 +714,7 @@ export default {
     // 파일을 업로드 할 때 마다 실행됩나다
     handleFileChange(e) {
       console.log("[Chat] Uploading files........", e.target.files[0]);
-      let payload = { chatFile: e.target.files[0], chatFileThumb: e.target.files[0], roomId: this.roomId };
+      let payload = { chatFile: e.target.files[0], chatFileThumb: this.makeTumbnail(e.target.files[0]), roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
       console.log("로딩 중 : ", this.isLoading);
@@ -735,6 +734,35 @@ export default {
           this.isLoading = false;
           console.error(e);
         });
+    },
+    async makeTumbnail(img) {
+      let convertFile = await this.convertFile(img);
+      console.log(convertFile);
+      let dataURI;
+      let thumbnail;
+      convertFile.onload = await function () {
+        let canvas = document.createElement("canvas");
+        let canvasContext = canvas.getContext("2d");
+
+        canvas.width = 100;
+        canvas.height = 100;
+
+        canvasContext.drawImage(this, 0, 0, 100, 100);
+
+        dataURI = canvas.toDataURL("image/jpeg");
+        thumbnail = dataURI;
+        return thumbnail;
+      };
+    },
+    convertFile(img) {
+      const reader = new FileReader();
+      reader.readAsDataURL(img);
+      reader.onload = () => {
+        let tempImage = new Image();
+        tempImage.src = reader.result;
+        console.log("=======썸네일========");
+        return tempImage;
+      };
     },
   },
   filters: {
@@ -938,6 +966,7 @@ export default {
 .img-message {
   max-width: 60%;
   border-radius: 5%;
+  cursor: pointer;
 }
 .video-message {
   max-width: 90%;
