@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface CustomRoomRepository {
     Optional<Room> findPrivate(Long userId, Long friendId);
     List<Room> findJoiningRoom(Long userId);
+    Long updateUsername(Long userId, String username);
+    Long updateProfile(Long userId, String profile);
 }
