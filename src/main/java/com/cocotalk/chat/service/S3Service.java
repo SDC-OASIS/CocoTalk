@@ -30,15 +30,16 @@ public class S3Service {
     private String bucket;
 
     public String uploadMessageFile(MultipartFile file, MultipartFile thumbnail, String roomId, Long userId) {
-        String[] imgExtension = new String[]{"PNG", "JPEG", "JPG", "GIF", "TIF", "TIFF", "BMP", "RLE", "DIB", "RAW"};
         //프로필 업로드
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         String filePath = "chat/" + roomId + "/"+ userId +"_" + LocalDateTime.now();
         String fileUrl = uploadFile(file,filePath+"."+extension);
-        //썸네일 업로드 // 이미지 파일이면 썸네일 확장자 그대로 감
+        //썸네일 업로드
         if(thumbnail != null && !thumbnail.isEmpty()) {
-            if(Arrays.asList(imgExtension).contains(extension.toUpperCase())) {
-                uploadFile(file, filePath+"_th."+extension);
+            if(file.getContentType().contains("image")) {   // 이미지 파일이면 썸네일 확장자 그대로 감
+                uploadFile(thumbnail, filePath+"_th."+extension);
+            } else if(file.getContentType().contains("video")){  // 동영상 파일이면 썸네일 확장자는 jpg 감
+                uploadFile(thumbnail, filePath+"_th.jpeg");
             }
         }
         return fileUrl;
