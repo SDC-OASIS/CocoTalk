@@ -234,5 +234,27 @@ extension ProfileModalViewController {
                 guard let self = self else { return }
                 self.dismiss(animated: true)
             }).disposed(by: bag)
+        
+        ivProfile.rx.tapGesture()
+            .when(.ended)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                let vc = PhotoModalViewController(imageURLString: self.profile.profileImageURL ?? "")
+                vc.modalPresentationStyle = .overFullScreen
+                self.present(vc, animated: true)
+            }).disposed(by: bag)
+        
+        ivBg.rx.tapGesture()
+            .when(.ended)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                let vc = PhotoModalViewController(imageURLString: self.profile.bgImageURL ?? "")
+                vc.modalPresentationStyle = .overFullScreen
+                self.present(vc, animated: true)
+            }).disposed(by: bag)
     }
 }
