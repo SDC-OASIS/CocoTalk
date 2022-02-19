@@ -92,6 +92,22 @@
               </div>
             </div>
           </div>
+          <!-- 파일 메시지 -->
+          <div v-else-if="chatMessage.type == 6" :class="{ 'my-file-message': chatMessage.userId == userInfo.id }">
+            <div>
+              <div v-if="chatMessage.userId == userInfo.id" class="my-file-message-info">
+                <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+                <div class="sent-time-me">오후2:00</div>
+              </div>
+              <div @click="fileClick(chatMessage.content)" class="file-message">
+                <span class="iconify" data-icon="akar-icons:file"></span>
+              </div>
+              <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
+                <div class="sent-time-me">오후2:00</div>
+                <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -270,16 +286,13 @@ export default {
       var img = new Image();
       img.src = url;
       var img_width = img.width;
-      var win_width = img.width + 25;
       var img_height = img.height;
       var curX = window.screenLeft;
       var curY = window.screenTop;
       var curWidth = document.body.clientWidth;
       var curHeight = document.body.clientHeight;
-
       var nLeft = curX + curWidth / 2 - img_width / 2;
       var nTop = curY + curHeight / 2 - img_height / 2;
-
       var strOption = "";
       strOption += "left=" + nLeft + "px,";
       strOption += "top=" + nTop + "px,";
@@ -287,9 +300,7 @@ export default {
       strOption += "height=" + img_height + "px,";
       strOption += "toolbar=no,menubar=no,location=no,scrollbars=yes,";
       strOption += "resizable=yes,status=no";
-      var OpenWindow = window.open("/", "popup", strOption);
-      // var OpenWindow = window.open("/", "popup", `width=${img_width}, height=${img_height}, left=${left}, top=${tops}`);
-      OpenWindow.document.write(`<style>body{margin:0px;}</style><img src='${url}' width='$${win_width}'>`);
+      window.open(url, "popup", strOption);
     },
     // 1.채팅내역 불러오기
     // 1-1. 일반 채팅방 입장
@@ -735,6 +746,9 @@ export default {
           console.error(e);
         });
     },
+    fileClick(url) {
+      window.open(url);
+   },
     async makeTumbnail(img) {
       let convertFile = await this.convertFile(img);
       console.log(convertFile);
@@ -764,7 +778,6 @@ export default {
         return tempImage;
       };
     },
-  },
   filters: {
     videoThumbNail: function (value) {
       return value + "#t=0.5";
@@ -971,6 +984,7 @@ export default {
 .video-message {
   max-width: 90%;
   border-radius: 5%;
+  display: inline-block;
 }
 .my-file-message {
   text-align: end;
@@ -988,7 +1002,20 @@ export default {
   display: inline-block;
   left: 5px;
 }
-
+.file-message {
+  background-color: white;
+  border-radius: 25% 00%;
+  display: inline-block;
+  padding: 5px 40px;
+}
+.file-message .iconify {
+  height: 30px;
+  width: 30px;
+}
+.file-message:hover {
+  cursor: pointer;
+  color: green;
+}
 .loading {
   position: absolute;
   bottom: 10px;
