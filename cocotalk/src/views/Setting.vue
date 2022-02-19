@@ -65,9 +65,7 @@ export default {
     console.log("설정 페이지");
   },
   methods: {
-    check() {
-      // console.log(window.location.pathname.split("/")[1]); = fiends같은 앞머리 가져오는 방법 연구
-    },
+    check() {},
   },
 };
 </script>

@@ -4,13 +4,16 @@
     <div class="header row">
       <span>친구</span>
       <div class="header-icon-container row">
-        <div style="dispaly: inline-block">
-          <span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
+        <div style="dispaly: inline-block" @click="filterOn">
+          <span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa" @click="filterOn"></span>
         </div>
         <div style="dispaly: inline-block" @click="openAddFriendModal">
           <span class="iconify" data-icon="heroicons-outline:user-add" style="color: #aaaaaa"></span>
         </div>
       </div>
+    </div>
+    <div v-if="filterStatus" class="add-friend-modal-input row">
+      <input placeholder="이름을 입력하세요." maxlength="20" @input="filter = $event.target.value" @keyup="setFilter" />
     </div>
     <!-- 목록 -->
     <div class="friend-list-inner-container">
@@ -25,7 +28,7 @@
       <!-- 친구목록 -->
       <div class="friend-list-container">
         <div class="friend-cnt">친구 - {{ friendsCnt }}</div>
-        <div class="friend-list-item-container row" v-for="(friend, idx) in friends" :key="idx" @dblclick="startPrivateChat(friend)">
+        <div class="friend-list-item-container row" v-for="(friend, idx) in friendsFiltered" :key="idx" @dblclick="startPrivateChat(friend)">
           <div @click="openProfileModal(friend.friend)">
             <profile-img :imgUrl="friend.friend.profile.profile" width="40px" />
           </div>
@@ -40,6 +43,7 @@
 import { mapState, mapActions } from "vuex";
 import ProfileImg from "@/components/common/ProfileImg.vue";
 import FriendListUserInfo from "@/components/friends/FriendListUserInfo.vue";
+import Hangul from "hangul-js";
 
 export default {
   name: "FriendList",
@@ -47,11 +51,19 @@ export default {
     ProfileImg,
     FriendListUserInfo,
   },
+  data() {
+    return {
+      filter: "",
+      friendsFiltered: [],
+      filterStatus: false,
+    };
+  },
   created() {
     console.log("=========[친구목록페이지]==========");
     this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
     this.getUser();
     this.getFriends();
+    this.friendsFiltered = this.friends;
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
@@ -74,6 +86,21 @@ export default {
       console.log("더블클릭:");
       console.log(friend);
       this.$store.dispatch("socket/startPrivateChat", friend.friend, { root: true });
+    },
+    filterOn() {
+      this.filterStatus = !this.filterStatus;
+    },
+    setFilter() {
+      let filteredFriends = [];
+      if (this.filter != "") {
+        this.friends.forEach((e) => {
+          if (Hangul.search(e.friend.username, this.filter) >= 0) {
+            filteredFriends.push(e);
+          }
+        });
+        return (this.friendsFiltered = filteredFriends);
+      }
+      return (this.friendsFiltered = this.friends);
     },
   },
 };
@@ -175,5 +202,35 @@ export default {
 .friend-list-item-container img {
   width: 50px;
   height: 50px;
+}
+
+.add-friend-modal-input {
+  text-align: center;
+  border-radius: 20px;
+  height: 35px;
+  background: #d8eec0;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  margin-bottom: 10px;
+}
+.add-friend-modal-input > input {
+  /* display: block; */
+  border: none;
+  border-radius: 20px;
+  /* margin: 0 0 20px 0; */
+  padding: 0 8%;
+  width: 90%;
+  /* height: 35px; */
+  background: #d8eec0;
+  font-size: 20px;
+}
+.add-friend-modal-input > input::placeholder {
+  font-size: 17px;
+  color: #749f58;
+}
+.add-friend-modal-input > input:focus {
+  outline: none;
+  /* outline: 2px solid #fce41e; */
 }
 </style>

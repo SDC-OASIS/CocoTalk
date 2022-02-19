@@ -104,10 +104,12 @@ export default {
     handleProfileFileChange(e) {
       this.file1_name = e.target.files[0].name;
       this.$store.dispatch("userStore/updateProfile", e.target.files[0]);
+      this.$store.dispatch("socket/getChatList");
     },
     handleBGFileChange(e) {
       this.file2_name = e.target.files[0].name;
       this.$store.dispatch("userStore/updateBG", e.target.files[0]);
+      this.$store.dispatch("socket/getChatList");
     },
     /////////////////
     closeProfileModal() {
@@ -127,7 +129,6 @@ export default {
       this.$store.dispatch("modal/setSidebar", false, { root: true });
     },
     selectImage() {
-      console.log("이미지바꾸기시작");
       this.profileEditStatus = true;
     },
     backgroundImg() {
@@ -155,6 +156,9 @@ export default {
   border-radius: 10px;
   position: relative;
   cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .exit {
   position: absolute;
@@ -198,6 +202,9 @@ export default {
   background-color: #22291c;
   border-radius: 10px;
   position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .profile-camera-container {

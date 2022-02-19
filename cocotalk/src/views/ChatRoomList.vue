@@ -4,7 +4,7 @@
     <div class="header row">
       <span>채팅</span>
       <div class="header-icon-container row">
-        <div style="dispaly: inline-block">
+        <div style="dispaly: inline-block" @click="filterOn">
           <span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
         </div>
         <div style="dispaly: inline-block" @click="openChatCreationModal">
@@ -12,9 +12,12 @@
         </div>
       </div>
     </div>
+    <div v-if="filterStatus" class="add-friend-modal-input row">
+      <input placeholder="이름을 입력하세요." maxlength="20" @input="filter = $event.target.value" @keyup="setFilter" />
+    </div>
     <!-- 채팅방 목록 -->
     <transition-group class="chat-room-list-container" @before-enter="beforeEnter" @after-enter="afterEnter" @enter-cancelled="afterEnter">
-      <div class="chat-room-item-container row" v-for="(chat, idx) in chats" :key="chat.room.id" :data-index="idx">
+      <div class="chat-room-item-container row" v-for="(chat, idx) in chatsFiltered" :key="chat.room.id" :data-index="idx">
         <div style="dispaly: inline-block; text-align: center">
           <!-- 채팅방 멤버수에 따라 다른 형태의 프로필 모양 -->
           <div v-if="chat.room.members.length == 1">
@@ -65,6 +68,7 @@ import { mapState } from "vuex";
 // import axios from "@/utils/axios";
 import ProfileImg from "@/components/common/ProfileImg.vue";
 import ChatListInfo from "@/components/chats/ChatListInfo.vue";
+import Hangul from "hangul-js";
 
 export default {
   name: "ChatList",
@@ -74,12 +78,15 @@ export default {
   },
   data() {
     return {
-      // chats: [],
+      filter: "",
+      chatsFiltered: [],
+      filterStatus: false,
     };
   },
   created() {
     console.log("========[채팅목록페이지]=========");
     this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
+    this.chatsFiltered = this.chats;
     // this.$store.dispatch("socket/chatListConnect");
     // this.getChatList();
     // this.chatListSubscribe();
@@ -128,6 +135,37 @@ export default {
       this.chats.splice(idx, 1);
       console.log(this.chats);
     },
+    filterOn() {
+      this.filterStatus = !this.filterStatus;
+    },
+    setFilter() {
+      let filteredChats = [];
+      if (this.filter != "") {
+        this.chats.forEach((e) => {
+          if (Hangul.search(e.room.roomname, this.filter) >= 0) {
+            console.log(e);
+            filteredChats.push(e);
+          }
+        });
+        return (this.chatsFiltered = filteredChats);
+      }
+      return (this.chatsFiltered = this.chats);
+    },
+    // filterOn() {
+    //   this.filterStatus = !this.filterStatus;
+    // },
+    // setFilter() {
+    //   let filteredFriends = [];
+    //   if (this.filter) {
+    //     this.friends.forEach((e) => {
+    //       if (Hangul.search(this.filter, e.username) >= 0) {
+    //         filteredFriends.push(e);
+    //       }
+    //     });
+    //   }
+    //   console.log(filteredFriends);
+    //   return (this.chatsFiltered = this.friends);
+    // },
   },
 };
 </script>
@@ -300,5 +338,35 @@ export default {
 .v-leave-to {
   opacity: 0;
   transform: translateY(20px);
+}
+
+.add-friend-modal-input {
+  text-align: center;
+  border-radius: 20px;
+  height: 35px;
+  background: #d8eec0;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 10px;
+  margin-bottom: 10px;
+}
+.add-friend-modal-input > input {
+  /* display: block; */
+  border: none;
+  border-radius: 20px;
+  /* margin: 0 0 20px 0; */
+  padding: 0 8%;
+  width: 90%;
+  /* height: 35px; */
+  background: #d8eec0;
+  font-size: 20px;
+}
+.add-friend-modal-input > input::placeholder {
+  font-size: 17px;
+  color: #749f58;
+}
+.add-friend-modal-input > input:focus {
+  outline: none;
+  /* outline: 2px solid #fce41e; */
 }
 </style>

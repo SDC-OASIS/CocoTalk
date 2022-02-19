@@ -33,7 +33,7 @@
               <i class="far fa-plus-square" style="font-size: 50px"></i>
               <span style="padding: 0 10px"> 대화상대 초대 </span>
             </div>
-            <div class="friend-container row" v-for="(member, idx) in members" :key="idx">
+            <div class="friend-container row" v-for="(member, idx) in roomInfo.members" :key="idx">
               <div @click="openProfileModal(member)">
                 <profile-img :imgUrl="member.profile.profile" width="50px" @status="checkStatus" />
               </div>
@@ -43,7 +43,9 @@
         </div>
         <!-- footer -->
         <div class="sidebar-footer row">
-          <span class="iconify" data-icon="fe:logout"></span>
+          <div @click="exitChat">
+            <span class="iconify exit-chat" data-icon="fe:logout"></span>
+          </div>
           <div class="row">
             <i class="far fa-star"></i>
             <!-- <i class="fas fa-star">채워진별</i> -->
@@ -67,11 +69,12 @@ export default {
     ProfileImg,
   },
   props: {
-    members: [],
+    roomInfo: [],
   },
   computed: {
     ...mapState("friend", ["friends"]),
     ...mapState("modal", ["sidebar"]),
+    ...mapState("socket", ["inviteRoomInfo"]),
   },
   methods: {
     closeSidebar() {
@@ -91,6 +94,11 @@ export default {
     inviteFriend() {
       console.log("====친구를 초대합니다====");
       this.$store.dispatch("modal/openInviteFriendModal");
+    },
+    exitChat() {
+      console.log("====채팅방 나가기====");
+      console.log(this.roomInfo);
+      this.$store.dispatch("socket/exitChat", this.roomInfo, { root: true });
     },
   },
 };
@@ -229,5 +237,8 @@ hr {
   .sidebar-footer {
     width: 310px;
   }
+}
+.exit-chat {
+  cursor: pointer;
 }
 </style>

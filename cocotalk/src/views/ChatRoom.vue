@@ -8,7 +8,8 @@
         </div>
         <span class="bold" style="font-size: 18px">{{ totalUnreadMessageCnt }}</span>
       </div>
-      <span class="bold chat-room-title" style="font-size: 18px">{{ this.roomInfo.roomname }}</span>
+      <span v-if="this.roomInfo.type == 0" class="bold chat-room-title" style="font-size: 18px">{{ privateRoomname }}</span>
+      <span v-else class="bold chat-room-title" style="font-size: 18px">{{ this.roomInfo.roomname }}</span>
       <div class="box">
         <span>
           <span class="iconify" data-icon="ant-design:search-outlined" style="cursor: pointer; color: black; padding-right: 10px"></span>
@@ -35,7 +36,7 @@
                   <div class="bubble box">{{ chatMessage.content }}</div>
                   <div style="position: relative; width: 70px">
                     <div class="unread-number">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
-                    <div class="sent-time">오후2:00</div>
+                    <div class="sent-time">{{ messageSentTime(chatMessage.sentAt) }}</div>
                   </div>
                 </div>
               </div>
@@ -46,7 +47,7 @@
                 <div class="row">
                   <div style="position: relative; width: 55px">
                     <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
-                    <div class="sent-time-me">오후2:00</div>
+                    <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
                   </div>
                   <div class="bubble-me box">{{ chatMessage.content }}</div>
                 </div>
@@ -57,16 +58,20 @@
           <div v-else-if="chatMessage.type == 1" class="invite-message">
             <div>{{ chatMessage.content }}</div>
           </div>
+          <!-- 퇴장 메시지 -->
+          <div v-else-if="roomInfo.type != 0 && chatMessage.type == 2" class="invite-message">
+            <div>{{ chatMessage.content }}</div>
+          </div>
           <!-- 사진 메시지 -->
           <div v-else-if="chatMessage.type == 4" :class="{ 'my-file-message': chatMessage.userId == userInfo.id }">
             <div>
               <div v-if="chatMessage.userId == userInfo.id" class="my-file-message-info">
                 <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
-                <div class="sent-time-me">오후2:00</div>
+                <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
               </div>
               <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" />
               <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
-                <div class="sent-time-me">오후2:00</div>
+                <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
                 <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
               </div>
             </div>
@@ -76,13 +81,13 @@
             <div>
               <div v-if="chatMessage.userId == userInfo.id" class="my-file-message-info">
                 <div class="unread-number-me">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
-                <div class="sent-time-me">오후2:00</div>
+                <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
               </div>
               <video controls class="video-message" :src="chatMessage.content">해당 브라우저에서 지원하지 않습니다</video>
               <!-- <video preload="metadata" :src="chatMessage.content | videoThumbNail"></video> -->
               <!-- <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" /> -->
               <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
-                <div class="sent-time-me">오후2:00</div>
+                <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
                 <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
               </div>
             </div>
@@ -128,7 +133,7 @@
       </div>
       <!-- 파일 업로드 버튼 END -->
     </div>
-    <Sidebar v-if="sidebar" :members="roomInfo.members" />
+    <Sidebar v-if="sidebar" :roomInfo="roomInfo" />
   </div>
 </template>
 
@@ -193,6 +198,8 @@ export default {
       "triggerMessage",
       "chats",
       "newPrivateRoomRefresh",
+      "awakePrivateRoomStatus",
+      "awakePrivateRoomInfo",
     ]),
     totalUnreadMessageCnt() {
       let cnt = 0;
@@ -201,12 +208,23 @@ export default {
       });
       return cnt;
     },
+    privateRoomname() {
+      let roomname;
+      this.roomInfo.members.forEach((e) => {
+        if (e.userId != this.userInfo.id) {
+          roomname = e.username;
+        }
+      });
+      return roomname;
+    },
   },
   watch: {
     // 채팅방을 켜둔상태에서 다른 채팅방으로 이동할 경우
     "$route.params.roomId": function () {
       // 이전 채팅방 disconnect
       this.$store.dispatch("modal/setSidebar", true, { root: true });
+      this.setAwakePrivateRoomStatus(false);
+      this.setAwakePrivateRoomInfo(null);
 
       if (!this.newPrivateRoomStatus) {
         const headers = { action: "leave" };
@@ -248,8 +266,21 @@ export default {
       this.bottomScrollTop = chatMessages.scrollTop;
     },
   },
+  destroyed() {
+    this.setAwakePrivateRoomStatus(false);
+    this.setAwakePrivateRoomInfo(null);
+  },
   methods: {
-    ...mapMutations("socket", ["setStompChatRoomClient", "setStompChatRoomConnected", "setCreateChatRoomStatus", "setNewPrivateRoomStatus", "setNewPrivateRoomRefresh", "setInviteRoomInfo"]),
+    ...mapMutations("socket", [
+      "setStompChatRoomClient",
+      "setStompChatRoomConnected",
+      "setCreateChatRoomStatus",
+      "setNewPrivateRoomStatus",
+      "setNewPrivateRoomRefresh",
+      "setInviteRoomInfo",
+      "setAwakePrivateRoomStatus",
+      "setAwakePrivateRoomInfo",
+    ]),
     // 이미지 클릭했을 때 원본 이미지로 보여주기
     openClick(url) {
       var img = new Image();
@@ -275,8 +306,16 @@ export default {
     // 1-1. 일반 채팅방 입장
     getChat() {
       this.roomMemberIds = [];
+      // 본인이 나간 개인톡방인경우
+      if (this.awakePrivateRoomStatus) {
+        console.log("내가이미나간 톡방");
+        console.log(this.awakePrivateRoomInfo);
+        this.roomInfo = this.awakePrivateRoomInfo;
+        return;
+      }
       axios.get(`chat/rooms/${this.roomStatus.roomId}/tail?count=${this.chatInfo.recentMessageBundleCount}`).then((res) => {
         console.log("채팅내역 가져오기");
+        console.log(this.chatInfo.recentMessageBundleCount);
         let chatData = res.data.data;
         if (chatData) {
           if (this.triggerMessage) {
@@ -317,7 +356,6 @@ export default {
     // 1-2. 채팅방 생성시 자동 입장
     getNewChat() {
       console.log("========[새로운 채팅방 입성]==========");
-      decodeURI;
       this.sendInviteMessage();
     },
 
@@ -339,6 +377,9 @@ export default {
         return item.userId == userId;
       });
       return this.roomInfo.members[idx];
+    },
+    messageSentTime(time) {
+      return this.$moment(time).format("LT");
     },
     unreadMemberCnt(sentAt) {
       // console.log("=======카톡안읽은 사람 숫자 연산 =========");
@@ -385,7 +426,7 @@ export default {
           // 채팅 메세지 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
             console.log("구독으로 받은 메시지 입니다.");
-            console.log("현재갠톡방상성상태:" + this.newPrivateRoomStatus);
+            console.log("현재갠톡방상성상태:" + "개인톡방생성중:" + this.newPrivateRoomStatus + "단톡생성중:" + this.createChatRoomStatus);
             const receivedMessage = JSON.parse(res.body);
             this.chatMessages.push(receivedMessage.message);
             console.log(receivedMessage);
@@ -400,13 +441,14 @@ export default {
             // 만약 처음 생성된방이라면
             if (this.newPrivateRoomRefresh) {
               this.getChat();
-              console.log(this.newPrivateRoomRefresh);
+              console.log("처음생성된 방:" + this.newPrivateRoomRefresh);
               this.setNewPrivateRoomRefresh(false);
             }
           });
           // 채팅 메세지 룸정보 업데이트 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/room`, (res) => {
-            console.log("구독으로 받은 채팅방 정보입니다dd.");
+            console.log("구독으로 받은 채팅방 정보입니다");
+            console.log(JSON.parse(res.body));
             this.roomInfo = JSON.parse(res.body);
             this.roomInfo.members.forEach((e) => {
               this.roomMemberIds = [];
@@ -415,19 +457,7 @@ export default {
                 e.profile = JSON.parse(e.profile);
               }
             });
-            console.log(this.roomInfo.members);
           });
-          // 채팅방 초대 - 이전의 Join과 다름. 좀 더 생각해보기
-          // const msg = {
-          // 	type: 3,
-          // 	roomId: this.roomStatus.roomId,
-          // 	userId: this.userInfo.id,
-          // 	inviteIds: [10],
-          // 	messageBundleId: this.socket.recentMessageBundleId,
-          // 	content: "초대메세지",
-          // };
-          // console.log("초대");
-          // this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/invite`, JSON.stringify(msg), {});
         },
         (error) => {
           // 소켓 연결 실패
@@ -446,6 +476,29 @@ export default {
         if (messageType == 0 && (!this.message || this.message.length == 0)) return;
         // 소켓이 연결되어 있어야 전송합니다.
         if (!this.stompChatRoomClient || !this.stompChatRoomClient.connected) return;
+
+        // awake message를 보내는경우 (상대가 나간 개인톡방)
+        let joining = "";
+        if (this.roomInfo.type == 0) {
+          this.roomInfo.members.forEach((e) => {
+            if (e.joining == false) {
+              messageType = 3;
+              this.sendToAwake(messageContent);
+              // this.getChat();
+              return;
+            }
+          });
+          console.log("상대방:" + joining);
+        }
+        // if (!joining) {
+        //   messageType = 3;
+        //   this.sendToAwake(messageContent);
+        //   return;
+        // }
+        // awake message를 보내는경우 (내가 나간 개인톡방)
+
+        // this.sendToAwakeOut();
+
         const msg = {
           type: messageType,
           content: messageContent,
@@ -462,6 +515,52 @@ export default {
         this.message = "";
       }
     },
+    sendToAwake(messageContent) {
+      let messageBundleId = this.chatInfo.nextMessageBundleId;
+      // 내가 나간 개인톡방인경우
+      if (this.awakePrivateRoomInfo) {
+        messageBundleId = this.roomInfo.messageBundleIds[this.roomInfo.messageBundleIds.length - 1];
+      }
+      let roomMemberIds = [];
+      this.roomInfo.members.forEach((e) => {
+        roomMemberIds.push(e.userId);
+      });
+
+      const msg = {
+        type: 3,
+        content: messageContent,
+        roomId: this.roomStatus.roomId,
+        roomType: 0,
+        roomname: null,
+        userId: this.userInfo.id,
+        username: this.userInfo.username,
+        receiverIds: roomMemberIds,
+        messageBundleId: messageBundleId,
+      };
+      this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/awake`, JSON.stringify(msg));
+
+      this.message = "";
+      this.setAwakePrivateRoomStatus(false);
+      this.setAwakePrivateRoomInfo(null);
+      this.getChat();
+      console.log(this.roomInfo);
+    },
+    // sendToAwakeOut(messageContent) {
+    //   const msg = {
+    //     type: 3,
+    //     content: messageContent,
+    //     roomId: this.roomStatus.roomId,
+    //     roomType: 0,
+    //     roomname: null,
+    //     userId: this.userInfo.id,
+    //     username: this.userInfo.username,
+    //     receiverIds: this.roomMemberIds,
+    //     messageBundleId: this.chatInfo.nextMessageBundleId,
+    //   };
+    //   this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/awake`, JSON.stringify(msg));
+
+    //   this.message = "";
+    // },
     sendToCreatePrivateRoom() {
       console.log("개인톡방생성 버튼 클릭");
       let members = [];
@@ -610,7 +709,7 @@ export default {
     scrollBottom() {
       let chatMessages = this.$refs.scrollRef;
       // 메세지가 왔을때 현재 스크롤 위치와 최하단 스크롤 위치가
-      if (chatMessages.scrollTop - this.bottomScrollTop < 1000) {
+      if (chatMessages && chatMessages.scrollTop - this.bottomScrollTop < 1000) {
         this.$nextTick(() => {
           let chatMessages = this.$refs.scrollRef;
           chatMessages.scrollTo({ top: this.previousScrollHeight, behavior: "smooth" });
@@ -626,7 +725,7 @@ export default {
     // 파일을 업로드 할 때 마다 실행됩나다
     handleFileChange(e) {
       console.log("[Chat] Uploading files........", e.target.files[0]);
-      let payload = { chatFile: e.target.files[0], chatFileThumb: e.target.files[0], roomId: this.roomId };
+      let payload = { chatFile: e.target.files[0], chatFileThumb: this.makeTumbnail(e.target.files[0]), roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
       console.log("로딩 중 : ", this.isLoading);
@@ -649,8 +748,36 @@ export default {
     },
     fileClick(url) {
       window.open(url);
+   },
+    async makeTumbnail(img) {
+      let convertFile = await this.convertFile(img);
+      console.log(convertFile);
+      let dataURI;
+      let thumbnail;
+      convertFile.onload = await function () {
+        let canvas = document.createElement("canvas");
+        let canvasContext = canvas.getContext("2d");
+
+        canvas.width = 100;
+        canvas.height = 100;
+
+        canvasContext.drawImage(this, 0, 0, 100, 100);
+
+        dataURI = canvas.toDataURL("image/jpeg");
+        thumbnail = dataURI;
+        return thumbnail;
+      };
     },
-  },
+    convertFile(img) {
+      const reader = new FileReader();
+      reader.readAsDataURL(img);
+      reader.onload = () => {
+        let tempImage = new Image();
+        tempImage.src = reader.result;
+        console.log("=======썸네일========");
+        return tempImage;
+      };
+    },
   filters: {
     videoThumbNail: function (value) {
       return value + "#t=0.5";
@@ -852,6 +979,7 @@ export default {
 .img-message {
   max-width: 60%;
   border-radius: 5%;
+  cursor: pointer;
 }
 .video-message {
   max-width: 90%;

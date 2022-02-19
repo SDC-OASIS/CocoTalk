@@ -109,7 +109,6 @@ const modal = {
     },
     openRoomNameEditModal: function (context, payload) {
       console.log("채팅방 멤버 옮기기");
-      console.log(payload);
       context.commit("OPEN_ROOM_NAME_EDIT_MODAL", payload);
     },
     closeRoomNameEditModal: function (context) {
