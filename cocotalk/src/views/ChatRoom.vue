@@ -803,7 +803,7 @@ export default {
   overflow: auto;
 }
 .chat-messages-container {
-  height: 72vh;
+  height: 71vh;
 }
 @media (max-height: 880px) {
   .chat-messages-container {
