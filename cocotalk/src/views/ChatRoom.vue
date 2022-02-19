@@ -748,7 +748,7 @@ export default {
     },
     fileClick(url) {
       window.open(url);
-   },
+    },
     async makeTumbnail(img) {
       let convertFile = await this.convertFile(img);
       console.log(convertFile);
@@ -778,9 +778,10 @@ export default {
         return tempImage;
       };
     },
-  filters: {
-    videoThumbNail: function (value) {
-      return value + "#t=0.5";
+    filters: {
+      videoThumbNail: function (value) {
+        return value + "#t=0.5";
+      },
     },
   },
 };

@@ -4,7 +4,7 @@ import router from "@/router";
 
 const axios = VueAxios.create({
   // API GateWay 주소로 기본 설정
-  baseURL: "http://138.2.88.163:8000/",
+  baseURL: "https://cocotalk-api.ml/",
   headers: {
     "Content-type": "application/json",
   },
