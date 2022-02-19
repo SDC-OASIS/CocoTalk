@@ -89,6 +89,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     var isEmoji: Bool?
     var isVideo: Bool?
     var isPhoto: Bool?
+    var isSystemMessage: Bool?
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -139,6 +140,22 @@ class MessageCollectionViewCell: UICollectionViewCell {
         ivProfile.isHidden = true
         ivTail.isHidden = true
         lblName.isHidden = true
+        
+        if isSystemMessage ?? false {
+            lblMessage.snp.makeConstraints {
+                $0.centerX.equalToSuperview()
+                $0.top.bottom.equalToSuperview()
+            }
+            lblMessage.textColor = .white
+            lblMessage.font = .systemFont(ofSize: 13)
+            lblMessage.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15)
+            lblUnreadMemberCount.isHidden = true
+            lblDate.isHidden = true
+            return
+        } else {
+            lblMessage.font = .systemFont(ofSize: 14.5)
+            lblMessage.textColor = .black
+        }
         
         let hasTail = self.hasTail ?? false
         let isMe = self.isMe ?? false
@@ -213,6 +230,14 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     func setData(data: ModelMessage) {
+        if 1...3 ~= (data.type ?? 0)   {
+            lblMessage.text = data.content ?? ""
+            lblMessage.textAlignment = .center
+            isSystemMessage = true
+            return
+        }
+        lblMessage.textAlignment = .natural
+        
         if let profileImgUrl = data.profileImageURL,
            !profileImgUrl.isEmpty {
             let url = URL(string: profileImgUrl)

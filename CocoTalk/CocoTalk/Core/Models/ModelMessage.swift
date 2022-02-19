@@ -40,7 +40,6 @@ struct ModelMessage: Codable {
     var mediaUrls: [String]? = nil
     
     /// 송신자
-    ///
     /// nil: 안내 메시지
     var senderId: Int? = nil
     

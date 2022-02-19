@@ -43,6 +43,7 @@ class ProfileModalViewController: UIViewController {
     private let ivUpdateName = UIImageView(image: UIImage(systemName: "pencil")).then {
         $0.tintColor = .white
         $0.setShadow()
+        $0.isHidden = true
     }
     
     /// 상태메시지

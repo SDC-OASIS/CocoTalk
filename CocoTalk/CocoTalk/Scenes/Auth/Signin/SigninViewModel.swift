@@ -53,7 +53,6 @@ class SigninViewModel {
 }
 
 extension SigninViewModel {
-#warning("로그인 에러 알리기")
     func signin() {
         let token: String? = KeychainWrapper.standard[.fcmToken]
         if token == nil {
