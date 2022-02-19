@@ -120,6 +120,8 @@
 		EAC615AE27B7673100B213BC /* CreateChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */; };
 		EAC7380F27C10B420011F4D1 /* MessageCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC7380E27C10B420011F4D1 /* MessageCellDelegate.swift */; };
 		EAC7381227C111BB0011F4D1 /* PhotoModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC7381127C111BB0011F4D1 /* PhotoModalViewController.swift */; };
+		EAC7381527C134700011F4D1 /* ChatDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC7381427C134700011F4D1 /* ChatDrawerViewController.swift */; };
+		EAC7381727C134BF0011F4D1 /* ChatDrawerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC7381627C134BF0011F4D1 /* ChatDrawerViewModel.swift */; };
 		EAD3215227BB7979007F6C2B /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD3215127BB7979007F6C2B /* Date+Ext.swift */; };
 		EAD3215427BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD3215327BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift */; };
 		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
@@ -238,6 +240,8 @@
 		EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomViewModel.swift; sourceTree = "<group>"; };
 		EAC7380E27C10B420011F4D1 /* MessageCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellDelegate.swift; sourceTree = "<group>"; };
 		EAC7381127C111BB0011F4D1 /* PhotoModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModalViewController.swift; sourceTree = "<group>"; };
+		EAC7381427C134700011F4D1 /* ChatDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDrawerViewController.swift; sourceTree = "<group>"; };
+		EAC7381627C134BF0011F4D1 /* ChatDrawerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDrawerViewModel.swift; sourceTree = "<group>"; };
 		EAD3215127BB7979007F6C2B /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
 		EAD3215327BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelInitialMessagesResponse.swift; sourceTree = "<group>"; };
 		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -421,6 +425,7 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EAC7381327C134570011F4D1 /* ChatDrawer */,
 				EAC7381027C111A90011F4D1 /* PhotoModal */,
 				EAC6159327B6925900B213BC /* ProfileModal */,
 				EA29145927B3E21800324476 /* GNB */,
@@ -708,6 +713,15 @@
 				EAC7381127C111BB0011F4D1 /* PhotoModalViewController.swift */,
 			);
 			path = PhotoModal;
+			sourceTree = "<group>";
+		};
+		EAC7381327C134570011F4D1 /* ChatDrawer */ = {
+			isa = PBXGroup;
+			children = (
+				EAC7381427C134700011F4D1 /* ChatDrawerViewController.swift */,
+				EAC7381627C134BF0011F4D1 /* ChatDrawerViewModel.swift */,
+			);
+			path = ChatDrawer;
 			sourceTree = "<group>";
 		};
 		EAE555A3279A700400777EBF /* MessageCell */ = {
@@ -1012,6 +1026,7 @@
 				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
 				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
 				EAD3215427BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift in Sources */,
+				EAC7381727C134BF0011F4D1 /* ChatDrawerViewModel.swift in Sources */,
 				EA29141727B0F35900324476 /* APIResult_1.swift in Sources */,
 				EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */,
 				EA29146C27B5157A00324476 /* MoreViewController.swift in Sources */,
@@ -1032,6 +1047,7 @@
 				EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */,
 				EA22D559279797D000E1F39A /* ChatRoomViewController.swift in Sources */,
 				EA2913E727AB6CE300324476 /* UserRepository.swift in Sources */,
+				EAC7381527C134700011F4D1 /* ChatDrawerViewController.swift in Sources */,
 				EA8F20B827B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift in Sources */,
 				EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */,
 				EA8F20A527B79458008A01ED /* SelectableFrinedCell.swift in Sources */,

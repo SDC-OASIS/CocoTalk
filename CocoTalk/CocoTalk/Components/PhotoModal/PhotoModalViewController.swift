@@ -30,10 +30,13 @@ class PhotoModalViewController: UIViewController {
     var viewVelocity = CGPoint(x: 0, y: 0)
     
     // MARK: - Life cycle
-    init(imageURLString: String) {
+    init(imageURLString: String, isProfile: Bool? = nil) {
         if !imageURLString.isEmpty {
             let url = URL(string: imageURLString)
-            ivImage.kf.setImage(with: url, placeholder: nil)
+            ivImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01"))
+        } else if let isProfile = isProfile,
+           isProfile {
+            ivImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
         }
         super.init(nibName: nil, bundle: nil)
     }

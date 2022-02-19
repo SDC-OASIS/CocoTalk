@@ -241,7 +241,7 @@ extension ProfileModalViewController {
                 guard let self = self else {
                     return
                 }
-                let vc = PhotoModalViewController(imageURLString: self.profile.profileImageURL ?? "")
+                let vc = PhotoModalViewController(imageURLString: self.profile.profileImageURL ?? "", isProfile: true)
                 vc.modalPresentationStyle = .overFullScreen
                 self.present(vc, animated: true)
             }).disposed(by: bag)
