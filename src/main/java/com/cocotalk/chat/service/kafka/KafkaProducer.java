@@ -1,5 +1,6 @@
 package com.cocotalk.chat.service.kafka;
 
+import com.cocotalk.chat.domain.entity.message.MessageType;
 import com.cocotalk.chat.domain.entity.room.RoomType;
 import com.cocotalk.chat.dto.kafka.ChatTopicDto;
 import com.cocotalk.chat.dto.kafka.PushTopicDto;
@@ -61,6 +62,7 @@ public class KafkaProducer {
                 .message(request.getContent())
                 .roomType(RoomType.values()[request.getRoomType()])
                 .username(request.getUsername())
+                .messageType(MessageType.values()[request.getType()])
                 .build();
         try {
             kafkaTemplate.send(pushTopic, mapper.writeValueAsString(pushTopicDto));

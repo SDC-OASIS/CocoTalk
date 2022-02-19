@@ -1,5 +1,6 @@
 package com.cocotalk.chat.dto.kafka;
 
+import com.cocotalk.chat.domain.entity.message.MessageType;
 import com.cocotalk.chat.domain.entity.room.RoomType;
 import lombok.*;
 
@@ -30,4 +31,6 @@ public class PushTopicDto {
     private String username;
     @NotNull
     private String message;
+    @NotNull
+    private MessageType messageType;
 }

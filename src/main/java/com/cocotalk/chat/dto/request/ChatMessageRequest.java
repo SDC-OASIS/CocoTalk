@@ -34,5 +34,5 @@ public class ChatMessageRequest {
 
     private String content;
 
-    private int type;
+    private int type; // 메시지 타입
 }
