@@ -37,8 +37,8 @@ public class S3Service {
         //썸네일 업로드
         if(thumbnail != null && !thumbnail.isEmpty()) {
             if(file.getContentType().contains("image")) {   // 이미지 파일이면 썸네일 확장자 그대로 감
-                uploadFile(thumbnail, filePath+"_th."+extension);
-            } else if(file.getContentType().contains("video")){  // 동영상 파일이면 썸네일 확장자는 jpg 감
+                uploadFile(thumbnail, filePath+"_th.jpeg");
+            } else if(file.getContentType().contains("video")){  // 동영상 파일이면 썸네일 확장자는 jpeg 감
                 uploadFile(thumbnail, filePath+"_th.jpeg");
             }
         }
