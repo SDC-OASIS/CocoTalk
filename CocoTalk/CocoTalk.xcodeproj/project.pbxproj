@@ -77,7 +77,7 @@
 		EA29145227B3D49800324476 /* ModelRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145127B3D49800324476 /* ModelRoom.swift */; };
 		EA29145427B3D4A000324476 /* ModelRoomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145327B3D4A000324476 /* ModelRoomList.swift */; };
 		EA29145627B3D75400324476 /* RoomAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145527B3D75400324476 /* RoomAPI.swift */; };
-		EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145727B3DE1500324476 /* ModelChatMessage.swift */; };
+		EA29145827B3DE1500324476 /* ModelSocketChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145727B3DE1500324476 /* ModelSocketChatMessage.swift */; };
 		EA29145B27B3E22A00324476 /* GNBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145A27B3E22A00324476 /* GNBView.swift */; };
 		EA29145D27B3F77D00324476 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29145C27B3F77D00324476 /* CoreDataHelper.swift */; };
 		EA29146927B4E19800324476 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA29146827B4E19800324476 /* UIImage+Ext.swift */; };
@@ -118,6 +118,10 @@
 		EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */; };
 		EAC615AB27B6E35F00B213BC /* TabEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AA27B6E35F00B213BC /* TabEnum.swift */; };
 		EAC615AE27B7673100B213BC /* CreateChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */; };
+		EAC7380F27C10B420011F4D1 /* MessageCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC7380E27C10B420011F4D1 /* MessageCellDelegate.swift */; };
+		EAC7381227C111BB0011F4D1 /* PhotoModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC7381127C111BB0011F4D1 /* PhotoModalViewController.swift */; };
+		EAD3215227BB7979007F6C2B /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD3215127BB7979007F6C2B /* Date+Ext.swift */; };
+		EAD3215427BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD3215327BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift */; };
 		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
 		EAE555A8279A981A00777EBF /* MessageEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A7279A981A00777EBF /* MessageEnum.swift */; };
 		EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A9279A986C00777EBF /* ModelMessage.swift */; };
@@ -197,7 +201,7 @@
 		EA29145127B3D49800324476 /* ModelRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRoom.swift; sourceTree = "<group>"; };
 		EA29145327B3D4A000324476 /* ModelRoomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRoomList.swift; sourceTree = "<group>"; };
 		EA29145527B3D75400324476 /* RoomAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomAPI.swift; sourceTree = "<group>"; };
-		EA29145727B3DE1500324476 /* ModelChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelChatMessage.swift; sourceTree = "<group>"; };
+		EA29145727B3DE1500324476 /* ModelSocketChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSocketChatMessage.swift; sourceTree = "<group>"; };
 		EA29145A27B3E22A00324476 /* GNBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBView.swift; sourceTree = "<group>"; };
 		EA29145C27B3F77D00324476 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		EA29146827B4E19800324476 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
@@ -232,6 +236,10 @@
 		EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendResponse.swift; sourceTree = "<group>"; };
 		EAC615AA27B6E35F00B213BC /* TabEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabEnum.swift; sourceTree = "<group>"; };
 		EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomViewModel.swift; sourceTree = "<group>"; };
+		EAC7380E27C10B420011F4D1 /* MessageCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellDelegate.swift; sourceTree = "<group>"; };
+		EAC7381127C111BB0011F4D1 /* PhotoModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModalViewController.swift; sourceTree = "<group>"; };
+		EAD3215127BB7979007F6C2B /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
+		EAD3215327BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelInitialMessagesResponse.swift; sourceTree = "<group>"; };
 		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		EAE555A7279A981A00777EBF /* MessageEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEnum.swift; sourceTree = "<group>"; };
 		EAE555A9279A986C00777EBF /* ModelMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelMessage.swift; sourceTree = "<group>"; };
@@ -330,7 +338,6 @@
 				EA22D557279797BE00E1F39A /* ChatRoom */,
 				EAC6159B27B6B61F00B213BC /* Setting */,
 				EAC6159A27B6B61800B213BC /* Search */,
-				EA22D53C2794F7D400E1F39A /* Root */,
 				EA3F375A278BD068007957EB /* Splash */,
 				EAE575C1278BB37D00D959A0 /* Auth */,
 			);
@@ -395,6 +402,7 @@
 				EA29144C27B3C23A00324476 /* Encodable+Ext.swift */,
 				EA29146827B4E19800324476 /* UIImage+Ext.swift */,
 				EA29146D27B51A9A00324476 /* UIViewController+Ext.swift */,
+				EAD3215127BB7979007F6C2B /* Date+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -402,7 +410,6 @@
 		EA14D50C2786C4AA00EDC892 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				EA29145727B3DE1500324476 /* ModelChatMessage.swift */,
 				EAE555A9279A986C00777EBF /* ModelMessage.swift */,
 				EA29145027B3D25A00324476 /* ChatRoom */,
 				EA29144127B37D8200324476 /* Friend */,
@@ -414,6 +421,7 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EAC7381027C111A90011F4D1 /* PhotoModal */,
 				EAC6159327B6925900B213BC /* ProfileModal */,
 				EA29145927B3E21800324476 /* GNB */,
 				EAE555FB279E21C800777EBF /* PaddingLabel */,
@@ -475,6 +483,7 @@
 				EA22D55A279797DB00E1F39A /* ChatRoomViewModel.swift */,
 				EAE5560927A154CD00777EBF /* MessageCollectionViewLayout.swift */,
 				EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */,
+				EAC7380E27C10B420011F4D1 /* MessageCellDelegate.swift */,
 			);
 			path = ChatRoom;
 			sourceTree = "<group>";
@@ -544,6 +553,8 @@
 				EA29145127B3D49800324476 /* ModelRoom.swift */,
 				EA29145327B3D4A000324476 /* ModelRoomList.swift */,
 				EA8F20B727B8BE5F008A01ED /* ModelCreateChatRoomRequest.swift */,
+				EA29145727B3DE1500324476 /* ModelSocketChatMessage.swift */,
+				EAD3215327BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift */,
 			);
 			path = ChatRoom;
 			sourceTree = "<group>";
@@ -683,11 +694,20 @@
 		EAC615AC27B766EF00B213BC /* MainTabs */ = {
 			isa = PBXGroup;
 			children = (
+				EA22D53C2794F7D400E1F39A /* Root */,
 				EA29146A27B5155B00324476 /* More */,
 				EA22D5392794F76D00E1F39A /* FriendList */,
 				EA22D54D27967BF700E1F39A /* ChatRoomList */,
 			);
 			path = MainTabs;
+			sourceTree = "<group>";
+		};
+		EAC7381027C111A90011F4D1 /* PhotoModal */ = {
+			isa = PBXGroup;
+			children = (
+				EAC7381127C111BB0011F4D1 /* PhotoModalViewController.swift */,
+			);
+			path = PhotoModal;
 			sourceTree = "<group>";
 		};
 		EAE555A3279A700400777EBF /* MessageCell */ = {
@@ -972,6 +992,7 @@
 				EA2913FC27AF5F4500324476 /* UserDefaultsKeyEnum.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,
 				EA29145627B3D75400324476 /* RoomAPI.swift in Sources */,
+				EAC7380F27C10B420011F4D1 /* MessageCellDelegate.swift in Sources */,
 				EA2913FE27AF6A4E00324476 /* UserDefaults+Ext.swift in Sources */,
 				EA29146927B4E19800324476 /* UIImage+Ext.swift in Sources */,
 				EA29143C27B339D700324476 /* SigninViewModel.swift in Sources */,
@@ -990,12 +1011,13 @@
 				EA8F20B627B8B441008A01ED /* ProfileHelper.swift in Sources */,
 				EAE7F3C1278D258E002EB808 /* SmsAuthViewController.swift in Sources */,
 				EA3F3760278BFCCD007957EB /* TermViewController.swift in Sources */,
+				EAD3215427BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift in Sources */,
 				EA29141727B0F35900324476 /* APIResult_1.swift in Sources */,
 				EA2913E527AA6B3200324476 /* MessageRepository.swift in Sources */,
 				EA29146C27B5157A00324476 /* MoreViewController.swift in Sources */,
 				EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */,
 				EA29143727B2290C00324476 /* APIResult_Device.swift in Sources */,
-				EA29145827B3DE1500324476 /* ModelChatMessage.swift in Sources */,
+				EA29145827B3DE1500324476 /* ModelSocketChatMessage.swift in Sources */,
 				EA29146E27B51A9A00324476 /* UIViewController+Ext.swift in Sources */,
 				EA29140927B0B13E00324476 /* ModelSignupResponse.swift in Sources */,
 				EA8F20A727B79506008A01ED /* CreateChatRoomDelegate.swift in Sources */,
@@ -1021,6 +1043,7 @@
 				EAE5560A27A154CD00777EBF /* MessageCollectionViewLayout.swift in Sources */,
 				EA29145427B3D4A000324476 /* ModelRoomList.swift in Sources */,
 				EA29145227B3D49800324476 /* ModelRoom.swift in Sources */,
+				EAC7381227C111BB0011F4D1 /* PhotoModalViewController.swift in Sources */,
 				EA29141F27B1375300324476 /* ModelSignupRequest.swift in Sources */,
 				EA29145B27B3E22A00324476 /* GNBView.swift in Sources */,
 				EA3F3769278C5224007957EB /* TermViewModel.swift in Sources */,
@@ -1035,6 +1058,7 @@
 				EA29141B27B10C0100324476 /* ModelIssueEmailCodeRequest.swift in Sources */,
 				EA8F20A927B796C7008A01ED /* ClosableFriendCell.swift in Sources */,
 				EA29140D27B0B16F00324476 /* URL+Ext.swift in Sources */,
+				EAD3215227BB7979007F6C2B /* Date+Ext.swift in Sources */,
 				EA29142127B1514200324476 /* ModelSigninRequest.swift in Sources */,
 				EAE555AA279A986C00777EBF /* ModelMessage.swift in Sources */,
 				EA14D4F22786B16C00EDC892 /* SceneDelegate.swift in Sources */,

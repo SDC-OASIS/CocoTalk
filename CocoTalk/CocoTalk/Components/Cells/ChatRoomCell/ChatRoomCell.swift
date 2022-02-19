@@ -194,27 +194,39 @@ class ChatRoomCell: UITableViewCell {
     }
     
     func setData(data: ModelRoomList) {
-        guard let img = data.room?.img else {
-            return
-        }
+        let img = data.room?.img ?? ""
         if let url = URL(string: img) {
             ivRoomImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01")!)
         } else {
-            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_0\(Int.random(in: 1..<4))")!
+            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
         }
         
         lblTitle.text = data.room?.roomname ?? ""
         lblMemeberNumber.text = "\(data.room?.members?.count ?? -1)"
-        ivPin.isHidden = !(data.room?.isPinned ?? true)
-        ivSilent.isHidden = !(data.room?.isSilent ?? true)
+        ivPin.isHidden = !(data.room?.isPinned ?? false)
+        ivSilent.isHidden = !(data.room?.isSilent ?? false)
         
         lblLastMessage.text = data.recentChatMessage?.content ?? ""
         
-        lblLastMsgTime.text = String((data.recentChatMessage?.sentAt?.split(separator: ".")[0].description.dropLast(3)) ?? "")
-        if data.recentMessageBundleCount ?? 0 > 0 {
+        
+        if let sentAt = data.recentChatMessage?.sentAt {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+            
+            if var sentAtDate = dateFormatter.date(from: sentAt) {
+                let myDateFormatter = DateFormatter()
+                myDateFormatter.dateFormat = "yyyy.MM.dd a hh:mm"
+                myDateFormatter.locale = Locale(identifier:"ko_KR")
+                sentAtDate.convertToKorTime()
+                
+                lblLastMsgTime.text = myDateFormatter.string(from: sentAtDate)
+            }
+        }
+
+        if data.unreadNumber ?? 0 > 0 {
             viewUnreadNumberContainer.backgroundColor = .red
             lblUnreadMessageNumber.isHidden = false
-            lblUnreadMessageNumber.text = (data.recentMessageBundleCount ?? 0).description
+            lblUnreadMessageNumber.text = (data.unreadNumber ?? 0).description
         } else {
             viewUnreadNumberContainer.backgroundColor = .clear
             lblUnreadMessageNumber.isHidden = true

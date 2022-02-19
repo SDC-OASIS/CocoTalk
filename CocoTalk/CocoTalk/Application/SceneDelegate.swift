@@ -44,16 +44,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
+        initSockets()
         viewModel.verifyToken()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.listSocket?.closeConnection()
+        appDelegate?.chatSocket?.closeConnection()
         appDelegate?.saveContext()
     }
-
-
+    
+    // MARK: - Helper
+    func initSockets() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.initListSocket()
+        appDelegate?.establishChatSocketConnection()
+    }
 }
 
 extension SceneDelegate {
@@ -74,9 +81,18 @@ extension SceneDelegate {
                     self.window?.backgroundColor = .white
                     self.window?.rootViewController = nav
                     self.window?.makeKeyAndVisible()
-                } else {
-                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                    appDelegate?.initializeListSocket()
+                }
+            }).disposed(by: bag)
+        
+        viewModel.dependency.isValidToken
+            .subscribe(onNext: { [weak self] isValid in
+                guard let self = self,
+                      let isValid = isValid else {
+                    return
+                }
+                
+                if !isValid {
+                    self.viewModel.reissueToken()
                 }
             }).disposed(by: bag)
     }

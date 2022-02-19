@@ -7,36 +7,60 @@
 
 import Foundation
 
-struct ModelMessage: Codable {
+struct ModelMessage: Codable {    
     /// 메시지 id
-    var id: Int?
+    var id: String? = nil
+    
+    /// 채팅방 id
+    var roomId: String? = nil
+    
+    /// 메시지 번들 id
+    var messageBundleId: String? = nil
+    
+    /// user id
+    var userId: Int? = nil
     
     /// 메시지 텍스트
-    var text: String?
+    var content: String? = nil
     
-    /// 사진/동영상/이모지
-    var mediaType: Int?
+    /// 메시지 타입
+    /// - 0: 단순 메시지
+    /// - 1: 입장 메시지 (XX 님이 입장하셨습니다.)
+    /// - 2: 퇴장 메시지 (XX 님이 퇴장하셨습니다)
+    /// - 3: 초대 메시지 (XX 님이 초대됐습니다.)
+    /// - 4: 사진
+    /// - 5: 동영상
+    /// - 6: 그 외 파일
+    var type: Int? = nil
+    
+    /// 보낸 시각
+    var sentAt: String? = nil
     
     /// 미디어 리소스 주소
-    var mediaUrls: [String]?
+    var mediaUrls: [String]? = nil
     
     /// 송신자
-    ///
     /// nil: 안내 메시지
-    var senderId: Int?
+    var senderId: Int? = nil
     
     /// 송신 날짜
-    var date: Date?
+    var date: Date? = nil
     
-    var isMe: Bool?
+    /// 내가 보낸 톡인지
+    var isMe: Bool? = nil
     
-    var hasTail: Bool?
-}
-
-extension ModelMessage {
-    #warning("랜덤 메시지 함수 삭제")
-    static func getRandomMessage(id: Int) -> ModelMessage {
-        let text = Bool.random() ? "첫 번째 줄" : "^.^ 오늘 재택하신 분들은 내일부터 슥슥 가져가심됩니다. 참고로 섭취 가능 기한은 1주일!"
-        return ModelMessage(id: id, text: text, mediaType: 0, mediaUrls: nil, senderId: Int.random(in: 0..<4), date: Date.now, isMe: Bool.random(), hasTail: Bool.random())
-    }
+    /// 꼬리 붙임 여부
+    var hasTail: Bool? = nil
+    
+    /// 날짜 표시 여부
+    var hasDate: Bool? = nil
+    
+    /// 유저 네임
+    var username: String? = nil
+    
+    /// 프로필 이미지 URL
+    var profileImageURL: String? = nil
+    
+    /// 안 읽은 사람 수
+    var unreadMemberCount: Int? = nil
 }

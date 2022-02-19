@@ -67,25 +67,18 @@ extension SplashViewModel {
                     return
                 }
                 
-                guard let isSuccess = response.isSuccess else {
-                    self.dependency.isValidToken.accept(false)
-                    self.reissueToken()
-                    return
-                }
-                
-                guard isSuccess,
-                      let result = response.result else {
+                guard let isSuccess = response.isSuccess,
+                      isSuccess,
+                      let _ = response.result else {
                           self.dependency.isValidToken.accept(false)
-                    self.reissueToken()
-                    return
-                }
+                          return
+                      }
                 
-                self.dependency.isValidToken.accept(result.isValid)
-                self.dependency.shouldSignout.accept(!result.isValid)
+                self.dependency.isValidToken.accept(true)
             }).disposed(by: bag)
     }
     
-    private func reissueToken() {
+    func reissueToken() {
         let token: String? = KeychainWrapper.standard[.refreshToken]
         guard let token = token else {
             return
@@ -93,16 +86,13 @@ extension SplashViewModel {
         authRepository.reissueToken(token)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self,
-                      let result = response.result else {
+                      let result = response.result,
+                      let accessToken = result.accessToken,
+                      let refreshToken = result.refreshToken else {
                           self?.dependency.shouldSignout.accept(true)
                           return
                       }
                 
-                guard let accessToken = result.accessToken,
-                      let refreshToken = result.refreshToken else {
-                          self.dependency.shouldSignout.accept(true)
-                          return
-                      }
                 KeychainWrapper.standard[.accessToken] = accessToken
                 KeychainWrapper.standard[.refreshToken] = refreshToken
                 self.dependency.shouldSignout.accept(false)

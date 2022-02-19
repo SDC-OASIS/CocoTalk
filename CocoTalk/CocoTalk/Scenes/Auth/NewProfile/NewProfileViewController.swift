@@ -120,7 +120,7 @@ class NewProfileViewController: UIViewController {
     }
     
     private func showPermissionAlert() {
-        let alert = UIAlertController(title: "사진첩 권한 요청", message: "프로필 수정을 위해 사진첩 권한을 허용해야합니다.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "앨범 권한 요청", message: "프로필 수정을 위해 사진첩 권한을 허용해야합니다.", preferredStyle: .alert)
         let disagree = UIAlertAction(title: "허용 안함", style: .default)
         let agree = UIAlertAction(title: "허용", style: .default) { alert in
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {

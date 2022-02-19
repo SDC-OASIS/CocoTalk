@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 import RxRelay
 import SwiftKeychainWrapper
+import UIKit
 
 protocol FriendListInput {
     
@@ -122,7 +123,6 @@ extension FriendListViewModel {
         #warning("비교 후 업데이트된 프로필 표시하기")
     }
     
-    #warning("채팅방 생성하는 로직 모달로 이동시키기")
     func checkChatRoomExist(userId: Int) {
         let token: String? = KeychainWrapper.standard[.accessToken]
         guard let token = token else {
@@ -137,6 +137,7 @@ extension FriendListViewModel {
                 }
                 
                 guard let room = response.data else {
+                    self.dependency.isLoading.accept(false)
                     self.dependency.isFailed.accept(true)
                     return
                 }
@@ -154,10 +155,6 @@ extension FriendListViewModel {
     }
     
     func createChatRoom(_ memberId: Int) {
-        let token: String? = KeychainWrapper.standard[.accessToken]
-        guard let token = token else {
-            return
-        }
         guard let myProfile = UserDefaults.getMyData(),
               let member = userRepsository.findUserById(memberId) else {
             dependency.isFailed.accept(true)
@@ -166,41 +163,26 @@ extension FriendListViewModel {
         
         var selectedMembers: [SelectableProfile] = []
         
+        // 개인톡 상대방 프로필
         selectedMembers.append(SelectableProfile(id: member.id ?? -1,
                                                  profileImageUrl: "",
                                                  profile: member.profile ?? "",
                                                  username: member.username ?? "",
                                                  isSelected: true))
+        // 내프로필
         selectedMembers.append(SelectableProfile(id: myProfile.id ?? -1,
                                                  profileImageUrl: "",
                                                  profile: myProfile.profile ?? "",
                                                  username: myProfile.username ?? "",
                                                  isSelected: true))
         let members = selectedMembers.map {
-            return ProfileForCreateChatRoom(userId: $0.id, username: $0.username, profile: $0.profile)
+            return UserWithPlainStringProfile(userId: $0.id, username: $0.username, profile: $0.profile)
         }
         let roomName = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
         
         let data = ModelCreateChatRoomRequest(roomname: roomName, img: "", type: 0, members: members)
-        
-        dependency.isLoading.accept(true)
-        chatRoomRepository.createChatRoom(with: token, data: data)
-            .subscribe(onNext: { [weak self] response in
-                self?.dependency.isLoading.accept(false)
-                guard let self = self else {
-                    return
-                }
-                
-                guard let room = response.data,
-                      let id = room.id else {
-                    self.dependency.isFailed.accept(true)
-                    return
-                }
-                
-                self.dependency.isFailed.accept(false)
-                self.output.isRoomExist.accept(true)
-                self.output.roomId.accept(id)
-            }).disposed(by: bag)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.listSocket?.createRoom(data)
     }
     
     func addFirendsWithContact() {

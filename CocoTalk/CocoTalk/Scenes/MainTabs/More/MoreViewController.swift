@@ -48,6 +48,7 @@ class MoreViewController: UIViewController {
     private func signout() {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.listSocket?.closeConnection()
+        appDelegate?.chatSocket?.closeConnection()
         KeychainWrapper.resetKeys()
         let signInVC = SigninViewController()
         let root = UINavigationController(rootViewController: signInVC)

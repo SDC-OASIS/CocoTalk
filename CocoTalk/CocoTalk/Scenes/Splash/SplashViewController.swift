@@ -39,13 +39,21 @@ class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if viewModel.dependency.isSignedIn {
-            viewModel.verifyToken()
+            initSockets()
+            move2Home()
+//            viewModel.verifyToken()
         } else {
             move2signInVC()
         }
     }
     
     // MARK: - Helper
+    func initSockets() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.initListSocket()
+        appDelegate?.establishChatSocketConnection()
+    }
+    
     private func move2Home() {
         let root = RootTabBarController()
         switchRoot(to: root)
@@ -59,18 +67,32 @@ class SplashViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.dependency.shouldSignout
-            .subscribe(onNext: { [weak self] shouldSignout in
-                guard let self = self,
-                      let shouldSignout = shouldSignout else {
-                          return
-                      }
-                if !shouldSignout {
-                    self.move2Home()
-                } else {
-                    self.move2signInVC()
-                }
-            }).disposed(by: bag)
+//        viewModel.dependency.shouldSignout
+//            .subscribe(onNext: { [weak self] shouldSignout in
+//                guard let self = self,
+//                      let shouldSignout = shouldSignout else {
+//                          return
+//                      }
+//                if !shouldSignout {
+//                    self.move2Home()
+//                } else {
+//                    self.move2signInVC()
+//                }
+//            }).disposed(by: bag)
+//
+//        viewModel.dependency.isValidToken
+//            .subscribe(onNext: { [weak self] isValid in
+//                guard let self = self,
+//                      let isValid = isValid else {
+//                    return
+//                }
+//
+//                if !isValid {
+//                    self.viewModel.reissueToken()
+//                } else {
+//                    self.move2Home()
+//                }
+//            }).disposed(by: bag)
     }
 }
 

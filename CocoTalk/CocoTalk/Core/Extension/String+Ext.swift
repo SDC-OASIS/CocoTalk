@@ -21,4 +21,29 @@ extension String {
         }
         return self
     }
+    
+    func parseDate() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        return dateFormatter.date(from: self)
+    }
+    
+    /// 서버에서 받은 시간을 사용자에게 보여주는 형태로 변환
+    func parseDateStringForMessage() -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        if var sentAtDate = dateFormatter.date(from: self) {
+            let myDateFormatter = DateFormatter()
+            myDateFormatter.dateFormat = "a hh:mm"
+            myDateFormatter.locale = Locale(identifier:"ko_KR")
+            sentAtDate.convertToKorTime()
+            return myDateFormatter.string(from: sentAtDate)
+        }
+        return nil
+    }
+    
+    func parseMessageBundleIds() -> [String]? {
+        let bundleIdString = String(self.dropFirst().dropLast())
+        return bundleIdString.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+    }
 }
