@@ -432,15 +432,18 @@ extension ChatRoomViewController {
                 self.collectionView.reloadData()
                 self.collectionView.layoutIfNeeded()
                 
-                if self.viewModel.dependency.isRefreshing.value {
+                if self.viewModel.dependency.isRefreshing.value { // 이전 메시지를 불러올 경우 X
                     self.viewModel.dependency.isRefreshing.accept(false)
                     return
-                } else if self.isFirstMessageFetch ||
-                    !self.viewModel.dependency.isRefreshing.value ||
-                    self.viewModel.dependency.rawMessages.value.last?.userId == self.myId {
+                } else if self.isFirstMessageFetch { // 첫번째 로딩일 경우
                     if messages.count > 0 {
                         self.isFirstMessageFetch = false
                     }
+                    DispatchQueue.main.async {
+                        self.collectionView.scrollToBottom(animated: false)
+                    }
+                } else if !self.isFirstMessageFetch &&
+                            (self.viewModel.dependency.rawMessages.value.last?.userId == self.myId) { // 내가 보낸 메시지인가
                     DispatchQueue.main.async {
                         self.collectionView.scrollToBottom(animated: false)
                     }
