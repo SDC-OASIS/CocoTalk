@@ -61,6 +61,10 @@ dependencies {
 	//kafka
 	implementation 'org.springframework.kafka:spring-kafka'
 
+	// Prometheus
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
 }
 
 test {

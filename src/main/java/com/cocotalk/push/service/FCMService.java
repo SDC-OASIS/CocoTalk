@@ -8,6 +8,7 @@ import com.cocotalk.push.dto.fcm.ios.Alert;
 import com.cocotalk.push.dto.fcm.ios.Apns;
 import com.cocotalk.push.dto.fcm.ios.Aps;
 import com.cocotalk.push.dto.fcm.web.Webpush;
+import com.cocotalk.push.dto.kafka.MessageType;
 import com.cocotalk.push.dto.kafka.PushTopicDto;
 import com.cocotalk.push.dto.kafka.RoomType;
 import com.cocotalk.push.entity.Device;
@@ -56,6 +57,18 @@ public class FCMService {
             subTitle = info.getRoomname();
         }
 
+        // 메시지 내용
+        String content;
+        if(MessageType.PHOTO.equals(info.getMessageType())){
+            content = "사진을 보냈습니다.";
+        } else if(MessageType.VIDEO.equals(info.getMessageType())) {
+            content = "동영상을 보냈습니다.";
+        } else if(MessageType.FILE.equals(info.getMessageType())) {
+            content = "파일을 보냈습니다.";
+        } else {
+            content = info.getMessage();
+        }
+
         // FCMMessage 작성
         FCMMessage fcmMessage = FCMMessage.builder()
                 .message(Message.builder()
@@ -69,7 +82,7 @@ public class FCMService {
                                                 .alert(Alert.builder()
                                                         .title(info.getUsername())
                                                         .subtitle(subTitle)
-                                                        .body(info.getMessage())
+                                                        .body(content)
                                                         .build())
                                                 .sound("chime.aiff")
                                                 .build())
@@ -92,6 +105,18 @@ public class FCMService {
             title = "["+info.getRoomname()+"] " + info.getUsername();
         }
 
+        // 메시지 내용
+        String content;
+        if(MessageType.PHOTO.equals(info.getMessageType())){
+            content = "사진을 보냈습니다.";
+        } else if(MessageType.VIDEO.equals(info.getMessageType())) {
+            content = "동영상을 보냈습니다.";
+        } else if(MessageType.FILE.equals(info.getMessageType())) {
+            content = "파일을 보냈습니다.";
+        } else {
+            content = info.getMessage();
+        }
+
         // FCMMessage 작성
         FCMMessage fcmMessage = FCMMessage.builder()
                 .message(Message.builder()
@@ -99,7 +124,7 @@ public class FCMService {
                         .webpush(Webpush.builder()
                                 .data(Webpush.Data.builder()
                                         .title(title)
-                                        .body(info.getMessage())
+                                        .body(content)
                                         .url(frontUrl)
                                         .build())
                                 .build())

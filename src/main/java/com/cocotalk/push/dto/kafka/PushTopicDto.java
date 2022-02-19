@@ -29,4 +29,6 @@ public class PushTopicDto {
     private String username;
     @NotNull
     private String message;
+    @NotNull
+    private MessageType messageType;
 }
