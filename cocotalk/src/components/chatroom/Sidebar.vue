@@ -1,20 +1,19 @@
 <template>
   <div>
-    <div id="sidebar">
+    <div id="sidebar" v-if="sidebar">
       <div class="sidebar-container">
         <div class="sidebar-content">
           <div class="sidebar-title">채팅방 서랍</div>
           <!-- 사진, 동영상 -->
-          <div class="sidebar-item">
+          <div class="sidebar-item" @click="openSidebarFilesModal">
             <div>
               <i class="far fa-image"></i>
               <span> 사진, 동영상 </span>
             </div>
-            <div class="media-img-container row">
-              <img src="https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg" alt="" />
-              <img src="https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg" alt="" />
-              <img src="https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg" alt="" />
-              <img src="https://media.bunjang.co.kr/product/150007679_1_1616845509_w360.jpg" alt="" />
+            <div class="row">
+              <div class="media-img-container row" v-for="(message, idx) in imgMessages" :key="idx">
+                <img :src="message.content" alt="" class="box" />
+              </div>
             </div>
           </div>
           <!-- 파일 -->
@@ -22,9 +21,6 @@
             <i class="fas fa-folder"></i>
             <span> 파일 </span>
           </div>
-          <hr />
-          <!-- 공지 -->
-          <div class="sidebar-title">공지</div>
           <hr />
           <!-- 대화상대 -->
           <div>
@@ -68,13 +64,32 @@ export default {
   components: {
     ProfileImg,
   },
+  data() {
+    return {
+      totalImgMessages: [],
+    };
+  },
+  created() {},
   props: {
     roomInfo: [],
+    chatMessages: [],
   },
   computed: {
     ...mapState("friend", ["friends"]),
     ...mapState("modal", ["sidebar"]),
     ...mapState("socket", ["inviteRoomInfo"]),
+    imgMessages() {
+      let imgs = [];
+      for (let i = 0; i < this.chatMessages.length; i++) {
+        if (this.chatMessages[i].type == 4) {
+          imgs.push(this.chatMessages[i]);
+        }
+        if (imgs.length == 4) {
+          break;
+        }
+      }
+      return imgs;
+    },
   },
   methods: {
     closeSidebar() {
@@ -99,6 +114,17 @@ export default {
       console.log("====채팅방 나가기====");
       console.log(this.roomInfo);
       this.$store.dispatch("socket/exitChat", this.roomInfo, { root: true });
+    },
+    openSidebarFilesModal() {
+      let totalImgs = [];
+      for (let i = 0; i < this.chatMessages.length; i++) {
+        if (this.chatMessages[i].type == 4) {
+          totalImgs.push(this.chatMessages[i]);
+        }
+      }
+      this.totalImgMessages = totalImgs;
+      console.log(this.totalImgMessages);
+      this.$store.dispatch("modal/openSidebarFilesModal", this.totalImgMessages, { root: true });
     },
   },
 };
@@ -184,9 +210,15 @@ hr {
   border-color: #b8c8ae;
   margin: 10px;
 }
+.media-img-container {
+  width: 85px;
+  margin: 0;
+}
 .media-img-container > img {
   width: 65px;
+  height: 65px;
   padding: 10px 10px 5px 0;
+  margin: 0;
 }
 .add-member {
   padding: 10px 20px;

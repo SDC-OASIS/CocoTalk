@@ -96,6 +96,31 @@ const socket = {
     },
   },
   actions: {
+    checkConnect() {
+      // let data = {
+      //   clientType: "web",
+      //   userId: store.getters["userStore/userInfo"].id,
+      //   fcmToken: store.getters["userStore/userInfo"].fcmToken,
+      // };
+      console.log("~~~~~~~~~~~~~~~~");
+      axios
+        .get("auth/device")
+        .then((res) => {
+          console.log("다중로그인 확인 - rest");
+          console.log(res);
+          if (!res.data.result.isValid) {
+            store.dispatch("userStore/logout");
+            const payload = {
+              status: "open",
+              text: "다른 기기에서 로그인되었습니다.",
+            };
+            store.dispatch("modal/openAlert", payload, { root: true });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getChatList(context) {
       axios.get("chat/rooms/list").then((res) => {
         console.log("채팅방목록 가져오기");
@@ -205,6 +230,7 @@ const socket = {
               store.dispatch("chat/goNewChat", newRoomInfo, { root: true });
             }
           });
+          store.dispatch("socket/checkConnectSub");
         },
         (error) => {
           console.log("소켓 연결 실패", error);
@@ -213,6 +239,52 @@ const socket = {
         },
       );
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
+    },
+    checkConnectSub(context) {
+      context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/crash/web`, (res) => {
+        console.log("=====현재 다중로그인 상태여부확인======커넥트");
+        console.log(store.getters["userStore/userInfo"].accessToken);
+        if (res.body != store.getters["userStore/userInfo"].fcmToken && store.getters["userStore/accessToken"]) {
+          store.dispatch("userStore/logout");
+          const payload = {
+            status: "open",
+            text: "다른 기기에서 로그인되었습니다.",
+          };
+          store.dispatch("modal/openAlert", payload, { root: true });
+        }
+        console.log(res.body);
+        // console.log(JSON.parse(res.body));
+        // let newRoom = JSON.parse(res.body);
+        // // let bundleInfo = JSON.parse(res.body).bundleInfoVo;
+        // console.log(newRoom);
+        // newRoom.messageBundleIds = newRoom.messageBundleIds.slice(1, -1).split(", ");
+        // newRoom.members.forEach((e) => {
+        //   if (e.profile) {
+        //     e.profile = JSON.parse(e.profile);
+        //   }
+        // });
+        // console.log(newRoom);
+        // let chatRoom = {
+        //   recentChatMessage: {},
+        //   recentMessageBundleCount: 1, //count 값 갱신해주기
+        //   room: newRoom,
+        //   unreadNumber: 0,
+        // };
+        // console.log(context.state.chats);
+        // context.commit("ADD_NEW_CHAT_ROOM", chatRoom);
+        // console.log("===방생성중[crateChatRoomStatus:" + context.state.createChatRoomStatus + "]===");
+        // if (context.state.createChatRoomStatus || context.state.newPrivateRoomStatus) {
+        //   // 새로생성된 채팅방으로 가기
+        //   let newRoomInfo = {
+        //     roomId: newRoom.id,
+        //     nextMessageBundleId: newRoom.messageBundleIds[0],
+        //     recentMessageBundleCount: 1,
+        //     newRoom: newRoom,
+        //   };
+        //   store.dispatch("chat/updateMessageBundleCount", 1, { root: true });
+        //   store.dispatch("chat/goNewChat", newRoomInfo, { root: true });
+        // }
+      });
     },
     goChat(context, chat) {
       // 현재 swagger로 채팅방생성중이기때문에 첫메세지가 없는 경우가 있어 nextMessageBundleId 업데이트.
@@ -357,6 +429,8 @@ const socket = {
           messageBundleId: store.getters["chat/chatInfo"].nextMessageBundleId,
         };
         console.log(msg);
+        store.dispatch("modal/setSidebar", false, { root: true });
+
         context.state.stompChatRoomClient.send(`/simple/chatroom/${context.state.inviteRoomInfo.id}/message/invite`, JSON.stringify(msg));
       }
     },

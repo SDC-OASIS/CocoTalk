@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import Alert from "@/components/modals/Alert.vue";
 
 export default {
@@ -19,10 +19,14 @@ export default {
     // 사용자 화면 넓이 받기
     const width = screen.width;
     this.$store.dispatch("userStore/getScreen", { width: width });
+    this.CLOSE_ALERT;
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
     ...mapState("modal", ["alert"]),
+  },
+  methods: {
+    ...mapMutations("modal", ["CLOSE_ALERT"]),
   },
 };
 </script>
