@@ -29,6 +29,8 @@ final class MessageCollectionViewLayout: UICollectionViewLayout {
     override func prepare() {
         super.prepare()
         
+        cache = []
+        
         guard let collectionView = collectionView else {
                   return
               }
