@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import RxCocoa
+import AVKit
 
 class MessageCollectionViewCell: UICollectionViewCell {
     
@@ -51,6 +53,13 @@ class MessageCollectionViewCell: UICollectionViewCell {
         $0.isHidden = true
     }
     
+    private let ivVideoIndicator = UIImageView().then {
+        $0.image = UIImage(systemName: "play.circle")
+        $0.isHidden = true
+        $0.tintColor = .white
+        $0.layer.zPosition = 999
+    }
+    
     /// 메시지 메타 데이터 스택
     private let stackView = UIStackView().then {
         $0.axis = .vertical
@@ -87,17 +96,19 @@ class MessageCollectionViewCell: UICollectionViewCell {
     var repliedAt: Int? // messageId
     var userTags: Int? // userId
     
-#warning("enum으로?")
     var isEmoji: Bool?
     var isVideo: Bool?
     var isPhoto: Bool?
     var isSystemMessage: Bool?
+    
+    var delegate: MessageCellDelegate?
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureView()
         configureSubViews()
+        bindProfile()
     }
     
     required init?(coder: NSCoder) {
@@ -128,7 +139,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     func configureView() {
         stackView.addArrangedSubview(lblUnreadMemberCount)
         stackView.addArrangedSubview(lblDate)
-        [ivProfile, ivTail, lblName, lblMessage, ivMedia, stackView].forEach {
+        [ivProfile, ivTail, lblName, lblMessage, ivVideoIndicator, ivMedia, stackView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -138,7 +149,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
         let height = UIScreen.main.bounds.height
         lblMessage.bounds = CGRect(origin: .zero, size: CGSize(width: width, height: height))
         lblDate.bounds = CGRect(origin: .zero, size: CGSize(width: width, height: height))
-        [ivProfile, ivTail, lblName, lblMessage, ivMedia, stackView].forEach {
+        [ivProfile, ivTail, lblName, lblMessage, ivVideoIndicator, ivMedia, stackView].forEach {
             $0.snp.removeConstraints()
         }
         
@@ -147,6 +158,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
         ivProfile.isHidden = true
         ivTail.isHidden = true
         lblName.isHidden = true
+        ivVideoIndicator.isHidden = true
         
         if isSystemMessage ?? false {
             lblMessage.snp.makeConstraints {
@@ -166,11 +178,19 @@ class MessageCollectionViewCell: UICollectionViewCell {
         }
         
         let mainContent: UIView
-//        lblMessage.isHidden = false
         if isPhoto ?? false || isVideo ?? false {
             mainContent = ivMedia
             ivMedia.isHidden = false
             lblMessage.isHidden = true
+            
+            if isVideo ?? false {
+                ivVideoIndicator.isHidden = false
+                ivVideoIndicator.snp.makeConstraints {
+                    $0.center.equalTo(ivMedia)
+                    $0.width.height.equalTo(50)
+                }
+            }
+            
         } else {
             mainContent = lblMessage
             ivMedia.isHidden = true
@@ -230,11 +250,9 @@ class MessageCollectionViewCell: UICollectionViewCell {
                 $0.top.equalToSuperview()
                 $0.trailing.equalToSuperview().offset(-20)
                 $0.leading.greaterThanOrEqualToSuperview()
-//                $0.bottom.equalToSuperview()
                 if isPhoto ?? false || isVideo ?? false {
-                    $0.height.equalTo(300).multipliedBy(1/(aspectRatio ?? 1))
-                    $0.width.equalTo(300)
-//                    $0.width.greaterThanOrEqualTo(100)
+                    $0.width.equalTo(200)
+                    $0.height.equalTo(200).multipliedBy(1/(aspectRatio ?? 1))
                 } else {
                     $0.bottom.equalToSuperview()
                 }
@@ -254,10 +272,8 @@ class MessageCollectionViewCell: UICollectionViewCell {
                 $0.trailing.lessThanOrEqualToSuperview()
                 $0.bottom.equalToSuperview()
                 if isPhoto ?? false || isVideo ?? false {
-                    $0.height.equalTo(300).multipliedBy(1/(aspectRatio ?? 1))
-//                    $0.height.greaterThanOrEqualTo(200)
-                    $0.width.equalTo(300)
-//                    $0.width.greaterThanOrEqualTo(300)
+                    $0.height.equalTo(200).multipliedBy(1/(aspectRatio ?? 1))
+                    $0.width.equalTo(200)
                 }
             }
             
@@ -292,6 +308,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
             isVideo = false
         }
         
+        self.userId = data.userId
         if let profileImgUrl = data.profileImageURL,
            !profileImgUrl.isEmpty {
             let url = URL(string: profileImgUrl)
@@ -303,14 +320,27 @@ class MessageCollectionViewCell: UICollectionViewCell {
         messageId = data.id ?? ""
         lblName.text = data.username ?? "(알수 없음)"
         
-        if messageType == 4 || messageType == 5 {
+        if messageType == 4 {
+            isPhoto = true
             if let mediaUrl = data.content,
                !mediaUrl.isEmpty {
-//                let filename: NSString = mediaUrl as NSString
-//                let pathPrefix = filename.deletingPathExtension
-//                let url = URL(string: "\(pathPrefix).jpeg")
                 let url = URL(string: mediaUrl)
+                lblMessage.text = mediaUrl
                 ivMedia.kf.setImage(with: url, placeholder: UIImage(systemName: "icloud.slash"))
+                bindMediaButton()
+            } else {
+                ivMedia.image = UIImage(systemName: "icloud.slash")
+            }
+        } else if messageType == 5 {
+            isVideo = true
+            if let mediaUrl = data.content,
+               !mediaUrl.isEmpty {
+                lblMessage.text = mediaUrl
+                let filename: NSString = mediaUrl as NSString
+                let pathPrefix = filename.deletingPathExtension
+                let url = URL(string: "\(pathPrefix)_th.jpeg")
+                ivMedia.kf.setImage(with: url, placeholder: UIImage(systemName: "icloud.slash"))
+                bindMediaButton()
             } else {
                 ivMedia.image = UIImage(systemName: "icloud.slash")
             }
@@ -338,5 +368,32 @@ class MessageCollectionViewCell: UICollectionViewCell {
         }
         
         setNeedsLayout()
+    }
+    
+    func bindMediaButton() {
+        ivMedia.rx.tapGesture()
+            .when(.ended)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self,
+                      let urlString = self.lblMessage.text else {
+                    return
+                }
+                if self.isVideo ?? false {
+                    self.delegate?.playMedia(url: urlString, type: 5)
+                } else if self.isPhoto ?? false {
+                    self.delegate?.playMedia(url: urlString, type: 4)
+                }
+            }).disposed(by: bag)
+    }
+    
+    func bindProfile() {
+        ivProfile.rx.tapGesture()
+            .when(.ended)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.delegate?.tapProfile(id: self.userId ?? -1)
+            }).disposed(by: bag)
     }
 }

@@ -97,8 +97,20 @@ class ChatRoomRepository {
             }
     }
     
-    func sendMediaFile(with token: String, roomId: String, mediaFile: Data, mediaThumbnail: Data) -> Observable<APIResult_1<String>> {
-        return provider.rx.request(.postMediaFile(token, roomId: roomId, mediaFile: mediaFile, mediaThumbnail: mediaThumbnail))
+    func sendPhoto(with token: String, roomId: String, photoFile: Data, photoThumbnail: Data) -> Observable<APIResult_1<String>> {
+        return provider.rx.request(.postPhotoFile(token, roomId: roomId, photoFile: photoFile, photoThumbnail: photoThumbnail))
+            .retry(3)
+            .asObservable()
+            .filterSuccessfulStatusCodes()
+            .map { try JSONDecoder().decode(APIResult_1<String>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+            return Observable.error(error)
+        }
+    }
+    
+    func sendVideo(with token: String, roomId: String, videoFile: Data, videoThumbnail: Data) -> Observable<APIResult_1<String>> {
+        return provider.rx.request(.postVideoFile(token, roomId: roomId, videoFile: videoFile, videoThumbnail: videoThumbnail))
             .retry(3)
             .asObservable()
             .filterSuccessfulStatusCodes()

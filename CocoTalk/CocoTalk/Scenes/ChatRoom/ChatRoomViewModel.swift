@@ -19,6 +19,7 @@ protocol ChatRoomInput {
 protocol ChatRoomDependency {
     var isLoading: BehaviorRelay<Bool> { get }
     var hasFirstMessage: BehaviorRelay<Bool> { get }
+    var isRefreshing: BehaviorRelay<Bool> { get }
     var loadSocketFailed: BehaviorRelay<Bool> { get }
     
     var socket: BehaviorRelay<WebSocketHelper?> { get }
@@ -28,7 +29,7 @@ protocol ChatRoomDependency {
     var bundleInfo: BehaviorRelay<ModelMessageBundle?> { get }
     var currentOldestMessageId: BehaviorRelay<String?> { get }
     
-    var isUploadingMediaFile: BehaviorRelay<Bool> { get }
+    var isUploadingPhoto: BehaviorRelay<Bool> { get }
     var uploadingMediaFileUUIDList: BehaviorRelay<[UUID]> { get }
     var uploadingMediaFileUUID: BehaviorRelay<UUID?> { get }
     var failedToSendMedia: BehaviorRelay<UUID?> { get }
@@ -66,6 +67,7 @@ class ChatRoomViewModel {
     struct Dependency: ChatRoomDependency {
         var isLoading = BehaviorRelay<Bool>(value: false)
         var hasFirstMessage = BehaviorRelay<Bool>(value: false)
+        var isRefreshing = BehaviorRelay<Bool>(value: false)
         var loadSocketFailed = BehaviorRelay<Bool>(value: false)
         
         var socket = BehaviorRelay<WebSocketHelper?>(value: nil)
@@ -77,7 +79,7 @@ class ChatRoomViewModel {
         
         var failedToSendMedia = BehaviorRelay<UUID?>(value: nil)
         var successToSendMedia = BehaviorRelay<UUID?>(value: nil)
-        var isUploadingMediaFile = BehaviorRelay<Bool>(value: false)
+        var isUploadingPhoto = BehaviorRelay<Bool>(value: false)
         var uploadingMediaFileUUIDList = BehaviorRelay<[UUID]>(value: [])
         var uploadingMediaFileUUID = BehaviorRelay<UUID?>(value: nil)
         var postedMediaFileURL = BehaviorRelay<String?>(value: nil)
@@ -355,22 +357,48 @@ extension ChatRoomViewModel {
             }).disposed(by: bag)
     }
     
-    func postMedia(mediaFile: Data?, mediaThumbnail: Data? = nil) {
+    func postPhoto(photoFile: Data?, photoThumbnail: Data? = nil) {
         let token: String? = KeychainWrapper.standard[.accessToken]
         guard let token = token else {
             return
         }
         
-        dependency.isUploadingMediaFile.accept(true)
+        dependency.isUploadingPhoto.accept(true)
         let oldVal = dependency.uploadingMediaFileUUIDList.value
         var newVal = oldVal
         let newFileUUID = UUID()
         newVal.append(newFileUUID)
         dependency.uploadingMediaFileUUIDList.accept(newVal)
         
-        chatRoomRepository.sendMediaFile(with: token, roomId: rooomId, mediaFile: mediaFile ?? Data(), mediaThumbnail: mediaThumbnail ?? Data())
+        chatRoomRepository.sendPhoto(with: token, roomId: rooomId, photoFile: photoFile ?? Data(), photoThumbnail: photoThumbnail ?? Data())
             .subscribe(onNext: { [weak self, newFileUUID] response in
-                self?.dependency.isUploadingMediaFile.accept(false)
+                self?.dependency.isUploadingPhoto.accept(false)
+                guard let self = self,
+                      let mediaUrl = response.data else {
+                          self?.dependency.failedToSendMedia.accept(newFileUUID)
+                    return
+                }
+                self.dependency.postedMediaFileURL.accept(mediaUrl)
+                self.dependency.successToSendMedia.accept(newFileUUID)
+            }).disposed(by: bag)
+    }
+    
+    func postVideo(videoFile: Data?, videoThumbnail: Data? = nil) {
+        let token: String? = KeychainWrapper.standard[.accessToken]
+        guard let token = token else {
+            return
+        }
+        
+        dependency.isUploadingPhoto.accept(true)
+        let oldVal = dependency.uploadingMediaFileUUIDList.value
+        var newVal = oldVal
+        let newFileUUID = UUID()
+        newVal.append(newFileUUID)
+        dependency.uploadingMediaFileUUIDList.accept(newVal)
+        
+        chatRoomRepository.sendVideo(with: token, roomId: rooomId, videoFile: videoFile ?? Data(), videoThumbnail: videoThumbnail ?? Data())
+            .subscribe(onNext: { [weak self, newFileUUID] response in
+                self?.dependency.isUploadingPhoto.accept(false)
                 guard let self = self,
                       let mediaUrl = response.data else {
                           self?.dependency.failedToSendMedia.accept(newFileUUID)

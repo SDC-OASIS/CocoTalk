@@ -14,6 +14,7 @@ import RxCocoa
 import IQKeyboardManagerSwift
 import RxGesture
 import PhotosUI
+import AVKit
 
 class ChatRoomViewController: UIViewController {
     
@@ -317,8 +318,10 @@ class ChatRoomViewController: UIViewController {
     
     // MARK: handleRefresh
     @objc func handleRefresh(refreshControl: UIRefreshControl) {
-        if !viewModel.dependency.isLoading.value,
+        if !viewModel.dependency.isRefreshing.value,
+           !viewModel.dependency.isLoading.value,
            !viewModel.dependency.hasFirstMessage.value {
+            viewModel.dependency.isRefreshing.accept(true)
             viewModel.fetchPreviousMessages()
         }
     }
@@ -429,20 +432,19 @@ extension ChatRoomViewController {
                 self.collectionView.reloadData()
                 self.collectionView.layoutIfNeeded()
                 
-                DispatchQueue.main.async {
-                    self.collectionView.scrollToBottom(animated: false)
+                if self.viewModel.dependency.isRefreshing.value {
+                    self.viewModel.dependency.isRefreshing.accept(false)
+                    return
+                } else if self.isFirstMessageFetch ||
+                    !self.viewModel.dependency.isRefreshing.value ||
+                    self.viewModel.dependency.rawMessages.value.last?.userId == self.myId {
+                    if messages.count > 0 {
+                        self.isFirstMessageFetch = false
+                    }
+                    DispatchQueue.main.async {
+                        self.collectionView.scrollToBottom(animated: false)
+                    }
                 }
-                
-                
-//                if self.isFirstMessageFetch ||
-//                    self.viewModel.dependency.rawMessages.value.last?.userId == self.myId {
-//                    if messages.count > 0 {
-//                        self.isFirstMessageFetch = false
-//                    }
-//                    DispatchQueue.main.async {
-//                        self.collectionView.scrollToBottom(animated: false)
-//                    }
-//                }
             }).disposed(by: bag)
         
         viewModel.output.roomInfo
@@ -529,7 +531,17 @@ extension ChatRoomViewController {
                       let room = self.viewModel.output.roomInfo.value else {
                     return
                 }
-                let message = self.viewModel.buildMessage(room, content: urlString, type: 4)
+                
+                let filename: NSString = urlString as NSString
+                let pathExtension = filename.pathExtension
+                print(pathExtension)
+                
+                let message: ModelPubChatMessage?
+                if pathExtension == "mp4" {
+                    message = self.viewModel.buildMessage(room, content: urlString, type: 5)
+                } else {
+                    message = self.viewModel.buildMessage(room, content: urlString, type: 4)
+                }
                 
                 guard let message = message else {
                     return
@@ -538,8 +550,6 @@ extension ChatRoomViewController {
                 self.viewModel.sendMedia(message)
             }).disposed(by: bag)
     }
-    
-    #warning("사진 동영상 메시지 뷰")
     
     // MARK: Bind CollectionView
     private func bindCollectionView() {
@@ -650,7 +660,40 @@ extension ChatRoomViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MessageCollectionViewCell.identifier, for: indexPath) as! MessageCollectionViewCell
         cell.setData(data: viewModel.output.messages.value[indexPath.row])
+        cell.delegate = self
         return cell
+    }
+}
+
+// MARK: - MessageVideoCellDelegate
+extension ChatRoomViewController: MessageCellDelegate {
+    func playMedia(url: String, type: Int) {
+        if type == 5 {
+            let url = URL(string: url)
+            let player = AVPlayer(url: url! as URL)
+            let playerViewController = AVPlayerViewController()
+            playerViewController.player = player
+            self.present(playerViewController, animated: true) {
+                playerViewController.player!.play()
+            }
+        } else if type == 4 {
+            let photoModalViewController = PhotoModalViewController(imageURLString: url)
+            photoModalViewController.modalPresentationStyle = .overFullScreen
+            self.present(photoModalViewController, animated: true)
+        }
+    }
+    
+    func tapProfile(id: Int) {
+        if let roomMember = members.filter({ $0.userId == id }).first,
+           let profile = roomMember.profile {
+            let profileData = try? JSONDecoder().decode(ModelProfileData.self, from: Data(profile.utf8))
+            let profileVC = ProfileModalViewController(profile: ModelProfile(username: roomMember.username,
+                                                                             bio: profileData?.message,
+                                                                             profileImageURL: profileData?.profile,
+                                                                             bgImageURL: profileData?.background))
+            profileVC.modalPresentationStyle = .overFullScreen
+            self.present(profileVC, animated: true)
+        }
     }
 }
 
@@ -659,7 +702,7 @@ extension ChatRoomViewController: UICollectionViewDelegate, UICollectionViewData
 extension ChatRoomViewController: MessageCollectionViewLayoutDelegate {
     func collectionView(_ collectionView: UICollectionView, heightForCellAtIndexPath indexPath: IndexPath) -> CGFloat {
         let width = collectionView.bounds.width
-        let estimatedHeight: CGFloat = 300.0
+        let estimatedHeight: CGFloat = 200.0
         let dummyCell = MessageCollectionViewCell(frame: CGRect(x: 0, y: 0, width: width, height: estimatedHeight))
         dummyCell.setData(data: viewModel.output.messages.value[indexPath.row])
         dummyCell.layoutIfNeeded()
@@ -693,26 +736,26 @@ extension ChatRoomViewController: PHPickerViewControllerDelegate {
                     let imageData = image as? UIImage
                     let resizedImage = imageData?.resized(to: 1024*3)
                     let resizedImageThumbnail = imageData?.resized(to: 512)
-                    self?.viewModel.postMedia(mediaFile: resizedImage?.jpegData(compressionQuality: 1.0), mediaThumbnail: resizedImageThumbnail?.jpegData(compressionQuality: 1.0))
+                    self?.viewModel.postPhoto(photoFile: resizedImage?.jpegData(compressionQuality: 1.0), photoThumbnail: resizedImageThumbnail?.jpegData(compressionQuality: 1.0))
                 }
             } else if itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
-                itemProvider.loadItem(forTypeIdentifier: UTType.movie.identifier) { [weak self] (videoURL, error) in
+                itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] (videoURL, error) in
                     guard let self = self,
-                          let url = videoURL as? URL else {
+                          let url = videoURL else {
                               return
                           }
                     let asset = AVAsset(url: url)
                     let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
                     avAssetImageGenerator.appliesPreferredTrackTransform = true
-                    let thumnailTime = CMTimeMake(value: 2, timescale: 1)
+                    let thumnailTime = CMTimeMake(value: 1, timescale: 600)
                     var videoData: Data?
                     var thumbImage: UIImage?
                     do {
                         let cgThumbImage = try avAssetImageGenerator.copyCGImage(at: thumnailTime, actualTime: nil)
                         thumbImage = UIImage(cgImage: cgThumbImage)
                         videoData = try Data(contentsOf: url, options: Data.ReadingOptions.alwaysMapped)
-                        self.viewModel.postMedia(mediaFile: videoData,
-                                                 mediaThumbnail: thumbImage?.resized(to: 1024)?.jpegData(compressionQuality: 1.0))
+                        self.viewModel.postVideo(videoFile: videoData,
+                                                 videoThumbnail: thumbImage?.resized(to: 1024)?.jpegData(compressionQuality: 1.0))
                     } catch {
                         videoData = nil
                         print(error.localizedDescription)
