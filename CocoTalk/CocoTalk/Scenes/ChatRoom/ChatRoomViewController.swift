@@ -13,6 +13,7 @@ import RxSwift
 import RxCocoa
 import IQKeyboardManagerSwift
 import RxGesture
+import PhotosUI
 
 class ChatRoomViewController: UIViewController {
     
@@ -53,6 +54,11 @@ class ChatRoomViewController: UIViewController {
         $0.isUserInteractionEnabled = false
     }
     
+    /// 최근 메시지뷰
+    private let uiviewNewMessage = UIView().then {
+        $0.backgroundColor = .white
+    }
+    
     /// 리프레쉬 UI
     private let refreshControl = UIRefreshControl()
     
@@ -62,6 +68,8 @@ class ChatRoomViewController: UIViewController {
     private var members: [RoomMember]
     private var roomId: String
     private var myId: Int?
+    private var keyboardHeight: CGFloat?
+    private var isFirstMessageFetch: Bool = true
     
     // MARK: - Life cycle
     
@@ -101,11 +109,6 @@ class ChatRoomViewController: UIViewController {
         // http://minsone.github.io/mac/ios/falling-snow-with-spritekit-on-uiview-in-swift
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.scrollToBottom(animated: false)
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         IQKeyboardManager.shared.enable = false
@@ -127,40 +130,129 @@ class ChatRoomViewController: UIViewController {
     private func keyboardWillShow(_ sender: Notification) {
         if let keyboardFrame: NSValue = sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let height = keyboardFrame.cgRectValue.origin.y - textFieldView.frame.height - 10
-            resetKeyboardPosition(height: height, isEditing: true)
-        }
-    }
-    
-    @objc
-    private func keyboardWillHide(_ sender: Notification) {
-        resetKeyboardPosition(isEditing: false)
-    }
-    
-    // MARK: resetKeyboardPosition
-    private func resetKeyboardPosition(height: CGFloat? = nil, isEditing: Bool) {
-        // bottomView.frame.origin.y = height
-        if isEditing {
-            let height: CGFloat = height ?? view.frame.size.height - bottomView.frame.height
+            keyboardHeight = height
             bottomView.snp.remakeConstraints {
                 $0.top.equalTo(height)
                 $0.bottom.equalToSuperview()
                 $0.leading.trailing.equalToSuperview()
             }
-        }
-        else {
-            textField.endEditing(!isEditing)
-            bottomView.snp.remakeConstraints {
-                $0.bottom.equalToSuperview()
-                $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(50)
-                $0.leading.trailing.equalToSuperview()
+            collectionView.snp.remakeConstraints {
+                $0.top.leading.trailing.equalToSuperview()
+                $0.bottom.equalTo(bottomView.snp.top)
             }
         }
-
+    }
+    
+    @objc
+    private func keyboardWillHide(_ sender: Notification) {
+        shrinkBottomView()
+    }
+    
+    // MARK: resetKeyboardPosition
+    private func resetKeyboardPosition(isEditing: Bool) {
+        if isEditing {
+            expandBottomView()
+        } else {
+            textField.endEditing(!isEditing)
+            shrinkBottomView()
+        }
+    }
+    
+    private func shrinkBottomView() {
+        bottomView.snp.remakeConstraints {
+            $0.bottom.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(50)
+            $0.leading.trailing.equalToSuperview()
+        }
         collectionView.snp.remakeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(bottomView.snp.top)
         }
-        view.layoutIfNeeded()
+    }
+    
+    private func expandBottomView() {
+        let height = keyboardHeight ?? view.frame.size.height - 300
+        bottomView.snp.remakeConstraints {
+            $0.top.equalTo(height)
+            $0.bottom.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
+        }
+        collectionView.snp.remakeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(bottomView.snp.top)
+        }
+    }
+    
+    private func showMediaActionSheet() {
+        let alert = UIAlertController(title: "사진/영상 보내기", message: nil, preferredStyle: .actionSheet)
+        
+        let albumAction = UIAlertAction(title: "앨범에서 보내기", style: .default) { [weak self] alert in
+            guard let self = self else {
+                return
+            }
+            self.showAlbumView()
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        alert.addAction(albumAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+    
+    private func showAlbumView() {
+        checkPermission()
+    }
+    
+    private func checkPermission() {
+        switch PHPhotoLibrary.authorizationStatus() {
+        case .denied, .restricted:
+            showPermissionAlert()
+        case .authorized, .limited:
+            presentPHPicker()
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { [weak self] status in
+                guard let self = self else {
+                    return
+                }
+                if status == .authorized {
+                    DispatchQueue.main.async {
+                        self.presentPHPicker()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.showPermissionAlert()
+                    }
+                }
+            }
+        default:
+            showPermissionAlert()
+        }
+    }
+    
+    private func showPermissionAlert() {
+        let alert = UIAlertController(title: "앨범 권한 요청", message: "프로필 수정을 위해 사진첩 권한을 허용해야합니다.", preferredStyle: .alert)
+        let disagree = UIAlertAction(title: "허용 안함", style: .default)
+        let agree = UIAlertAction(title: "허용", style: .default) { alert in
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl)
+            }
+        }
+        alert.addAction(disagree)
+        alert.addAction(agree)
+        present(alert, animated: true)
+    }
+    
+    private func presentPHPicker() {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .any(of: [.videos, .images])
+        let phpicker = PHPickerViewController(configuration: configuration)
+        phpicker.modalPresentationStyle = .overFullScreen
+        phpicker.delegate = self
+        self.present(phpicker, animated: true)
     }
     
     // MARK: connectSocket
@@ -213,8 +305,6 @@ class ChatRoomViewController: UIViewController {
         navigationController?.isNavigationBarHidden = false
         navigationController?.tabBarController?.tabBar.isHidden = true
         
-        #warning("커스텀 네비게이션 바 구현")
-        #warning("타이틀 + (사람수)")
         // https://dushyant37.medium.com/swift-4-recipe-using-attributed-string-in-navigation-bar-title-39f08f5cdb81
         let navAppearance = UINavigationBarAppearance()
         navAppearance.configureWithOpaqueBackground()
@@ -331,18 +421,28 @@ extension ChatRoomViewController {
             }).disposed(by: bag)
         
         viewModel.output.messages
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] messages in
                 guard let self = self else {
                     return
                 }
                 print("🚧 메시지 리스트 수신")
                 self.collectionView.reloadData()
                 self.collectionView.layoutIfNeeded()
-                if self.viewModel.dependency.rawMessages.value.last?.userId == self.myId {
-                    DispatchQueue.main.async {
-                        self.collectionView.scrollToBottom(animated: false)
-                    }
+                
+                DispatchQueue.main.async {
+                    self.collectionView.scrollToBottom(animated: false)
                 }
+                
+                
+//                if self.isFirstMessageFetch ||
+//                    self.viewModel.dependency.rawMessages.value.last?.userId == self.myId {
+//                    if messages.count > 0 {
+//                        self.isFirstMessageFetch = false
+//                    }
+//                    DispatchQueue.main.async {
+//                        self.collectionView.scrollToBottom(animated: false)
+//                    }
+//                }
             }).disposed(by: bag)
         
         viewModel.output.roomInfo
@@ -382,7 +482,64 @@ extension ChatRoomViewController {
                 }
                 self.viewModel.dependency.rawMessages.accept(newVal)
             }).disposed(by: bag)
+        
+        viewModel.dependency.uploadingMediaFileUUID
+            .subscribe(onNext: { [weak self] uuid in
+                guard let self = self,
+                      let uuid = uuid else {
+                    return
+                }
+                let oldVal = self.viewModel.dependency.rawMessages.value
+                var newVal = oldVal
+                let sentAt = Date()
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+                let sentAtString = dateFormatter.string(from: sentAt)
+                
+                newVal.append(ModelMessage(id: uuid.description,
+                                           roomId: self.roomId,
+                                           messageBundleId: nil,
+                                           userId: self.myId,
+                                           content: "업로드 중...",
+                                           type: 2,
+                                           sentAt: sentAtString))
+                self.viewModel.dependency.rawMessages.accept(newVal)
+            }).disposed(by: bag)
+        
+        viewModel.dependency.successToSendMedia
+            .subscribe(onNext: { [weak self] uuid in
+                guard let self = self,
+                      let uuid = uuid else {
+                    return
+                }
+                let oldVal = self.viewModel.dependency.uploadingMediaFileUUIDList.value
+                let newVal = oldVal.filter { $0 != uuid }
+                self.viewModel.dependency.uploadingMediaFileUUIDList.accept(newVal)
+                
+                let oldMessages = self.viewModel.dependency.rawMessages.value
+                let newMessages = oldMessages.filter { $0.id != uuid.description }
+                self.viewModel.dependency.rawMessages.accept(newMessages)
+            }).disposed(by: bag)
+        
+        viewModel.dependency.postedMediaFileURL
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self,
+                      let urlString = response,
+                      let room = self.viewModel.output.roomInfo.value else {
+                    return
+                }
+                let message = self.viewModel.buildMessage(room, content: urlString, type: 4)
+                
+                guard let message = message else {
+                    return
+                }
+                
+                self.viewModel.sendMedia(message)
+            }).disposed(by: bag)
     }
+    
+    #warning("사진 동영상 메시지 뷰")
     
     // MARK: Bind CollectionView
     private func bindCollectionView() {
@@ -392,6 +549,7 @@ extension ChatRoomViewController {
                 guard let self = self else {
                     return
                 }
+                self.shrinkBottomView()
                 self.resetKeyboardPosition(isEditing: false)
             }).disposed(by: bag)
     }
@@ -425,6 +583,15 @@ extension ChatRoomViewController {
                 self.textField.text = ""
                 self.viewModel.input.text.accept("")
                 self.ivSend.isHidden = true
+            }).disposed(by: bag)
+        
+        ivMedia.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.showMediaActionSheet()
             }).disposed(by: bag)
     }
     
@@ -492,7 +659,7 @@ extension ChatRoomViewController: UICollectionViewDelegate, UICollectionViewData
 extension ChatRoomViewController: MessageCollectionViewLayoutDelegate {
     func collectionView(_ collectionView: UICollectionView, heightForCellAtIndexPath indexPath: IndexPath) -> CGFloat {
         let width = collectionView.bounds.width
-        let estimatedHeight: CGFloat = 800.0
+        let estimatedHeight: CGFloat = 300.0
         let dummyCell = MessageCollectionViewCell(frame: CGRect(x: 0, y: 0, width: width, height: estimatedHeight))
         dummyCell.setData(data: viewModel.output.messages.value[indexPath.row])
         dummyCell.layoutIfNeeded()
@@ -507,11 +674,53 @@ extension ChatRoomViewController: UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print("hello")
-    }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return false
     }
 }
+
+// MARK: - PHPickerViewControllerDelegate
+extension ChatRoomViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+                
+        if let itemProvider = itemProvider {
+            
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+                    let imageData = image as? UIImage
+                    let resizedImage = imageData?.resized(to: 1024*3)
+                    let resizedImageThumbnail = imageData?.resized(to: 512)
+                    self?.viewModel.postMedia(mediaFile: resizedImage?.jpegData(compressionQuality: 1.0), mediaThumbnail: resizedImageThumbnail?.jpegData(compressionQuality: 1.0))
+                }
+            } else if itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+                itemProvider.loadItem(forTypeIdentifier: UTType.movie.identifier) { [weak self] (videoURL, error) in
+                    guard let self = self,
+                          let url = videoURL as? URL else {
+                              return
+                          }
+                    let asset = AVAsset(url: url)
+                    let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
+                    avAssetImageGenerator.appliesPreferredTrackTransform = true
+                    let thumnailTime = CMTimeMake(value: 2, timescale: 1)
+                    var videoData: Data?
+                    var thumbImage: UIImage?
+                    do {
+                        let cgThumbImage = try avAssetImageGenerator.copyCGImage(at: thumnailTime, actualTime: nil)
+                        thumbImage = UIImage(cgImage: cgThumbImage)
+                        videoData = try Data(contentsOf: url, options: Data.ReadingOptions.alwaysMapped)
+                        self.viewModel.postMedia(mediaFile: videoData,
+                                                 mediaThumbnail: thumbImage?.resized(to: 1024)?.jpegData(compressionQuality: 1.0))
+                    } catch {
+                        videoData = nil
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+}
+

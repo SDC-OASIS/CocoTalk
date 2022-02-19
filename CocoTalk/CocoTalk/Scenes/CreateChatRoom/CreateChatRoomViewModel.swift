@@ -46,7 +46,6 @@ class CreateChatRoomViewModel {
         var keyword = BehaviorRelay<String>(value: "")
     }
     
-    #warning("웹소켓 헬퍼 추가")
     struct Dependency: CreateChatRoomDependency {
         var isFailed = BehaviorRelay<Bool?>(value: nil)
         var isLoading = BehaviorRelay<Bool>(value: false)

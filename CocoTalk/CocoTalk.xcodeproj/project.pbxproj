@@ -118,6 +118,7 @@
 		EAC615A927B6D45900B213BC /* ModelAddFriendResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */; };
 		EAC615AB27B6E35F00B213BC /* TabEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AA27B6E35F00B213BC /* TabEnum.swift */; };
 		EAC615AE27B7673100B213BC /* CreateChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */; };
+		EAC7380D27BF38300011F4D1 /* ChatRoomBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC7380C27BF38300011F4D1 /* ChatRoomBottomView.swift */; };
 		EAD3215227BB7979007F6C2B /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD3215127BB7979007F6C2B /* Date+Ext.swift */; };
 		EAD3215427BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD3215327BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift */; };
 		EAE555A5279A701B00777EBF /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */; };
@@ -234,6 +235,7 @@
 		EAC615A827B6D45900B213BC /* ModelAddFriendResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAddFriendResponse.swift; sourceTree = "<group>"; };
 		EAC615AA27B6E35F00B213BC /* TabEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabEnum.swift; sourceTree = "<group>"; };
 		EAC615AD27B7673100B213BC /* CreateChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomViewModel.swift; sourceTree = "<group>"; };
+		EAC7380C27BF38300011F4D1 /* ChatRoomBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomBottomView.swift; sourceTree = "<group>"; };
 		EAD3215127BB7979007F6C2B /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
 		EAD3215327BB7ED2007F6C2B /* ModelInitialMessagesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelInitialMessagesResponse.swift; sourceTree = "<group>"; };
 		EAE555A4279A701B00777EBF /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 		EA14D50E2786C70B00EDC892 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EAD3215927BE9955007F6C2B /* ChatRoomBottomView */,
 				EAC6159327B6925900B213BC /* ProfileModal */,
 				EA29145927B3E21800324476 /* GNB */,
 				EAE555FB279E21C800777EBF /* PaddingLabel */,
@@ -696,6 +699,14 @@
 			path = MainTabs;
 			sourceTree = "<group>";
 		};
+		EAD3215927BE9955007F6C2B /* ChatRoomBottomView */ = {
+			isa = PBXGroup;
+			children = (
+				EAC7380C27BF38300011F4D1 /* ChatRoomBottomView.swift */,
+			);
+			path = ChatRoomBottomView;
+			sourceTree = "<group>";
+		};
 		EAE555A3279A700400777EBF /* MessageCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -971,6 +982,7 @@
 				EA2913DF27AA43D800324476 /* APIError.swift in Sources */,
 				EA29140627B0B04F00324476 /* AuthAPI.swift in Sources */,
 				EAC615A527B6C0C500B213BC /* AddFriendDelegate.swift in Sources */,
+				EAC7380D27BF38300011F4D1 /* ChatRoomBottomView.swift in Sources */,
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EAC6159627B6926000B213BC /* ProfileModalViewModel.swift in Sources */,
 				EA8F20B427B80826008A01ED /* CreateGroupChatViewModel.swift in Sources */,

@@ -43,7 +43,6 @@ class ChatRoomListViewController: UIViewController {
         
         configureView()
         configureSubviews()
-        bindRx()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,6 +52,7 @@ class ChatRoomListViewController: UIViewController {
             print("🚧 리스트 소켓 다시 불러오기")
             getListSocketFromAppDelegate()
         }
+        bindRx()
     }
     
     // MARK: - Helper
@@ -199,11 +199,8 @@ extension ChatRoomListViewController {
         
         listSocket.receivedNewRoom
             .subscribe(onNext: { [weak self] newRoom in
-                guard let self = self else {
-                    return
-                }
-                
-                guard let socket = self.viewModel.dependency.listSocket.value else {
+                guard let self = self,
+                      let socket = self.viewModel.dependency.listSocket.value else {
                     return
                 }
                 

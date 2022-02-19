@@ -19,12 +19,21 @@ protocol ChatRoomInput {
 protocol ChatRoomDependency {
     var isLoading: BehaviorRelay<Bool> { get }
     var hasFirstMessage: BehaviorRelay<Bool> { get }
+    var loadSocketFailed: BehaviorRelay<Bool> { get }
+    
     var socket: BehaviorRelay<WebSocketHelper?> { get }
     var userId2RoomMember: BehaviorRelay<[Int:RoomMember]> { get }
     var rawMessages: BehaviorRelay<[ModelMessage]> { get }
     var prevMessages: BehaviorRelay<[ModelMessage]> { get }
     var bundleInfo: BehaviorRelay<ModelMessageBundle?> { get }
     var currentOldestMessageId: BehaviorRelay<String?> { get }
+    
+    var isUploadingMediaFile: BehaviorRelay<Bool> { get }
+    var uploadingMediaFileUUIDList: BehaviorRelay<[UUID]> { get }
+    var uploadingMediaFileUUID: BehaviorRelay<UUID?> { get }
+    var failedToSendMedia: BehaviorRelay<UUID?> { get }
+    var successToSendMedia: BehaviorRelay<UUID?> { get }
+    var postedMediaFileURL: BehaviorRelay<String?> { get }
 }
 
 protocol ChatRoomOutput {
@@ -57,12 +66,21 @@ class ChatRoomViewModel {
     struct Dependency: ChatRoomDependency {
         var isLoading = BehaviorRelay<Bool>(value: false)
         var hasFirstMessage = BehaviorRelay<Bool>(value: false)
+        var loadSocketFailed = BehaviorRelay<Bool>(value: false)
+        
         var socket = BehaviorRelay<WebSocketHelper?>(value: nil)
         var userId2RoomMember = BehaviorRelay<[Int:RoomMember]>(value: [:])
         var rawMessages = BehaviorRelay<[ModelMessage]>(value: [])
         var prevMessages = BehaviorRelay<[ModelMessage]>(value: [])
         var bundleInfo = BehaviorRelay<ModelMessageBundle?>(value: nil)
         var currentOldestMessageId = BehaviorRelay<String?>(value: nil)
+        
+        var failedToSendMedia = BehaviorRelay<UUID?>(value: nil)
+        var successToSendMedia = BehaviorRelay<UUID?>(value: nil)
+        var isUploadingMediaFile = BehaviorRelay<Bool>(value: false)
+        var uploadingMediaFileUUIDList = BehaviorRelay<[UUID]>(value: [])
+        var uploadingMediaFileUUID = BehaviorRelay<UUID?>(value: nil)
+        var postedMediaFileURL = BehaviorRelay<String?>(value: nil)
     }
     
     struct Output: ChatRoomOutput {
@@ -165,7 +183,7 @@ class ChatRoomViewModel {
     }
     
     // MARK: - Build ModelPubChatMessage with ModelRoom
-    func buildMessage(_ room: ModelRoom) -> ModelPubChatMessage? {
+    func buildMessage(_ room: ModelRoom, content: String? = nil, type: Int? = nil) -> ModelPubChatMessage? {
         if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.myData.rawValue) as? Data,
            let data = try? JSONDecoder().decode(ModelSignupResponse.self, from: savedData) {
             
@@ -193,8 +211,8 @@ class ChatRoomViewModel {
                                        username: data.username ?? "",
                                        messageBundleId: nextBundleId,
                                        receiverIds: room.members?.map { "\($0.userId ?? -1)" },
-                                       type: 0,
-                                       content: input.text.value)
+                                       type: type ?? 0,
+                                       content: content ?? input.text.value)
         }
         return nil
     }
@@ -286,6 +304,13 @@ extension ChatRoomViewModel {
         }
     }
     
+    func sendMedia(_ message: ModelPubChatMessage) {
+        guard let socket = dependency.socket.value else {
+            return
+        }
+        socket.sendMessage(message)
+    }
+    
     // MARK: - Fetch preveious messages
     func fetchPreviousMessages() {
         let token: String? = KeychainWrapper.standard[.accessToken]
@@ -330,4 +355,29 @@ extension ChatRoomViewModel {
             }).disposed(by: bag)
     }
     
+    func postMedia(mediaFile: Data?, mediaThumbnail: Data? = nil) {
+        let token: String? = KeychainWrapper.standard[.accessToken]
+        guard let token = token else {
+            return
+        }
+        
+        dependency.isUploadingMediaFile.accept(true)
+        let oldVal = dependency.uploadingMediaFileUUIDList.value
+        var newVal = oldVal
+        let newFileUUID = UUID()
+        newVal.append(newFileUUID)
+        dependency.uploadingMediaFileUUIDList.accept(newVal)
+        
+        chatRoomRepository.sendMediaFile(with: token, roomId: rooomId, mediaFile: mediaFile ?? Data(), mediaThumbnail: mediaThumbnail ?? Data())
+            .subscribe(onNext: { [weak self, newFileUUID] response in
+                self?.dependency.isUploadingMediaFile.accept(false)
+                guard let self = self,
+                      let mediaUrl = response.data else {
+                          self?.dependency.failedToSendMedia.accept(newFileUUID)
+                    return
+                }
+                self.dependency.postedMediaFileURL.accept(mediaUrl)
+                self.dependency.successToSendMedia.accept(newFileUUID)
+            }).disposed(by: bag)
+    }
 }

@@ -123,7 +123,6 @@ extension FriendListViewModel {
         #warning("비교 후 업데이트된 프로필 표시하기")
     }
     
-    #warning("채팅방 생성하는 로직 모달로 이동시키기")
     func checkChatRoomExist(userId: Int) {
         let token: String? = KeychainWrapper.standard[.accessToken]
         guard let token = token else {
@@ -138,6 +137,7 @@ extension FriendListViewModel {
                 }
                 
                 guard let room = response.data else {
+                    self.dependency.isLoading.accept(false)
                     self.dependency.isFailed.accept(true)
                     return
                 }
@@ -163,11 +163,13 @@ extension FriendListViewModel {
         
         var selectedMembers: [SelectableProfile] = []
         
+        // 개인톡 상대방 프로필
         selectedMembers.append(SelectableProfile(id: member.id ?? -1,
                                                  profileImageUrl: "",
                                                  profile: member.profile ?? "",
                                                  username: member.username ?? "",
                                                  isSelected: true))
+        // 내프로필
         selectedMembers.append(SelectableProfile(id: myProfile.id ?? -1,
                                                  profileImageUrl: "",
                                                  profile: myProfile.profile ?? "",

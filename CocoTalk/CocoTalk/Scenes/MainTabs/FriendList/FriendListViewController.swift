@@ -93,6 +93,7 @@ extension FriendListViewController {
 extension FriendListViewController {
     func bindRx() {
         bindViewModel()
+        bindSocket()
     }
     
     func bindViewModel() {
@@ -124,6 +125,11 @@ extension FriendListViewController {
                 }
                 
             }).disposed(by: bag)
+    }
+    
+    func bindSocket() {
+//        소켓 불러오기
+//        createChatRequestLog
     }
 }
 
@@ -170,7 +176,6 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
         return viewModel.dependency.sections[section]
     }
     
-    #warning("각 섹션별 대응 코드 작성")
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let profile: ModelProfile
         if indexPath.section == 0 {
@@ -219,7 +224,7 @@ extension FriendListViewController: GNBDelegate {
     }
 }
 
-
+// MARK: - AddFriendDelegate
 extension FriendListViewController: AddFriendDelegate {
     func didAddFriend() {
         #warning("코어 데이터로 불러오기")

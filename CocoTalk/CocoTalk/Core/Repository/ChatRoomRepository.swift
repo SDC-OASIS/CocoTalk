@@ -97,6 +97,18 @@ class ChatRoomRepository {
             }
     }
     
+    func sendMediaFile(with token: String, roomId: String, mediaFile: Data, mediaThumbnail: Data) -> Observable<APIResult_1<String>> {
+        return provider.rx.request(.postMediaFile(token, roomId: roomId, mediaFile: mediaFile, mediaThumbnail: mediaThumbnail))
+            .retry(3)
+            .asObservable()
+            .filterSuccessfulStatusCodes()
+            .map { try JSONDecoder().decode(APIResult_1<String>.self, from: $0.data) }
+            .catch { error in
+                print(error)
+            return Observable.error(error)
+        }
+    }
+    
     func insert(_ newItem: ItemType) -> Bool {
         return true
     }

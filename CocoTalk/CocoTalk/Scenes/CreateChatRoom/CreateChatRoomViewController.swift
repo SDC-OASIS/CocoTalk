@@ -197,7 +197,6 @@ extension CreateChatRoomViewController {
                    if isFailed {
                        self.showAlert(title: "채팅방 생성 오류", message: "생성에 실패했습니다. 다시 시도해주세요.")
                    } else {
-                       #warning("채팅방 열기")
                        self.delegate?.fetchChatRoom()
                    }
                     self.dismiss(animated: true)
