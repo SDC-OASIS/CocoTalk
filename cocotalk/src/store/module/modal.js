@@ -24,16 +24,22 @@ const modal = {
       selectedFriends: Object,
     },
     sidebar: "close",
+    sidebarFilesModal: {
+      status: "close",
+      files: Array,
+    },
   },
   mutations: {
     GET_SCREEN(state, payload) {
       state.screenInfo.width = payload.width;
     },
     OPEN_ALERT(state, payload) {
+      console.log("alert오픈");
       state.alert.status = payload.status;
       state.alert.text = payload.text;
     },
     CLOSE_ALERT(state) {
+      console.log("alert닫힘");
       state.alert.status = "close";
     },
     OPEN_PROFILE_MODAL(state, payload) {
@@ -74,6 +80,13 @@ const modal = {
     },
     CLOSE_PRIVATE_TO_TEAM_MODAL(state) {
       state.privateToTeamModal.status = "close";
+    },
+    OPEN_SIDEBAR_FILES_MODAL(state, payload) {
+      state.sidebarFilesModal.status = "open";
+      state.sidebarFilesModal.files = payload;
+    },
+    CLOSE_SIDEBAR_FILES_MODAL(state) {
+      state.sidebarFilesModal.status = "close";
     },
     SET_SIDEBAR(state, status) {
       state.sidebar = status;
@@ -127,6 +140,13 @@ const modal = {
     },
     closePrivateToTeamModal: function (context) {
       context.commit("CLOSE_PRIVATE_TO_TEAM_MODAL");
+    },
+    openSidebarFilesModal(context, payload) {
+      console.log("사이드바머달");
+      context.commit("OPEN_SIDEBAR_FILES_MODAL", payload);
+    },
+    closeSidebarFilesModal(context) {
+      context.commit("CLOSE_SIDEBAR_FILES_MODAL");
     },
     setSidebar: function (context, status) {
       context.commit("SET_SIDEBAR", status);

@@ -1,7 +1,17 @@
 <template>
   <div class="chat-default-container row">
-    <h1>설정페이지입니다.</h1>
-    <button @click="check">ss</button>
+    <h1 class="setting-title">CocoTalk Developers</h1>
+    <img class="polaroid" src="https://d1fwng7137yw58.cloudfront.net/common/team_oasis.jpg" alt="" />
+    <div style="width: 100%">
+      <h3 class="setting-title" style="margin-bottom: 0px">고병학</h3>
+      <span class="setting-title">iOS 개발자</span>
+      <h3 class="setting-title">권희은</h3>
+      <span class="setting-title">프론트엔드 개발자</span>
+      <h3 class="setting-title">김민정</h3>
+      <span class="setting-title">백엔드 개발자</span>
+      <h3 class="setting-title">황종훈</h3>
+      <span class="setting-title">백엔드 개발자</span>
+    </div>
   </div>
 </template>
 
@@ -28,14 +38,7 @@ export default {
       console.log("채팅을 시작해주세요");
     },
   },
-  methods: {
-    check() {
-      // console.log(window.location.pathname.split("/")[1]); = fiends같은 앞머리 가져오는 방법 연구
-    },
-    changeNow() {
-      this.$store.dispatch("chat/changePage", { chat: "chat", roomId: "4" });
-    },
-  },
+  methods: {},
 };
 </script>
 
@@ -48,7 +51,8 @@ export default {
   align-content: center;
 }
 .chat-default-container > img {
-  padding-right: 50px;
+  width: 320px;
+  height: 220px;
 }
 .chat-default-container > span {
   padding-bottom: 150px;
@@ -56,18 +60,17 @@ export default {
   font-weight: bold;
   color: #90949b;
 }
+.polaroid {
+  background: #000; /*Change this to a background image or remove*/
+  border: solid #fff;
+  border-width: 6px 6px 20px 6px;
+  box-shadow: 1px 1px 5px #333; /* Standard blur at 5px. Increase for more depth */
+  -webkit-box-shadow: 1px 1px 5px #333;
+  -moz-box-shadow: 1px 1px 5px #333;
+  height: 200px; /*Set to height of your image or desired div*/
+  width: 200px; /*Set to width of your image or desired div*/
+}
+.setting-title {
+  color: #728566;
+}
 </style>
-
-<script>
-export default {
-  name: "Setting",
-  created() {
-    console.log("설정 페이지");
-  },
-  methods: {
-    check() {},
-  },
-};
-</script>
-
-<style></style>

@@ -16,7 +16,7 @@
       <private-to-team-modal v-if="privateToTeamModal.status == 'open'" />
       <room-name-edit-modal v-if="roomNameEditModal.status == 'open'" />
       <profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
-      <profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
+      <sidebar-files-modal v-if="sidebarFilesModal.status == 'open'" :files="sidebarFilesModal.files" />
     </div>
   </div>
 </template>
@@ -31,6 +31,7 @@ import PrivateToTeamModal from "@/components/modals/PrivateToTeamModal.vue";
 import AddFriendModal from "@/components/modals/AddFriendModal.vue";
 import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
 import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
+import SidebarFilesModal from "@/components/modals/SidebarFilesModal.vue";
 
 export default {
   name: "MainPage",
@@ -48,22 +49,47 @@ export default {
     Alert,
     InviteFriendModal,
     PrivateToTeamModal,
+    SidebarFilesModal,
   },
   created() {
-    this.setStompChatListDisconnect();
+    this.setStompChatListDisconnect;
     this.$store.dispatch("socket/chatListConnect");
     this.$store.dispatch("socket/getChatList");
+    this.$store.dispatch("socket/checkConnect");
     // 에러페이지에서는 navbar 안보이게 만들기
     if (window.location.pathname == "/error") {
       this.nav = false;
     }
   },
+  destroyed() {
+    this.CLOSE_ALERT,
+      this.CLOSE_PROFILE_MODAL,
+      this.CLOSE_ADD_FRIEND_MODAL,
+      this.CLOSE_CHAT_CREATION_MODAL,
+      this.CLOSE_ROOM_NAME_EDIT_MODAL,
+      this.CLOSE_INVITE_FRIEND_MODAL,
+      this.CLOSE_PRIVATE_TO_TEAM_MODAL;
+    this.CLOSE_SIDEBAR_FILES_MODAL;
+    const headers = { action: "leave" };
+    this.stompChatListClient.disconnect(() => {}, headers);
+  },
   computed: {
-    ...mapState("socket", ["stompChatListConnected"]),
-    ...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal", "inviteFriendModal", "privateToTeamModal"]),
+    ...mapState("socket", ["stompChatListConnected", "stompChat"]),
+    ...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal", "inviteFriendModal", "privateToTeamModal", "sidebarFilesModal"]),
   },
   methods: {
-    ...mapMutations("socket", ["setStompChatListConnected", "setStompChatListDisconnect"]),
+    ...mapMutations("socket", ["setStompChatListConnected", "stompChatListClient"]),
+    ...mapMutations("modal", [
+      "CLOSE_ALERT",
+      "CLOSE_PROFILE_MODAL",
+      "CLOSE_ADD_FRIEND_MODAL",
+      "CLOSE_CHAT_CREATION_MODAL",
+      "CLOSE_ROOM_NAME_EDIT_MODAL",
+      "CLOSE_INVITE_FRIEND_MODAL",
+      "CLOSE_PRIVATE_TO_TEAM_MODAL",
+      "OPEN_SIDEBAR_FILES_MODAL",
+      "CLOSE_SIDEBAR_FILES_MODAL",
+    ]),
   },
 };
 </script>

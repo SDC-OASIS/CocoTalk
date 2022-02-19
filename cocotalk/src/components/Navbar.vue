@@ -27,8 +27,9 @@
           </router-link>
         </li>
         <li>
-          <router-link :to="{ path: getMainPath + '/setting' }">
-            <span class="iconify" data-icon="uil:setting"></span>
+          <router-link :to="{ path: getMainPath + '/developers' }">
+            <i class="iconify fa fa-desktop"></i>
+            <!-- <span class="iconify" data-icon="uil:setting"></span> -->
           </router-link>
         </li>
         <li @click="logout">

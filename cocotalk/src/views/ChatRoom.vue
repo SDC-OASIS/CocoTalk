@@ -133,7 +133,7 @@
       </div>
       <!-- 파일 업로드 버튼 END -->
     </div>
-    <Sidebar v-if="sidebar" :roomInfo="roomInfo" />
+    <Sidebar v-if="sidebar" :roomInfo="roomInfo" :chatMessages="chatMessages" />
   </div>
 </template>
 
@@ -655,7 +655,6 @@ export default {
     },
     openSidebar() {
       this.$store.dispatch("modal/setSidebar", true, { root: true });
-
       const sidebar = document.querySelector(".sidebar-container");
       const sidebarBack = document.querySelector(".sidebar-background");
       sidebarBack.style.display = "block";
@@ -725,7 +724,7 @@ export default {
     // 파일을 업로드 할 때 마다 실행됩나다
     handleFileChange(e) {
       console.log("[Chat] Uploading files........", e.target.files[0]);
-      let payload = { chatFile: e.target.files[0], chatFileThumb: this.makeTumbnail(e.target.files[0]), roomId: this.roomId };
+      let payload = { chatFile: e.target.files[0], chatFileThumb: e.target.files[0], roomId: this.roomId };
       document.getElementById("file-input").value = ""; // input 초기화
       this.isLoading = true;
       console.log("로딩 중 : ", this.isLoading);
@@ -978,12 +977,12 @@ export default {
   height: 30px;
 }
 .img-message {
-  max-width: 60%;
+  max-width: 40%;
   border-radius: 5%;
   cursor: pointer;
 }
 .video-message {
-  max-width: 90%;
+  max-width: 60%;
   border-radius: 5%;
   display: inline-block;
 }

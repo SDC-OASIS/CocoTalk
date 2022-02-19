@@ -54,7 +54,7 @@ export default {
   props: {
     imgUrl: {
       type: String,
-      default: "https://ifh.ccs/g/pLtMj2.png",
+      default: "https://d1fwng7137yw58.cloudfront.net/common/default_profile.png",
     },
     width: {
       type: String,
@@ -69,14 +69,14 @@ export default {
   computed: {
     imgCheck() {
       if (this.imgUrl == null) {
-        return "https://ifh.cc/g/pLtMj2.png";
+        return "https://d1fwng7137yw58.cloudfront.net/user_profile/93/profile/2022-02-19T02:28:20.251425.png";
       }
       return this.imgUrl;
     },
   },
   methods: {
     replaceImg(e) {
-      e.target.src = "https://ifh.cc/g/pLtMj2.png";
+      e.target.src = "https://d1fwng7137yw58.cloudfront.net/user_profile/93/profile/2022-02-19T02:28:20.251425.png";
     },
   },
   mounted() {
