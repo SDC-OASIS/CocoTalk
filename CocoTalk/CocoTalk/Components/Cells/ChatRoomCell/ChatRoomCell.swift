@@ -194,14 +194,28 @@ class ChatRoomCell: UITableViewCell {
     }
     
     func setData(data: ModelRoomList) {
-        let img = data.room?.img ?? ""
-        if let url = URL(string: img) {
-            ivRoomImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01")!)
-        } else {
-            ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
-        }
         
-        lblTitle.text = data.room?.roomname ?? ""
+        if (data.room?.type ?? 0) == 0 { // 개인톡
+            var member = data.room?.members?.filter { $0.userId != UserRepository.myProfile?.id }.first
+            member = ProfileHelper().decodeProfile(profile: member!)
+            lblTitle.text = member?.username ?? "(알수 없음)"
+            let imgURLString = member?.profileImageURL ?? ""
+            if let url = URL(string: imgURLString) {
+                ivRoomImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01")!)
+            } else {
+                ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
+            }
+            
+        } else {
+            lblTitle.text = data.room?.roomname ?? ""
+            let imgURLString = data.room?.img ?? ""
+            if let url = URL(string: imgURLString) { // 단체톡
+                ivRoomImage.kf.setImage(with: url, placeholder: UIImage(named: "profile_noimg_thumbnail_01")!)
+            } else {
+                ivRoomImage.image = UIImage(named: "profile_noimg_thumbnail_01")!
+            }
+        }
+
         lblMemeberNumber.text = "\(data.room?.members?.count ?? -1)"
         ivPin.isHidden = !(data.room?.isPinned ?? false)
         ivSilent.isHidden = !(data.room?.isSilent ?? false)
