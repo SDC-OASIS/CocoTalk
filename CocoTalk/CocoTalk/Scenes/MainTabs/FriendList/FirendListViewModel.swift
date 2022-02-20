@@ -40,8 +40,8 @@ class FriendListViewModel {
     var output = Output()
     
     init() {
-        let myProfile = userRepsository.fetchMyProfile()
-        output.myProfile.accept(myProfile)
+//        let myProfile = userRepsository.fetchMyProfile()
+//        output.myProfile.accept(myProfile)
         output.friends.accept(userRepsository.initFetch())
     }
     
@@ -53,7 +53,7 @@ class FriendListViewModel {
         var isFailed = BehaviorRelay<Bool?>(value: nil)
         var isLoading = BehaviorRelay<Bool>(value: false)
         var favoriteProfile: [ModelProfile] = []
-        var sections = ["내 프로필", "즐겨찾기", "친구 목록"]
+        var sections = ["내 프로필", "", "친구 목록"]
     }
     
     struct Output: FriendListOutput {

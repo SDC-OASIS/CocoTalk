@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import FirebaseAuth
 
 class SmsAuthViewController: UIViewController {
     
@@ -22,7 +23,7 @@ class SmsAuthViewController: UIViewController {
     
     /// 인증번호 텍스트 필드
     private let textFieldAuthNumber = UITextField().then {
-        $0.placeholder = "인증번호 4자리"
+        $0.placeholder = "인증번호 6자리"
         $0.textAlignment = .center
         $0.font = .systemFont(ofSize: 24)
         $0.textContentType = .oneTimeCode
@@ -81,6 +82,27 @@ class SmsAuthViewController: UIViewController {
     }
     
     // MARK: - Helper
+    private func verifyAuthNumber() {
+        let verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
+        
+        let credential = PhoneAuthProvider.provider().credential(
+            withVerificationID: verificationID ?? "",
+            verificationCode: textFieldAuthNumber.text ?? ""
+        )
+        
+        Auth.auth().signIn(with: credential) { [weak self] authResult, error in
+            guard let self = self else {
+                return
+            }
+            
+            if error == nil {
+                self.pushPasswordVC()
+            } else {
+                self.authenticationFailAlert(title: "인증 실패", message: "잘못된 코드입니다.")
+            }
+        }
+    }
+    
     private func startTimer() {
         viewModel.dependency.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
     }
@@ -168,19 +190,9 @@ extension SmsAuthViewController {
                       let isLoading = self.viewModel.dependency.isLoading.value  else {
                     return
                 }
-                #warning("viewmodel 인증 시작")
-                #warning("SMS 인증하기")
-                /*
-                 
-                 1) sms 코드 인증
-                 2) 인증 완료
-                 3) 서버에 전화번호가 있는지 확인
-                 4-1) 없으면 push
-                 4-2) 있으면 pop
-                 
-                 */
+                
                 if !isLoading,
-                   self.textFieldAuthNumber.text?.count == 4 {
+                   self.textFieldAuthNumber.text?.count == 6 {
                     self.viewModel.checkPhoneExist()
                 }
             }).disposed(by: bag)
@@ -204,15 +216,15 @@ extension SmsAuthViewController {
                 }
                 
                 var result: String
-                if newValue.isNumber() && newValue.count < 5 {
-                    if newValue.count == 4 {
+                if newValue.isNumber() && newValue.count < 7 {
+                    if newValue.count == 6 {
                         self.btnConfirm.backgroundColor = .systemGreen
                     } else {
                         self.btnConfirm.backgroundColor = .systemGray
                     }
                     result = newValue
                 } else {
-                    if oldValue.count == 4 {
+                    if oldValue.count == 6 {
                         self.btnConfirm.backgroundColor = .systemGreen
                     } else {
                         self.btnConfirm.backgroundColor = .systemGray
@@ -233,9 +245,8 @@ extension SmsAuthViewController {
                       let result = result else {
                     return
                 }
-                
                 if !result {
-                    self.pushPasswordVC()
+                    self.verifyAuthNumber()
                 } else {
                     self.authenticationFailAlert(title: "중복된 전화번호", message: "이미 ID가 존재하는 전화번호입니다.")
                 }

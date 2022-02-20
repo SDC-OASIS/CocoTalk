@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import FirebaseAuth
 
 class PhoneNumberViewController: UIViewController {
     
@@ -65,19 +66,31 @@ class PhoneNumberViewController: UIViewController {
     }
     
     private func move2SmsVC() {
-        guard let phoneNumber = textFieldPhoneNumber.text else {
+        guard var phoneNumber = textFieldPhoneNumber.text else {
             return
         }
         
-        #warning("SMS 인증 보내기")
-    
-        if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
-           var signupData = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
-            signupData.phone = textFieldPhoneNumber.text ?? ""
-            UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
-        }
-        let vc = SmsAuthViewController(phoneNumber: phoneNumber)
-        self.navigationController?.pushViewController(vc, animated: true)
+        PhoneAuthProvider.provider()
+            .verifyPhoneNumber("+82\(phoneNumber)", uiDelegate: nil) { [weak self] verificationID, error in
+                guard let self = self else {
+                    return
+                }
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                
+                UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+                
+                if let savedData = UserDefaults.standard.object(forKey: UserDefaultsKey.signupData.rawValue) as? Data,
+                   var signupData = try? JSONDecoder().decode(ModelSignupData.self, from: savedData) {
+                    signupData.phone = self.textFieldPhoneNumber.text ?? ""
+                    UserDefaults.standard.set(signupData.encode() ?? nil, forKey: UserDefaultsKey.signupData.rawValue)
+                }
+                let vc = SmsAuthViewController(phoneNumber: phoneNumber)
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
     }
 }
 
