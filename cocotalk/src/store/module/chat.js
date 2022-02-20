@@ -103,6 +103,7 @@ const chat = {
     updateMessageBundleCount(context, recentMessageBundleCount) {
       context.commit("UPDATE_MESSAGE_BUNDLE_COUNT", recentMessageBundleCount);
     },
+    // 새로 생성한 방으로 이동
     goNewChat(context, newRoomInfo) {
       context.commit("GO_CHAT", newRoomInfo);
       context.commit("NEW_ROOM_INFO", newRoomInfo.newRoom);
@@ -113,9 +114,6 @@ const chat = {
       frm.append("messageFile", payload.chatFile);
       frm.append("messageFileThumb", payload.chatFileThumb);
       frm.append("roomId", payload.roomId);
-      for (let e of frm.entries()) {
-        console.log(e);
-      }
       return await axios.post("chat/messages/file", frm, { headers: { "Content-Type": "multipart/form-data" } });
     },
   },

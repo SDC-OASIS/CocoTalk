@@ -20,7 +20,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "Nopage",
+  name: "PageNotFound",
   data: function () {
     return {
       users: this.$store.state.users,

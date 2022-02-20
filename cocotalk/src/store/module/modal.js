@@ -34,12 +34,10 @@ const modal = {
       state.screenInfo.width = payload.width;
     },
     OPEN_ALERT(state, payload) {
-      console.log("alert오픈");
       state.alert.status = payload.status;
       state.alert.text = payload.text;
     },
     CLOSE_ALERT(state) {
-      console.log("alert닫힘");
       state.alert.status = "close";
     },
     OPEN_PROFILE_MODAL(state, payload) {
@@ -121,7 +119,6 @@ const modal = {
       context.commit("CLOSE_CHAT_CREATION_MODAL");
     },
     openRoomNameEditModal: function (context, payload) {
-      console.log("채팅방 멤버 옮기기");
       context.commit("OPEN_ROOM_NAME_EDIT_MODAL", payload);
     },
     closeRoomNameEditModal: function (context) {

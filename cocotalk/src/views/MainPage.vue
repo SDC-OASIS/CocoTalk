@@ -41,18 +41,18 @@ export default {
     };
   },
   components: {
+    Alert,
     Navbar,
+    ProfileModal,
     AddFriendModal,
     ChatCreationModal,
     RoomNameEditModal,
-    ProfileModal,
-    Alert,
     InviteFriendModal,
     PrivateToTeamModal,
     SidebarFilesModal,
   },
   created() {
-    this.setStompChatListDisconnect;
+    this.SET_STOMP_CHAT_LIST_DISCONNECT;
     this.$store.dispatch("socket/getChatList");
     this.$store.dispatch("socket/checkConnect");
     this.$store.dispatch("socket/chatListConnect");
@@ -78,7 +78,7 @@ export default {
     ...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal", "inviteFriendModal", "privateToTeamModal", "sidebarFilesModal"]),
   },
   methods: {
-    ...mapMutations("socket", ["setStompChatListConnected", "stompChatListClient"]),
+    ...mapMutations("socket", ["SET_STOMP_CHAT_LIST_CONNECTED", "stompChatListClient"]),
     ...mapMutations("modal", [
       "CLOSE_ALERT",
       "CLOSE_PROFILE_MODAL",

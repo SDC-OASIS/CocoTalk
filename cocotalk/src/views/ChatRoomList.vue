@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div v-if="filterStatus" class="add-friend-modal-input row">
+    <div v-if="filterStatus" class="chat-list-search row">
       <input placeholder="이름을 입력하세요." maxlength="20" @input="filter = $event.target.value" @keyup="setFilter" />
     </div>
     <!-- 채팅방 목록 -->
@@ -83,8 +83,8 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
     this.chatsFiltered = this.chats;
+    this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
@@ -96,7 +96,6 @@ export default {
       this.$store.dispatch("modal/openChatCreationModal", "open", { root: true });
     },
     goChat(chat) {
-      console.log("goChat");
       this.$store.dispatch("socket/goChat", chat, { root: true });
     },
 
@@ -121,14 +120,12 @@ export default {
     },
     // 목록에서 삭제시 애니메이션을 보기위한 테스트 함수입니다.
     deleteMessage(id) {
-      console.log(id);
       const idx = this.chats.findIndex(function (item) {
         return item.room.id == id;
       });
-      console.log(idx);
       this.chats.splice(idx, 1);
-      console.log(this.chats);
     },
+    // 채팅방 검색 필터
     filterOn() {
       this.filterStatus = !this.filterStatus;
     },
@@ -137,7 +134,6 @@ export default {
       if (this.filter != "") {
         this.chats.forEach((e) => {
           if (Hangul.search(e.room.roomname, this.filter) >= 0) {
-            console.log(e);
             filteredChats.push(e);
           }
         });
@@ -149,6 +145,7 @@ export default {
 };
 </script>
 <style scoped>
+/* 최상단 컨테이너 */
 .chat-room-list-outer-container {
   display: block;
   padding-top: 20px;
@@ -157,6 +154,8 @@ export default {
   border-right: 2px solid #9eac95;
   font-size: 15px;
 }
+
+/* 상단바 */
 .header {
   justify-content: space-between;
 }
@@ -186,6 +185,34 @@ export default {
   cursor: pointer;
 }
 
+/* 채팅방 검색 */
+.chat-list-search {
+  text-align: center;
+  border-radius: 20px;
+  height: 35px;
+  background: #d8eec0;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 10px;
+  margin-bottom: 10px;
+}
+.chat-list-search > input {
+  border: none;
+  border-radius: 20px;
+  padding: 0 8%;
+  width: 90%;
+  background: #d8eec0;
+  font-size: 20px;
+}
+.chat-list-search > input::placeholder {
+  font-size: 17px;
+  color: #749f58;
+}
+.chat-list-search > input:focus {
+  outline: none;
+}
+
+/* 채팅방 목록 */
 .chat-room-list-container {
   padding: 20px 0;
   text-align: left;
@@ -208,17 +235,17 @@ export default {
   background-clip: padding-box;
   border: 5px solid transparent;
 }
-
 .chat-room-list-container > span {
   margin-bottom: 100px;
 }
+
+/* 채팅방 요소 */
 .chat-room-item-container {
   padding: 10px 0;
   align-items: center;
   padding-left: 20px;
   cursor: pointer;
 }
-
 .chat-room-item-container img {
   width: 50px;
   height: 50px;
@@ -248,13 +275,14 @@ export default {
 .chat-detail-info {
   text-align: right;
 }
-
 @media (max-width: 1600px) {
   .chat-info-container {
     justify-content: space-between;
     width: 75%;
   }
 }
+
+/* 다중 프로필 */
 .two-friends-first-img {
   position: relative;
   top: -12px;
@@ -265,7 +293,6 @@ export default {
   top: 4px;
   left: -14px;
 }
-
 .three-friends-first-img {
   position: relative;
   top: 2px;
@@ -304,7 +331,8 @@ export default {
   top: 1px;
   left: -18px;
 }
-/* 트랜지션 전용 스타일 */
+
+/* 트랜지션 그룹 모션 적용 */
 .v-enter-active,
 .v-leave-active,
 .v-move {
@@ -313,39 +341,8 @@ export default {
 .v-leave-active {
   position: absolute;
 }
-
 .v-leave-to {
   opacity: 0;
   transform: translateY(20px);
-}
-
-.add-friend-modal-input {
-  text-align: center;
-  border-radius: 20px;
-  height: 35px;
-  background: #d8eec0;
-  align-items: center;
-  justify-content: center;
-  margin: 10px 10px;
-  margin-bottom: 10px;
-}
-.add-friend-modal-input > input {
-  /* display: block; */
-  border: none;
-  border-radius: 20px;
-  /* margin: 0 0 20px 0; */
-  padding: 0 8%;
-  width: 90%;
-  /* height: 35px; */
-  background: #d8eec0;
-  font-size: 20px;
-}
-.add-friend-modal-input > input::placeholder {
-  font-size: 17px;
-  color: #749f58;
-}
-.add-friend-modal-input > input:focus {
-  outline: none;
-  /* outline: 2px solid #fce41e; */
 }
 </style>
