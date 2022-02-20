@@ -10,9 +10,11 @@
             <span>대화상대 선택</span>
             <span style="color: #aaaaaa; padding: 0 10px">{{ selectedFriendsCnt }}</span>
           </div>
+          <!-- 단체 톡방인 경우 해당 방에 친구 초대 -->
           <div v-if="inviteRoomInfo.type > 0" @click="inviteFriend">
             <Button text="확인" width="60px" height="30px" />
           </div>
+          <!-- 개인 톡방인 경우 새로운 단체 톡방 생성하며 초대 -->
           <div v-if="inviteRoomInfo.type == 0" @click="createNewRoom">
             <Button text="확인" width="60px" height="30px" />
           </div>
@@ -103,7 +105,6 @@ export default {
     },
     inviteFriend() {
       this.$store.dispatch("socket/inviteFriend", this.selectedFriends, { root: true });
-      console.log("확인");
       this.$store.dispatch("modal/setSidebar", false, { root: true });
       this.$store.dispatch("modal/setSidebar", true, { root: true });
       this.$store.dispatch("modal/closeInviteFriendModal");

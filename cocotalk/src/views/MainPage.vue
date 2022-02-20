@@ -52,7 +52,6 @@ export default {
     SidebarFilesModal,
   },
   created() {
-    this.SET_STOMP_CHAT_LIST_DISCONNECT;
     this.$store.dispatch("socket/getChatList");
     this.$store.dispatch("socket/checkConnect");
     this.$store.dispatch("socket/chatListConnect");
@@ -70,8 +69,6 @@ export default {
       this.CLOSE_INVITE_FRIEND_MODAL,
       this.CLOSE_PRIVATE_TO_TEAM_MODAL;
     this.CLOSE_SIDEBAR_FILES_MODAL;
-    const headers = { action: "leave" };
-    this.stompChatListClient.disconnect(() => {}, headers);
   },
   computed: {
     ...mapState("socket", ["stompChatListConnected", "stompChat"]),
