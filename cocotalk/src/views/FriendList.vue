@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div v-if="filterStatus" class="add-friend-modal-input row">
+    <div v-if="filterStatus" class="friend-list-search row">
       <input placeholder="이름을 입력하세요." maxlength="20" @input="filter = $event.target.value" @keyup="setFilter" />
     </div>
     <!-- 목록 -->
@@ -59,10 +59,10 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
     this.getUser();
     this.getFriends();
     this.friendsFiltered = this.friends; //이름으로 검색시 친구목록 필터
+    this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
@@ -104,6 +104,7 @@ export default {
 </script>
 
 <style scoped>
+/* 전체 컨테이너 */
 .friend-list-outer-container {
   display: block;
   padding-top: 20px;
@@ -116,6 +117,7 @@ export default {
   border-bottom: 1px solid #9eac95;
   width: 90%;
 }
+/* 최상단 헤더 */
 .header {
   justify-content: space-between;
   padding-bottom: 10px;
@@ -145,12 +147,12 @@ export default {
   cursor: pointer;
 }
 
+/* 내 프로필 */
 .myprofile {
   padding: 10px 20px 10px 20px;
   align-items: center;
   cursor: pointer;
 }
-
 .myprofile:hover {
   background-color: #e7f7dd;
 }
@@ -158,6 +160,7 @@ export default {
   display: inline-block;
 }
 
+/* 친구목록 */
 .friend-list-container {
   text-align: left;
 }
@@ -182,8 +185,6 @@ export default {
   border: 5px solid transparent;
 }
 .friend-cnt {
-  /* margin-bottom: 100px; */
-  /* 왜 안되지! */
   font-size: 13px;
   margin: 15px 0px 5px 20px;
 }
@@ -201,7 +202,8 @@ export default {
   height: 50px;
 }
 
-.add-friend-modal-input {
+/* 친구검색 */
+.friend-list-search {
   text-align: center;
   border-radius: 20px;
   height: 35px;
@@ -211,23 +213,19 @@ export default {
   margin: 0 10px;
   margin-bottom: 10px;
 }
-.add-friend-modal-input > input {
-  /* display: block; */
+.friend-list-search > input {
   border: none;
   border-radius: 20px;
-  /* margin: 0 0 20px 0; */
   padding: 0 8%;
   width: 90%;
-  /* height: 35px; */
   background: #d8eec0;
   font-size: 20px;
 }
-.add-friend-modal-input > input::placeholder {
+.friend-list-search > input::placeholder {
   font-size: 17px;
   color: #749f58;
 }
-.add-friend-modal-input > input:focus {
+.friend-list-search > input:focus {
   outline: none;
-  /* outline: 2px solid #fce41e; */
 }
 </style>

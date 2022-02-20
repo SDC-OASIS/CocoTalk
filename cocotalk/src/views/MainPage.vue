@@ -41,18 +41,17 @@ export default {
     };
   },
   components: {
+    Alert,
     Navbar,
+    ProfileModal,
     AddFriendModal,
     ChatCreationModal,
     RoomNameEditModal,
-    ProfileModal,
-    Alert,
     InviteFriendModal,
     PrivateToTeamModal,
     SidebarFilesModal,
   },
   created() {
-    this.setStompChatListDisconnect;
     this.$store.dispatch("socket/getChatList");
     this.$store.dispatch("socket/checkConnect");
     this.$store.dispatch("socket/chatListConnect");
@@ -70,15 +69,13 @@ export default {
       this.CLOSE_INVITE_FRIEND_MODAL,
       this.CLOSE_PRIVATE_TO_TEAM_MODAL;
     this.CLOSE_SIDEBAR_FILES_MODAL;
-    const headers = { action: "leave" };
-    this.stompChatListClient.disconnect(() => {}, headers);
   },
   computed: {
     ...mapState("socket", ["stompChatListConnected", "stompChat"]),
     ...mapState("modal", ["alert", "addFriendModal", "profileModal", "ChatCreationModal", "roomNameEditModal", "inviteFriendModal", "privateToTeamModal", "sidebarFilesModal"]),
   },
   methods: {
-    ...mapMutations("socket", ["setStompChatListConnected", "stompChatListClient"]),
+    ...mapMutations("socket", ["SET_STOMP_CHAT_LIST_CONNECTED", "stompChatListClient"]),
     ...mapMutations("modal", [
       "CLOSE_ALERT",
       "CLOSE_PROFILE_MODAL",

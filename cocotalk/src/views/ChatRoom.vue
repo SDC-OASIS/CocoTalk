@@ -80,8 +80,6 @@
                 <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
               </div>
               <video controls class="video-message" :src="chatMessage.content">해당 브라우저에서 지원하지 않습니다</video>
-              <!-- <video preload="metadata" :src="chatMessage.content | videoThumbNail"></video> -->
-              <!-- <img @click="openClick(chatMessage.content)" class="img-message" :src="chatMessage.content" /> -->
               <div v-if="chatMessage.userId != userInfo.id" class="others-file-message-info">
                 <div class="sent-time-me">{{ messageSentTime(chatMessage.sentAt) }}</div>
                 <div class="unread-number" style="left: 6px; margin-bottom: 2px">{{ unreadMemberCnt(chatMessage.sentAt) }}</div>
@@ -158,13 +156,13 @@ export default {
     };
   },
   components: {
-    ProfileImg,
     Button,
     Sidebar,
+    ProfileImg,
   },
   created() {
-    this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, roomId: this.$route.params.roomId }, { root: true });
     this.$store.dispatch("modal/setSidebar", true, { root: true });
+    this.$store.dispatch("chat/changePage", { mainPage: this.roomStatus.mainPage, roomId: this.$route.params.roomId }, { root: true });
     // 개인톡방 생성을 위한 트리거메세지를 보내기전 상태
     if (this.newPrivateRoomStatus && !this.triggerMessage) {
       this.newPrivateRoom();
@@ -212,8 +210,8 @@ export default {
     // 채팅방을 켜둔상태에서 다른 채팅방으로 이동할 경우
     "$route.params.roomId": function () {
       this.$store.dispatch("modal/setSidebar", true, { root: true });
-      this.setAwakePrivateRoomStatus(false);
-      this.setAwakePrivateRoomInfo(null);
+      this.SET_AWAKE_PRIVATE_ROOM_STATUS(false);
+      this.SET_AWAKE_PRIVATE_ROOM_INFO(null);
       // 새로운 개인톡방을 생성하지 않는 경우 (생성중일때는 connection이 없기에 disconnect 불가)
       if (!this.newPrivateRoomStatus) {
         const headers = { action: "leave" };
@@ -253,19 +251,19 @@ export default {
     },
   },
   destroyed() {
-    this.setAwakePrivateRoomInfo(null);
-    this.setAwakePrivateRoomStatus(false);
+    this.SET_AWAKE_PRIVATE_ROOM_INFO(null);
+    this.SET_AWAKE_PRIVATE_ROOM_STATUS(false);
   },
   methods: {
     ...mapMutations("socket", [
-      "setStompChatRoomClient",
-      "setStompChatRoomConnected",
-      "setCreateChatRoomStatus",
-      "setNewPrivateRoomStatus",
-      "setNewPrivateRoomRefresh",
-      "setInviteRoomInfo",
-      "setAwakePrivateRoomStatus",
-      "setAwakePrivateRoomInfo",
+      "SET_STOMP_CHAT_ROOM_CLIENT",
+      "SET_STOMP_CHAT_ROOM_CONNECTED",
+      "SET_CREATE_CHAT_ROOM_STATUS",
+      "SET_NEW_PRIVATE_ROOM_STATUS",
+      "SET_NEW_PRIVATE_ROOM_REFRESH",
+      "SET_INVITE_ROOM_INFO",
+      "SET_AWAKE_PRIVATE_ROOM_STATUS",
+      "SET_AWAKE_PRIVATE_ROOM_INFO",
     ]),
     // 이미지 클릭했을 때 원본 이미지로 보여주기
     openClick(url) {
@@ -288,6 +286,7 @@ export default {
       strOption += "resizable=yes,status=no";
       window.open(url, "popup", strOption);
     },
+
     // 1.채팅내역 불러오기
     // 1-1. 일반 채팅방 입장
     getChat() {
@@ -305,7 +304,7 @@ export default {
             this.sendTriggerMessage();
           }
           this.roomInfo = chatData.room;
-          this.setInviteRoomInfo(this.roomInfo);
+          this.SET_INVITE_ROOM_INFO(this.roomInfo);
           this.chatMessages = chatData.messageList;
           chatData.room.messageBundleIds = chatData.room.messageBundleIds.slice(1, -1).split(", ");
           // 새로 받은 최신 bundleId 업데이트
@@ -359,7 +358,8 @@ export default {
     messageSentTime(time) {
       return this.$moment(time).add(9, "hours").format("LT");
     },
-    // console.log("=======카톡안읽은 사람 숫자 연산 =========");
+
+    // 카톡 안 읽은 사람 숫자 계산
     unreadMemberCnt(sentAt) {
       if (this.roomInfo.members) {
         let cnt = this.roomInfo.members.length;
@@ -383,7 +383,7 @@ export default {
     chatRoomConnect: function () {
       const serverURL = "http://138.2.93.111:8080/stomp";
       let socket = new SockJS(serverURL);
-      this.setStompChatRoomClient(Stomp.over(socket));
+      this.SET_STOMP_CHAT_ROOM_CLIENT(Stomp.over(socket));
       this.stompChatRoomClient.connect(
         { view: "chatRoom", userId: this.userInfo.id, roomId: this.roomStatus.roomId },
         () => {
@@ -398,7 +398,7 @@ export default {
           if (this.triggerMessage) {
             this.sendTriggerMessage();
           }
-          this.setStompChatRoomConnected(true);
+          this.SET_STOMP_CHAT_ROOM_CONNECTED(true);
           // 채팅 메세지 채널 subscribe
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
             const receivedMessage = JSON.parse(res.body);
@@ -415,7 +415,7 @@ export default {
             // 처음 생성된방인 경우
             if (this.newPrivateRoomRefresh) {
               this.getChat();
-              this.setNewPrivateRoomRefresh(false);
+              this.SET_NEW_PRIVATE_ROOM_REFRESH(false);
             }
           });
           // 채팅 메세지 룸정보 업데이트 채널 subscribe
@@ -453,7 +453,6 @@ export default {
             if (e.joining == false) {
               messageType = 3;
               this.sendToAwake(messageContent);
-              // this.getChat();
               return;
             }
           });
@@ -486,20 +485,19 @@ export default {
 
       const msg = {
         type: 3,
-        content: messageContent,
-        roomId: this.roomStatus.roomId,
         roomType: 0,
         roomname: null,
+        content: messageContent,
         userId: this.userInfo.id,
-        username: this.userInfo.username,
         receiverIds: roomMemberIds,
+        roomId: this.roomStatus.roomId,
+        username: this.userInfo.username,
         messageBundleId: messageBundleId,
       };
       this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/awake`, JSON.stringify(msg));
-
-      this.message = "";
-      this.setAwakePrivateRoomStatus(false);
-      this.setAwakePrivateRoomInfo(null);
+      this.message = ""; //보낸 메세지 초기화
+      this.SET_AWAKE_PRIVATE_ROOM_STATUS(false);
+      this.SET_AWAKE_PRIVATE_ROOM_INFO(null);
       this.getChat();
     },
     sendToCreatePrivateRoom() {
@@ -519,10 +517,10 @@ export default {
       members.push(userInfo);
 
       const payload = {
-        roomname: this.newPrivateRoomFriendInfo.username,
-        img: this.newPrivateRoomFriendInfo.profile.profile,
         type: 0,
         members: members,
+        roomname: this.newPrivateRoomFriendInfo.username,
+        img: this.newPrivateRoomFriendInfo.profile.profile,
       };
       this.$store.dispatch("socket/setTriggerMessage", this.message, { root: true });
       this.$store.dispatch("socket/createPrivateChat", payload, { root: true });
@@ -553,8 +551,9 @@ export default {
         };
         this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
       }
-      this.setCreateChatRoomStatus(false);
+      this.SET_CREATE_CHAT_ROOM_STATUS(false);
     },
+    // 개인톡방의 경우 나 또는 상대가 나간 경우 이를 깨워줄 trigger message를 보냅니다.
     sendTriggerMessage() {
       if (this.stompChatRoomClient && this.stompChatRoomClient.connected && this.triggerMessage) {
         let membersIds = [];
@@ -575,7 +574,7 @@ export default {
           messageBundleId: this.chatInfo.nextMessageBundleId,
         };
         this.stompChatRoomClient.send(`/simple/chatroom/${this.roomStatus.roomId}/message/send`, JSON.stringify(msg));
-        this.setNewPrivateRoomRefresh(true);
+        this.SET_NEW_PRIVATE_ROOM_REFRESH(true);
       }
       this.message = "";
       this.$store.dispatch("socket/clearNewPrivateRoom");
@@ -586,7 +585,6 @@ export default {
       };
       this.roomInfo = roomInfo;
     },
-
     openProfileModal(userProfileInfo) {
       this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
     },

@@ -78,7 +78,6 @@ const userStore = {
     login: async function (context, payload) {
       const userInfo = payload;
       await axios.post("auth/signin", userInfo).then((res) => {
-        console.log(res.data);
         if (res.data.isSuccess) {
           context.commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
           context.commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);

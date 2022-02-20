@@ -24,34 +24,34 @@ const socket = {
     triggerMessage: null,
   },
   mutations: {
-    setStompChatListClient(state, stompChatListClient) {
+    SET_STOMP_CHAT_LIST_CLIENT(state, stompChatListClient) {
       state.stompChatListClient = stompChatListClient;
     },
-    setStompChatRoomClient(state, stompChatRoomClient) {
+    SET_STOMP_CHAT_ROOM_CLIENT(state, stompChatRoomClient) {
       state.stompChatRoomClient = stompChatRoomClient;
     },
-    setStompChatListConnected(state, payload) {
+    SET_STOMP_CHAT_LIST_CONNECTED(state, payload) {
       state.stompChatListConnected = payload;
     },
-    setStompChatRoomConnected(state, stompChatRoomConnected) {
+    SET_STOMP_CHAT_ROOM_CONNECTED(state, stompChatRoomConnected) {
       state.stompChatRoomConnected = stompChatRoomConnected;
     },
-    setStompChatListDisconnect(state) {
+    SET_STOMP_CHAT_LIST_DISCONNECT(state) {
       state.stompChatListConnected = false;
     },
-    setCreateChatRoomStatus(state, payload) {
+    SET_CREATE_CHAT_ROOM_STATUS(state, payload) {
       state.createChatRoomStatus = payload;
     },
-    setNewPrivateRoomStatus(state, payload) {
+    SET_NEW_PRIVATE_ROOM_STATUS(state, payload) {
       state.newPrivateRoomStatus = payload;
     },
-    setNewPrivateRoomFriendInfo(state, payload) {
+    SET_NEW_PRIVATE_ROOM_FRIEND_INFO(state, payload) {
       state.newPrivateRoomFriendInfo = payload;
     },
-    setInviteRoomInfo(state, payload) {
+    SET_INVITE_ROOM_INFO(state, payload) {
       state.inviteRoomInfo = payload;
     },
-    setChatList(state, payload) {
+    SET_CHAT_LIST(state, payload) {
       state.chats = payload;
     },
     UPDATE_CHAT_LIST(state, { idx, lastMessage }) {
@@ -85,17 +85,18 @@ const socket = {
       state.triggerMessage = null;
       state.newPrivateRoomStatus = false;
     },
-    setNewPrivateRoomRefresh(state, payload) {
+    SET_NEW_PRIVATE_ROOM_REFRESH(state, payload) {
       state.newPrivateRoomRefresh = payload;
     },
-    setAwakePrivateRoomStatus(state, payload) {
+    SET_AWAKE_PRIVATE_ROOM_STATUS(state, payload) {
       state.awakePrivateRoomStatus = payload;
     },
-    setAwakePrivateRoomInfo(state, friend) {
+    SET_AWAKE_PRIVATE_ROOM_INFO(state, friend) {
       state.awakePrivateRoomInfo = friend;
     },
   },
   actions: {
+    // 커넥션 전에 다른 기기와 로그인 되어있는지 확인
     checkConnect() {
       axios.get("auth/device").then((res) => {
         if (!res.data.result.isValid) {
@@ -108,6 +109,7 @@ const socket = {
         }
       });
     },
+    // 채팅방 목록 데이터 받아오기
     getChatList(context) {
       axios.get("chat/rooms/list").then((res) => {
         const chatList = res.data.data;
@@ -123,19 +125,20 @@ const socket = {
               e.unreadNumber = 0;
             }
           });
-          context.commit("setChatList", chatList);
+          context.commit("SET_CHAT_LIST", chatList);
         }
       });
     },
+    // 채팅방목록이자 전역에서 데이터를 관리해주는 웹소켓 연결
     async chatListConnect(context) {
       const serverURL = "http://138.2.93.111:8080/stomp";
       let socket = new SockJS(serverURL);
-      await context.commit("setStompChatListClient", Stomp.over(socket));
+      await context.commit("SET_STOMP_CHAT_LIST_CLIENT", Stomp.over(socket));
       await context.state.stompChatListClient.connect(
         { view: "chatList", userId: store.getters["userStore/userInfo"].id },
         () => {
           this.connected = true;
-          context.commit("setStompChatListConnected", true);
+          context.commit("SET_STOMP_CHAT_LIST_CONNECTED", true);
           //[채팅목록 마지막 메세지 subscribe]
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/message`, (res) => {
             const data = JSON.parse(res.body);
@@ -165,7 +168,7 @@ const socket = {
             // 3.채팅방 목록에 없는 방의 메세지인 경우 (나가기한 1대1 채팅) == 구현중 ==
           });
 
-          //[채팅목록 채팅방정보 채널 subscribe] == 구현중 ==
+          //[채팅목록 채팅방정보 채널 subscribe]
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/room`, (res) => {
             const newRoomInfo = JSON.parse(res.body);
             const idx = context.state.chats.findIndex(function (item) {
@@ -174,7 +177,7 @@ const socket = {
             context.commit("UPDATE_ROOM_INFO", { idx, newRoomInfo });
           });
 
-          //[채팅목록 새로 생성된 채팅방정보 채널 subscribe] == 구현중 ==
+          //[채팅목록 새로 생성된 채팅방정보 채널 subscribe]
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/room/new`, (res) => {
             let newRoom = JSON.parse(res.body);
             newRoom.messageBundleIds = newRoom.messageBundleIds.slice(1, -1).split(", ");
@@ -206,10 +209,11 @@ const socket = {
         },
         () => {
           this.connected = false;
-          context.commit("setStompChatListConnected", false);
+          context.commit("SET_STOMP_CHAT_LIST_CONNECTED", false);
         },
       );
     },
+    // [다른 기기에서 로그인 되면 즉시 알려주는 채널 subscribe]
     checkConnectSub(context) {
       context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/crash/web`, (res) => {
         if (res.body != store.getters["userStore/userInfo"].fcmToken && store.getters["userStore/accessToken"]) {
@@ -220,12 +224,9 @@ const socket = {
           };
           store.dispatch("modal/openAlert", payload, { root: true });
         }
-        console.log(res.body);
       });
     },
     goChat(context, chat) {
-      // 현재 swagger로 채팅방생성중이기때문에 첫메세지가 없는 경우가 있어 nextMessageBundleId 업데이트.
-      // 채팅방내부에서 채팅내역불러와서 갱신해주기 때문에 이후에는 필요없음
       let payload = {
         roomId: chat.room.id,
         nextMessageBundleId: chat.room.messageBundleIds[chat.room.messageBundleIds.length - 1],
@@ -242,7 +243,7 @@ const socket = {
     createChat(context, data) {
       context.state.stompChatListClient.send("/simple/chatroom/new", JSON.stringify(data));
       store.dispatch("modal/closeRoomNameEditModal");
-      context.commit("setCreateChatRoomStatus", true);
+      context.commit("SET_CREATE_CHAT_ROOM_STATUS", true);
     },
     startPrivateChat(context, friend) {
       store.dispatch("modal/closeProfileModal");
@@ -253,27 +254,27 @@ const socket = {
       axios.get(`chat/rooms/private/${friend.id}`).then((res) => {
         // 방이 있는 경우
         if (res.data.data.id) {
-          context.commit("setNewPrivateRoomStatus", false);
+          context.commit("SET_NEW_PRIVATE_ROOM_STATUS", false);
           res.data.data.members.forEach((e) => {
             if (e.userId == store.getters["userStore/userInfo"].id && !e.joining) {
-              context.commit("setAwakePrivateRoomStatus", true);
+              context.commit("SET_AWAKE_PRIVATE_ROOM_STATUS", true);
               res.data.data.messageBundleIds = res.data.data.messageBundleIds.slice(1, -1).split(", ");
-              context.commit("setAwakePrivateRoomInfo", res.data.data);
+              context.commit("SET_AWAKE_PRIVATE_ROOM_INFO", res.data.data);
             }
           });
           router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: res.data.data.id } }).catch(() => {});
         }
         // 방이 없는 경우
         else {
-          context.commit("setNewPrivateRoomFriendInfo", friend);
-          context.commit("setNewPrivateRoomStatus", true);
+          context.commit("SET_NEW_PRIVATE_ROOM_FRIEND_INFO", friend);
+          context.commit("SET_NEW_PRIVATE_ROOM_STATUS", true);
           router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: "private" } }).catch(() => {});
         }
       });
     },
     createPrivateChat(context, data) {
       context.state.stompChatListClient.send("/simple/chatroom/new", JSON.stringify(data));
-      context.commit("setNewPrivateRoomStatus", true);
+      context.commit("SET_NEW_PRIVATE_ROOM_STATUS", true);
     },
     setTriggerMessage(context, msg) {
       context.commit("SET_TRIGGER_MASSAGE", msg);
@@ -317,7 +318,6 @@ const socket = {
       let members = [...invitees, ...previousMembers]; // 이미 채팅방에 참여하고 있는 멤버 제외 완료
 
       if (context.state.stompChatRoomClient && context.state.stompChatRoomClient.connected) {
-        console.log(context.state.inviteRoomInfo);
         let invitedFriendsNames = [];
         invitees.forEach((e) => {
           if (e.userId != store.getters["userStore/userInfo"].id) {
@@ -347,6 +347,7 @@ const socket = {
         context.state.stompChatRoomClient.send(`/simple/chatroom/${context.state.inviteRoomInfo.id}/message/invite`, JSON.stringify(msg));
       }
     },
+    // 채팅방 나가기
     exitChat(context, roomInfo) {
       if (context.state.stompChatRoomClient && context.state.stompChatRoomClient.connected) {
         let membersIds = [];

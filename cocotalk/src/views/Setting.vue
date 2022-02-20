@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-default-container row">
+  <div class="setting-container row">
     <h1 class="setting-title">CocoTalk Developers</h1>
     <img class="polaroid" src="https://d1fwng7137yw58.cloudfront.net/common/team_oasis.jpg" alt="" />
     <div style="width: 100%">
@@ -34,32 +34,32 @@ export default {
 </script>
 
 <style scoped>
-.chat-default-container {
+.setting-container {
   background-color: #ffffff;
   height: 100vh;
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
 }
-.chat-default-container > img {
+.setting-container > img {
   width: 320px;
   height: 220px;
 }
-.chat-default-container > span {
+.setting-container > span {
   padding-bottom: 150px;
   font-size: 25px;
   font-weight: bold;
   color: #90949b;
 }
 .polaroid {
-  background: #000; /*Change this to a background image or remove*/
+  background: #000;
   border: solid #fff;
   border-width: 6px 6px 20px 6px;
-  box-shadow: 1px 1px 5px #333; /* Standard blur at 5px. Increase for more depth */
+  box-shadow: 1px 1px 5px #333;
   -webkit-box-shadow: 1px 1px 5px #333;
   -moz-box-shadow: 1px 1px 5px #333;
-  height: 200px; /*Set to height of your image or desired div*/
-  width: 200px; /*Set to width of your image or desired div*/
+  height: 200px;
+  width: 200px;
 }
 .setting-title {
   color: #728566;
