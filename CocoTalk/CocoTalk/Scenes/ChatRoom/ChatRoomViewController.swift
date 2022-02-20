@@ -63,6 +63,11 @@ class ChatRoomViewController: UIViewController {
     /// 리프레쉬 UI
     private let refreshControl = UIRefreshControl()
     
+    /// 메뉴 버튼
+    private let btnMenu = UIBarButtonItem().then {
+        $0.image = UIImage(systemName: "line.3.horizontal")
+    }
+    
     // MARK: - Properties
     let bag = DisposeBag()
     let viewModel: ChatRoomViewModel
@@ -299,6 +304,7 @@ class ChatRoomViewController: UIViewController {
         navigationController?.tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.standardAppearance = UINavigationBarAppearance()
         navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
+        navigationController?.navigationItem.rightBarButtonItem = nil
     }
     
     // MARK: setNavigationAppearance
@@ -314,6 +320,7 @@ class ChatRoomViewController: UIViewController {
         navAppearance.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 19, weight: .semibold)]
         navigationController?.navigationBar.standardAppearance = navAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
+        self.navigationItem.rightBarButtonItem = btnMenu
     }
     
     // MARK: handleRefresh
@@ -605,6 +612,17 @@ extension ChatRoomViewController {
                     return
                 }
                 self.showMediaActionSheet()
+            }).disposed(by: bag)
+        
+        btnMenu.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                let vc = ChatDrawerViewController(roomId: self.roomId, members: self.members)
+                vc.modalPresentationStyle = .overFullScreen
+                vc.modalTransitionStyle = .crossDissolve
+                self.present(vc, animated: true)
             }).disposed(by: bag)
     }
     

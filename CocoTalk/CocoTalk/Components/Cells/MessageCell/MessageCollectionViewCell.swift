@@ -81,6 +81,36 @@ class MessageCollectionViewCell: UICollectionViewCell {
         $0.numberOfLines = 0
     }
     
+    /// 파일 다운로드 뷰
+    private let uiviewFile = UIView().then {
+        $0.layer.cornerRadius = 14
+        $0.clipsToBounds = true
+        $0.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        $0.isHidden = true
+    }
+    
+    /// 파일 다운로드 버튼 뷰
+    private let btnViewFile = UIView().then {
+        $0.layer.cornerRadius = 20
+        $0.clipsToBounds = true
+        $0.backgroundColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+    }
+    
+    /// 파일 다운로드 이미지
+    private let ivArrowDown = UIImageView().then {
+        $0.image = UIImage(systemName: "arrow.down.to.line")
+        $0.tintColor = .black
+    }
+    
+    /// 파일 URL
+    private let lblFileURL = UILabel().then {
+        $0.font = .systemFont(ofSize: 14.5)
+        $0.textColor = .black
+        $0.lineBreakMode = .byTruncatingMiddle
+    }
+    
+    
     // MARK: - Properties
     static let identifier = "MessageCollectionViewCell"
     let bag = DisposeBag()
@@ -100,6 +130,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     var isVideo: Bool?
     var isPhoto: Bool?
     var isSystemMessage: Bool?
+    var isFile: Bool?
     
     var delegate: MessageCellDelegate?
     
@@ -130,6 +161,8 @@ class MessageCollectionViewCell: UICollectionViewCell {
         withDate = false
         isVideo = false
         isPhoto = false
+        isSystemMessage = false
+        isFile = false
         lblUnreadMemberCount.text = ""
         
         super.prepareForReuse()
@@ -139,7 +172,12 @@ class MessageCollectionViewCell: UICollectionViewCell {
     func configureView() {
         stackView.addArrangedSubview(lblUnreadMemberCount)
         stackView.addArrangedSubview(lblDate)
-        [ivProfile, ivTail, lblName, lblMessage, ivVideoIndicator, ivMedia, stackView].forEach {
+        btnViewFile.addSubview(ivArrowDown)
+        
+        [btnViewFile, lblFileURL].forEach {
+            uiviewFile.addSubview($0)
+        }
+        [ivProfile, ivTail, lblName, lblMessage, ivVideoIndicator, ivMedia, uiviewFile, stackView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -149,16 +187,18 @@ class MessageCollectionViewCell: UICollectionViewCell {
         let height = UIScreen.main.bounds.height
         lblMessage.bounds = CGRect(origin: .zero, size: CGSize(width: width, height: height))
         lblDate.bounds = CGRect(origin: .zero, size: CGSize(width: width, height: height))
-        [ivProfile, ivTail, lblName, lblMessage, ivVideoIndicator, ivMedia, stackView].forEach {
+        [ivProfile, ivTail, lblName, lblMessage, ivVideoIndicator, ivMedia, uiviewFile, btnViewFile, lblFileURL, ivArrowDown, stackView].forEach {
             $0.snp.removeConstraints()
         }
         
-        ivMedia.isHidden = true
-        lblMessage.isHidden = true
+        // 메타 데이터 초기화
         ivProfile.isHidden = true
         ivTail.isHidden = true
         lblName.isHidden = true
         ivVideoIndicator.isHidden = true
+        lblMessage.isHidden = true
+        ivMedia.isHidden = true
+        uiviewFile.isHidden = true
         
         if isSystemMessage ?? false {
             lblMessage.snp.makeConstraints {
@@ -178,22 +218,37 @@ class MessageCollectionViewCell: UICollectionViewCell {
         }
         
         let mainContent: UIView
-        if isPhoto ?? false || isVideo ?? false {
+        if isPhoto ?? false || isVideo ?? false { // 사진, 영상 메시지의 경우
             mainContent = ivMedia
             ivMedia.isHidden = false
-            lblMessage.isHidden = true
-            
             if isVideo ?? false {
                 ivVideoIndicator.isHidden = false
-                ivVideoIndicator.snp.makeConstraints {
+                ivVideoIndicator.snp.makeConstraints { // 영상 메시지일 경우
                     $0.center.equalTo(ivMedia)
                     $0.width.height.equalTo(50)
                 }
             }
+        }  else if isFile ?? false { // 파일 메시지일 경우
+            mainContent = uiviewFile
+            btnViewFile.snp.makeConstraints {
+                $0.centerY.equalToSuperview()
+                $0.leading.equalToSuperview().offset(7.5)
+                $0.height.width.equalTo(40)
+            }
             
-        } else {
+            ivArrowDown.snp.makeConstraints {
+                $0.center.equalTo(btnViewFile)
+                $0.width.height.equalTo(20)
+            }
+            
+            lblFileURL.snp.makeConstraints {
+                $0.centerY.equalTo(btnViewFile)
+                $0.leading.equalTo(btnViewFile.snp.trailing).offset(10)
+                $0.trailing.equalToSuperview().inset(20)
+            }
+            uiviewFile.isHidden = false
+        } else { // 일반 텍스트 메시지일 경우
             mainContent = lblMessage
-            ivMedia.isHidden = true
             lblMessage.isHidden = false
         }
         
@@ -202,7 +257,6 @@ class MessageCollectionViewCell: UICollectionViewCell {
         
         if hasTail {
             ivTail.isHidden = false
-            
             if isMe {
                 ivTail.snp.makeConstraints {
                     $0.top.equalTo(lblMessage)
@@ -213,7 +267,6 @@ class MessageCollectionViewCell: UICollectionViewCell {
             } else {
                 ivProfile.isHidden = false
                 lblName.isHidden = false
-                
                 ivProfile.snp.makeConstraints {
                     $0.top.equalToSuperview().offset(8)
                     $0.leading.equalToSuperview().offset(12)
@@ -243,7 +296,6 @@ class MessageCollectionViewCell: UICollectionViewCell {
             aspectRatio = nil
         }
         
-        
         if isMe {
             mainContent.backgroundColor = UIColor(red: 250/255, green: 230/255, blue: 76/255, alpha: 1)
             mainContent.snp.makeConstraints {
@@ -253,6 +305,9 @@ class MessageCollectionViewCell: UICollectionViewCell {
                 if isPhoto ?? false || isVideo ?? false {
                     $0.width.equalTo(200)
                     $0.height.equalTo(200).multipliedBy(1/(aspectRatio ?? 1))
+                } else if isFile ?? false {
+                    $0.height.equalTo(60)
+                    $0.width.equalTo(260)
                 } else {
                     $0.bottom.equalToSuperview()
                 }
@@ -274,6 +329,9 @@ class MessageCollectionViewCell: UICollectionViewCell {
                 if isPhoto ?? false || isVideo ?? false {
                     $0.height.equalTo(200).multipliedBy(1/(aspectRatio ?? 1))
                     $0.width.equalTo(200)
+                } else if isFile ?? false {
+                    $0.height.equalTo(60)
+                    $0.width.equalTo(260)
                 }
             }
             
@@ -287,6 +345,14 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     func setData(data: ModelMessage) {
+        // 메타 데이터 초기화
+        hasTail = false
+        withDate = false
+        isVideo = false
+        isPhoto = false
+        isSystemMessage = false
+        isFile = false
+        
         let messageType = data.type ?? 0
         if (1...3).contains(messageType) {
             lblMessage.text = data.content ?? ""
@@ -296,18 +362,9 @@ class MessageCollectionViewCell: UICollectionViewCell {
             return
         } else {
             lblMessage.textAlignment = .natural
-            isSystemMessage = false
         }
         
-        if messageType == 4 {
-            isPhoto = true
-        } else if messageType == 5 {
-            isVideo = true
-        } else {
-            isPhoto = false
-            isVideo = false
-        }
-        
+        // 프로필 이미지 수정
         self.userId = data.userId
         if let profileImgUrl = data.profileImageURL,
            !profileImgUrl.isEmpty {
@@ -320,7 +377,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
         messageId = data.id ?? ""
         lblName.text = data.username ?? "(알수 없음)"
         
-        if messageType == 4 {
+        if messageType == 4 { // 이미지 셀 설정
             isPhoto = true
             if let mediaUrl = data.content,
                !mediaUrl.isEmpty {
@@ -331,7 +388,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
             } else {
                 ivMedia.image = UIImage(systemName: "icloud.slash")
             }
-        } else if messageType == 5 {
+        } else if messageType == 5 { // 영상 셀 설정
             isVideo = true
             if let mediaUrl = data.content,
                !mediaUrl.isEmpty {
@@ -344,14 +401,17 @@ class MessageCollectionViewCell: UICollectionViewCell {
             } else {
                 ivMedia.image = UIImage(systemName: "icloud.slash")
             }
-        } else {
-            lblMessage.text = data.content ?? ""
+        } else if messageType == 6 { // 그 외 파일 셀 설정
+            isFile = true
+            lblFileURL.text = data.content ?? ""
         }
+        lblMessage.text = data.content ?? ""
         
         isMe = data.isMe ?? false
         hasTail = data.hasTail ?? false
         ivTail.image = (isMe ?? false) ? UIImage(named: "tail_right") : UIImage(named: "tail_left")
         
+        // 안 읽은 사람 수 보여주기
         if let count = data.unreadMemberCount {
             if count > 0 {
                 lblUnreadMemberCount.text = "\(count)"
@@ -360,6 +420,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
             }
         }
         
+        // 날짜 보여주기 설정
         if let hasData = data.hasDate,
            hasData,
            let sentAt = data.sentAt,
@@ -371,6 +432,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     func bindMediaButton() {
+        // 앨범 첨부 파일 전송
         ivMedia.rx.tapGesture()
             .when(.ended)
             .subscribe(onNext: { [weak self] _ in
@@ -387,6 +449,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     func bindProfile() {
+        // 프로필 탭 했을 때 동작
         ivProfile.rx.tapGesture()
             .when(.ended)
             .subscribe(onNext: { [weak self] _ in

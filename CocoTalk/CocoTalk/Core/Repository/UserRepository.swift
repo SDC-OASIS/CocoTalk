@@ -25,6 +25,8 @@ class UserRepository {
     
     static var items: [ItemType] = []
     
+    static var myProfile: ModelProfile? 
+    
 #warning("코어 데이터에서 불러오기")
     func initFetch() -> [ItemType] {
         return UserRepository.items

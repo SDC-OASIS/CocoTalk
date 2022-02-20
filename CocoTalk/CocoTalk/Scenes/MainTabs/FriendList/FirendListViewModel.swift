@@ -98,10 +98,12 @@ extension FriendListViewModel {
         userRepsository.fetchMyProfileFromServer(with: token)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self,
-                      let myProfile = response else {
+                      var myProfile = response else {
                     return
                 }
-                self.output.myProfile.accept(ProfileHelper().decodeProfile(profile: myProfile))
+                myProfile = ProfileHelper().decodeProfile(profile: myProfile)
+                UserRepository.myProfile = myProfile
+                self.output.myProfile.accept(myProfile)
             }).disposed(by: bag)
     }
     
