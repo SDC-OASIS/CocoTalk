@@ -97,12 +97,6 @@ export default {
       this.roomName = e.target.value;
     },
     setCreateChatRoom() {
-      console.log("갠톡에서 단톡으로 모달실행");
-      console.log("룸멤버");
-      console.log(this.inviteRoomInfo);
-      console.log("신규멤버");
-      console.log(this.privateToTeamModal.selectedFriends);
-
       // 기존멤버 데이터 형식 맞추기
       let previousMembers = [];
       let previousMemberIds = [];

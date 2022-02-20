@@ -10,7 +10,6 @@ const chat = {
     roomStatus: {
       chatPage: "chat",
     },
-    // chats: [],
     chatInfo: {
       nextMessageBundleId: "",
       recentMessageBundleCount: 0,
@@ -91,8 +90,6 @@ const chat = {
     },
     // 채팅방목록에서 채팅방 클릭해 채팅방 열기
     async goChat(context, payload) {
-      console.log("채팅시작");
-      console.log(payload);
       await context.commit("GO_CHAT", payload);
       if (context.state.roomStatus.mainPage == "friends") {
         await router.push({ name: "friendsChat", params: { chat: "chat", roomId: payload.roomId } }).catch(() => {});
@@ -107,10 +104,8 @@ const chat = {
       context.commit("UPDATE_MESSAGE_BUNDLE_COUNT", recentMessageBundleCount);
     },
     goNewChat(context, newRoomInfo) {
-      console.log("새로운 채팅방 오픈");
       context.commit("GO_CHAT", newRoomInfo);
       context.commit("NEW_ROOM_INFO", newRoomInfo.newRoom);
-      // store.dispatch("socket/clearNewPrivateRoom");
       router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: newRoomInfo.roomId } }).catch(() => {});
     },
     updateFile: async function (context, payload) {

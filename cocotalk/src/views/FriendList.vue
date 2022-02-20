@@ -59,11 +59,10 @@ export default {
     };
   },
   created() {
-    console.log("=========[친구목록페이지]==========");
     this.$store.dispatch("chat/changeMainPage", "friends", { root: true });
     this.getUser();
     this.getFriends();
-    this.friendsFiltered = this.friends;
+    this.friendsFiltered = this.friends; //이름으로 검색시 친구목록 필터
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
@@ -76,17 +75,6 @@ export default {
   methods: {
     ...mapActions("userStore", ["getUser"]),
     ...mapActions("friend", ["getFriends"]),
-    openProfileModal(userProfileInfo) {
-      this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
-    },
-    openAddFriendModal() {
-      this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
-    },
-    startPrivateChat(friend) {
-      console.log("더블클릭:");
-      console.log(friend);
-      this.$store.dispatch("socket/startPrivateChat", friend.friend, { root: true });
-    },
     filterOn() {
       this.filterStatus = !this.filterStatus;
     },
@@ -101,6 +89,15 @@ export default {
         return (this.friendsFiltered = filteredFriends);
       }
       return (this.friendsFiltered = this.friends);
+    },
+    startPrivateChat(friend) {
+      this.$store.dispatch("socket/startPrivateChat", friend.friend, { root: true });
+    },
+    openAddFriendModal() {
+      this.$store.dispatch("modal/openAddFriendModal", "open", { root: true });
+    },
+    openProfileModal(userProfileInfo) {
+      this.$store.dispatch("modal/openProfileModal", { status: "open", userProfileInfo: userProfileInfo }, { root: true });
     },
   },
 };

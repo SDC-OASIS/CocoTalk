@@ -25,13 +25,11 @@
         <div>
           <div class="make-chat-modal-input row">
             <span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
-            <!-- @keyup="filter" -->
             <input v-model="searchName" type="text" placeholder="ID를 입력하세요." maxlength="20" />
           </div>
           <div class="make-chat-modal-info row" style="justify-content: left">
             <div class="friend-list-container" :style="{ height: height }">
               <div class="friend-cnt">친구 - {{ searchFriendsCnt }}</div>
-              <!-- {{ searchFriends }} -->
               <div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
                 <profile-img :imgUrl="friend.friend.profile.profile" width="50px" />
                 <div class="friend-name">{{ friend.friend.username }}</div>
@@ -68,7 +66,6 @@ export default {
   computed: {
     ...mapState("friend", ["friends"]),
     selectedFriendsCnt() {
-      console.log(this.selectedFriends);
       if (this.selectedFriends.length) {
         return this.selectedFriends.length;
       } else {
@@ -76,7 +73,6 @@ export default {
       }
     },
     searchFriendsCnt() {
-      console.log(this.searchFriends);
       if (this.searchFriends.length) {
         return this.searchFriends.length;
       } else {
@@ -99,13 +95,10 @@ export default {
       this.$store.dispatch("modal/closeChatCreationModal");
     },
     deleteSelectedFriend(friend, idx) {
-      console.log(friend, idx);
       this.selectedFriends.splice(idx, 1);
     },
     openRoomNameEditModal() {
       this.closeChatCreationModal();
-      console.log("채팅방 멤버 선택완료");
-      console.log(this.selectedFriends);
       this.$store.dispatch("modal/openRoomNameEditModal", this.selectedFriends, { root: true });
     },
   },

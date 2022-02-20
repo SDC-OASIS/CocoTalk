@@ -9,12 +9,12 @@
           <router-view name="right" class="right-container" />
         </div>
       </div>
-      <alert v-if="alert.status == 'open'" :text="alert.text" />
       <add-friend-modal v-if="addFriendModal == 'open'" />
+      <alert v-if="alert.status == 'open'" :text="alert.text" />
       <chat-creation-modal v-if="ChatCreationModal == 'open'" />
       <invite-friend-modal v-if="inviteFriendModal == 'open'" />
-      <private-to-team-modal v-if="privateToTeamModal.status == 'open'" />
       <room-name-edit-modal v-if="roomNameEditModal.status == 'open'" />
+      <private-to-team-modal v-if="privateToTeamModal.status == 'open'" />
       <profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
       <sidebar-files-modal v-if="sidebarFilesModal.status == 'open'" :files="sidebarFilesModal.files" />
     </div>
@@ -26,12 +26,12 @@ import { mapMutations, mapState } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 import Alert from "@/components/modals/Alert.vue";
 import ProfileModal from "@/components/modals/ProfileModal.vue";
-import InviteFriendModal from "@/components/modals/InviteFriendModal.vue";
-import PrivateToTeamModal from "@/components/modals/PrivateToTeamModal.vue";
 import AddFriendModal from "@/components/modals/AddFriendModal.vue";
+import InviteFriendModal from "@/components/modals/InviteFriendModal.vue";
 import ChatCreationModal from "@/components/modals/ChatCreationModal.vue";
 import RoomNameEditModal from "@/components/modals/RoomNameEditModal.vue";
 import SidebarFilesModal from "@/components/modals/SidebarFilesModal.vue";
+import PrivateToTeamModal from "@/components/modals/PrivateToTeamModal.vue";
 
 export default {
   name: "MainPage",
@@ -53,9 +53,9 @@ export default {
   },
   created() {
     this.setStompChatListDisconnect;
-    this.$store.dispatch("socket/chatListConnect");
     this.$store.dispatch("socket/getChatList");
     this.$store.dispatch("socket/checkConnect");
+    this.$store.dispatch("socket/chatListConnect");
     // 에러페이지에서는 navbar 안보이게 만들기
     if (window.location.pathname == "/error") {
       this.nav = false;

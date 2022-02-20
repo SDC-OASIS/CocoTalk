@@ -44,7 +44,6 @@
           </div>
           <div class="row">
             <i class="far fa-star"></i>
-            <!-- <i class="fas fa-star">채워진별</i> -->
             <span class="iconify" data-icon="bi:bell-fill"></span>
           </div>
         </div>
@@ -107,12 +106,9 @@ export default {
       }
     },
     inviteFriend() {
-      console.log("====친구를 초대합니다====");
       this.$store.dispatch("modal/openInviteFriendModal");
     },
     exitChat() {
-      console.log("====채팅방 나가기====");
-      console.log(this.roomInfo);
       this.$store.dispatch("socket/exitChat", this.roomInfo, { root: true });
     },
     openSidebarFilesModal() {
@@ -123,7 +119,6 @@ export default {
         }
       }
       this.totalImgMessages = totalImgs;
-      console.log(this.totalImgMessages);
       this.$store.dispatch("modal/openSidebarFilesModal", this.totalImgMessages, { root: true });
     },
   },

@@ -32,7 +32,6 @@ export default {
       this.user.cid = this.user.cid.replace(/\s/g, "");
       this.user.password = this.user.password.replace(/\s/g, "");
       let fcmToken = await getToken();
-      console.log("[PUSH] FCM TOKEN", fcmToken);
       this.user.fcmToken = fcmToken;
       this.login(this.user);
     },

@@ -1,33 +1,20 @@
 <template>
   <div class="modal row" @click.self="closeProfileModal">
     <div class="modal-container" :style="{ backgroundImage: `url(${userProfileInfo.profile.background})` }" @click.self="openFullImg(userProfileInfo.profile.background)">
-      <!--파일 업로드 테스트용 START -->
-      <!-- <div style="color: white">
-        <div style="color: yellow">프로필 사진 업로드</div>
-        <input id="customFile" type="file" @change="handleProfileFileChange" />
-        <label class="custom-file-label" for="customFile">{{ file1_name }}</label>
-      </div>
-      <div style="color: white">
-        <div style="color: yellow">배경 사진 업로드</div>
-        <input id="customFile" type="file" @change="handleBGFileChange" />
-        <label class="custom-file-label" for="customFile">{{ file2_name }}</label>
-      </div> -->
-      <!--파일 업로드 테스트용 END -->
-      <!--파일 업로드 구현중-->
+      <!-- 프로필 편집 -->
       <div style="display: none">
         <input id="profileFile" type="file" @change="handleProfileFileChange" />
-        <!-- <label class="custom-file-label" for="profileFile">{{ file1_name }}</label> -->
       </div>
       <div style="display: none">
         <input id="backgroundFile" type="file" @change="handleBGFileChange" />
-        <!-- <label class="custom-file-label" for="customFile">{{ file2_name }}</label> -->
       </div>
-      <!--파일 업로드 구현중 -->
       <div @click="closeProfileModal">
         <span class="iconify exit" data-icon="bx:bx-x" style="color: white"></span>
       </div>
+      <!-- 프로필모달 하단부 -->
       <div class="modal-bottom-container">
         <div class="profile-modal-info" @click.self="openFullImg(userProfileInfo.profile.background)">
+          <!-- 프로필 이미지 -->
           <div style="cursor: pointer; display: inline-block; position: relative">
             <profile-img :imgUrl="userProfileInfo.profile.profile" width="70px" @click.native="openFullImg(userProfileInfo.profile.profile)" />
             <label class="custom-file-label" for="profileFile">
@@ -43,6 +30,7 @@
           <div v-else style="height: 20px; width: 10px"></div>
         </div>
         <hr />
+        <!-- 프로필 모달 하단부 관리 -->
         <div class="modal-profile-chat" style="display: inline-block; margin: 0 20px">
           <div v-if="!profileEditStatus" @click="startPrivateChat" style="display: inline-block; margin: 0 20px">
             <i class="chat fas fa-comment"></i>
@@ -85,7 +73,6 @@ export default {
       },
       profileInfo: this.userProfileInfo,
       profileEditStatus: false,
-      //파일 업로드 테스트용 변수
       file1_name: "파일을 선택하세요.",
       message1: "Hello, world",
       file2_name: "파일을 선택하세요.",
@@ -100,7 +87,6 @@ export default {
     ...mapState("modal", ["profileModal"]),
   },
   methods: {
-    /////////////// 파일 업로드 테스트용 함수
     handleProfileFileChange(e) {
       this.file1_name = e.target.files[0].name;
       this.$store.dispatch("userStore/updateProfile", e.target.files[0]);
@@ -111,7 +97,6 @@ export default {
       this.$store.dispatch("userStore/updateBG", e.target.files[0]);
       this.$store.dispatch("socket/getChatList");
     },
-    /////////////////
     closeProfileModal() {
       this.$store.dispatch("modal/closeProfileModal");
     },
@@ -123,8 +108,6 @@ export default {
       this.fullImg.status = false;
     },
     startPrivateChat() {
-      console.log("프로필에서 클릭해 1대1채팅열기");
-      console.log(this.profileInfo);
       this.$store.dispatch("socket/startPrivateChat", this.profileInfo, { root: true });
       this.$store.dispatch("modal/setSidebar", false, { root: true });
     },
@@ -141,9 +124,6 @@ export default {
         return this.userProfileInfo.profile.profile;
       }
     },
-  },
-  created() {
-    console.log(this.profileInfo);
   },
 };
 </script>
