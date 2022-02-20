@@ -20,7 +20,7 @@
 - WebSocket
 - STOMP
 - Kafka
-- Mapstrcut
+- Mapstruct
 
 ---
 
@@ -100,11 +100,11 @@ spring:
 ---
 
 spring:
+  application:
+    name: chat-service
   config:
     activate:
-      on-profile: common # common profile
-  application:
-    name: chat-service # spring cloud eureka applicaiton group name
+      on-profile: common
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher # swagger 세팅
@@ -114,14 +114,33 @@ spring:
     livereload:
       enabled: true
 
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          mongodb:
-            core:
-              MongoTemplate: DEBUG # mongodb query logging
+  kafka:
+    push-topic: push
+    chat-topic: chat
+    consumer:
+      bootstrap-servers: {{ your bootstrap server uri }}
+      group-id: {{ kafka group id }}
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: {{ your bootstrap server uri }}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  servlet:
+    multipart:
+      maxFileSize: 200MB
+      maxRequestSize: 200MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 eureka:
   instance:
@@ -130,11 +149,11 @@ eureka:
     ip-address: {{ eureka client ip address }}
     prefer-ip-address: true # optional
 
-client:
-  register-with-eureka: true # setting whether to register for Service Discovery
-  fetch-registry: true
-  service-url:
-    defaultZone: {{ eureka server url }} # A client is registered by sending a POST request to it.
+  client:
+    register-with-eureka: true # setting whether to register for Service Discovery
+    fetch-registry: true
+    service-url:
+      defaultZone: {{ eureka server url }} # A client is registered by sending a POST request to it.
 
 jwt:
  secret: {{ your jwt secret }}
@@ -145,7 +164,9 @@ cocotalk:
 
 oci:
   user:
-    url: {{ user-server-url/token }}
+    url: {{ user-server-url:port/token }}
+  presence:
+    websocket-url: {{ presence-server-url:port/ws }}
 
 ---
 
@@ -178,6 +199,7 @@ spring:
 **[Swagger UI API Docs 바로가기](http://138.2.88.163:8000/webjars/swagger-ui/index.html?urls.primaryName=chat)**
 
 - 테스트 페이지  `[GET] /`
+- 채팅방 생성 `[POST] /rooms`
 - user가 참가중인 채팅방 리스트 조회  `[GET] /rooms/list`
 - roomId로 채팅방 조회 `[GET] /rooms/{id}`
 - roomId로 채팅방과 첫 메시지 페이지 조회 `[GET] /rooms/{id}/tail`
@@ -196,11 +218,11 @@ spring:
 **Subscribe Topic**
 - **채팅방 리스트**
   - 메시지 토픽 `'/topic/' + userId + '/message'`
-  - 방 정보 토픽`'/topic/' + userId + '/room'`
-  - 방 생성 정보 토픽 `'/topic/' + userId + '/room/new'`
+  - 채팅방 정보 토픽`'/topic/' + userId + '/room'`
+  - 채팅방 생성 정보 토픽 `'/topic/' + userId + '/room/new'`
 - **채팅방 내부**
   - 메시지 토픽 `'/topic/' + roomId + '/message'`
-  - 방 정보 토픽 `'/topic/' + roomId + '/room'`
+  - 채팅방 정보 토픽 `'/topic/' + roomId + '/room'`
 
 ---
 
