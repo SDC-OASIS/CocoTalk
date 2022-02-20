@@ -9,12 +9,12 @@
           <router-view name="right" class="right-container" />
         </div>
       </div>
-      <alert v-if="alert.status == 'open'" :text="alert.text" />
       <add-friend-modal v-if="addFriendModal == 'open'" />
       <chat-creation-modal v-if="ChatCreationModal == 'open'" />
       <invite-friend-modal v-if="inviteFriendModal == 'open'" />
-      <private-to-team-modal v-if="privateToTeamModal.status == 'open'" />
+      <alert v-if="alert.status == 'open'" :text="alert.text" />
       <room-name-edit-modal v-if="roomNameEditModal.status == 'open'" />
+      <private-to-team-modal v-if="privateToTeamModal.status == 'open'" />
       <profile-modal v-if="profileModal.status == 'open'" :userProfileInfo="profileModal.userProfileInfo" />
       <sidebar-files-modal v-if="sidebarFilesModal.status == 'open'" :files="sidebarFilesModal.files" />
     </div>

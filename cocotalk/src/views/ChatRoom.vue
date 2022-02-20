@@ -379,7 +379,7 @@ export default {
       return this.roomInfo.members[idx];
     },
     messageSentTime(time) {
-      return this.$moment(time).format("LT");
+      return this.$moment(time).add(9, "hours").format("LT");
     },
     unreadMemberCnt(sentAt) {
       // console.log("=======카톡안읽은 사람 숫자 연산 =========");
@@ -872,7 +872,7 @@ export default {
   color: #749f58;
   font-size: 10px;
   position: absolute;
-  bottom: 10px;
+  bottom: 11px;
   left: 1px;
   width: 70px;
   height: 15px;
@@ -882,7 +882,7 @@ export default {
   color: #749f58;
   font-size: 10px;
   position: absolute;
-  bottom: 11px;
+  bottom: 13px;
   right: 1px;
   width: 12px;
   height: 15px;
@@ -891,8 +891,8 @@ export default {
 .sent-time {
   position: absolute;
   bottom: 0;
-  right: 0;
-  width: 70px;
+  right: -10px;
+  width: 80px;
   height: 15px;
   font-size: 11px;
 }
@@ -900,7 +900,7 @@ export default {
   position: absolute;
   bottom: 2px;
   right: 0;
-  width: 50px;
+  width: 60px;
   height: 15px;
   font-size: 11px;
 }

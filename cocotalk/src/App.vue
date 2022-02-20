@@ -22,8 +22,8 @@ export default {
     this.CLOSE_ALERT;
   },
   computed: {
-    ...mapState("chat", ["roomStatus"]),
     ...mapState("modal", ["alert"]),
+    ...mapState("chat", ["roomStatus"]),
   },
   methods: {
     ...mapMutations("modal", ["CLOSE_ALERT"]),
