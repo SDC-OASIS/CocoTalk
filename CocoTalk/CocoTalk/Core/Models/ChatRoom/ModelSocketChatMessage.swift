@@ -34,6 +34,13 @@ struct ModelSubChatMessage: Codable {
     var content: String?
     
     /// 보낸 메시지 타입
+    /// 0: 일반 메시지
+    /// 1: 초대
+    /// 2: 나가기
+    /// 3: join
+    /// 4: 사진
+    /// 5: 영상
+    /// 6: 파일
     var type: Int?
     
     /// 보낸 시간

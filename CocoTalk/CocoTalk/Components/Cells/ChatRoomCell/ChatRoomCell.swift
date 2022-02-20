@@ -220,7 +220,19 @@ class ChatRoomCell: UITableViewCell {
         ivPin.isHidden = !(data.room?.isPinned ?? false)
         ivSilent.isHidden = !(data.room?.isSilent ?? false)
         
-        lblLastMessage.text = data.recentChatMessage?.content ?? ""
+        switch data.recentChatMessage?.type ?? 0  {
+        case 4:
+            lblLastMessage.text = "사진을 보냈습니다."
+            break
+        case 5:
+            lblLastMessage.text = "동영상을 보냈습니다."
+            break
+        case 6:
+            lblLastMessage.text = "파일을 보냈습니다."
+            break
+        default:
+            lblLastMessage.text = data.recentChatMessage?.content ?? ""
+        }
         
         
         if let sentAt = data.recentChatMessage?.sentAt {
