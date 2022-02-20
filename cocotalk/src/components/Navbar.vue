@@ -91,7 +91,7 @@ export default {
 }
 .nav-logo img {
   width: 55px;
-  padding-top: 10px;
+  padding-top: 5px;
   padding-left: 15px;
   float: left;
 }

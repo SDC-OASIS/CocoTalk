@@ -10,12 +10,12 @@
             <span>대화상대 선택</span>
             <span style="color: #aaaaaa; padding: 0 10px">{{ selectedFriendsCnt }}</span>
           </div>
-          <div v-if="inviteRoomInfo.type > 0" @click="inviteFriend">
+          <div @click="inviteFriend">
             <Button text="확인" width="60px" height="30px" />
           </div>
-          <div v-if="inviteRoomInfo.type == 0" @click="createNewRoom">
+          <!-- <div v-if="inviteRoomInfo.type == 0" @click="createNewRoom">
             <Button text="확인" width="60px" height="30px" />
-          </div>
+          </div> -->
         </div>
         <div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
           <div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">
