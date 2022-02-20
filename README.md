@@ -1,4 +1,4 @@
-# Cocotalk 프리젠스 서버
+# Cocotalk 채팅 관리 서버
 
 # 목차
 
@@ -95,4 +95,4 @@ client:
 
 **[Swagger UI API Docs 바로가기](http://138.2.88.163:8000/webjars/swagger-ui/index.html?urls.primaryName=presence)**
 
-- STOMP Connect할 채팅 서버 Enpoint 조회  `[GET] /chatserver/connect`
+- STOMP Connect할 채팅 서버 Enpoint 조회  `[GET] /stomp/connect`
