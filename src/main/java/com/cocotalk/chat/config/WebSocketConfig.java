@@ -22,13 +22,13 @@ public class WebSocketConfig {
     private int port;
 
     @Value(value = "${oci.presence.websocket-url}")
-    private String PRESENCE_SERVICE_WEBSOCKET_URL;
+    private String PRESENCE_SERVICE_WEBSOCKET_URL; // 채팅 관리 서버 URL
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Bean
     @DependsOn("ServerUrl")
-    public WebSocketUtil webSocketClient() throws Exception {
+    public WebSocketUtil webSocketClient() throws Exception { // 채팅 관리 서버와 WebSocket 연결
         URI uri = new URI(PRESENCE_SERVICE_WEBSOCKET_URL);
         WebSocketUtil webSocketUtil = new WebSocketUtil(uri, new Draft_6455(), ServerUrl());
         webSocketUtil.connectBlocking();
@@ -36,7 +36,7 @@ public class WebSocketConfig {
     }
 
     @Bean
-    public String ServerUrl() {
+    public String ServerUrl() { // 자신의 Public IP와 포트 번호를 추출
         String publicIp = restTemplate.getForObject("http://checkip.amazonaws.com/", String.class);
         log.info("Response From http://checkip.amazonaws.com/ : {}", publicIp);
         if(publicIp == null) throw new CustomException(CustomError.COMMUNICATION, "채팅 서버의 Public IP 요청에 실패했습니다.");

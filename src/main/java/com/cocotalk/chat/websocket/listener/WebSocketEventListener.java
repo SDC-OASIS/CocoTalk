@@ -41,11 +41,11 @@ public class WebSocketEventListener {
     }
 
     @EventListener
-    public void handleWebSocketConnectListener(SessionConnectEvent event) {
+    public void handleWebSocketConnectListener(SessionConnectEvent event) { // WebSocket 연결 이벤트 발생시
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        handleWebSocketConnectSession(accessor);
+        handleWebSocketConnectSession(accessor); // 세션 관리 + 상태 정보 업데이트
         PresenceRequest connectRequest = PresenceRequest.builder()
-                .action("connect")
+                .action("connect") // 채팅 관리 서버에 메시지 전송 -> redis에 stompEndpoint를 key로 갖는 value값 + 1 (connection 수)
                 .serverUrl(webSocketUtil.getStompEndpoint())
                 .build();
         try {
@@ -63,21 +63,21 @@ public class WebSocketEventListener {
         String view = accessor.getFirstNativeHeader("view");
         if (view != null && sessionAttributes != null) {
             sessionAttributes.put("view", view);
-            if (view.equals("chatRoom")) {
+            if (view.equals("chatRoom")) { // 채팅방 소켓일때
                 try {
                     ObjectId roomId = new ObjectId(Objects.requireNonNull(accessor.getFirstNativeHeader("roomId")));
                     Long userId = Long.parseLong(Objects.requireNonNull(accessor.getFirstNativeHeader("userId")));
                     sessionAttributes.put("roomId", roomId);
                     sessionAttributes.put("userId", userId);
 
-                    RoomVo roomVo = roomService.saveEnteredAt(roomId, userId);
-                    kafkaProducer.sendToChat("/topic/" + roomVo.getId() + "/room", roomVo);
+                    RoomVo roomVo = roomService.saveEnteredAt(roomId, userId); // 유저가 채팅방 소켓 연결 된 시각 업데이트
+                    kafkaProducer.sendToChat("/topic/" + roomVo.getId() + "/room", roomVo); // 업데이트 된 채팅방 정보 전송
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                     log.error("[WebSocketEventListener/handleWebSocketConnectSession] : ChatRoom Connect 헤더에 roomId 또는 userId가 설정되지 않았습니다.");
                     throw new CustomException(CustomError.BAD_REQUEST, e);
                 }
-            } else if (view.equals("chatList")) {
+            } else if (view.equals("chatList")) { // 채팅방 리스트 소켓일때
                 try {
                     Long userId = Long.parseLong(Objects.requireNonNull(accessor.getFirstNativeHeader("userId")));
                     sessionAttributes.put("userId", userId);
@@ -94,11 +94,11 @@ public class WebSocketEventListener {
     }
 
     @EventListener
-    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) { // WebSocket 연결 해제 이벤트 발생시
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        handleWebSocketDisconnectSession(accessor);
+        handleWebSocketDisconnectSession(accessor); // 세션 관리 + 상태 정보 업데이트
         PresenceRequest disconnectRequest = PresenceRequest.builder()
-                .action("disconnect")
+                .action("disconnect") // 채팅 관리 서버에 메시지 전송 -> redis에 stompEndpoint를 key로 갖는 value값 + 1 (connection 수)
                 .serverUrl(webSocketUtil.getStompEndpoint())
                 .build();
         try {
@@ -115,7 +115,7 @@ public class WebSocketEventListener {
         Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
         if (sessionAttributes != null && sessionAttributes.get("view") != null) {
             String view = sessionAttributes.get("view").toString();
-            if (view.equals("chatRoom")) {
+            if (view.equals("chatRoom")) { // 채팅방 소켓일때
                 String action = accessor.getFirstNativeHeader("action");
                 if (action != null) { // 채팅방에서 나가기 버튼 눌렀을 때
                     sessionAttributes.put("action", action);
@@ -123,11 +123,11 @@ public class WebSocketEventListener {
                     Long userId = (Long) sessionAttributes.get("userId");
                     ObjectId roomId = (ObjectId) sessionAttributes.get("roomId");
                     if (sessionAttributes.get("action") != null) {
-                        if (sessionAttributes.get("action").equals("leave")) {
-                            RoomVo roomVo = roomService.saveLeftAt(roomId, userId);
-                            kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
+                        if (sessionAttributes.get("action").equals("leave")) {  // 채팅방에서 나가기 버튼 눌렀을 때
+                            RoomVo roomVo = roomService.saveLeftAt(roomId, userId); // 유저가 톡방에서 떠난 시각 업데이트
+                            kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo); // 업데이트 된 채팅방 정보 전송
                             int size = roomVo.getMembers().size();
-                            for(int i = 0; i < size; ++i) {
+                            for(int i = 0; i < size; ++i) { // 채팅방 리스트 소켓에도 업데이트 된 채팅방 정보 전송
                                 long memberId = roomVo.getMembers().get(i).getUserId();
                                 kafkaProducer.sendToChat("/topic/" + memberId + "/room", roomVo);
                             }
@@ -135,11 +135,11 @@ public class WebSocketEventListener {
                             throw new CustomException(CustomError.BAD_REQUEST, "지원하지 않는 형식의 action 입니다.");
                         }
                     } else {
-                        RoomVo roomVo = roomService.saveAwayAt(roomId, userId);
-                        kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo);
+                        RoomVo roomVo = roomService.saveAwayAt(roomId, userId); // 유저가 채팅방 소켓 연결 해제된 시각 업데이트
+                        kafkaProducer.sendToChat("/topic/" + roomId + "/room", roomVo); // 업데이트 된 채팅방 정보 전송
                     }
                 }
-            } else if (view.equals("chatList")) {
+            } else if (view.equals("chatList")) { // 채팅방 리스트 소켓일때
             }
         } else {
             throw new CustomException(CustomError.UNKNOWN, "SessionAttributes에 view가 설정되지 않았습니다.");

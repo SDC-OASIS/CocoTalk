@@ -347,11 +347,11 @@ public class RoomService {
         return roomMapper.toVo(roomRepository.save(newRoom));
     }
 
-    public Long modifyUsername(UserVo userVo, String newUsername) {
+    public Long modifyUsername(UserVo userVo, String newUsername) { // 채팅방 멤버 이름 업데이트
         return roomRepository.updateUsername(userVo.getId(), newUsername);
     }
 
-    public Long modifyProfile(UserVo userVo, String newProfile) {
+    public Long modifyProfile(UserVo userVo, String newProfile) { // 채팅방 멤버 프로필 업데이트
         return roomRepository.updateProfile(userVo.getId(), newProfile);
     }
 

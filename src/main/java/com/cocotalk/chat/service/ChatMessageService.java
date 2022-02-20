@@ -99,23 +99,12 @@ public class ChatMessageService {
                 messageIds.addAll(beforeBundleVo.getMessageIds());
             }
             if (count != 0) {
-                messageIds.addAll(messageBundleService.findSlice(bundleId, 0, count).getMessageIds()); // 예외 처리 필요?
+                messageIds.addAll(messageBundleService.findSlice(bundleId, 0, count).getMessageIds());
             }
         }
         return StreamSupport.stream(chatMessageRepository.findAllById(messageIds).spliterator(), false)
                 .filter(chatMessageVo -> chatMessageVo.getSentAt().isAfter(roomMemberVo.getJoinedAt()))
                 .map(messageMapper::toVo)
                 .collect(Collectors.toList());
-    }
-
-    public ChatMessageVo modifyChatMessage(ChatMessageVo chatMessageVo) {
-        ChatMessage chatMessage = messageMapper.toEntity(chatMessageVo);
-        return messageMapper.toVo(chatMessageRepository.save(chatMessage));
-    }
-
-    public ChatMessageVo setMessageBundleId(ChatMessageVo chatMessageVo, MessageBundleVo messageBundleVo) {
-        ChatMessage chatMessage = messageMapper.toEntity(chatMessageVo);
-        chatMessage.setMessageBundleId(messageBundleVo.getId());
-        return messageMapper.toVo(chatMessageRepository.save(chatMessage));
     }
 }

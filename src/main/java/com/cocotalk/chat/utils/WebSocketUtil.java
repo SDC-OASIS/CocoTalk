@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Getter
 public class WebSocketUtil extends WebSocketClient implements ApplicationListener<ContextClosedEvent> {
-    private final String stompEndpoint;
+    private final String stompEndpoint; // 클라이언트가 채팅을 위해 연결을 맺는 stomp 엔드포인트 
     private final static ObjectMapper objectMapper = new ObjectMapper();
     private static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private static boolean reconnect = false;
@@ -33,7 +33,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
     @Override
     public void onOpen(ServerHandshake handshake) {
         log.info("Opened connection to presence service");
-        registerServer();
+        registerServer(); // 채팅 관리 서버에 자신의 stompEnpoint 등록
         if(reconnect) {
             executor.shutdownNow();
             reconnect = false;
@@ -56,7 +56,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
         log.info("Withdraw server endpoint to Presence server");
-        withdrawServer();
+        withdrawServer(); // 채팅 관리 서버에 자신의 stompEnpoint 등록 해제
     }
 
     @Override
@@ -64,7 +64,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
         e.printStackTrace();
     }
 
-    public void tryReconnect() {
+    public void tryReconnect() { // 채팅 관리 서버와 WebSocket 연결이 끊기면 10초마다 재연결 요청
         executor.schedule(() -> {
             try {
                 log.info("Try reconnect every 10 seconds");
@@ -76,7 +76,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
         }, 10, TimeUnit.SECONDS);
     }
 
-    public void registerServer() {
+    public void registerServer() { // 채팅 관리 서버에 자신의 stompEnpoint 등록
         PresenceRequest registerRequest = PresenceRequest.builder()
                 .action("register")
                 .serverUrl(stompEndpoint)
@@ -92,7 +92,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
         }
     }
 
-    public void withdrawServer() { // 서버 종료 시
+    public void withdrawServer() { // 채팅 관리 서버에 자신의 stompEnpoint 등록 해제
         PresenceRequest withdrawRequest = PresenceRequest.builder()
                 .action("withdraw")
                 .serverUrl(stompEndpoint)

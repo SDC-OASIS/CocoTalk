@@ -38,7 +38,7 @@ public class JwtUtil {
         return request.getHeader("X-REFRESH-TOKEN");
     }
 
-    public static TokenPayload getPayload(String token) {
+    public static TokenPayload getPayload(String token) { // JWT 파싱
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecret))
                 .build()

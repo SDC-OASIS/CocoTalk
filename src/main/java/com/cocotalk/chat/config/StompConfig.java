@@ -1,7 +1,6 @@
 package com.cocotalk.chat.config;
 
 import com.cocotalk.chat.websocket.interceptor.InboundChannelInterceptor;
-import com.cocotalk.chat.websocket.interceptor.OutboundChannelInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -14,16 +13,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
-    // private final AuthenticationChannelInterceptor authenticationChannelInterceptor;
     private final InboundChannelInterceptor inboundChannelInterceptor;
-    private final OutboundChannelInterceptor outboundChannelInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
-                // .setHeartbeatTime(1000);
+        // .setHeartbeatTime(1000);
     }
 
     @Override
@@ -37,19 +34,5 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(inboundChannelInterceptor);
-        // registration.interceptors(authenticationChannelInterceptor);
     }
-
-    @Override
-    public void configureClientOutboundChannel(ChannelRegistration registration) {
-        registration.interceptors(outboundChannelInterceptor);
-    }
-
-//    @Override
-//    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-//        // 시간과 보내는 버퍼 사이즈 제한
-//        registration.setSendTimeLimit(15 * 1000).setSendBufferSizeLimit(512 * 1024);
-//        //전송받고 보낼 메시지 사이즈 제한
-//        registration.setMessageSizeLimit(128 * 1024);
-//    }
 }

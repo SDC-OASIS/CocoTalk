@@ -36,26 +36,26 @@ public class MessageInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Map<String, Object> reqMap = getRequestParameterMap(request);
+        Map<String, Object> reqMap = getRequestParameterMap(request); // 쿼리 스트링 파싱
 
         String rid = (String)reqMap.get("roomId");
 
         if(rid != null) {
-            TokenPayload payload = JwtUtil.getPayload(request.getHeader("X-ACCESS-TOKEN"));
+            TokenPayload payload = JwtUtil.getPayload(request.getHeader("X-ACCESS-TOKEN")); // Access Token 추출
 
             ObjectId roomId = new ObjectId(rid);
 
-            RoomVo roomVo = roomMapper.toVo(roomRepository.findById(roomId).orElseThrow(() -> INVALID_ROOM_ID));
+            RoomVo roomVo = roomMapper.toVo(roomRepository.findById(roomId).orElseThrow(() -> INVALID_ROOM_ID)); // 채팅방 정보 조회
 
             Long userId = payload.getUserId();
 
-            RoomMemberVo roomMemberVo = roomVo.getMembers().stream()
+            RoomMemberVo roomMemberVo = roomVo.getMembers().stream() // 토큰에 포함된 userId가 채팅방 멤버로 참가중인지 확인
                     .filter(member -> userId.equals(member.getUserId()))
                     .findFirst()
                     .map(roomMemberMapper::toVo)
                     .orElseThrow(() -> NOT_PERMITTED);
 
-            request.setAttribute("roomVo", roomVo);
+            request.setAttribute("roomVo", roomVo); // 조회한 채팅방과 채팅방 멤버 정보 request에 set
             request.setAttribute("roomMemberVo", roomMemberVo);
         }
         return true;

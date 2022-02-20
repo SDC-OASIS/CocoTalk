@@ -59,7 +59,7 @@ public class MessageBundleService {
     public MessageBundleVo saveMessageId(MessageBundleVo messageBundleVo, ChatMessageVo chatMessageVo) { // 메시지 번들안에 메시지 ObjectId 저장
         messageBundleVo.getMessageIds().add(chatMessageVo.getId());
         MessageBundle messageBundle = messageBundleMapper.toEntity(messageBundleVo);
-        messageBundle.setCount(messageBundleVo.getCount() + 1);
+        messageBundle.setCount(messageBundleVo.getCount() + 1); // 카운트 값 증가 -> 메시지 페이징에 필요
         return messageBundleMapper.toVo(messageBundleRepository.save(messageBundle));
     }
 }

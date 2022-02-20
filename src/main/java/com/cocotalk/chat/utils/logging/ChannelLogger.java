@@ -18,9 +18,6 @@ public class ChannelLogger {
     public void loggingMessage(Message<?> message) {
         final StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         final StompCommand command = headerAccessor.getCommand() != null ? headerAccessor.getCommand() : StompCommand.ACK;
-        // MessageHeaders headers = message.getHeaders();
-        // StompCommand c = (StompCommand)message.getHeaders().get("simpMessageType");
-        // final StompCommand command = headerAccessor.getCommand() != null ? headerAccessor.getCommand() : (StompCommand)message.getHeaders().get("simpMessageType");
         String data = message.getPayload() + getPath();
         if(StompCommand.STOMP.equals((command))){
             log.info(data + StompCommand.STOMP);

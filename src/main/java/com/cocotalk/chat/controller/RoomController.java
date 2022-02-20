@@ -4,6 +4,7 @@ import com.cocotalk.chat.domain.vo.*;
 import com.cocotalk.chat.dto.request.RoomRequest;
 import com.cocotalk.chat.dto.response.CustomResponse;
 import com.cocotalk.chat.service.RoomService;
+import com.cocotalk.chat.service.kafka.KafkaProducer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,6 +28,28 @@ import java.util.List;
 @RequestMapping(value = "/rooms")
 public class RoomController {
     private final RoomService roomService;
+
+    private final KafkaProducer kafkaProducer;
+
+    /**
+     * 채팅방 생성 API [POST] /rooms
+     *
+     * @param request 새로운 채팅방 생성을 요청하는 모델
+     * @return ResponseEntity<CustomResponse<RoomVo>> 생성된 채팅방 정보가 포함됩니다.
+     * @exception com.cocotalk.chat.exception.CustomException 채팅방 멤버수가 올바르지 않으면 BAD_REQUEST 예외가 발생합니다.
+     */
+    @PostMapping
+    @Operation(summary = "채팅방 생성")
+    @SecurityRequirement(name = "X-ACCESS-TOKEN")
+    public ResponseEntity<CustomResponse<RoomVo>> create(@RequestBody @Valid RoomRequest request){
+        RoomVo data = roomService.create(request);
+        int size = data.getMembers().size();
+        for(int i = 0; i < size; ++i) { // (2) 방 생성 정보를 채팅방에 포함된 멤버들에게 pub
+            Long userId = data.getMembers().get(i).getUserId();
+            kafkaProducer.sendToChat("/topic/" + userId + "/room/new", data);
+        }
+        return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.CREATED);
+    }
 
     /**
      * 채팅방 조회 API [GET] /rooms
@@ -94,6 +117,7 @@ public class RoomController {
      * @param userVo 요청한 유저의 정보
      * @param userId 1:1 채팅 상대방의 userId
      * @return ResponseEntity<CustomResponse<RoomVo>> 조회한 채팅방 정보가 포함됩니다.
+     * @exception com.cocotalk.chat.exception.CustomException 자기 자신과의 개인 채팅방을 조회하면 BAD_REQUEST 예외가 발생합니다.
      */
     @GetMapping("/private/{userId}")
     @Operation(summary = "내 정보와 다른 userId로 개인 채팅방 조회")
