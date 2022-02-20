@@ -14,6 +14,7 @@ import java.util.List;
 @ToString
 @Getter
 @Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PushTopicDto {

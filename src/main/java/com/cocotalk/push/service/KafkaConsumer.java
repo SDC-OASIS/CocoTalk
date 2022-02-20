@@ -28,6 +28,13 @@ public class KafkaConsumer {
     private final ObjectMapper mapper;
     private final DeviceRepository deviceRepository;
 
+    /**
+     *
+     * Kafka의 push topic에 메시지가 들어오면 consume 함수가 실행됩니다.
+     * 들어온 메시지를 ObjectMapper를 사용해 PushTopicDto객체로 매핑하여 사용합니다.
+     *
+     * @param message 들어온 메시지
+     */
     @KafkaListener(topics = "${spring.kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void consume(String message) throws IOException {
         PushTopicDto pushTopicDto = mapper.readValue(message, PushTopicDto.class);
@@ -36,5 +43,4 @@ public class KafkaConsumer {
         System.out.println(String.format("Consumed message : %s", message));
         System.out.println(String.format("[Parse] Consumed message : %s", pushTopicDto));
     }
-
 }

@@ -29,6 +29,7 @@ public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
             BindingContext bindingContext,
             ServerWebExchange exchange
     ) {
+        // userAgent와 요청 ip 정보로 ClientInfo 객체를 생성하여 반환합니다.
         String agent = exchange.getRequest().getHeaders().getFirst("User-Agent");
         String clientIp;
         String xForwarded = exchange.getRequest().getHeaders().getFirst("X-Forwarded-For");
@@ -41,8 +42,6 @@ public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
             clientIp = xForwarded.split(",")[0];
         }
         ClientType clientType = parseClientType(agent);
-        log.info("[resolveArgument/agent] : " + agent);
-        log.info("[resolveArgument/clientIp] : " + clientIp);
         return Mono.just(ClientInfo.builder()
                 .ip(clientIp)
                 .agent(agent)
@@ -50,6 +49,12 @@ public class ClientArgumentResolver implements HandlerMethodArgumentResolver {
                 .build());
     }
 
+    /**
+     * userAgent를 파싱하여 ClientType 정보로 반합니다.
+     *
+     * @param userAgent 요청자의 userAgent
+     * @return userAgent에 해당하는 ClientType
+     */
     private ClientType parseClientType(String userAgent){
         if(userAgent.contains("Mozilla"))
             return ClientType.WEB;

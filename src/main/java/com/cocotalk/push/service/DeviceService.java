@@ -29,12 +29,23 @@ import static com.cocotalk.push.dto.common.response.ResponseStatus.*;
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
-    private final ObjectMapper mapper;
 
+    /**
+     * device id로 device 정보를 찾습니다
+     *
+     * @param id device pk
+     * @return 조회한 device 정보
+     */
     public Mono<Device> find(long id) {
         return deviceRepository.findById(id);
     }
 
+    /**
+     * (userId) or (userId and Type)의 조건으로 device 정보들을 찾습니다.
+     *
+     * @param selectInput device를 조회할 조건이 담긴 요청 모델
+     * @return 조회한 device들의 정보
+     */
     public Flux<Device> findByOptions(SelectInput selectInput) {
         if(selectInput.getType()==null)
             return deviceRepository.findByUserId(selectInput.getUserId());
@@ -42,10 +53,17 @@ public class DeviceService {
         return Flux.from(deviceRepository.findByUserIdAndType(selectInput.getUserId(), type));
     }
 
+    /**
+     * client Type(MOBILE/WEB)과 userId가 일치하는 fcmToken을 갱신합니다.
+     * 
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
+     * @param saveInput 갱신될 userId와  갱신할 fcmToken이 담긴 요청 모델
+     * @return 갱신된 device 정보
+     */
     public Mono<Device> save(ClientInfo clientInfo, SaveInput saveInput) {
         log.info("[save/SaveInput] : " + saveInput);
         log.info("[save/clientInfo] : " + clientInfo);
-        short clientType = parseClientType(clientInfo.getAgent());
+        short clientType = (short) clientInfo.getClientType().ordinal();
         return deviceRepository.findByUserIdAndType(saveInput.getUserId(), clientType)
                 .flatMap(target -> { // device 정보가 있는 경우
                     target.setToken(saveInput.getFcmToken());
@@ -65,8 +83,14 @@ public class DeviceService {
                 ).doOnError((e) -> {throw new CustomException(DATABASE_ERROR, e);});
     }
 
+    /**
+     * client Type(MOBILE/WEB)과 userId가 일치하는 device 정보를 삭제합니다.
+     *
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
+     * @param deleteInput 삭제할 userId
+     */
     public void delete(ClientInfo clientInfo, DeleteInput deleteInput) {
-        short clientType = parseClientType(clientInfo.getAgent());
+        short clientType = (short) clientInfo.getClientType().ordinal();
         log.info("userId and type : "+deleteInput.getUserId()+","+clientType);
         deviceRepository.findByUserIdAndType(deleteInput.getUserId(), clientType)
                 .doOnNext(target -> {
@@ -74,12 +98,6 @@ public class DeviceService {
                 })
                 .doOnError((e) -> {throw new CustomException(DATABASE_ERROR, e);})
                 .subscribe();
-    }
-
-    private short parseClientType(String userAgent){
-        if(userAgent.contains("Mozilla"))
-            return (short) ClientType.WEB.ordinal();
-        return  (short) ClientType.MOBILE.ordinal();
     }
 
 }
