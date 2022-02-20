@@ -30,12 +30,13 @@
   - 회원 정보와 프로필 이미지로 회원가입
 - 로그인 
   - AccessToken, RefreshToken 발급 후 redis에 저장
-  - fcm token을 push server에게 보내 db에 기록함
+  - 요청으로 받은 fcm token을 push server에게 갱신 요청함
+  - chat 서버에 기존에 로그인 중인 device 강제 종료를 요청함 (기기별 동시 로그인 제한)
 - 로그아웃
 - Token 재발급
   - refresh token을 대조하여 token 재발급
 - 이메일 인증
-- 동시 로그인 방지 
+- 기기별 동시 로그인 제한
   - 마지막으로 로그인한 기기가 맞는지 체크 API
 
 ---
