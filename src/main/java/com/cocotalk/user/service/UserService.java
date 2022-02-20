@@ -85,7 +85,7 @@ public class UserService {
 
     @Transactional
     public UserVo modify(User user, UserModifyRequest request, String token) {
-        if(!user.getUsername().equals(request.getUsername())) {
+        if(!user.getUsername().equals(request.getUsername())) { // 유저 이름 변경시 채팅방 멤버 정보 업데이트
             HttpHeaders headers = new HttpHeaders();
             headers.set(TOKEN_HEADER_NAME, token);
             headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));
@@ -128,6 +128,7 @@ public class UserService {
         // objcet -> json
         String profile =  ProfilePayload.toJSON(profilePayload);
 
+        // 채팅방 멤버 프로필 정보 업데이트
         HttpHeaders headers = new HttpHeaders();
         headers.set(TOKEN_HEADER_NAME, token);
         headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));
@@ -159,6 +160,7 @@ public class UserService {
         user.setProfile(profile);
         userRepository.save(user);
 
+        // 채팅방 멤버 프로필 정보 업데이트
         HttpHeaders headers = new HttpHeaders();
         headers.set(TOKEN_HEADER_NAME, token);
         headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));
@@ -181,6 +183,7 @@ public class UserService {
         user.setProfile(profile);
         userRepository.save(user);
 
+        // 채팅방 멤버 프로필 정보 업데이트
         HttpHeaders headers = new HttpHeaders();
         headers.set(TOKEN_HEADER_NAME, token);
         headers.setContentType(new MediaType("application", "text", StandardCharsets.UTF_8));

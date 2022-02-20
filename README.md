@@ -29,7 +29,7 @@
 - 유저 수정
 - 유저 삭제
 - 유저 프로필 사진 수정
-- 유저 백그라운드 사진 수정
+- 유저 프로필 배경 사진 수정
 - 유저 프로필 메시지 수정
 
 ### 친구
@@ -182,7 +182,7 @@ spring:
 - 유저 연락처로 조회 `[GET] /phone?phones=[]`
 - 유저 수정 `[PUT] /profile`
 - 유저 프로필 사진 수정 `[PUT] /profile/img`
-- 유저 백그라운드 사진 수정`[PUT] /profile/bg`
+- 유저 프로필 배경 사진 수정`[PUT] /profile/bg`
 - 유저 프로필 메시지 수정 `[PUT] /profile/message`
 - 유저 삭제 `[DELETE] /profile`
 
