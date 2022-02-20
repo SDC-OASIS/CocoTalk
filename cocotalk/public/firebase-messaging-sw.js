@@ -30,7 +30,7 @@ messaging.onBackgroundMessage((payload) => {
     const title = payload.data.title;
     const options = {
       body: payload.data.body,
-      icon: "https://d1fwng7137yw58.cloudfront.net/common/notification.png",
+      icon: "https://d1fwng7137yw58.cloudfront.net/common/logo.png",
       data: { url: payload.data.url },
     };
     self.registration.showNotification(title, options); // 새로운 알림이 작성됨, 즉 알림이 두번 울림

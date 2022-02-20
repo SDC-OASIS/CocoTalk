@@ -17,7 +17,7 @@
           <!-- 개인 톡방인 경우 새로운 단체 톡방 생성하며 초대 -->
           <div v-if="inviteRoomInfo.type == 0" @click="createNewRoom">
             <Button text="확인" width="60px" height="30px" />
-          </div>
+          </div> -->
         </div>
         <div v-if="selectedFriends.length" class="selected-friend-container" style="width: 100%; padding: 5px 0">
           <div class="selected-friend row" v-for="(selectedFriend, idx) in selectedFriends" :key="idx">

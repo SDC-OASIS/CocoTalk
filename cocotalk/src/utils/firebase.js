@@ -59,16 +59,16 @@ async function getToken() {
 }
 //포그라운드 메시지
 //포그라운드 메시지는 사용하지 않을 예정
-// message.onMessage(({ notification }) => {
-//   const { title, body } = notification;
-//   console.log("[PUSH] onMessage: ", `${title} ${body}`);
-//   // alert(`${title} ${body}`);
-//   const options = {
-//     body: body,
-//     icon: "/mococo.png", //s3처럼 따로 url 안쓰면 edge는 안보임
-//     // icon: "/favicon.ico",
-//   };
-//   new Notification(title, options);
-// });
+message.onMessage(({ notification }) => {
+  const { title, body } = notification;
+  console.log("[PUSH] onMessage: ", `${title} ${body}`);
+  // alert(`${title} ${body}`);
+  const options = {
+    body: body,
+    icon: "/mococo.png", //s3처럼 따로 url 안쓰면 edge는 안보임
+    // icon: "/favicon.ico",
+  };
+  new Notification(title, options);
+});
 
 export { getToken };
