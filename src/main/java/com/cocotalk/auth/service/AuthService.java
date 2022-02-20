@@ -54,6 +54,13 @@ public class AuthService {
     @Value("${mail.exp}")
     long mailCodeExp;
 
+    /**
+     * 로그인
+     *
+     * @param clientInfo 요청 클라이언트의 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
+     * @param signinInput 로그인에 필요한 요청 모델
+     * @return 발급된 access Token과 refresh Token
+     */
     public ResponseEntity<Response<TokenDto>> signin(ClientInfo clientInfo, SigninInput signinInput) {
         // 1. user 정보 가져오기
         log.info("[signin/ClientInfo] : "+ clientInfo);
@@ -96,7 +103,13 @@ public class AuthService {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(tokenDto, SUCCESS));
     }
-
+    
+    /**
+     * 회원가입
+     *
+     * @param signupInput 회원가입에 필요한 요청 모델
+     * @return 회원가입된 유저의 정보
+     */
     @Transactional
     public ResponseEntity<Response<SignupOutput>> signup(SignupInput signupInput) {
         log.info("[signup/signupInput] : "+signupInput);
@@ -134,6 +147,11 @@ public class AuthService {
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(signupOutput, CREATED));
     }
 
+    /**
+     * 로그이웃
+     *
+     * @param clientInfo 요청 클라이언트의 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
+     */
     public ResponseEntity<Response<Object>> signout(ClientInfo clientInfo) {
         String refreshToken = JwtUtils.getRefreshToken();
         if(refreshToken!=null) {
@@ -147,9 +165,10 @@ public class AuthService {
     }
 
     /**
-     * 해당 refresh token이 redis의 값과 일치한 경우 token 재발급
+     * 요청 refresh token이 redis의 refresh token값과 일치한 경우 token 재발급
      *
-     * @return ResponseEntity<Response<TokenDto>>
+     * @param clientInfo 요청 클라이언트의 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
+     * @return 발급된 access Token과 refresh Token
      */
     public ResponseEntity<Response<TokenDto>> reissue(ClientInfo clientInfo) {
         ClientType clientType = clientInfo.getClientType();
@@ -188,6 +207,12 @@ public class AuthService {
         }
     }
 
+    /**
+     * 이메일로 인증코드 전송
+     *
+     * @param issueInput 인증 코드를 보낼 이메일이 담긴 요청 모델
+     * @return 전송한 인증코드의 만료시간이 담긴 모델
+     */
     public ResponseEntity<Response<IssueOutput>> sendMail(IssueInput issueInput) {
         log.info("[sendMail/IssueInput] : "+issueInput);
         IssueOutput emailOutput;
@@ -225,6 +250,12 @@ public class AuthService {
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(emailOutput, SUCCESS));
     }
 
+    /**
+     * 해당 이메일의 인증코드가 sendMail 함수로 전송한 인증코드와 일치하는지 검증
+     *
+     * @param validationInput 이메일과 인증코드가 담긴 요청 모델
+     * @return 해당 이메일의 인증코드가 유효한지에 대한 결과
+     */
     public ResponseEntity<Response<ValidationDto>> checkMail(ValidationInput validationInput) {
         log.info("[checkMail/ValidationInput] : "+validationInput);
         String code = redisService.getEmailCode(validationInput.getEmail());
@@ -234,6 +265,13 @@ public class AuthService {
     }
 
 
+    /**
+     * 마지막으로 로그인한 기기 검증
+     * request의 accesstoken 속 fcmtoken과 redis에 보관된 마지막 접속자의 refreshtoken속 fcmtoken을 비교
+     *
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
+     * @return 마지막으로 로그인힌 기기가 맞는지에 대한 결과
+     */
     public ResponseEntity<Response<ValidationDto>> checkLastly(ClientInfo clientInfo) {
         String accessToken = JwtUtils.getAccessToken();
         if(accessToken==null)
@@ -252,6 +290,13 @@ public class AuthService {
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(validationDto, SUCCESS));
     }
 
+    /**
+     * Push 서버로 fcm token을 갱신해달라는 요청을 보냄
+     *
+     * @param userId fcmToken을 갱신할 userId
+     * @param fcmToken 갱신할 새로운 fcmToken
+     * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
+     */
     private void setFcmToken(Long userId, String fcmToken, ClientInfo clientInfo){
         FCMTokenRequest fcmTokenDto = FCMTokenRequest.builder()
                 .userId(userId)
@@ -276,6 +321,7 @@ public class AuthService {
     /**
      * chat server에게 현재 로그인한 기기를 제외하고 같은 타입의 기기는 로그아웃 처리해 달라는 요청을 보냄
      * ex) 모바일로 로그인 했으면 다른 모바일 기기는 로그인이 해제되어야 함
+     *
      * @param userId 현재 로그인한 user의 id
      * @param fcmToken 현재 로그인한 user의 device 정보 (FCM TOKEN)
      * @param clientType 현재 로그인한 user의 client type (WEB or MOBILE)

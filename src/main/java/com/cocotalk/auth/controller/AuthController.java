@@ -46,7 +46,7 @@ public class AuthController {
      * 
      * @param signinInput 로그인에 필요한 정보
      * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
-     * @return ResponseEntity<Response<TokenDto>> 발급된 accesstoken과 refreshtoken 반환
+     * @return 발급된 accesstoken과 refreshtoken
      */
     @Operation(summary  = "로그인")
     @PostMapping("/signin")
@@ -58,7 +58,6 @@ public class AuthController {
      * 로그아웃 API [GET] /signout
      *
      * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
-     * @return ResponseEntity<Response<Object>>
      */
     @Operation(summary = "로그아웃")
     @GetMapping("/signout")
@@ -70,7 +69,7 @@ public class AuthController {
      * 회원가입 API [POST] /signup
      *
      * @param signUpInput 회원가입에 필요한 정보
-     * @return ResponseEntity<Response<SignUpOutput>> 가입된 회원 정보
+     * @return 가입된 회원 정보
      */
     @Operation(summary = "회원가입")
     @PostMapping(value = "/signup", consumes = {"multipart/form-data"})
@@ -84,7 +83,7 @@ public class AuthController {
      * ACCESS TOKEN 재발급 API [GET] /reissue
      *
      * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
-     * @return ResponseEntity<Response<TokenDto>> 발급된 accesstoken과 refreshtoken 반환
+     * @return 발급된 accesstoken과 refreshtoken
      */
     @Operation(summary = "ACCESS TOKEN 재발급")
     @GetMapping("/reissue")
@@ -97,7 +96,7 @@ public class AuthController {
      * 이메일 인증 코드 보내기 API [POST] /email/issue
      *
      * @param emailInput 인증 코드를 보낼 이메일 정보
-     * @return ResponseEntity<Response<EmailOutput>>
+     * @return 전송한 인증코드의 만료시간이 담긴 모델
      */
     @Operation(summary = "Eamil 인증 코드 발송")
     @PostMapping("/email/issue")
@@ -108,8 +107,9 @@ public class AuthController {
 
     /**
      * 이메일 인증 코드 확인 API [POST] /email/validation
+     *
      * @param validationInput 확인할 email과 code 정보
-     * @return ResponseEntity<Response<ValidationDto>>
+     * @return 해당 이메일의 인증코드가 유효한지에 대한 결과
      */
     @Operation(summary = "Eamil 인증 코드 확인")
     @PostMapping("/email/validation")
@@ -123,7 +123,7 @@ public class AuthController {
      * request의 accesstoken 속 fcmtoken과 redis에 보관된 마지막 접속자의 refreshtoken속 fcmtoken을 비교
      *
      * @param clientInfo 요청자의 client 정보 ( MOBILE/WEB을 별도로 관리하기 위해 필요 )
-     * @return ResponseEntity<Response<ValidationDto>>
+     * @return 마지막으로 로그인힌 기기가 맞는지에 대한 결과
      */
     @Operation(summary = "마지막으로 로그인한 기기가 맞는지 체크")
     @GetMapping("/device")
