@@ -29,9 +29,6 @@ export default {
   computed: {
     ...mapState("chat", ["roomStatus"]),
   },
-  created() {
-    console.log("에러페이지입니다.");
-  },
 };
 </script>
 
@@ -129,4 +126,3 @@ h1 span:nth-child(6) {
   }
 }
 </style>
-© 2022 GitHub, Inc. Terms Privacy Security Status Docs Contact GitHub Pricing API Training Blog About Loading complete

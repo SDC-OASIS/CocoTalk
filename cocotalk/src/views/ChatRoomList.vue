@@ -65,7 +65,6 @@
 
 <script>
 import { mapState } from "vuex";
-// import axios from "@/utils/axios";
 import ProfileImg from "@/components/common/ProfileImg.vue";
 import ChatListInfo from "@/components/chats/ChatListInfo.vue";
 import Hangul from "hangul-js";
@@ -84,12 +83,8 @@ export default {
     };
   },
   created() {
-    console.log("========[채팅목록페이지]=========");
     this.$store.dispatch("chat/changeMainPage", "chats", { root: true });
     this.chatsFiltered = this.chats;
-    // this.$store.dispatch("socket/chatListConnect");
-    // this.getChatList();
-    // this.chatListSubscribe();
   },
   computed: {
     ...mapState("chat", ["roomStatus"]),
@@ -108,7 +103,6 @@ export default {
     messageSentTime(time) {
       return this.$moment(time).format("LT");
     },
-
     // 트랜지션 시작에서 인덱스*100ms 만큼의 딜레이 부여
     beforeEnter(el) {
       this.$nextTick(() => {
@@ -151,21 +145,6 @@ export default {
       }
       return (this.chatsFiltered = this.chats);
     },
-    // filterOn() {
-    //   this.filterStatus = !this.filterStatus;
-    // },
-    // setFilter() {
-    //   let filteredFriends = [];
-    //   if (this.filter) {
-    //     this.friends.forEach((e) => {
-    //       if (Hangul.search(this.filter, e.username) >= 0) {
-    //         filteredFriends.push(e);
-    //       }
-    //     });
-    //   }
-    //   console.log(filteredFriends);
-    //   return (this.chatsFiltered = this.friends);
-    // },
   },
 };
 </script>

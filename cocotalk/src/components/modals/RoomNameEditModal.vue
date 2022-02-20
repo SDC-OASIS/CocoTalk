@@ -95,7 +95,6 @@ export default {
       this.roomName = e.target.value;
     },
     setroomName() {
-      console.log("채팅방 이름 설정");
       let selectedNames = "";
       this.roomNameEditModal.selectedFriends.forEach((e) => {
         selectedNames += e.username + ", ";
@@ -103,7 +102,6 @@ export default {
       this.roomName = selectedNames;
     },
     createChatRoom() {
-      "채팅방생성 버튼 클릭";
       let type = 0;
       if (this.roomNameEditModal.selectedFriends.length > 1) {
         type = 1;
@@ -129,7 +127,6 @@ export default {
         type: type,
         members: members,
       };
-      console.log(payload);
       this.$store.dispatch("socket/createChat", payload, { root: true });
     },
   },

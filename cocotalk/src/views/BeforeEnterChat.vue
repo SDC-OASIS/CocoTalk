@@ -16,7 +16,6 @@ export default {
     };
   },
   created() {
-    console.log("=======[채팅시작전페이지]=======");
     this.$store.dispatch("chat/deleteRoomId", { mainPage: this.roomStatus.mainPage, roomId: "" }, { root: true });
   },
   computed: {

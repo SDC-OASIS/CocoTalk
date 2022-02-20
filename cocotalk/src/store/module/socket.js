@@ -9,6 +9,7 @@ const socket = {
   plugins: [createPersistedState()],
   namespaced: true,
   state: {
+    chats: [],
     stompChatListClient: null,
     stompChatListConnected: false,
     stompChatRoomClient: null,
@@ -21,7 +22,6 @@ const socket = {
     awakePrivateRoomInfo: {},
     inviteRoomInfo: {},
     triggerMessage: null,
-    chats: [],
   },
   mutations: {
     setStompChatListClient(state, stompChatListClient) {
@@ -97,33 +97,19 @@ const socket = {
   },
   actions: {
     checkConnect() {
-      // let data = {
-      //   clientType: "web",
-      //   userId: store.getters["userStore/userInfo"].id,
-      //   fcmToken: store.getters["userStore/userInfo"].fcmToken,
-      // };
-      console.log("~~~~~~~~~~~~~~~~");
-      axios
-        .get("auth/device")
-        .then((res) => {
-          console.log("다중로그인 확인 - rest");
-          console.log(res);
-          if (!res.data.result.isValid) {
-            store.dispatch("userStore/logout");
-            const payload = {
-              status: "open",
-              text: "다른 기기에서 로그인되었습니다.",
-            };
-            store.dispatch("modal/openAlert", payload, { root: true });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      axios.get("auth/device").then((res) => {
+        if (!res.data.result.isValid) {
+          store.dispatch("userStore/logout");
+          const payload = {
+            status: "open",
+            text: "다른 기기에서 로그인되었습니다.",
+          };
+          store.dispatch("modal/openAlert", payload, { root: true });
+        }
+      });
     },
     getChatList(context) {
       axios.get("chat/rooms/list").then((res) => {
-        console.log("채팅방목록 가져오기");
         const chatList = res.data.data;
         if (chatList) {
           chatList.forEach((e) => {
@@ -139,7 +125,6 @@ const socket = {
           });
           context.commit("setChatList", chatList);
         }
-        console.log(chatList);
       });
     },
     async chatListConnect(context) {
@@ -148,13 +133,11 @@ const socket = {
       await context.commit("setStompChatListClient", Stomp.over(socket));
       await context.state.stompChatListClient.connect(
         { view: "chatList", userId: store.getters["userStore/userInfo"].id },
-        (frame) => {
+        () => {
           this.connected = true;
           context.commit("setStompChatListConnected", true);
-          console.log("소켓 연결 성공", frame);
           //[채팅목록 마지막 메세지 subscribe]
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/message`, (res) => {
-            console.log("구독으로 받은 메시지목록의 마지막 메세지 정보 입니다.");
             const data = JSON.parse(res.body);
             let lastMessage = data.message;
             let bundleInfo = data.bundleInfo;
@@ -163,7 +146,6 @@ const socket = {
             });
             // 1.마지막 메세지 갱신
             if (context.state.chats[idx].room.type == 0 && lastMessage.type == 2) return;
-            console.log(data);
             context.commit("UPDATE_CHAT_LIST", { idx, lastMessage });
             // 현재 입장한 방이 아니고 초대메세지와 퇴장메세지가 아니라면 안읽은 메세지수에 더해줌
             if (context.state.chats[idx].room.id != store.getters["chat/roomStatus"].roomId && lastMessage.type != 1 && lastMessage.type != 2) {
@@ -172,7 +154,6 @@ const socket = {
             // 채팅방 목록 최상단에 있지않은 경우
             if (idx) {
               const updateData = context.state.chats[idx];
-              console.log(updateData);
               context.commit("DELETE_UADATED_CHATROOM", idx);
               context.commit("ADD_UADATED_CHATROOM", updateData);
             }
@@ -186,8 +167,6 @@ const socket = {
 
           //[채팅목록 채팅방정보 채널 subscribe] == 구현중 ==
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/room`, (res) => {
-            console.log("구독으로 받은 업데이트된 룸정보입니다.");
-            console.log(res);
             const newRoomInfo = JSON.parse(res.body);
             const idx = context.state.chats.findIndex(function (item) {
               return item.room.id == newRoomInfo.id;
@@ -197,27 +176,20 @@ const socket = {
 
           //[채팅목록 새로 생성된 채팅방정보 채널 subscribe] == 구현중 ==
           context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/room/new`, (res) => {
-            console.log("구독으로 받은 새로 생성된 룸정보입니다.");
-            console.log(JSON.parse(res.body));
             let newRoom = JSON.parse(res.body);
-            // let bundleInfo = JSON.parse(res.body).bundleInfoVo;
-            console.log(newRoom);
             newRoom.messageBundleIds = newRoom.messageBundleIds.slice(1, -1).split(", ");
             newRoom.members.forEach((e) => {
               if (e.profile) {
                 e.profile = JSON.parse(e.profile);
               }
             });
-            console.log(newRoom);
             let chatRoom = {
               recentChatMessage: {},
               recentMessageBundleCount: 1, //count 값 갱신해주기
               room: newRoom,
               unreadNumber: 0,
             };
-            console.log(context.state.chats);
             context.commit("ADD_NEW_CHAT_ROOM", chatRoom);
-            console.log("===방생성중[crateChatRoomStatus:" + context.state.createChatRoomStatus + "]===");
             if (context.state.createChatRoomStatus || context.state.newPrivateRoomStatus) {
               // 새로생성된 채팅방으로 가기
               let newRoomInfo = {
@@ -232,18 +204,14 @@ const socket = {
           });
           store.dispatch("socket/checkConnectSub");
         },
-        (error) => {
-          console.log("소켓 연결 실패", error);
+        () => {
           this.connected = false;
           context.commit("setStompChatListConnected", false);
         },
       );
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
     },
     checkConnectSub(context) {
       context.state.stompChatListClient.subscribe(`/topic/${store.getters["userStore/userInfo"].id}/crash/web`, (res) => {
-        console.log("=====현재 다중로그인 상태여부확인======커넥트");
-        console.log(store.getters["userStore/userInfo"].accessToken);
         if (res.body != store.getters["userStore/userInfo"].fcmToken && store.getters["userStore/accessToken"]) {
           store.dispatch("userStore/logout");
           const payload = {
@@ -253,37 +221,6 @@ const socket = {
           store.dispatch("modal/openAlert", payload, { root: true });
         }
         console.log(res.body);
-        // console.log(JSON.parse(res.body));
-        // let newRoom = JSON.parse(res.body);
-        // // let bundleInfo = JSON.parse(res.body).bundleInfoVo;
-        // console.log(newRoom);
-        // newRoom.messageBundleIds = newRoom.messageBundleIds.slice(1, -1).split(", ");
-        // newRoom.members.forEach((e) => {
-        //   if (e.profile) {
-        //     e.profile = JSON.parse(e.profile);
-        //   }
-        // });
-        // console.log(newRoom);
-        // let chatRoom = {
-        //   recentChatMessage: {},
-        //   recentMessageBundleCount: 1, //count 값 갱신해주기
-        //   room: newRoom,
-        //   unreadNumber: 0,
-        // };
-        // console.log(context.state.chats);
-        // context.commit("ADD_NEW_CHAT_ROOM", chatRoom);
-        // console.log("===방생성중[crateChatRoomStatus:" + context.state.createChatRoomStatus + "]===");
-        // if (context.state.createChatRoomStatus || context.state.newPrivateRoomStatus) {
-        //   // 새로생성된 채팅방으로 가기
-        //   let newRoomInfo = {
-        //     roomId: newRoom.id,
-        //     nextMessageBundleId: newRoom.messageBundleIds[0],
-        //     recentMessageBundleCount: 1,
-        //     newRoom: newRoom,
-        //   };
-        //   store.dispatch("chat/updateMessageBundleCount", 1, { root: true });
-        //   store.dispatch("chat/goNewChat", newRoomInfo, { root: true });
-        // }
       });
     },
     goChat(context, chat) {
@@ -303,36 +240,31 @@ const socket = {
     },
 
     createChat(context, data) {
-      console.log("채팅방생성");
       context.state.stompChatListClient.send("/simple/chatroom/new", JSON.stringify(data));
       store.dispatch("modal/closeRoomNameEditModal");
       context.commit("setCreateChatRoomStatus", true);
     },
     startPrivateChat(context, friend) {
-      console.log("개인톡방 체크");
       store.dispatch("modal/closeProfileModal");
       if (!friend.id) {
         friend.id = friend.userId;
       }
+      // 이미 생성된 개인톡방이 있는지 체크
       axios.get(`chat/rooms/private/${friend.id}`).then((res) => {
-        console.log("개인톡방 있나요?");
+        // 방이 있는 경우
         if (res.data.data.id) {
           context.commit("setNewPrivateRoomStatus", false);
-          console.log("방있어요");
-          console.log(res.data.data.id);
-
           res.data.data.members.forEach((e) => {
             if (e.userId == store.getters["userStore/userInfo"].id && !e.joining) {
-              console.log("얍얍!!!!!!!");
               context.commit("setAwakePrivateRoomStatus", true);
               res.data.data.messageBundleIds = res.data.data.messageBundleIds.slice(1, -1).split(", ");
               context.commit("setAwakePrivateRoomInfo", res.data.data);
             }
           });
-
           router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: res.data.data.id } }).catch(() => {});
-        } else {
-          console.log("방없어요");
+        }
+        // 방이 없는 경우
+        else {
           context.commit("setNewPrivateRoomFriendInfo", friend);
           context.commit("setNewPrivateRoomStatus", true);
           router.push({ name: store.getters["chat/roomStatus"].mainPage + "Chat", params: { chat: "chat", roomId: "private" } }).catch(() => {});
@@ -340,12 +272,7 @@ const socket = {
       });
     },
     createPrivateChat(context, data) {
-      console.log("개인톡방생성");
-      context.state.stompChatListClient.send("/simple/chatroom/new", JSON.stringify(data), (res) => {
-        console.log("생성결과");
-        console.log(res);
-      });
-      // store.dispatch("modal/closeRoomNameEditModal"); 아마 프로필모달닫기?
+      context.state.stompChatListClient.send("/simple/chatroom/new", JSON.stringify(data));
       context.commit("setNewPrivateRoomStatus", true);
     },
     setTriggerMessage(context, msg) {
@@ -356,11 +283,6 @@ const socket = {
     },
     // 채팅방 내부에서 친구초대
     inviteFriend(context, friends) {
-      console.log("친구초대시작합니다.");
-      console.log("방정보");
-      console.log(context.state.inviteRoomInfo);
-      console.log("friends");
-      console.log(friends);
       if (!friends.length) {
         return;
       }
@@ -392,18 +314,11 @@ const socket = {
           inviteesName.push(invitee.username);
         }
       });
-      console.log(invitees);
-      console.log(previousMembers);
-      let members = [...invitees, ...previousMembers];
-      // const setMembers = [...new Map(members.map((item) => [item.userId, item])).values()];
-      console.log(members);
-      console.log("=====필터: 이미 채팅방에 참여한 멤버 거르기 완료=====");
+      let members = [...invitees, ...previousMembers]; // 이미 채팅방에 참여하고 있는 멤버 제외 완료
 
       if (context.state.stompChatRoomClient && context.state.stompChatRoomClient.connected) {
         console.log(context.state.inviteRoomInfo);
         let invitedFriendsNames = [];
-        // let invitedFriendsIds = [];
-        // let invitedFriends = friends;
         invitees.forEach((e) => {
           if (e.userId != store.getters["userStore/userInfo"].id) {
             invitedFriendsNames.push(e.username + "님");
@@ -428,15 +343,12 @@ const socket = {
           invitees: invitees,
           messageBundleId: store.getters["chat/chatInfo"].nextMessageBundleId,
         };
-        console.log(msg);
         store.dispatch("modal/setSidebar", false, { root: true });
-
         context.state.stompChatRoomClient.send(`/simple/chatroom/${context.state.inviteRoomInfo.id}/message/invite`, JSON.stringify(msg));
       }
     },
     exitChat(context, roomInfo) {
       if (context.state.stompChatRoomClient && context.state.stompChatRoomClient.connected) {
-        console.log(roomInfo);
         let membersIds = [];
         roomInfo.members.forEach((e) => {
           if (e.userId != store.getters["userStore/userInfo"].id) {
@@ -455,7 +367,6 @@ const socket = {
           receiverIds: membersIds,
           messageBundleId: store.getters["chat/chatInfo"].nextMessageBundleId,
         };
-        console.log(msg);
         context.state.stompChatRoomClient.send(`/simple/chatroom/${roomInfo.id}/message/leave`, JSON.stringify(msg));
         const idx = context.state.chats.findIndex(function (item) {
           return item.room.id == roomInfo.id;

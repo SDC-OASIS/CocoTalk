@@ -23,13 +23,11 @@
         <li v-show="isMute">
           <router-link @click.native="setMute(false)" to="#">
             <span class="iconify" data-icon="bi:bell-slash-fill" style="color: #ffc978"></span>
-            <!-- <span class="iconify" data-icon="bi:bell-slash"></span> -->
           </router-link>
         </li>
         <li>
           <router-link :to="{ path: getMainPath + '/developers' }">
             <i class="iconify fa fa-desktop"></i>
-            <!-- <span class="iconify" data-icon="uil:setting"></span> -->
           </router-link>
         </li>
         <li @click="logout">
@@ -73,7 +71,6 @@ export default {
     },
     setMute(flag) {
       this.$store.dispatch("workerStore/setMute", flag);
-      console.log("[VUEX GETTER] isMute", this.isMute);
     },
   },
 };
@@ -93,7 +90,9 @@ export default {
   width: 380px;
 }
 .nav-logo img {
-  width: 50px;
+  width: 55px;
+  padding-top: 10px;
+  padding-left: 15px;
   float: left;
 }
 ul.nav {
@@ -120,7 +119,7 @@ ul.nav a {
     width: 330px;
   }
   ul.nav a {
-    padding: 10px 30px;
+    padding: 18px 30px;
   }
   .iconify {
     font-size: 25px;
@@ -143,6 +142,6 @@ ul.nav a {
 }
 ul.nav a:hover {
   background: #42652b;
-  height: 30px;
+  height: 25px;
 }
 </style>

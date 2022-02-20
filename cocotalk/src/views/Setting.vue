@@ -25,18 +25,9 @@ export default {
       now: this.$route.params.roomId,
     };
   },
-  created() {
-    console.log("설정 페이지");
-  },
-
   computed: {
     ...mapState("chat", ["roomStatus"]),
     ...mapState("friends", ["friends"]),
-  },
-  watch: {
-    "$route.params.roomId": function () {
-      console.log("채팅을 시작해주세요");
-    },
   },
   methods: {},
 };

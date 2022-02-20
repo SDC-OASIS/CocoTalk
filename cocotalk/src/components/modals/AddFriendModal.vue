@@ -32,9 +32,6 @@
           <Button v-else-if="friendInfo.type == 1 || friendInfo.type == 2" text="친구추가" width="80px" height="30px" @click.native="addFriend" />
           <Button v-else-if="friendInfo.type == 3" text="나와의 채팅" width="100px" height="30px" />
         </div>
-        <!-- <div v-else class="row" style="justify-content: right" @click="getFriendInfo">
-					<Button text="검색" width="80px" height="30px" />
-				</div> -->
       </div>
     </div>
   </div>
@@ -79,12 +76,10 @@ export default {
     getFriendInfo() {
       if (this.friendId) {
         axios.get(`user/friends/cid/${this.friendId}`).then((res) => {
-          console.log("친구정보 가져오기");
           let friendInfo = res.data.data;
           if (friendInfo.friend.id) {
             friendInfo.friend.profile = JSON.parse(friendInfo.friend.profile);
             this.friendInfo = friendInfo;
-            console.log(this.friendInfo);
           }
         });
       }

@@ -17,17 +17,10 @@
 </template>
 
 <script>
-// import { mapState } from "vuex";
-// import Button from "../common/Button.vue";
 export default {
   name: "SidebarFilesModal",
   props: {
     files: [],
-  },
-  computed: {},
-  components: {
-    // ProfileImg,
-    // Button,
   },
   methods: {
     closeSidebarFIlesModal() {
@@ -55,7 +48,6 @@ export default {
       strOption += "toolbar=no,menubar=no,location=no,scrollbars=yes,";
       strOption += "resizable=yes,status=no";
       var OpenWindow = window.open("/", "popup", strOption);
-      // var OpenWindow = window.open("/", "popup", `width=${img_width}, height=${img_height}, left=${left}, top=${tops}`);
       OpenWindow.document.write(`<style>body{margin:0px;}</style><img src='${url}' width='$${win_width}'>`);
     },
   },

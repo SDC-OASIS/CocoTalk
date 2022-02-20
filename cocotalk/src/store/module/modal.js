@@ -128,21 +128,18 @@ const modal = {
       context.commit("CLOSE_ROOM_NAME_EDIT_MODAL");
     },
     openInviteFriendModal: function (context) {
-      console.log("친구초대모달 오픈");
       context.commit("OPEN_INVITE_FRIEND_MODAL");
     },
     closeInviteFriendModal: function (context) {
       context.commit("CLOSE_INVITE_FRIEND_MODAL");
     },
     openPrivateToTeamModal: function (context, payload) {
-      console.log("갠톡에서 단톡으로 바꾸기");
       context.commit("OPEN_PRIVATE_TO_TEAM_MODAL", payload);
     },
     closePrivateToTeamModal: function (context) {
       context.commit("CLOSE_PRIVATE_TO_TEAM_MODAL");
     },
     openSidebarFilesModal(context, payload) {
-      console.log("사이드바머달");
       context.commit("OPEN_SIDEBAR_FILES_MODAL", payload);
     },
     closeSidebarFilesModal(context) {

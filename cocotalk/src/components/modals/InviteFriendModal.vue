@@ -28,13 +28,11 @@
         <div>
           <div class="make-chat-modal-input row">
             <span class="iconify" data-icon="ant-design:search-outlined" style="color: #aaaaaa"></span>
-            <!-- @keyup="filter" -->
             <input v-model="searchName" type="text" placeholder="ID를 입력하세요." maxlength="20" />
           </div>
           <div class="make-chat-modal-info row" style="justify-content: left">
             <div class="friend-list-container" :style="{ height: height }">
               <div class="friend-cnt">친구 - {{ searchFriendsCnt }}</div>
-              <!-- {{ searchFriends }} -->
               <div class="friend-container row wrap" v-for="(friend, idx) in searchFriends" :key="idx">
                 <profile-img :imgUrl="friend.friend.profile.profile" width="50px" />
                 <div class="friend-name">{{ friend.friend.username }}</div>
@@ -101,22 +99,17 @@ export default {
       this.$store.dispatch("modal/closeInviteFriendModal");
     },
     deleteSelectedFriend(friend, idx) {
-      console.log(friend, idx);
       this.selectedFriends.splice(idx, 1);
     },
     inviteFriend() {
-      console.log("초대 멤버 선택완료");
-      console.log(this.selectedFriends);
       this.$store.dispatch("socket/inviteFriend", this.selectedFriends, { root: true });
+      console.log("확인");
       this.$store.dispatch("modal/setSidebar", false, { root: true });
       this.$store.dispatch("modal/setSidebar", true, { root: true });
-
       this.$store.dispatch("modal/closeInviteFriendModal");
     },
+    // 개인 톡방에서 초대시 단톡 생성
     createNewRoom() {
-      console.log("갠톡방이니 단톡을 생성하자");
-      console.log("채팅방 멤버 선택완료");
-      console.log(this.selectedFriends);
       this.$store.dispatch("modal/closeInviteFriendModal");
       this.$store.dispatch("modal/openPrivateToTeamModal", this.selectedFriends, { root: true });
     },
