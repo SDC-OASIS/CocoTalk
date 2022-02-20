@@ -14,6 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ *
+ * S3에 파일을 올리는 서비스
+ *
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,14 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    /**
+     * 유저 프로필에 들어갈 사진을 S3에 업로드합니다.
+     * @param img S3에 업로드할 사진
+     * @param imgThumb S3에 업로드할 사진의 썸네일
+     * @param userId 유저의 id
+     *
+     * @return 업로드된 사진의 url
+     */
     public String uploadProfileImg(MultipartFile img, MultipartFile imgThumb, Long userId) {
         //프로필 업로드
         String extension = StringUtils.getFilenameExtension(img.getOriginalFilename());
@@ -39,6 +52,13 @@ public class S3Service {
         return originUrl;
     }
 
+    /**
+     * S3에 파일을 업로드합니다
+     * @param file S3에 업로드할 파일
+     * @param filePath S3에 업로드될 경로
+     *
+     * @return 업로드된 file의 url
+     */
     private String uploadFile(MultipartFile file, String filePath) {
         try {
             amazonS3.putObject(new PutObjectRequest(bucket, filePath, file.getInputStream(), null)
