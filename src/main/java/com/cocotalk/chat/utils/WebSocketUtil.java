@@ -65,15 +65,7 @@ public class WebSocketUtil extends WebSocketClient implements ApplicationListene
     }
 
     public void tryReconnect() { // 채팅 관리 서버와 WebSocket 연결이 끊기면 10초마다 재연결 요청
-        executor.schedule(() -> {
-            try {
-                log.info("Try reconnect every 10 seconds");
-                this.reconnectBlocking();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                log.error("[WebSocketUtil/tryReconnect] : 프리젠스 서버에 웹 소켓 재연결을 요청하는 도중 문제가 발생했습니다.");
-            }
-        }, 10, TimeUnit.SECONDS);
+        executor.schedule(this::reconnect, 10, TimeUnit.SECONDS);
     }
 
     public void registerServer() { // 채팅 관리 서버에 자신의 stompEnpoint 등록

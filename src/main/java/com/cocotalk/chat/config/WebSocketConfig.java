@@ -31,7 +31,7 @@ public class WebSocketConfig {
     public WebSocketUtil webSocketClient() throws Exception { // 채팅 관리 서버와 WebSocket 연결
         URI uri = new URI(PRESENCE_SERVICE_WEBSOCKET_URL);
         WebSocketUtil webSocketUtil = new WebSocketUtil(uri, new Draft_6455(), ServerUrl());
-        webSocketUtil.connectBlocking();
+        webSocketUtil.connect();
         return webSocketUtil;
     }
 
