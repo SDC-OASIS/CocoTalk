@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *
+ * S3에 파일을 올리는 서비스
+ *
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,22 +34,38 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    /**
+     * 채팅 메시지에 들어갈 파일을 S3에 업로드합니다.
+     * @param file S3에 업로드할 파일
+     * @param thumbnail S3에 업로드할 파일의 썸네일 (썸네일 파일이 있는 경우에만 업로드합니다)
+     * @param roomId 채팅이 올라가는 roomId
+     * @param userId 채팅을 올린 userId
+     *
+     * @return 업로드된 file의 url
+     */
     public String uploadMessageFile(MultipartFile file, MultipartFile thumbnail, String roomId, Long userId) {
         //프로필 업로드
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         String filePath = "chat/" + roomId + "/"+ userId +"_" + LocalDateTime.now();
         String fileUrl = uploadFile(file,filePath+"."+extension);
-        //썸네일 업로드
+        //썸네일 업로드, 썸네일 확장자는 .jpeg
         if(thumbnail != null && !thumbnail.isEmpty()) {
-            if(file.getContentType().contains("image")) {   // 이미지 파일이면 썸네일 확장자 그대로 감
+            if(file.getContentType().contains("image")) {
                 uploadFile(thumbnail, filePath+"_th.jpeg");
-            } else if(file.getContentType().contains("video")){  // 동영상 파일이면 썸네일 확장자는 jpeg 감
+            } else if(file.getContentType().contains("video")){
                 uploadFile(thumbnail, filePath+"_th.jpeg");
             }
         }
         return fileUrl;
     }
 
+    /**
+     * S3에 파일을 업로드합니다
+     * @param file S3에 업로드할 파일
+     * @param filePath S3에 업로드될 경로
+     *
+     * @return 업로드된 file의 url
+     */
     private String uploadFile(MultipartFile file, String filePath) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
@@ -66,22 +87,6 @@ public class S3Service {
             log.error("[S3Service/uploadFile] : S3에 파일을 업로드하는 도중 문제가 발생했습니다.");
             throw new CustomException(CustomError.INPUT_OUTPUT, e);
         }
-    }
-
-    private void deleteFile(String filePath) {
-        ObjectListing objectList = amazonS3.listObjects(bucket, filePath);
-        List<S3ObjectSummary> objectSummeryList = objectList.getObjectSummaries();
-
-        if(objectSummeryList.size()==0) return;
-
-        String[] keysList = new String[objectSummeryList.size()];
-        int count = 0;
-        for (S3ObjectSummary summery : objectSummeryList) {
-            keysList[count++] = summery.getKey();
-        }
-        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(keysList);
-        amazonS3.deleteObjects(deleteObjectsRequest);
-        log.info("[deleteFile/filePath]" + filePath + "is removed");
     }
 
 }
