@@ -777,11 +777,6 @@ export default {
         return tempImage;
       };
     },
-    filters: {
-      videoThumbNail: function (value) {
-        return value + "#t=0.5";
-      },
-    },
   },
 };
 </script>
