@@ -51,9 +51,9 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     ){
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         String accessToken = req.getHeader(TOKEN_HEADER_NAME);
-        if (!StringUtils.hasLength(accessToken)) throw new CustomException(CustomError.NOT_LOGIN);
+        if (!StringUtils.hasLength(accessToken)) throw new CustomException(CustomError.NOT_LOGIN); // 헤더에 token 포함 여부 검사
 
-        TokenPayload payload = JwtUtil.getPayload(accessToken);
+        TokenPayload payload = JwtUtil.getPayload(accessToken); // jwt 인증
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(TOKEN_HEADER_NAME, accessToken);
@@ -62,7 +62,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         UriComponentsBuilder uriComponentsBuilder =
                 UriComponentsBuilder.fromHttpUrl(USER_SERVICE_URL);
 
-        ResponseEntity<CustomResponse> response = restTemplate.exchange(
+        ResponseEntity<CustomResponse> response = restTemplate.exchange( // 유저 서버에서 유저 정보 가져오기
                 URI.create(uriComponentsBuilder.build().toUriString()),
                 HttpMethod.GET,
                 request,
@@ -70,7 +70,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
         Object data = response.getBody().getData();
 
-        if(data == null) throw INVALID_USER_ID;
+        if(data == null) throw INVALID_USER_ID; // 유저 존재하지 않을시 예외 발생
 
         return objectMapper.convertValue(data, UserVo.class);
     }

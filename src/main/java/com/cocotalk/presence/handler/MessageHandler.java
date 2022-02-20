@@ -22,7 +22,7 @@ public class MessageHandler extends TextWebSocketHandler {
     private final ChatConnectService chatConnectService;
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) { // 채팅 서버로부터 수신한 웹 소켓 메시지를 처리하는 핸들 메서드입니다.
+    public void handleTextMessage(WebSocketSession session, TextMessage message) { // 채팅 서버로부터 수신한 웹 소켓 메시지를 핸들링하는 메서드입니다.
         try {
             PresenceRequest request = objectMapper.readValue(message.getPayload(), PresenceRequest.class);
             switch (request.getAction()) {

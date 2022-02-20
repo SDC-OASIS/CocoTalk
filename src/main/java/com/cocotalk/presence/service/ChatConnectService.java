@@ -67,7 +67,7 @@ public class ChatConnectService {
         log.info("serverUrl {} 커넥션 - 1", serverUrl);
     }
 
-    public String handoverConnectionUrl() { // least connection 상태인 채팅서버 URL을 클라이언트에게 전달하는 메서드입니다.
+    public String getConnectionUrl() { // least connection 상태인 채팅서버 URL을 클라이언트에게 전달하는 메서드입니다.
         String prefix =  "CC/*";
         Set<String> urls = redisTemplate.keys(prefix);
         if(urls.size() == 0) throw new CustomException(CustomError.CHAT_SERVER_CONNECTION, "연결할 수 있는 채팅 서버가 없습니다");

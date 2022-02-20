@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PresenceController {
     private final ChatConnectService chatConnectService;
 
-    @GetMapping("/chatserver/connect")
+    @GetMapping("/stomp/connect")
     public ResponseEntity<CustomResponse<String>> handoverChatServerUrl(@Parameter(hidden = true) UserVo userVo) {
-         String data = chatConnectService.handoverConnectionUrl();
+         String data = chatConnectService.getConnectionUrl();
          return new ResponseEntity<>(new CustomResponse<>(data), HttpStatus.OK);
     }
 }
