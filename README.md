@@ -134,6 +134,15 @@ cloud:
       auto: false
     cloudfront:
       domain: {{ your cloudfront domain }}
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}     
 ```
 
 ---
