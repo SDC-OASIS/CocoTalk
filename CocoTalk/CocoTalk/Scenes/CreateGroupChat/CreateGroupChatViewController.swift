@@ -126,6 +126,7 @@ extension CreateGroupChatViewController {
         
         ivProfile.snp.makeConstraints {
             $0.top.equalTo(lblTitle.snp.bottom).offset(50)
+            $0.height.width.equalTo(100)
             $0.centerX.equalToSuperview()
         }
         

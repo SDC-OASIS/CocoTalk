@@ -86,7 +86,7 @@ class EmailRegisterViewController: UIViewController {
     }
     
     private func pushEmailAuthVC() {
-        guard let email = textFieldEmail.text,
+        guard let email = textFieldEmail.text?.trimmingCharacters(in: .whitespaces),
               !email.isEmpty  else {
                   showEmailAlert()
                   return

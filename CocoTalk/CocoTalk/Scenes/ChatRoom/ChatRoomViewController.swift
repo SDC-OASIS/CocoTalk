@@ -56,8 +56,8 @@ class ChatRoomViewController: UIViewController {
     }
     
     /// 최근 메시지뷰
-    private let uiviewNewMessage = UIView().then {
-        $0.backgroundColor = .white
+    private var uiviewNewMessage = NewMessageView().then {
+        $0.isHidden = true
     }
     
     /// 리프레쉬 UI
@@ -76,6 +76,8 @@ class ChatRoomViewController: UIViewController {
     private var myId: Int?
     private var keyboardHeight: CGFloat?
     private var isFirstMessageFetch: Bool = true
+    private var lastCellIndex: Int = 0
+    private var shouldScrollBottom: Bool = true
     
     // MARK: - Life cycle
     
@@ -98,7 +100,8 @@ class ChatRoomViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 171/255, green: 194/255, blue: 209/255, alpha: 1)
+//        view.backgroundColor = UIColor(red: 171/255, green: 194/255, blue: 209/255, alpha: 1)
+        view.backgroundColor = UIColor(red: 216/255, green: 238/255, blue: 192/255, alpha: 1)
         navigationController?.isNavigationBarHidden = false
         
         textField.delegate = self
@@ -316,7 +319,8 @@ class ChatRoomViewController: UIViewController {
         let navAppearance = UINavigationBarAppearance()
         navAppearance.configureWithOpaqueBackground()
         navAppearance.shadowColor = .clear
-        navAppearance.backgroundColor = UIColor(red: 171/255, green: 194/255, blue: 209/255, alpha: 0.9)
+        navAppearance.backgroundColor = UIColor(red: 216/255, green: 238/255, blue: 192/255, alpha: 0.9)
+//        navAppearance.backgroundColor = UIColor(red: 171/255, green: 194/255, blue: 209/255, alpha: 0.9)
         navAppearance.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 19, weight: .semibold)]
         navigationController?.navigationBar.standardAppearance = navAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
@@ -360,6 +364,8 @@ extension ChatRoomViewController {
         
         uiViewSend.addSubview(ivSend)
         bottomView.addSubview(uiViewSend)
+        
+        view.addSubview(uiviewNewMessage)
         view.addSubview(bottomView)
     }
     
@@ -407,6 +413,13 @@ extension ChatRoomViewController {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(bottomView.snp.top)
         }
+        
+        uiviewNewMessage.snp.makeConstraints {
+            $0.bottom.equalTo(bottomView.snp.top).offset(-10)
+            $0.height.equalTo(40)
+            $0.leading.equalToSuperview().offset(10)
+            $0.trailing.equalToSuperview().inset(10)
+        }
     }
 }
 
@@ -426,6 +439,7 @@ extension ChatRoomViewController {
                 guard let self = self else {
                     return
                 }
+                self.lastCellIndex = rawMessages.count
                 let processedMessages = self.viewModel.getProcessedMessages()
                 self.viewModel.output.messages.accept(processedMessages)
             }).disposed(by: bag)
@@ -439,11 +453,12 @@ extension ChatRoomViewController {
                 self.collectionView.reloadData()
                 self.collectionView.layoutIfNeeded()
                 
+                self.uiviewNewMessage.isHidden = true
                 if self.viewModel.dependency.isRefreshing.value { // 이전 메시지를 불러올 경우 X
                     self.viewModel.dependency.isRefreshing.accept(false)
                     return
                 } else if self.isFirstMessageFetch { // 첫번째 로딩일 경우
-                    if messages.count > 0 {
+                    if messages.count > 0 && self.shouldScrollBottom {
                         self.isFirstMessageFetch = false
                     }
                     DispatchQueue.main.async {
@@ -451,6 +466,30 @@ extension ChatRoomViewController {
                     }
                 } else if !self.isFirstMessageFetch &&
                             (self.viewModel.dependency.rawMessages.value.last?.userId == self.myId) { // 내가 보낸 메시지인가
+                    DispatchQueue.main.async {
+                        self.collectionView.scrollToBottom(animated: false)
+                    }
+                } else if !self.shouldScrollBottom { // 새메시지가 오고 밑으로 스크롤을 하지 않을 경우
+                    var contentString: String
+                    switch messages.last?.type ?? 0 {
+                    case 4:
+                        contentString = "사진을 보냈습니다."
+                        break
+                    case 5:
+                        contentString = "동영상을 보냈습니다."
+                        break
+                    case 6:
+                        contentString = "파일을 보냈습니다."
+                        break
+                    default:
+                        contentString = messages.last?.content ?? ""
+                        
+                    }
+                    self.uiviewNewMessage.setData(profileImageURL: messages.last?.profileImageURL,
+                                                  username: messages.last?.username,
+                                                  content: contentString)
+                    self.uiviewNewMessage.isHidden = false
+                } else if self.shouldScrollBottom {
                     DispatchQueue.main.async {
                         self.collectionView.scrollToBottom(animated: false)
                     }
@@ -624,6 +663,18 @@ extension ChatRoomViewController {
                 vc.modalTransitionStyle = .crossDissolve
                 self.present(vc, animated: true)
             }).disposed(by: bag)
+        
+        uiviewNewMessage.rx.tapGesture()
+            .when(.ended)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.uiviewNewMessage.isHidden = true
+                DispatchQueue.main.async {
+                    self.collectionView.scrollToBottom(animated: false)
+                }
+            }).disposed(by: bag)
     }
     
     // MARK: Bind Socket
@@ -683,6 +734,19 @@ extension ChatRoomViewController: UICollectionViewDelegate, UICollectionViewData
         cell.setData(data: viewModel.output.messages.value[indexPath.row])
         cell.delegate = self
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        print(indexPath.row)
+        if (lastCellIndex - 10)..<lastCellIndex ~= indexPath.row {
+            shouldScrollBottom = true
+        } else {
+            shouldScrollBottom = false
+        }
+        
+        if lastCellIndex - 2 == indexPath.row {
+            uiviewNewMessage.isHidden = true
+        }
     }
 }
 

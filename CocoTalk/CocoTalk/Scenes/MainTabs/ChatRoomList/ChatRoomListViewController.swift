@@ -74,7 +74,12 @@ class ChatRoomListViewController: UIViewController {
         let members = room?.members ?? []
         let roomId = room?.id ?? ""
         let vc = ChatRoomViewController(members: members, roomId: roomId)
-        vc.title = room?.roomname ?? ""
+        if room?.type ?? 0 == 0 {
+            let member = room?.members?.filter { $0.userId != UserRepository.myProfile?.id }.first
+            vc.title = member?.username ?? ""
+        } else {
+            vc.title = room?.roomname ?? ""
+        }
         vc.hidesBottomBarWhenPushed = true
         guard let nav = self.navigationController else {
             return
@@ -167,6 +172,14 @@ extension ChatRoomListViewController {
             return
         }
         
+        listSocket.isSocketConnected
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.viewModel.fetch()
+            }).disposed(by: bag)
+        
         listSocket.receivedMessage
             .subscribe(onNext: { [weak self] message in
                 guard let self = self,
@@ -228,6 +241,9 @@ extension ChatRoomListViewController {
                     return
                 }
                 
+                socket.createChatRequestLog.accept(nil)
+                socket.receivedNewRoom.accept(nil)
+                
                 // 메시지 보내기
                 if let roomType = newRoom.type,
                    roomType == 1,
@@ -261,6 +277,7 @@ extension ChatRoomListViewController: UITableViewDelegate, UITableViewDataSource
     
 }
 
+// MARK: - GNBDelegate
 extension ChatRoomListViewController: GNBDelegate {
     func gnbTabType() -> TabEnum {
         return .chatRoom
@@ -284,6 +301,7 @@ extension ChatRoomListViewController: GNBDelegate {
     }
 }
 
+// MARK: - CreateChatRoomDelegate
 extension ChatRoomListViewController: CreateChatRoomDelegate {
     func fetchChatRoom() {
         viewModel.fetch()

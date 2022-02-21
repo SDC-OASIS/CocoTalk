@@ -52,7 +52,10 @@ class FriendListViewController: UIViewController {
         let members = viewModel.output.talkMembers.value ?? []
         let roomId = viewModel.output.roomId.value ?? ""
         let vc = ChatRoomViewController(members: members, roomId: roomId)
-        vc.title = String(members.reduce("", { $0 + ", \($1.username ?? "")" }).dropFirst(2))
+        
+        let member = members.filter { $0.userId != UserRepository.myProfile?.id }.first
+        vc.title = member?.username ?? ""
+        
         vc.hidesBottomBarWhenPushed = true
         chatRoomListVC.pushViewController(vc, animated: true)
     }

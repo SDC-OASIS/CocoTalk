@@ -95,6 +95,7 @@
 		EA3F376F278C61E9007957EB /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F376E278C61E9007957EB /* PasswordViewController.swift */; };
 		EA3F3772278C623F007957EB /* NewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3771278C623F007957EB /* NewProfileViewController.swift */; };
 		EA3F3775278C6270007957EB /* EmailRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */; };
+		EA7EDB6B27C2657800002CC1 /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7EDB6A27C2657800002CC1 /* NewMessageView.swift */; };
 		EA8F20A527B79458008A01ED /* SelectableFrinedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20A427B79458008A01ED /* SelectableFrinedCell.swift */; };
 		EA8F20A727B79506008A01ED /* CreateChatRoomDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20A627B79506008A01ED /* CreateChatRoomDelegate.swift */; };
 		EA8F20A927B796C7008A01ED /* ClosableFriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F20A827B796C7008A01ED /* ClosableFriendCell.swift */; };
@@ -217,6 +218,7 @@
 		EA3F376E278C61E9007957EB /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		EA3F3771278C623F007957EB /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
 		EA3F3774278C6270007957EB /* EmailRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRegisterViewController.swift; sourceTree = "<group>"; };
+		EA7EDB6A27C2657800002CC1 /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
 		EA8F20A427B79458008A01ED /* SelectableFrinedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableFrinedCell.swift; sourceTree = "<group>"; };
 		EA8F20A627B79506008A01ED /* CreateChatRoomDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomDelegate.swift; sourceTree = "<group>"; };
 		EA8F20A827B796C7008A01ED /* ClosableFriendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosableFriendCell.swift; sourceTree = "<group>"; };
@@ -489,6 +491,7 @@
 				EAE5560927A154CD00777EBF /* MessageCollectionViewLayout.swift */,
 				EAE5560B27A1554300777EBF /* MessageCollectionViewLayoutDelegate.swift */,
 				EAC7380E27C10B420011F4D1 /* MessageCellDelegate.swift */,
+				EA7EDB6A27C2657800002CC1 /* NewMessageView.swift */,
 			);
 			path = ChatRoom;
 			sourceTree = "<group>";
@@ -1002,6 +1005,7 @@
 				EA3F376B278C5FAB007957EB /* PhoneNumberViewController.swift in Sources */,
 				EAC6159627B6926000B213BC /* ProfileModalViewModel.swift in Sources */,
 				EA8F20B427B80826008A01ED /* CreateGroupChatViewModel.swift in Sources */,
+				EA7EDB6B27C2657800002CC1 /* NewMessageView.swift in Sources */,
 				EA29141927B1096C00324476 /* EmailRegisterViewModel.swift in Sources */,
 				EA2913FC27AF5F4500324476 /* UserDefaultsKeyEnum.swift in Sources */,
 				EA14D4FA2786B16C00EDC892 /* CocoTalk.xcdatamodeld in Sources */,

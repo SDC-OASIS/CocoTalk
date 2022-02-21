@@ -70,7 +70,8 @@ class MessageCollectionViewCell: UICollectionViewCell {
     /// 안 읽은 사람 수
     private let lblUnreadMemberCount = UILabel().then {
         $0.font = .systemFont(ofSize: 10, weight: .bold)
-        $0.textColor = UIColor(red: 252/255, green: 235/255, blue: 88/255, alpha: 1)
+        $0.textColor = UIColor(red: 116/255, green: 159/255, blue: 88/255, alpha: 1)
+//        $0.textColor = UIColor(red: 252/255, green: 235/255, blue: 88/255, alpha: 1)
         $0.numberOfLines = 0
     }
     
@@ -414,6 +415,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
         // 안 읽은 사람 수 보여주기
         if let count = data.unreadMemberCount {
             if count > 0 {
+                lblUnreadMemberCount.isHidden = false
                 lblUnreadMemberCount.text = "\(count)"
             } else {
                 lblUnreadMemberCount.text = ""
@@ -425,6 +427,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
            hasData,
            let sentAt = data.sentAt,
            let dateLabel = sentAt.parseDateStringForMessage() {
+            lblDate.isHidden = false
             lblDate.text = dateLabel
         }
         
