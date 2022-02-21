@@ -120,14 +120,12 @@ const userStore = {
             if (res.data.isSuccess) {
               commit("SET_ACCESS_TOKEN", res.data.result.accessToken);
               commit("SET_REFRESH_TOKEN", res.data.result.refreshToken);
-              console.log("[VUEX] TOKEN 재설정 완료");
               resolve(res);
             } else {
               reject(res);
             }
           })
           .catch((error) => {
-            console.error(error);
             reject(error);
           })
           .finally(() => {
@@ -140,7 +138,6 @@ const userStore = {
       frm.append("profileImg", payload);
       frm.append("profileImgThumb", payload);
       await axios.put("user/profile/img", frm, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
-        console.log(JSON.parse(res.data.data.profile).profile);
         context.commit("UPDATE_PROFILE", JSON.parse(res.data.data.profile).profile);
       });
     },
@@ -148,7 +145,6 @@ const userStore = {
       var frm = new FormData();
       frm.append("bgImg", payload);
       await axios.put("user/profile/bg", frm, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
-        console.log(res.data);
         context.commit("UPDATE_BACKGROUND", JSON.parse(res.data.data.profile).background);
       });
     },

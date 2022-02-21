@@ -293,7 +293,6 @@ export default {
       this.roomMemberIds = [];
       // 본인이 나간 개인톡방인경우
       if (this.awakePrivateRoomStatus) {
-        console.log(this.awakePrivateRoomInfo);
         this.roomInfo = this.awakePrivateRoomInfo;
         return;
       }
@@ -380,8 +379,9 @@ export default {
     },
 
     // 3.채팅방 소켓 연결
-    chatRoomConnect: function () {
-      const serverURL = "http://138.2.93.111:8080/stomp";
+    chatRoomConnect: async function () {
+      const serverURL = await this.$store.dispatch("socket/getChatUrl");
+      // const serverURL = "http://138.2.93.111:8080/stomp";
       let socket = new SockJS(serverURL);
       this.SET_STOMP_CHAT_ROOM_CLIENT(Stomp.over(socket));
       this.stompChatRoomClient.connect(
@@ -403,7 +403,6 @@ export default {
           this.stompChatRoomClient.subscribe(`/topic/${this.roomStatus.roomId}/message`, (res) => {
             const receivedMessage = JSON.parse(res.body);
             this.chatMessages.push(receivedMessage.message);
-            console.log(receivedMessage);
             // 새로 메세지가 들어올 경우 마지막 메세지의 BundleId로 업데이트 / 채팅방 첫 생성시를 위한 bundlecount도 업데이트
             const payload = {
               nextMessageBundleId: receivedMessage.bundleInfo.nextMessageBundleId,
@@ -430,9 +429,8 @@ export default {
             });
           });
         },
-        (error) => {
+        () => {
           // 소켓 연결 실패
-          console.log("소켓 연결 실패", error);
           this.connected = false;
         },
       );
@@ -679,7 +677,6 @@ export default {
     },
     async makeTumbnail(img) {
       let convertFile = await this.convertFile(img);
-      console.log(convertFile);
       let dataURI;
       let thumbnail;
       convertFile.onload = await function () {
