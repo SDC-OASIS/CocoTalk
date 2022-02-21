@@ -129,9 +129,24 @@ const socket = {
         }
       });
     },
+    getChatUrl() {
+      return new Promise((resolve, reject) => {
+        {
+          axios
+            .get("presence/stomp/connect")
+            .then((res) => {
+              resolve(res.data.data);
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        }
+      });
+    },
     // 채팅방목록이자 전역에서 데이터를 관리해주는 웹소켓 연결
     async chatListConnect(context) {
-      const serverURL = "http://138.2.93.111:8080/stomp";
+      // const serverURL = "http://138.2.93.111:8080/stomp";
+      const serverURL = await store.dispatch("socket/getChatUrl");
       let socket = new SockJS(serverURL);
       await context.commit("SET_STOMP_CHAT_LIST_CLIENT", Stomp.over(socket));
       await context.state.stompChatListClient.connect(

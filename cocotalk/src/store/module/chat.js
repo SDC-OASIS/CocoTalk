@@ -26,7 +26,6 @@ const chat = {
   },
   mutations: {
     CHANGE_PAGE(state, payload) {
-      console.log("페이지를 전환합니다.");
       // roomId가 존재하지 않는 경우 == 채팅방이 닫혀있는 경우
       if (!payload.roomId) {
         state.roomStatus.roomId = "";
