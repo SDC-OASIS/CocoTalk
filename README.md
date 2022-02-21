@@ -28,7 +28,7 @@ open CocoTalk.xcworkspace
 
 |                        프로젝트 팀 색                        |                       기존 카카오톡 색                       |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| ![모바일_채팅방](/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/모바일_채팅방.gif) | <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9.gif?raw=true" alt="채팅방"/> |
+| ![모바일_채팅방](https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EB%AA%A8%EB%B0%94%EC%9D%BC_%EC%B1%84%ED%8C%85%EB%B0%A9.gif?raw=true) | <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9.gif?raw=true" alt="채팅방"/> |
 
 (왼쪽은 팀 프로젝트 색, 오른쪽은 카카오톡 색 적용)
 
@@ -36,7 +36,7 @@ open CocoTalk.xcworkspace
 
 ### 동시 로그인 방지
 
-<img src="/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/모바일_동시로그인_방지.gif" alt="모바일_동시로그인_방지"  width='60%' />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EB%AA%A8%EB%B0%94%EC%9D%BC_%EB%8F%99%EC%8B%9C%EB%A1%9C%EA%B7%B8%EC%9D%B8_%EB%B0%A9%EC%A7%80.gif?raw=true" alt="모바일_동시로그인_방지"  width='80%' />
 
 **왼쪽과 오른쪽기기가 같은 아이디로 로그인 되는 모습입니다. 오른쪽이 더 최근에 로그인된 기기이므로 왼쪽은 알림경고창이 보인 후 로그아웃 됩니다.**
 
@@ -52,7 +52,7 @@ open CocoTalk.xcworkspace
 
 |                         채팅방 생성                          |                          친구 추가                           |                    프로필 사진 확인 하기                     |                       프로필 사진 보기                       |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9%20%EC%83%9D%EC%84%B1.gif?raw=true" alt="채팅방 생성" width="100%" /> | <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B9%9C%EA%B5%AC%EC%B6%94%EA%B0%80.gif?raw=true" alt="친구추가" width="100%" /> | ![모바일_프로필_확인](/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/모바일_프로필_확인.gif) | ![모바일_푸시_치킨](/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/모바일_푸시_치킨.gif) |
+| <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B1%84%ED%8C%85%EB%B0%A9%20%EC%83%9D%EC%84%B1.gif?raw=true" alt="채팅방 생성" width="100%" /> | <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%B9%9C%EA%B5%AC%EC%B6%94%EA%B0%80.gif?raw=true" alt="친구추가" width="100%" /> | ![모바일_프로필_확인](https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EB%AA%A8%EB%B0%94%EC%9D%BC_%ED%94%84%EB%A1%9C%ED%95%84_%ED%99%95%EC%9D%B8.gif?raw=true) | ![모바일_푸시_치킨](https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EB%AA%A8%EB%B0%94%EC%9D%BC_%ED%91%B8%EC%8B%9C_%EC%B9%98%ED%82%A8.gif?raw=true) |
 
 ## Architecture
 
@@ -62,7 +62,7 @@ open CocoTalk.xcworkspace
 
 각 화면에서 데이터를 요청할 때 요청을 보낸 객체에서 결과 값을 subscribe하는 방법으로 구현했습니다. 데이터 요청하는 단계는 ViewController, ViewModel, Repository, Data networking 순서입니다. 
 
-<img src="/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/data_flow.png" alt="data_flow"  width='40%' />
+<img src="/images/data_flow.png" alt="data_flow"  width='20%' />
 
 
 
@@ -70,7 +70,7 @@ open CocoTalk.xcworkspace
 
 채팅을 직접 주고 받는 소켓서버가 2개 이상으로 운영되기 때문에 채팅 관리 서버에서 어떤 소켓 서버로 연결할지 클라이언트에 알려줘야 했습니다. 그래서 클라이언트에서는 채팅 관리 서버에 연결할 소켓 서버 주소를 요청하고, 받은 주소로 소켓 서버에 연결합니다.
 
-![소켓서버연결](/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/소켓서버연결.png)
+![소켓서버연결](https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EC%86%8C%EC%BC%93%EC%84%9C%EB%B2%84%EC%97%B0%EA%B2%B0.png?raw=true)
 
 
 
@@ -88,7 +88,7 @@ open CocoTalk.xcworkspace
 3. D1 기기가 포그라운드 상태가 되면서 "/auth/device" api를 사용해서 현재 갖고 있는 액세스 토큰과 리프레쉬 토큰이 가장 최근 로그인된 디바이스에서 발행한 토큰인지 확인한다.
 4. 가장 최근에 로그인된 디바이스에서 발행한 토큰이 아닐 경우 인증 서버에서 유효하지 않은 토큰임을 알려주고, D1 기기가 갖고 있는 계정에 대한 토큰이 삭제되고, 로그아웃 처리된다.
 
-<img src="/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/동시로그인_소켓연결X.png" alt="동시로그인_소켓연결X"  width='66%' />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EB%8F%99%EC%8B%9C%EB%A1%9C%EA%B7%B8%EC%9D%B8_%EC%86%8C%EC%BC%93%EC%97%B0%EA%B2%B0X.png?raw=true"  width='66%' />
 
 
 
@@ -101,7 +101,7 @@ open CocoTalk.xcworkspace
 4) 유저A로 로그인된 D2를 제외한 모든 기기에 소켓으로 로그아웃 메시지를 보냅니다.
 5) D1은 소켓 메시지를 받고 로그아웃 처리를 수행한다.
 
-<img src="/Users/byunghak/Documents/xcode_workspace/Stove_Dev_Camp/CocoTalk-iOS/images/동시로그인_소켓O.png" alt="동시로그인_소켓O" width='66%' />
+<img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%EB%8F%99%EC%8B%9C%EB%A1%9C%EA%B7%B8%EC%9D%B8_%EC%86%8C%EC%BC%93O.png?raw=true" alt="동시로그인_소켓O" width='66%' />
 
 ## Tech stack & Libraries
 
