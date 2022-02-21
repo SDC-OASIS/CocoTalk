@@ -8,7 +8,6 @@ importScripts("firebaseConfig.js");
 
 //스크립트에서 변수 불러 옴
 firebase.initializeApp(firebaseConfig);
-// console.log("Worker ::: fireConfig", firebaseConfig);
 
 const messaging = firebase.messaging();
 
@@ -18,14 +17,11 @@ var isMute = false;
 const muteBroadcast = new BroadcastChannel("mute");
 muteBroadcast.onmessage = (event) => {
   isMute = event.data.key;
-  console.log("Worker ::: isMute", isMute);
 };
 
 // 백그라운드 커스텀
 messaging.onBackgroundMessage((payload) => {
-  console.log("[PUSH] [firebase-messaging-sw.js] Received background message ", payload);
   if (!isMute) {
-    console.log("백그라운드  알림이 왔습니다. [현재 뮤트 상태] ", isMute);
     // Customize notification here
     const title = payload.data.title;
     const options = {
@@ -39,7 +35,6 @@ messaging.onBackgroundMessage((payload) => {
 
 // notification 클릭 이벤트
 self.addEventListener("notificationclick", function (event) {
-  console.log("On notification click: ", event.notification);
   event.notification.close();
   const url = event.notification.data.url; //사이트 배포 주소
   // This looks to see if the current is already open and

@@ -4,11 +4,9 @@ import "firebase/messaging";
 // 서비스 워커 삭제 후 등록
 navigator.serviceWorker.getRegistrations().then(function (registrations) {
   for (let registration of registrations) {
-    console.log("기존 serviceWorker를 제거합니다.", registration);
     registration.unregister();
   }
   navigator.serviceWorker.register("/firebase-messaging-sw.js").then((registration) => {
-    console.log("serviceWorker registration");
     return message.useServiceWorker(registration);
   });
 });
@@ -25,8 +23,6 @@ const config = {
 
 firebase.initializeApp(config);
 
-// firebase.initializeApp(fireConfig);
-
 const message = firebase.messaging();
 
 async function deleteToken() {
@@ -42,17 +38,14 @@ async function deleteToken() {
   });
 }
 async function getToken() {
-  let isDelete = await deleteToken();
-  console.log("isDelete", isDelete);
+  await deleteToken();
   return new Promise((resolve, reject) => {
     message
       .requestPermission()
       .then(() => {
-        console.log("Notification permission granted.");
         resolve(message.getToken());
       })
       .catch((err) => {
-        console.log("[GET FCM TOKEN]", err);
         reject(err);
       });
   });
@@ -61,7 +54,6 @@ async function getToken() {
 //포그라운드 메시지는 사용하지 않을 예정
 message.onMessage(({ notification }) => {
   const { title, body } = notification;
-  console.log("[PUSH] onMessage: ", `${title} ${body}`);
   // alert(`${title} ${body}`);
   const options = {
     body: body,
