@@ -142,6 +142,20 @@ management:
     tags:
       application: ${spring.application.name}
 
+cloud:
+  aws:
+    credentials:
+      accessKey: {{ your credentials accessKey }}
+      secretKey: {{ your credentials secretKey }}
+    s3:
+      bucket: {{ your bucket name }}
+    region:
+      static: {{ region }}
+    stack:
+      auto: false
+    cloudfront:
+      domain: {{ your cloudfront domain }}
+
 eureka:
   instance:
     instance-id: {{ eureka client id }}
