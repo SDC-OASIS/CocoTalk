@@ -173,7 +173,7 @@ npm run serve
   ```
 
 * 화면의 큰 두 부분이 각각 독립적으로 rendering되어야한다.
-
+![이중구조](./assets/이중구조.gif)
 
 
 ### Named Route
