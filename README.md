@@ -170,7 +170,7 @@ eureka:
       defaultZone: {{ eureka server url }} # A client is registered by sending a POST request to it.
 
 jwt:
- secret: {{ your jwt secret }}
+  secret: {{ your jwt secret }}
 
 cocotalk:
   message-bundle-limit: {{ message bundle limit }}
