@@ -1,0 +1,13 @@
+  {
+    "_id": {"$oid": "61fca964bd38314549649236"},
+    "_class": "com.cocotalk.chat.domain.entity.message.MessageBundle",
+    "count": 5,
+    "messageIds": [
+      {"$oid": "61fca964bd38314549649237"},
+      {"$oid": "61fca9ba7d8ee2254ac10076"},
+      {"$oid": "61fcab307d8ee2254ac10077"},
+      {"$oid": "61fcabdc7d8ee2254ac10078"},
+      {"$oid": "61fcafac7d8ee2254ac10079"}
+    ],
+    "roomId": {"$oid": "61fca964bd38314549649235"}
+  }

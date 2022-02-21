@@ -1,0 +1,11 @@
+  {
+    "_id": {"$oid": "61fca9ba7d8ee2254ac10076"},
+    "_class": "com.cocotalk.chat.domain.entity.message.InviteMessage",
+    "content": "10가 입장했습니다.",
+    "messageBundleId": {"$oid": "61fca964bd38314549649236"},
+    "roomId": {"$oid": "61fca964bd38314549649235"},
+    "sentAt": {"$date": "2022-02-04T04:21:14.542Z"},
+    "type": 3,
+    "userId": 10,
+    "inviteeIds": [10]
+  },

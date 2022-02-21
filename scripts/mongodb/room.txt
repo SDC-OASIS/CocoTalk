@@ -1,0 +1,44 @@
+[
+  {
+    "_id": {"$oid": "61fca964bd38314549649235"},
+    "_class": "com.cocotalk.chat.domain.entity.room.Room",
+    "img": "img",
+    "members": [
+      {
+        "userId": 5,
+        "joining": true,
+        "joinedAt": {"$date": "2022-02-04T04:19:48.636Z"},
+        "awayAt": {"$date": "2022-02-04T04:19:48.636Z"},
+        "leftAt": {"$date": "2022-02-04T04:19:48.636Z"}
+      },
+      {
+        "userId": 10,
+        "joining": true,
+        "joinedAt": {"$date": "2022-02-04T04:19:48.636Z"},
+        "awayAt": {"$date": "2022-02-04T04:20:20.547Z"},
+        "leftAt": {"$date": "2022-02-04T04:19:48.636Z"}
+      },
+      {
+        "userId": 12,
+        "joining": true,
+        "joinedAt": {"$date": "2022-02-04T04:29:14.255Z"},
+        "awayAt": {"$date": "2022-02-04T04:29:14.255Z"},
+        "leftAt": {"$date": "2022-02-04T04:29:14.255Z"}
+      },
+      {
+        "userId": 13,
+        "joining": false,
+        "joinedAt": {"$date": "2022-02-04T04:30:20.658Z"},
+        "awayAt": {"$date": "2022-02-07T10:15:00.354Z"},
+        "leftAt": {"$date": "2022-02-04T04:46:36.969Z"}
+      }
+    ],
+    "messageBundleIds": [
+      {"$oid": "61fca964bd38314549649236"}
+    ],
+    "noticeIds": [
+      {"$oid": "61fca964bd38314549649236"}
+    ],
+    "type": 0
+  }
+]
