@@ -214,7 +214,7 @@ extension ChatDrawerViewController {
         uiViewInvite.rx.tapGesture()
             .when(.ended)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else {
+                guard let _ = self else {
                     return
                 }
                 print("초대 클릭")

@@ -4,11 +4,9 @@
 
 <img src="https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/images/%ED%8F%B4%EB%8D%94%EA%B5%AC%EC%A1%B0.png?raw=true" alt="Screen Shot 2022-02-14 at 8.14.02 AM" width="33%" />
 
-
-
 ## 네트워킹 (Moya 기반)
 
-RxMoya를 사용해서 네트워킹을 비동기로 처리하도록 했습니다. 네트워킹 리스폰스를 각 뷰모델에서 구독한 후 값을 받아 처리합니다. 
+RxMoya를 사용해서 네트워킹을 비동기로 처리하도록 했습니다. 네트워킹 리스폰스를 각 뷰모델에서 구독한 후 값을 받아 처리합니다.
 
 - [API Response 구조체](https://github.com/SDC-OASIS/CocoTalk-iOS/tree/master/CocoTalk/CocoTalk/Core/Networking/APIResult)
 - [API 엔드포인트 Enum](https://github.com/SDC-OASIS/CocoTalk-iOS/tree/master/CocoTalk/CocoTalk/Core/Networking/API)
@@ -27,9 +25,10 @@ RxMoya를 사용해서 네트워킹을 비동기로 처리하도록 했습니다
 
   - UserDefaults에 사용자 정보를 저장해서 API 호출을 다시 안하게 함
 
-- [카카오톡 메시지 UI 구현](https://github.com/SDC-OASIS/CocoTalk-iOS/tree/master/CocoTalk/CocoTalk/Scenes/ChatRoom)
+- 카카오톡 메시지 UI 구현
 
-  - UICollectionViewLayout를 커스터마이징해서 사용
+  - [UICollectionViewLayout를 커스터마이징해서 사용](<(https://github.com/SDC-OASIS/CocoTalk-iOS/tree/master/CocoTalk/CocoTalk/Scenes/ChatRoom)>)
+  - [MessageCollectionViewCell 구현](https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/CocoTalk/CocoTalk/Components/Cells/MessageCell/MessageCollectionViewCell.swift)
 
 - 동시 로그인 방지 기능
 
@@ -48,6 +47,3 @@ RxMoya를 사용해서 네트워킹을 비동기로 처리하도록 했습니다
   - [개별 파일](https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/CocoTalk/CocoTalk/Core/Repository/AuthRepository.swift)
 
 - [StompClientLib를 활용한 채팅 소켓 Helper](https://github.com/SDC-OASIS/CocoTalk-iOS/blob/master/CocoTalk/CocoTalk/Core/Helpers/WebSocketHelper.swift)
-
-  
-
