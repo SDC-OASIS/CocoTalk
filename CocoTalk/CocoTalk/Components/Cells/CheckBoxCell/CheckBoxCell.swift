@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import RxCocoa
 
+/// 약관 동의 목록에서 사용하는 셀
 class CheckBoxCell: UITableViewCell {
     
     // MARK: - UI Properties

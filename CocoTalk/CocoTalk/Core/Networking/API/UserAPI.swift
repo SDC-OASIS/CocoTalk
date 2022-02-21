@@ -8,6 +8,7 @@
 import Foundation
 import Moya
 
+/// 유저 API
 enum UserAPI {
     case addFriend(_ cid: Int, _ token: String)
     case findUserByCid(_ cid: String, _ token: String)

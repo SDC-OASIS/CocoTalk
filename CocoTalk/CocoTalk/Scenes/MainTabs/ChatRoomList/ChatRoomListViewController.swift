@@ -10,6 +10,7 @@ import SnapKit
 import Then
 import RxSwift
 
+/// 채팅방 목록 뷰컨트롤러
 class ChatRoomListViewController: UIViewController {
     
     // MARK: - UI Properties

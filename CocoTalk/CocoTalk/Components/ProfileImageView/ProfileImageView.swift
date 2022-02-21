@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Squairecle를 사용하는 프로필 이미지 뷰
 class ProfileImageView: UIImageView {
 
     private let ivMask = UIImageView(image: UIImage(named: "squircle_mask")!)

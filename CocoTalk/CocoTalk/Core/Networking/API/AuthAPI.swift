@@ -9,6 +9,7 @@ import Foundation
 import Moya
 import UIKit
 
+/// 인증 API
 enum AuthAPI {
     case reissueToken(_ token: String)
     case verifyToken(_ token: String)

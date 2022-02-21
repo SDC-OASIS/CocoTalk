@@ -12,6 +12,7 @@ import SnapKit
 import Then
 import RxSwift
 
+/// 이메일 인증코드를 입력하는 뷰
 class EmailAuthNumberViewController: UIViewController {
     
     // MARK: - UI Properties

@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
+/// 친구추가 뷰컨트롤러
 class AddFriendViewController: UIViewController {
     
     // MARK: - UI Properties

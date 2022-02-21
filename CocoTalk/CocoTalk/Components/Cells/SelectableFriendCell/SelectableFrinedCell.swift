@@ -10,6 +10,7 @@ import Then
 import SnapKit
 import RxSwift
 
+/// 채팅방 친구 초대할 때 보이는 목록에 있는 셀
 class SelectableFriendCell: UITableViewCell {
     
     // MARK: - UI Properties

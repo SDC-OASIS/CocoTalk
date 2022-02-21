@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import RxCocoa
 
+/// 그룹 채팅방 생성 뷰컨트롤러
 class CreateGroupChatViewController: UIViewController {
     
     // MARK: - UI Properties

@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// 메시지 컬렉션뷰 레이아웃
 final class MessageCollectionViewLayout: UICollectionViewLayout {
     weak var delegate: MessageCollectionViewLayoutDelegate?
     

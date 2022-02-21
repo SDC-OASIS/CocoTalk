@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import RxSwift
 
+/// 루트 탭바 컨트롤러
 class RootTabBarController: UITabBarController {
     
     // MARK: - UI Properties

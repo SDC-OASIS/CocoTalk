@@ -11,6 +11,7 @@ import RxRelay
 import StompClientLib
 import SwiftKeychainWrapper
 
+/// 웹소켓 연결을 지원하는 클래스
 final class WebSocketHelper: StompClientLibDelegate {
      
     

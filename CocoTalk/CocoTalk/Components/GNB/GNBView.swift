@@ -11,6 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+/// 글로벌 네비게이션 바
 class GNBView: UIView {
     
     // MARK: - UI properties

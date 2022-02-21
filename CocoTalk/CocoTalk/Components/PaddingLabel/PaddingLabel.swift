@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// 패딩 라벨 뷰
 class PaddingLabel: UILabel {
     
     var topInset: CGFloat = 8

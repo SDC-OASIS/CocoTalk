@@ -13,6 +13,7 @@ import RxSwift
 import RxGesture
 import Kingfisher
 
+/// 프로필 모달 뷰컨트롤러
 class ProfileModalViewController: UIViewController {
     
     // MARK: - UI Properties

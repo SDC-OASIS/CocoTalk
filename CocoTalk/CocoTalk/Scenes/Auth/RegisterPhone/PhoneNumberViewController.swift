@@ -11,6 +11,9 @@ import Then
 import RxSwift
 import FirebaseAuth
 
+/// sms 인증을 위한 전화번호 입력 뷰컨트롤러
+///
+/// 기본으로 번호에 +82가 적용됩니다.
 class PhoneNumberViewController: UIViewController {
     
     // MARK: - UI Properties
@@ -66,7 +69,7 @@ class PhoneNumberViewController: UIViewController {
     }
     
     private func move2SmsVC() {
-        guard var phoneNumber = textFieldPhoneNumber.text else {
+        guard let phoneNumber = textFieldPhoneNumber.text else {
             return
         }
         

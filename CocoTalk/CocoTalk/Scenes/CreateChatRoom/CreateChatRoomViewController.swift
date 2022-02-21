@@ -10,6 +10,7 @@ import SnapKit
 import Then
 import RxSwift
 
+/// 채팅방 생성시 사용하는 친구 선택 뷰
 class CreateChatRoomViewController: UIViewController {
     
     // MARK: - UI Properties

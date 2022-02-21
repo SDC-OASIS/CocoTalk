@@ -8,6 +8,7 @@
 import Foundation
 import Moya
 
+/// 채팅방, 채팅 API
 enum RoomAPI {
     case fetchPrevMessages(_ token: String, roomId: String, bundleId: String, count: Int)
     case fetchInitialMessages(_ token: String, roomId: String, count: Int)

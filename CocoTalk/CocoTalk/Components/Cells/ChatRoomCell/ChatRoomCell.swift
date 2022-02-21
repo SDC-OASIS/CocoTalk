@@ -9,13 +9,7 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-/// ProfileTableViewCell
-///
-/// <기능>
-///  - 슬라이드
-///     - 좌측: 즐겨찾기, 상단 고정
-///     - 우측: 읽음, 나가기
-///  - 길게 눌렀을 때 👉 채팅방 미리보기
+/// 채팅방 목록 셀
 class ChatRoomCell: UITableViewCell {
     
     // MARK: - UI properties

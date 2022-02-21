@@ -10,6 +10,7 @@ import UIKit
 import Then
 import SnapKit
 
+/// 채팅방 초대 대상으로 지정된 친구 셀
 class ClosableFriendCell: UICollectionViewCell {
     
     // MARK: - UI Properties

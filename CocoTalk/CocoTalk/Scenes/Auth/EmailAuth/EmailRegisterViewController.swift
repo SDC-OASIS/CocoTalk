@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import RxCocoa
 
+/// 이메일 인증에 사용될 이메일을 입력하는 뷰
 class EmailRegisterViewController: UIViewController {
     
     // MARK: - UI Properties

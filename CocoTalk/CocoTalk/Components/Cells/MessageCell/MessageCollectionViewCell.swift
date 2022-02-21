@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 import AVKit
 
+/// 채팅방 내에 메시지 셀
 class MessageCollectionViewCell: UICollectionViewCell {
     
     // MARK: - UI Properties

@@ -16,6 +16,7 @@ import RxGesture
 import PhotosUI
 import AVKit
 
+/// 채팅방 뷰 컨트롤러
 class ChatRoomViewController: UIViewController {
     
     // MARK: - UI Properties

@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import RxSwift
 
+/// 사진 모달 뷰컨트롤러
 class PhotoModalViewController: UIViewController {
     // MARK: - UI Properties
     /// 닫기 버튼

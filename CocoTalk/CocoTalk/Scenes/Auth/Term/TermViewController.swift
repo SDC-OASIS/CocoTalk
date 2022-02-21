@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import RxGesture
 
+/// 약관 동의 목록 뷰 컨트롤러
 class TermViewController: UIViewController {
     
     // MARK: - UI Properties

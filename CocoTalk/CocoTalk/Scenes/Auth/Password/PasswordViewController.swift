@@ -10,6 +10,7 @@ import SnapKit
 import Then
 import RxSwift
 
+/// 회원가입 할 때 비밀번호를 입력하는 뷰
 class PasswordViewController: UIViewController {
     
     // MARK: - UI Properties

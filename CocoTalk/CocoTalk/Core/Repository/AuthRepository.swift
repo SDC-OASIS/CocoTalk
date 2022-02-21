@@ -11,6 +11,8 @@ import Moya
 import RxMoya
 import SwiftKeychainWrapper
 
+
+/// 인증 관련 네트워킹을 지원하는 레포지토리
 class AuthRepository {
     private let provider: MoyaProvider<AuthAPI>
     

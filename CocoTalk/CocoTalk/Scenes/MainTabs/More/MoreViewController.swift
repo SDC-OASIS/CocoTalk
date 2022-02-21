@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import SwiftKeychainWrapper
 
+/// 더보기 탭
 class MoreViewController: UIViewController {
     
     // MARK: - UI Properties

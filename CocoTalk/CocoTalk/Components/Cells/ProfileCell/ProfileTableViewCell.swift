@@ -11,10 +11,6 @@ import Kingfisher
 
 
 /// ProfileTableViewCell
-///
-/// <기능>
-///  - 슬라이드 👉 즐겨찾기, 숨김, 차단
-///  - 길게 눌렀을 때 👉 채팅, 프로필 모달뷰
 class ProfileTableViewCell: UITableViewCell {
     
     // MARK: - UI properties

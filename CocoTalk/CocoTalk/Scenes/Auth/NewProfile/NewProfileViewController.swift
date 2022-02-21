@@ -12,6 +12,7 @@ import RxSwift
 import RxGesture
 import PhotosUI
 
+/// 회원가입할 때 프로필 사진과 이름을 등록하는 뷰
 class NewProfileViewController: UIViewController {
     
     // MARK: - UI Properties

@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import RxCocoa
 
+/// 채팅방 서랍 뷰
 class ChatDrawerViewController: UIViewController {
     
     // MARK: - UI Properties

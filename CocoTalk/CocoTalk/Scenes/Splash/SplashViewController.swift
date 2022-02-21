@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import SwiftKeychainWrapper
 
+/// 스플래시 뷰
 class SplashViewController: UIViewController {
     
     // MARK: - UI Properties

@@ -8,8 +8,6 @@
 import UIKit
 import SnapKit
 
-
-#warning("ProfileTableViewCell과 통합")
 /// MyProfileCell
 ///
 /// <기능>

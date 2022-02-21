@@ -9,6 +9,11 @@ import UIKit
 import SnapKit
 import Then
 
+/// 채팅방 내에 새 메시지 뷰
+///
+/// 탭 하면 최하단으로 이동.
+/// 
+/// 탭 하지 않고 최하단으로 가면 사라짐
 class NewMessageView: UIView {
 
     // MARK: - UI properties

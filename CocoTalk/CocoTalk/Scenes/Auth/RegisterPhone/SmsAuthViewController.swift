@@ -12,6 +12,7 @@ import Then
 import RxSwift
 import FirebaseAuth
 
+/// sms 인증 코드를 입력하는 뷰컨트롤러
 class SmsAuthViewController: UIViewController {
     
     // MARK: - UI Properties

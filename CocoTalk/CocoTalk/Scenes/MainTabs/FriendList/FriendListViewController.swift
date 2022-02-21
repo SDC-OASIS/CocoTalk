@@ -10,6 +10,7 @@ import SnapKit
 import Then
 import RxSwift
 
+/// 친구목록 뷰컨트롤러
 class FriendListViewController: UIViewController {
     
     // MARK: - UI Properties

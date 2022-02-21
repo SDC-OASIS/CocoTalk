@@ -12,6 +12,7 @@ import CoreData
 import Moya
 import RxMoya
 
+/// 채팅방, 채팅에 관련된 네트워킹을 지원하는 레포지토리
 class ChatRoomRepository {
     typealias ItemType = ModelRoomList
     

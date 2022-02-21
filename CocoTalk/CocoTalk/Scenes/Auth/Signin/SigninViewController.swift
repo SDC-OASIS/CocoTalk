@@ -11,6 +11,7 @@ import Then
 import RxSwift
 import RxCocoa
 
+/// 아이디로 로그인하는 뷰
 class SigninViewController: UIViewController {
     
     // MARK: - UI Properties
