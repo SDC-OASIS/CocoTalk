@@ -15,10 +15,12 @@ final class WebSocketHelper: StompClientLibDelegate {
      
     
     // MARK: - Private properties
+    private var chatRoomRepository = ChatRoomRepository()
     private var userId: String = ""
     private var roomId: String = ""
     private var socketType: SocketType
     private var destinationToType: [String: SocketTopicEnum] = [:]
+    private var bag = DisposeBag()
     
     
     // MARK: - Public properties
@@ -40,6 +42,9 @@ final class WebSocketHelper: StompClientLibDelegate {
     /// 커넥션 성공
     var isSocketConnected = BehaviorRelay<Bool?>(value: nil)
     
+    /// 채팅 관리 서버 요청 결과
+    private var assignedChatServerDestination = BehaviorRelay<String?>(value: nil)
+    
     
     /// 소켓 초기화
     init(socketType: SocketType, userId: Int? = -1, roomId: String? = "") {
@@ -51,12 +56,18 @@ final class WebSocketHelper: StompClientLibDelegate {
         } else {
             header = ["view": "chatRoom", "userId": "\(self.userId)", "roomId": self.roomId]
         }
+        bind()
     }
     
     /// 소켓 연결
     func establishConnection() {
+        requestDestination()
+    }
+    
+    func openSocketWithURL(destination: String) {
+        let url = URL(string: "\(destination)/websocket")
         socketClient = StompClientLib()
-        socketClient?.openSocketWithURLRequest(request: NSURLRequest(url: .baseSocketURL as URL) ,
+        socketClient?.openSocketWithURLRequest(request: NSURLRequest(url: url! as URL) ,
                                                delegate: self,
                                                connectionHeaders: header)
     }
@@ -68,14 +79,6 @@ final class WebSocketHelper: StompClientLibDelegate {
     
     /// 받은 소켓 메시지 핸들링
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, akaStringBody stringBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
-        #warning("삭제")
-//        print("🟢 STOMP CLIENT MESSAGE 🟢")
-//        print("[destination]")
-//        print(destination)
-//        print("[header]")
-//        print(header ?? "")
-//        print("[string body]")
-//        print(stringBody ?? "")
         
         let body = stringBody ?? ""
         
@@ -239,3 +242,41 @@ extension WebSocketHelper {
     }
 }
 
+
+// MARK: - Request chatting server destination
+extension WebSocketHelper {
+    func requestDestination() {
+        let token: String? = KeychainWrapper.standard[.accessToken]
+        guard let token = token else {
+            return
+        }
+        
+        chatRoomRepository.getDestination(with: token)
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self,
+                      let destination = response.data else {
+                    return
+                }
+                self.assignedChatServerDestination.accept(destination)
+            }).disposed(by: bag)
+    }
+}
+
+
+// MARK: - Bind Method
+extension WebSocketHelper {
+    func bind() {
+        bindDestination()
+    }
+    
+    func bindDestination() {
+        assignedChatServerDestination
+            .subscribe(onNext: { [weak self] destination in
+                guard let self = self,
+                      let destination = destination else {
+                    return
+                }
+                self.openSocketWithURL(destination: destination)
+            }).disposed(by: bag)
+    }
+}

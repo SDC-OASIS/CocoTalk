@@ -16,11 +16,17 @@ enum RoomAPI {
     case checkRoomExist(_ token: String, memberId: String)
     case postPhotoFile(_ token: String, roomId: String, photoFile: Data, photoThumbnail: Data)
     case postVideoFile(_ token: String, roomId: String, videoFile: Data, videoThumbnail: Data)
+    case getChatDestination(_ token: String)
 }
 
 extension RoomAPI: TargetType {
     var baseURL: URL {
-        .baseURL
+        switch self {
+        case .getChatDestination(_):
+            return .chatManagingServerURL
+        default:
+            return .baseURL
+        }
     }
     
     var path: String {
@@ -39,6 +45,8 @@ extension RoomAPI: TargetType {
             return "/chat/messages/file"
         case .postVideoFile(_,_,_,_):
             return "/chat/messages/file"
+        case .getChatDestination(_):
+            return "/presence/stomp/connect"
         }
     }
     
@@ -58,6 +66,8 @@ extension RoomAPI: TargetType {
             return .post
         case .postVideoFile(_,_,_,_):
             return .post
+        case .getChatDestination(_):
+            return .get
         }
     }
     
@@ -91,6 +101,8 @@ extension RoomAPI: TargetType {
             let roomIdData = roomId.data(using: String.Encoding.utf8) ?? Data()
             formData.append(Moya.MultipartFormData(provider: .data(roomIdData), name: "roomId"))
             return .uploadMultipart(formData)
+        case .getChatDestination(_):
+            return .requestPlain
         }
     }
     
@@ -115,6 +127,9 @@ extension RoomAPI: TargetType {
             break
         case .postPhotoFile(let token,_,_,_), .postVideoFile(let token,_,_,_):
             parameters["Content-type"] = "multipart/form-data"
+            parameters["X-ACCESS-TOKEN"] = token
+            break
+        case .getChatDestination(let token):
             parameters["X-ACCESS-TOKEN"] = token
             break
         }

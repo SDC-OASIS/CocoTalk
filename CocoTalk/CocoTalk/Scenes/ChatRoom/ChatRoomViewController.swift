@@ -737,7 +737,6 @@ extension ChatRoomViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        print(indexPath.row)
         if (lastCellIndex - 10)..<lastCellIndex ~= indexPath.row {
             shouldScrollBottom = true
         } else {
