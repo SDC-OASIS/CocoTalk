@@ -119,11 +119,11 @@ eureka:
     ip-address: {{ eureka client ip address }}
     prefer-ip-address: true # optional
 
-client:
-  register-with-eureka: true # setting whether to register for Service Discovery
-  fetch-registry: true
-  service-url:
-    defaultZone: {{ eureka server url }} # A client is registered by sending a POST request to it.
+  client:
+    register-with-eureka: true # setting whether to register for Service Discovery
+    fetch-registry: true
+    service-url:
+      defaultZone: {{ eureka server url }} # A client is registered by sending a POST request to it.
     
 cloud:
   aws:
