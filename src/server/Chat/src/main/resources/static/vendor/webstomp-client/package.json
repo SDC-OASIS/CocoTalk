@@ -1,0 +1,53 @@
+{
+  "name": "webstomp-client",
+  "version": "1.2.6",
+  "description": "Stomp client over websocket for browsers and nodejs",
+  "license": "Apache-2.0",
+  "keywords": [
+    "stomp",
+    "webstomp",
+    "websocket"
+  ],
+  "author": "Jérôme Steunou",
+  "files": [
+    "dist",
+    "src",
+    "*.md",
+    "*.txt",
+    "index.d.ts"
+  ],
+  "main": "dist/webstomp.js",
+  "types": "index.d.ts",
+  "es6": "src/webstomp.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSteunou/webstomp-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JSteunou/webstomp-client/issues"
+  },
+  "homepage": "https://github.com/JSteunou/webstomp-client#readme",
+  "devDependencies": {
+    "babel-core": "^6.7.4",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.1.0",
+    "http-server": "^0.11.1",
+    "opn-cli": "^3.1.0",
+    "rollup": "^0.62.0",
+    "rollup-plugin-babel": "^3.0.7",
+    "uglify-js": "^3.4.4",
+    "ws": "^5.2.2"
+  },
+  "scripts": {
+    "test": "echo \"TODO: add tests\"",
+    "build": "rollup -c && uglifyjs dist/webstomp.js -o dist/webstomp.min.js",
+    "example": "npm run build && opn http://localhost:8080/example & http-server",
+    "lint": "eslint src --fix",
+    "lintnofix": "eslint src",
+    "preversion": "npm run lintnofix && npm run test",
+    "version": "npm run build && git add dist",
+    "postversion": "git push --follow-tags && npm publish"
+  }
+}
