@@ -89,6 +89,18 @@ eureka:
 
 fcm:
   api-url: {{ your fcm api call url }}
+  notification-icon: {{ web notification icon img }}
+  frontend-url: {{ your frontend server url }} # 웹 푸시 클릭 이벤트 용
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}  
+  
 ```
 
 ---
