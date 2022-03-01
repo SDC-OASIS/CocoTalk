@@ -1,4 +1,4 @@
-# Cocotalk 채팅 서버
+# Cocotalk 유저 서버
 
 # 목차
 
