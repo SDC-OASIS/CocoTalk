@@ -213,9 +213,14 @@
 
 
 ### ERD
-![전체 ERD](https://user-images.githubusercontent.com/54519245/156175423-add6edd0-c5f7-46f0-86db-779d81abf078.PNG)
+**전체 ERD**
+![cocotalk-erd](https://user-images.githubusercontent.com/54519245/156178086-1d3cc340-230f-4b7e-83f8-390690a73a83.PNG)
 
+**MySQL ERD**
+![mysql-erd](https://user-images.githubusercontent.com/54519245/156178098-760c6a9b-8f50-4d1b-8f52-ad605aeb1137.PNG)
 
+**MongoDB ERD**
+![mongo-erd](https://user-images.githubusercontent.com/54519245/156178092-ec7f91a9-858c-40cc-b6ea-6db5de570ca0.PNG)
 
 ---
 
