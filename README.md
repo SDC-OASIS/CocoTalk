@@ -13,7 +13,7 @@
 - [산출물](#-산출물)
   - [API 명세서](#api-명세서)
   - [기능 정의서](#기능-정의서)
-  - [다이어그램](#다이어그램)
+  - [ERD](#ERD)
 
 - [Github Repository](#-github-repository)
 
@@ -30,7 +30,7 @@
 
 
 
-##  📂디렉토리 구조
+## 📂 디렉토리 구조
 
 ```
 ├── docs
@@ -55,23 +55,23 @@
 
 #### 클라이언트
 
-- [iOS](src/client/ios/README.md)
+- [iOS](src/client/iOS/README.md)
 
-- [WEB](src/client/web/README.md)
+- [WEB](src/client/Web/README.md)
 
 #### 서버
 
-- [인증 서버](src/server/CocoTalk-Auth/README.md)
+- [인증 서버](src/server/Auth/README.md)
 
-- [유저 서버](src/server/Cocotalk-User/README.md)
+- [유저 서버](src/server/User/README.md)
 
-- [채팅 서버](src/server/Cocotalk-Chat/README.md)
+- [채팅 서버](src/server/Chat/README.md)
 
-- [푸시 서버](src/server/CocoTalk-Push/README.md)
+- [푸시 서버](src/server/Push/README.md)
 
-- [API GateWay](src/server/Cocotalk-Cloud/README.md)
+- [Eureka 서버](src/server/Cloud/README.md)
 
-- [채팅 서버 관리 서버](src/server/Cocotalk-Presence/README.md)
+- [채팅 서버 관리 서버](src/server/Presence/README.md)
 
   
 
@@ -146,7 +146,7 @@
 
 ## 🔎 전체 아키텍처
 
-![전체 아키텍처](http://stove-developers-gitlab.sginfra.net/stove-dev-camp-2nd/oasis/-/raw/main/docs/%EC%A0%84%EC%B2%B4_%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98_%EA%B5%AC%EC%A1%B0.png)
+![전체 아키텍처](https://user-images.githubusercontent.com/54519245/156173506-32f8c328-d756-4463-9e26-07808310b031.png)
 
 
 ---
@@ -208,19 +208,12 @@
 
 ### 기능 정의서
 
-![기능정의서](http://stove-developers-gitlab.sginfra.net/stove-dev-camp-2nd/oasis/-/raw/main/docs/%EA%B8%B0%EB%8A%A5%EC%A0%95%EC%9D%98%EC%84%9C.png)
+![기능 정의서](https://user-images.githubusercontent.com/54519245/156175825-860fcd95-c54e-4ef4-8880-6d1334f03e6e.PNG)
 
 
 
-### 다이어그램
-
-- **MySQL ERD**
-
-![MySQL ERD](http://stove-developers-gitlab.sginfra.net/stove-dev-camp-2nd/oasis/-/raw/main/docs/MySQL_ERD.png)
-
-- **MongoDB**
-
-![MySQL ERD](http://stove-developers-gitlab.sginfra.net/stove-dev-camp-2nd/oasis/-/raw/main/docs/MongoDB_Diagram.png)
+### ERD
+![전체 ERD](https://user-images.githubusercontent.com/54519245/156175423-add6edd0-c5f7-46f0-86db-779d81abf078.PNG)
 
 
 
